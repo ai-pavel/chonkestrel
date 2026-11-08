@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Made by tools/ship_variants.py from the vanilla rebel_long.xml
+    (copyright (c) 2012 by Subset Games). The front of rebel_long.xml and the back of jelly_button.xml.
+-->
+<FTL>
+<img x="-66" y="-45" w="361" h="484"/>
+<offsets>
+	<cloak x="20" y="19"/>
+</offsets>
+<weaponMounts>
+	<mount x="153" y="120" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="222" y="120" rotate="false" mirror="false" slide="right" gib="2"/>
+	<mount x="80" y="192" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="295" y="192" rotate="false" mirror="false" slide="right" gib="2"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>24</x>
+		<y>1</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>180</x>
+		<y>0</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>15</x>
+		<y>242</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>180</x>
+		<y>242</y>
+	</gib4>
+</explosion>
+</FTL>

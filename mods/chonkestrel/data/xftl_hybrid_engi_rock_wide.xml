@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Made by tools/ship_variants.py from the vanilla circle_scout.xml
+    (copyright (c) 2012 by Subset Games). The wide version of XFTL_HYBRID_ENGI_ROCK, 6 columns wider at column 1.
+-->
+<FTL>
+<img x="-42" y="-47" w="510" h="383"/>
+<offsets>
+	<cloak x="19" y="15"/>
+</offsets>
+<weaponMounts>
+	<mount x="32" y="70" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="436" y="70" rotate="false" mirror="false" slide="right" gib="2"/>
+	<mount x="345" y="32" rotate="false" mirror="false" slide="up" gib="2"/>
+	<mount x="458" y="138" rotate="false" mirror="false" slide="right" gib="2"/>
+	<mount x="147" y="29" rotate="false" mirror="true" slide="up" gib="1"/>
+	<mount x="217" y="29" rotate="false" mirror="true" slide="up" gib="1"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>1</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>255</x>
+		<y>0</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>34</x>
+		<y>191</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>255</x>
+		<y>191</y>
+	</gib4>
+</explosion>
+</FTL>

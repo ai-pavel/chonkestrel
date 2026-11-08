@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Made by tools/ship_variants.py from the vanilla jelly_button.xml
+    (copyright (c) 2012 by Subset Games). The long version of XFTL_HYBRID_SLUG_ENGI, 6 rows longer at row 1.
+-->
+<FTL>
+<img x="-77" y="-60" w="300" h="505"/>
+<offsets>
+	<cloak x="32" y="32"/>
+</offsets>
+<weaponMounts>
+	<mount x="63" y="346" rotate="false" mirror="true" slide="left" gib="3"/>
+	<mount x="229" y="346" rotate="false" mirror="false" slide="right" gib="4"/>
+	<mount x="74" y="317" rotate="false" mirror="true" slide="left" gib="3"/>
+	<mount x="218" y="317" rotate="false" mirror="false" slide="right" gib="4"/>
+	<mount x="80" y="200" rotate="false" mirror="true" slide="left" gib="1"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>51</x>
+		<y>13</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>150</x>
+		<y>13</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>11</x>
+		<y>252</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>150</x>
+		<y>252</y>
+	</gib4>
+</explosion>
+</FTL>

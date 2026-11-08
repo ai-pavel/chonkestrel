@@ -1,0 +1,123 @@
+<!--
+    More events for the vanilla Mantis sectors. See sector_data.xml.append.
+-->
+
+<eventList name="XFTL_MORE_MANTIS">
+	<event load="XFTL_MANTIS_HUNT"/>
+	<event load="XFTL_MANTIS_ARENA"/>
+	<event load="XFTL_MANTIS_HATCHERY"/>
+	<event load="XFTL_MANTIS_OUTCAST"/>
+</eventList>
+
+<event name="XFTL_MANTIS_HUNT">
+	<text>A Mantis hunting party has cornered a freighter. Its crew are screaming for help over every channel.</text>
+	<choice>
+		<text>Drive off the hunters.</text>
+		<event>
+			<text>The Mantis turn their attention to you.</text>
+			<ship load="XFTL_MANTIS_HUNTERS" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave.</text>
+		<event>
+			<text>You leave the freighter to its fate.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_MANTIS_HUNTERS" auto_blueprint="SHIPS_MANTIS">
+	<destroyed>
+		<text>The freighter's crew thank you, and give you a share of their cargo.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The freighter's crew thank you. One of them wants to come with you, to pay the Mantis back.</text>
+		<crewMember amount="1" class="human"/>
+		<autoReward level="LOW">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_MANTIS_ARENA">
+	<text>A Mantis war chief invites you to send a champion to their fighting arena. "Show us your strength, softskin."</text>
+	<choice>
+		<text>Send your toughest crew member.</text>
+		<event load="XFTL_MANTIS_ARENA_OUTCOME"/>
+	</choice>
+	<choice req="mantis" hidden="true">
+		<text>(Mantis Crew) Send your Mantis to fight.</text>
+		<event>
+			<text>Your Mantis tears through the other fighters. The war chief is impressed, and rewards you generously.</text>
+			<autoReward level="HIGH">standard</autoReward>
+		</event>
+	</choice>
+	<choice req="rock" hidden="true">
+		<text>(Rock Crew) Send your Rockman to fight.</text>
+		<event>
+			<text>The Mantis claws can't get through your Rockman's skin. The war chief grudgingly rewards you.</text>
+			<autoReward level="MED">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Decline.</text>
+		<event>
+			<text>"Weak!" The war chief's ship attacks.</text>
+			<ship load="MANTIS_FIGHT" hostile="true"/>
+		</event>
+	</choice>
+</event>
+<eventList name="XFTL_MANTIS_ARENA_OUTCOME">
+	<event>
+		<text>Your champion wins, bloodied but alive. The war chief rewards you.</text>
+		<autoReward level="MED">standard</autoReward>
+	</event>
+	<event>
+		<text>Your champion loses, and is carried back to your ship. The Mantis let you go, laughing, after collecting their bets from you.</text>
+		<item_modify>
+			<item type="scrap" min="-10" max="-10"/>
+		</item_modify>
+	</event>
+</eventList>
+
+<event name="XFTL_MANTIS_HATCHERY">
+	<text>Your sensors pick up a Mantis hatchery ship, guarding its eggs. It isn't in the mood for visitors.</text>
+	<choice>
+		<text>Attack it.</text>
+		<event>
+			<text>The hatchery's guards swarm out to defend it.</text>
+			<ship load="MANTIS_FIGHT" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Keep your distance.</text>
+		<event>
+			<text>You leave the hatchery alone.</text>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_MANTIS_OUTCAST">
+	<text>A Mantis is drifting in an escape pod. "My clan cast me out for refusing to eat prisoners. I will fight for anyone who takes me in."</text>
+	<choice>
+		<text>Take the Mantis aboard.</text>
+		<event load="XFTL_MANTIS_OUTCAST_OUTCOME"/>
+	</choice>
+	<choice>
+		<text>Leave it.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_MANTIS_OUTCAST_OUTCOME">
+	<event>
+		<text>The Mantis keeps its word, and takes its place among your crew.</text>
+		<crewMember amount="1" class="mantis"/>
+	</event>
+	<event>
+		<text>The Mantis keeps its word, and takes its place among your crew.</text>
+		<crewMember amount="1" class="mantis"/>
+	</event>
+	<event>
+		<text>It was lying. The Mantis attacks your crew, and its clan's ship arrives right behind it!</text>
+		<boarders min="1" max="1" class="mantis"/>
+		<ship load="MANTIS_FIGHT" hostile="true"/>
+	</event>
+</eventList>

@@ -1,0 +1,2 @@
+https://github.com/blizzarchon/Slipstream-Mod-Manager
+Commit: 090a0d6c63f4bee21dd0c93079ea5f72d6dd5120

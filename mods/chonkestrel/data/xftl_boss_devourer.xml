@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Made by tools/boss_ships.py from the vanilla anaerobic_bomber.xml
+    (copyright (c) 2012 by Subset Games). Stretched into a size 3 boss: 6 columns at column 3, then 6 rows at row 4.
+-->
+<FTL>
+<img x="-99" y="-44" w="653" h="564"/>
+<offsets>
+	<cloak x="17" y="17"/>
+</offsets>
+<weaponMounts>
+	<mount x="150" y="25" rotate="false" mirror="true" slide="up" gib="1"/>
+	<mount x="505" y="25" rotate="false" mirror="false" slide="up" gib="2"/>
+	<mount x="105" y="80" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="550" y="80" rotate="false" mirror="false" slide="right" gib="2"/>
+	<mount x="274" y="67" rotate="false" mirror="true" slide="up" gib="1"/>
+	<mount x="344" y="67" rotate="false" mirror="false" slide="up" gib="2"/>
+	<mount x="77" y="289" rotate="false" mirror="true" slide="left" gib="3"/>
+	<mount x="578" y="289" rotate="false" mirror="false" slide="right" gib="4"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>0</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>326</x>
+		<y>0</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>1</x>
+		<y>282</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>326</x>
+		<y>282</y>
+	</gib4>
+</explosion>
+</FTL>

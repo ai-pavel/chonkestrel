@@ -1,0 +1,118 @@
+<!--
+    More events for the vanilla Zoltan sectors. See sector_data.xml.append.
+-->
+
+<eventList name="XFTL_MORE_ZOLTAN">
+	<event load="XFTL_ZOLTAN_PILGRIMS"/>
+	<event load="XFTL_ZOLTAN_TRIAL"/>
+	<event load="XFTL_ZOLTAN_ENERGY_MARKET"/>
+	<event load="XFTL_ZOLTAN_PEACEKEEPERS"/>
+</eventList>
+
+<event name="XFTL_ZOLTAN_PILGRIMS">
+	<text>A Zoltan pilgrim ship is travelling to its homeworld. "Our journey is long, and our energy is low. Would you share your fuel?"</text>
+	<choice>
+		<text>Give them some fuel.</text>
+		<event>
+			<text>The pilgrims bless your ship, and one of them decides their pilgrimage lies with you.</text>
+			<item_modify>
+				<item type="fuel" min="-2" max="-2"/>
+			</item_modify>
+			<crewMember amount="1" class="energy"/>
+		</event>
+	</choice>
+	<choice req="energy" hidden="true">
+		<text>(Zoltan Crew) Have your Zoltan recharge their ship directly.</text>
+		<event>
+			<text>Your Zoltan channels some of their own energy into the pilgrims' ship. They give you a gift in return.</text>
+			<autoReward level="MED">stuff</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Refuse.</text>
+		<event>
+			<text>"We will find another way." The pilgrims drift on.</text>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_ZOLTAN_TRIAL">
+	<text>A Zoltan magistrate demands that you stand trial. "Your ship has entered our space armed. You will answer for your intentions."</text>
+	<choice>
+		<text>Explain your mission against the Rebels.</text>
+		<event load="XFTL_ZOLTAN_TRIAL_OUTCOME"/>
+	</choice>
+	<choice>
+		<text>Refuse to stand trial.</text>
+		<event>
+			<text>"Then you will be judged without your testimony." The magistrate's ship attacks.</text>
+			<ship load="ZOLTAN_SHIP" hostile="true"/>
+		</event>
+	</choice>
+</event>
+<eventList name="XFTL_ZOLTAN_TRIAL_OUTCOME">
+	<event>
+		<text>The magistrate finds you innocent, and grants you supplies for your mission.</text>
+		<autoReward level="MED">standard</autoReward>
+	</event>
+	<event>
+		<text>The magistrate finds you innocent, but fines you for the paperwork.</text>
+		<item_modify>
+			<item type="scrap" min="-10" max="-10"/>
+		</item_modify>
+	</event>
+	<event>
+		<text>The magistrate rules that your weapons are a threat, and orders you to leave Zoltan space at once. The Rebels hear about the trial.</text>
+		<modifyPursuit amount="1"/>
+	</event>
+</eventList>
+
+<event name="XFTL_ZOLTAN_ENERGY_MARKET">
+	<text>A Zoltan energy trader offers to recharge your batteries and overhaul your power systems, for a price.</text>
+	<choice>
+		<text>Pay for the overhaul.</text>
+		<event>
+			<text>The traders fine-tune your reactor. It's running a little stronger.</text>
+			<item_modify>
+				<item type="scrap" min="-40" max="-40"/>
+			</item_modify>
+			<upgrade amount="1" system="reactor"/>
+		</event>
+	</choice>
+	<choice req="battery" hidden="true">
+		<text>(Backup Battery) Sell them some of your stored power.</text>
+		<event>
+			<text>The traders pay well for the energy in your battery.</text>
+			<autoReward level="MED">scrap_only</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Decline.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_ZOLTAN_PEACEKEEPERS">
+	<text>A Zoltan peacekeeping ship is shadowing a Rebel cruiser that has entered their space. "We do not fight. But we would not object if you did."</text>
+	<choice>
+		<text>Attack the Rebel cruiser.</text>
+		<event>
+			<text>The Zoltan watch silently as you engage.</text>
+			<ship load="XFTL_ZOLTAN_REBEL_INTRUDER" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave the Rebels to the Zoltan.</text>
+		<event/>
+	</choice>
+</event>
+<ship name="XFTL_ZOLTAN_REBEL_INTRUDER" auto_blueprint="SHIPS_REBEL">
+	<destroyed>
+		<text>The Zoltan peacekeepers thank you in their own way, with a quiet delivery of supplies.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The Zoltan peacekeepers take the empty Rebel ship into custody, and give you supplies for your trouble.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>

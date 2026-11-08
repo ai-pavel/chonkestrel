@@ -1,0 +1,625 @@
+<!--
+    Events for big player ships (size 2, like the Chonkestrel). They only
+    appear for them (xftlMinShipSize on the sectors' events, see
+    sector_data.xml.append), mostly in the second act.
+
+    They're written so they'll keep working once there are size 2 hostile
+    ships: the enemies are "battle groups", "packs" and so on, which are
+    several vanilla ships for now, and one big ship from the *_SIZE2 lists
+    (see autoBlueprints.xml.append) once those have some.
+
+    Rewards and costs that should grow with the player's ship use
+    xftlScale="size", and some choices are only for big ships
+    (req="xftl_ship_size" lvl="2"). See doc/game/lore.md.
+-->
+
+
+<!--
+********************
+ENEMY GROUPS
+********************
+-->
+
+<!-- Each of these gives its own rewards, so a group of three gives three
+     times the rewards. -->
+<ship name="XFTL_REBEL_BATTLEGROUP" auto_blueprint="SHIPS_REBEL" xftlBigBlueprint="SHIPS_REBEL_SIZE2">
+	<destroyed>
+		<text load="XFTL_GROUP_DESTROYED"/>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text load="XFTL_GROUP_DEAD_CREW"/>
+		<autoReward level="MED">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<ship name="XFTL_AUTO_BATTLEGROUP" auto_blueprint="SHIPS_AUTO" xftlBigBlueprint="SHIPS_AUTO_SIZE2">
+	<destroyed>
+		<text load="XFTL_GROUP_DESTROYED"/>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+</ship>
+
+<ship name="XFTL_PIRATE_PACK" auto_blueprint="SHIPS_PIRATE" xftlBigBlueprint="SHIPS_PIRATE_SIZE2">
+	<destroyed>
+		<text load="XFTL_GROUP_DESTROYED"/>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text load="XFTL_GROUP_DEAD_CREW"/>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<ship name="XFTL_MANTIS_PACK" auto_blueprint="SHIPS_MANTIS" xftlBigBlueprint="SHIPS_MANTIS_SIZE2">
+	<destroyed>
+		<text load="XFTL_GROUP_DESTROYED"/>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text load="XFTL_GROUP_DEAD_CREW"/>
+		<autoReward level="MED">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<ship name="XFTL_ROCK_PACK" auto_blueprint="SHIPS_ROCK" xftlBigBlueprint="SHIPS_ROCK_SIZE2">
+	<destroyed>
+		<text load="XFTL_GROUP_DESTROYED"/>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text load="XFTL_GROUP_DEAD_CREW"/>
+		<autoReward level="MED">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<ship name="XFTL_BOUNTY_HUNTERS" auto_blueprint="SHIPS_PIRATE" xftlBigBlueprint="SHIPS_PIRATE_SIZE2">
+	<destroyed>
+		<text>The hunter's ship breaks apart. Its hold is full of the bounties it already collected.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>With the hunter's crew dead, you help yourself to their ship's stores.</text>
+		<autoReward level="HIGH">stuff</autoReward>
+	</deadCrew>
+</ship>
+
+<textList name="XFTL_GROUP_DESTROYED">
+	<text>The ship breaks apart under your guns. You collect what's left.</text>
+	<text>Another one down. You sweep the debris for anything useful.</text>
+	<text>The ship explodes. Its wreckage drifts past your hull, and your crew pick out the salvage.</text>
+</textList>
+<textList name="XFTL_GROUP_DEAD_CREW">
+	<text>The ship falls silent, its crew dead. You strip it of supplies.</text>
+	<text>With its crew gone, the ship drifts helplessly. You help yourself to its stores.</text>
+</textList>
+
+
+<!--
+********************
+CIVILIAN
+********************
+-->
+
+<eventList name="XFTL_BIG_CIVILIAN">
+	<event load="XFTL_BIG_DOCKING"/>
+	<event load="XFTL_BIG_FAME"/>
+	<event load="XFTL_BIG_TOW"/>
+	<event load="XFTL_BIG_REFUGEES"/>
+	<event load="XFTL_BIG_ENGINEERS"/>
+	<event load="XFTL_BIG_CUSTOMS"/>
+	<event load="XFTL_BIG_ESCORT"/>
+	<event load="XFTL_BIG_TRADER"/>
+</eventList>
+
+<event name="XFTL_BIG_DOCKING">
+	<text>The station at this beacon was never built for a ship your size. The dockmaster stares at your hull on the screen. "Uh... we'll have to send a shuttle out to you."</text>
+	<choice>
+		<text>Trade through their shuttle.</text>
+		<event>
+			<text>It takes hours, but the shuttle brings over some supplies in exchange for spare parts.</text>
+			<autoReward level="LOW">standard</autoReward>
+		</event>
+	</choice>
+	<choice req="xftl_ship_size" lvl="2" hidden="true">
+		<text>(Heavy cruiser) Offer your hull as a dock for their freighters.</text>
+		<event>
+			<text>Freighters latch onto your hull to unload while the station's docks are full. The station pays you handsomely for the help.</text>
+			<autoReward level="MED" xftlScale="size">scrap_only</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Move on.</text>
+		<event/>
+	</choice>
+</event>
+
+<textList name="XFTL_BIG_FAME">
+	<text>Word of a Federation heavy cruiser has spread. The colony at this beacon turns out to watch you arrive, and their mayor hails you in person.</text>
+	<text>The local news is running footage of your ship. "The Federation still has teeth!" The colonists want to help.</text>
+	<text>A crowd of civilian ships gathers around your cruiser, flashing their running lights in greeting.</text>
+</textList>
+<event name="XFTL_BIG_FAME">
+	<text load="XFTL_BIG_FAME"/>
+	<choice>
+		<text>Ask for volunteers.</text>
+		<event>
+			<text>One of the colonists signs up on the spot.</text>
+			<crewMember amount="1"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Ask for supplies.</text>
+		<event>
+			<text>The colonists send up what they can spare.</text>
+			<item_modify xftlScale="size">
+				<item type="fuel" min="1" max="3"/>
+				<item type="missiles" min="1" max="2"/>
+			</item_modify>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_BIG_TOW">
+	<text>A freighter's engines have failed, and it's drifting towards the beacon's star. Its captain hails you. "Nobody else out here has the mass to tow us. Please!"</text>
+	<choice>
+		<text>Tow the freighter to safety.</text>
+		<event>
+			<text>It takes a lot of fuel to haul the freighter clear, but its captain is generous.</text>
+			<item_modify>
+				<item type="fuel" min="-2" max="-2"/>
+			</item_modify>
+			<autoReward level="HIGH" xftlScale="size">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>You can't spare the fuel.</text>
+		<event>
+			<text>You leave the freighter to its fate.</text>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_BIG_REFUGEES">
+	<text>A flotilla of refugee ships is waiting at the beacon. They're overloaded, and their life support is failing. Your ship has room for them all.</text>
+	<choice>
+		<text>Take them aboard until the next colony.</text>
+		<event>
+			<text>Your crew make room in every corridor. At the next colony, a few of the refugees decide to stay with you.</text>
+			<item_modify xftlScale="size">
+				<item type="fuel" min="-1" max="-1"/>
+			</item_modify>
+			<crewMember amount="1"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Share some of your supplies instead.</text>
+		<event>
+			<text>The refugees thank you, and give you what little scrap they have left.</text>
+			<item_modify>
+				<item type="missiles" min="-2" max="-2"/>
+				<item type="scrap" min="10" max="20"/>
+			</item_modify>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave them.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_BIG_ENGINEERS">
+	<text>A team of civilian shipwrights asks to study your ship. "We've never seen a hull like this. Let us take some measurements, and we'll tune up whatever you like."</text>
+	<choice>
+		<text>Let them study the ship.</text>
+		<event load="XFTL_BIG_ENGINEERS_OUTCOME"/>
+	</choice>
+	<choice>
+		<text>Your ship's design is classified.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_BIG_ENGINEERS_OUTCOME">
+	<event>
+		<text>The shipwrights find room in your reactor for a little more power.</text>
+		<upgrade amount="1" system="reactor"/>
+	</event>
+	<event>
+		<text>The shipwrights tune your engines, and pay you for the data.</text>
+		<autoReward level="MED" xftlScale="size">scrap_only</autoReward>
+	</event>
+	<event>
+		<text>Halfway through their work, the "shipwrights" try to steal your ship's schematics! Your crew catch them, but not before they've damaged a few systems.</text>
+		<damage amount="2" system="random"/>
+		<damage amount="1" system="random"/>
+	</event>
+</eventList>
+
+<event name="XFTL_BIG_CUSTOMS">
+	<text>The beacon's traffic control charges docking fees by mass. Your ship's mass is... considerable.</text>
+	<choice>
+		<text>Pay the fee.</text>
+		<event>
+			<text>Traffic control lets you through, and their supply depot sells you some fuel.</text>
+			<item_modify xftlScale="size">
+				<item type="scrap" min="-10" max="-10"/>
+				<item type="fuel" min="2" max="2"/>
+			</item_modify>
+		</event>
+	</choice>
+	<choice>
+		<text>Ignore them.</text>
+		<event>
+			<text>You ignore their protests. You won't get any supplies here.</text>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_BIG_ESCORT">
+	<text>A convoy of civilian freighters asks you to escort them to the next beacon. "With a cruiser alongside us, no pirate would dare."</text>
+	<choice>
+		<text>Escort the convoy.</text>
+		<event load="XFTL_BIG_ESCORT_OUTCOME"/>
+	</choice>
+	<choice>
+		<text>You don't have time.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_BIG_ESCORT_OUTCOME">
+	<event>
+		<text>The convoy arrives safely. Its captains pool together a reward for you.</text>
+		<autoReward level="MED" xftlScale="size">standard</autoReward>
+	</event>
+	<event>
+		<text>Pirates were waiting for the convoy. They didn't expect you, but they attack anyway.</text>
+		<ship load="XFTL_PIRATE_PACK" hostile="true"/>
+	</event>
+</eventList>
+
+<event name="XFTL_BIG_TRADER">
+	<text>A merchant has a cargo of heavy ship parts that nobody else can use. "Made for capital ships. They've been sitting in my hold for years."</text>
+	<choice>
+		<text>Buy the parts.</text>
+		<event>
+			<text>Your engineers find a use for most of them.</text>
+			<item_modify>
+				<item type="scrap" min="-40" max="-40"/>
+			</item_modify>
+			<augment name="RANDOM"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Buy some reinforcing plates.</text>
+		<event>
+			<text>Your crew bolt the plates onto your hull.</text>
+			<item_modify>
+				<item type="scrap" min="-25" max="-25"/>
+			</item_modify>
+			<damage amount="-6" xftlScale="size"/>
+		</event>
+	</choice>
+	<choice>
+		<text>No thanks.</text>
+		<event/>
+	</choice>
+</event>
+
+
+<!--
+********************
+HOSTILE
+********************
+-->
+
+<eventList name="XFTL_BIG_HOSTILE">
+	<event load="XFTL_BIG_BATTLEGROUP"/>
+	<event load="XFTL_BIG_BATTLEGROUP"/>
+	<event load="XFTL_BIG_PIRATES"/>
+	<event load="XFTL_BIG_BOUNTY"/>
+	<event load="XFTL_BIG_MINEFIELD"/>
+	<event load="XFTL_BIG_RAM"/>
+	<event load="XFTL_BIG_INTERDICTOR"/>
+	<event load="XFTL_BIG_MANTIS"/>
+	<event load="XFTL_BIG_ROCK"/>
+</eventList>
+
+<textList name="XFTL_BIG_BATTLEGROUP">
+	<text>A Rebel battle group is waiting for you. "Heavy cruiser sighted. All ships, engage!"</text>
+	<text>The Rebels have learned not to send a single ship against a cruiser. A battle group turns to face you.</text>
+	<text>A Rebel hunter group has been tracking your ship's wake. They've caught up with you.</text>
+	<text>"Federation cruiser, by order of the Rebellion you are to be destroyed." The battle group opens fire.</text>
+</textList>
+<event name="XFTL_BIG_BATTLEGROUP">
+	<text load="XFTL_BIG_BATTLEGROUP"/>
+	<ship load="XFTL_REBEL_BATTLEGROUP" hostile="true"/>
+</event>
+
+<textList name="XFTL_BIG_PIRATES">
+	<text>A pack of pirates has been waiting for a prize like your ship. "That cruiser's worth more than this whole sector. Take it!"</text>
+	<text>Pirates hail you. "Nice ship. Hand it over, and we'll let your crew have the escape pods."</text>
+</textList>
+<event name="XFTL_BIG_PIRATES">
+	<text load="XFTL_BIG_PIRATES"/>
+	<choice>
+		<text>Fight.</text>
+		<event>
+			<text>The pirates close in.</text>
+			<ship load="XFTL_PIRATE_PACK" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="xftl_ship_size" lvl="2" hidden="true">
+		<text>(Heavy cruiser) Power up every weapon you have, and wait.</text>
+		<event load="XFTL_BIG_PIRATES_STANDOFF"/>
+	</choice>
+</event>
+<eventList name="XFTL_BIG_PIRATES_STANDOFF">
+	<event>
+		<text>The pirates take one look at your weapons, and decide they'd rather be somewhere else.</text>
+	</event>
+	<event>
+		<text>The pirates hesitate, then pay you to let them go.</text>
+		<autoReward level="LOW" xftlScale="size">scrap_only</autoReward>
+	</event>
+	<event>
+		<text>The pirates are either very brave or very stupid. They attack!</text>
+		<ship load="XFTL_PIRATE_PACK" hostile="true"/>
+	</event>
+</eventList>
+
+<event name="XFTL_BIG_BOUNTY">
+	<text>A bounty hunter hails you. "The Rebels put a fortune on that cruiser's head. Nothing personal." Their ship isn't alone.</text>
+	<ship load="XFTL_BOUNTY_HUNTERS" hostile="true"/>
+</event>
+
+<event name="XFTL_BIG_MINEFIELD">
+	<text>The Rebels have mined this beacon with heavy mines, made to cripple capital ships. Your sensors pick them up just in time.</text>
+	<choice>
+		<text>Weave through the minefield.</text>
+		<event load="XFTL_BIG_MINEFIELD_OUTCOME"/>
+	</choice>
+	<choice req="drones" hidden="true">
+		<text>(Drones) Send drones ahead to clear a path.</text>
+		<event>
+			<text>Your drones set off the mines one by one, and you pass through unharmed. Some of the mines were worth salvaging.</text>
+			<autoReward level="LOW">stuff</autoReward>
+		</event>
+	</choice>
+	<choice req="cloaking" hidden="true">
+		<text>(Cloaking) Cloak, so the mines can't lock on.</text>
+		<event>
+			<text>The mines drift past you, blind to your ship.</text>
+		</event>
+	</choice>
+</event>
+<eventList name="XFTL_BIG_MINEFIELD_OUTCOME">
+	<event>
+		<text>You make it through with only a few scrapes.</text>
+		<damage amount="1"/>
+	</event>
+	<event>
+		<text>A mine detonates against your hull.</text>
+		<damage amount="3" xftlScale="size" system="random"/>
+	</event>
+	<event>
+		<text>Two mines detonate at once, starting fires.</text>
+		<damage amount="2" xftlScale="size" system="room" effect="fire"/>
+		<damage amount="2" xftlScale="size" system="random"/>
+	</event>
+</eventList>
+
+<event name="XFTL_BIG_RAM">
+	<text>A lone Rebel scout is blocking the beacon, calling for reinforcements. It's tiny next to your ship.</text>
+	<choice>
+		<text>Destroy it before the reinforcements arrive.</text>
+		<event>
+			<text>The scout fights back.</text>
+			<ship load="REBEL" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="xftl_ship_size" lvl="2" hidden="true">
+		<text>(Heavy cruiser) Ram it.</text>
+		<event>
+			<text>You ram the scout at full speed. It crumples against your armour, and you sweep up the wreckage.</text>
+			<damage amount="2"/>
+			<autoReward level="LOW">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave before the reinforcements arrive.</text>
+		<event>
+			<text>You leave, but the Rebel fleet now knows where you are.</text>
+			<modifyPursuit amount="1"/>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_BIG_INTERDICTOR">
+	<text>A Rebel interdictor is projecting a field around the beacon that drags on big ships. Your engines strain against it, and its escorts move in.</text>
+	<status type="limit" target="player" system="engines" amount="2"/>
+	<ship load="XFTL_REBEL_BATTLEGROUP" hostile="true"/>
+</event>
+
+<event name="XFTL_BIG_MANTIS">
+	<text>A Mantis war band has spotted your ship. To them, a ship that big means one thing: a lot of crew to hunt.</text>
+	<choice>
+		<text>Fight them off.</text>
+		<event>
+			<text>The Mantis ships close in to board you.</text>
+			<ship load="XFTL_MANTIS_PACK" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Try to outrun them.</text>
+		<event load="XFTL_BIG_MANTIS_OUTCOME"/>
+	</choice>
+</event>
+<eventList name="XFTL_BIG_MANTIS_OUTCOME">
+	<event>
+		<text>Your ship is too big to outrun them. Mantis boarders teleport aboard!</text>
+		<boarders min="2" max="3" class="mantis" xftlScale="size"/>
+	</event>
+	<event>
+		<text>You get away, but only just.</text>
+	</event>
+</eventList>
+
+<event name="XFTL_BIG_ROCK">
+	<text>A Rockman crusade fleet blocks the beacon. "A ship of that size can only be a weapon of the heretics! Destroy it!"</text>
+	<ship load="XFTL_ROCK_PACK" hostile="true"/>
+</event>
+
+
+<!--
+********************
+NEBULA
+********************
+-->
+
+<eventList name="XFTL_BIG_NEBULA">
+	<event load="XFTL_BIG_NEBULA_WAKE"/>
+	<event load="XFTL_BIG_NEBULA_AMBUSH"/>
+	<event load="XFTL_BIG_NEBULA_SLUG"/>
+	<event load="XFTL_BIG_NEBULA_HIDE"/>
+</eventList>
+
+<event name="XFTL_BIG_NEBULA_WAKE">
+	<text>Your ship is so big that it leaves a visible wake through the nebula's gas. Anyone following you will have no trouble.</text>
+	<environment type="nebula"/>
+	<choice>
+		<text>Burn extra fuel to disperse the wake.</text>
+		<event>
+			<text>You vent fuel behind you to scatter the gas. The Rebels won't find your trail.</text>
+			<item_modify xftlScale="size">
+				<item type="fuel" min="-1" max="-1"/>
+			</item_modify>
+			<modifyPursuit amount="-1"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Don't bother.</text>
+		<event>
+			<text>The Rebel fleet will be following your wake.</text>
+			<modifyPursuit amount="1"/>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_BIG_NEBULA_AMBUSH">
+	<text>Your sensors are useless in the nebula, but a cruiser is hard to hide. A Rebel battle group was waiting for you.</text>
+	<environment type="nebula"/>
+	<ship load="XFTL_REBEL_BATTLEGROUP" hostile="true"/>
+</event>
+
+<event name="XFTL_BIG_NEBULA_SLUG">
+	<text>A Slug merchant drifts out of the nebula. "Such a large ship needs such a large amount of fuel! I have a special price, just for you."</text>
+	<environment type="nebula"/>
+	<choice>
+		<text>Buy the fuel.</text>
+		<event load="XFTL_BIG_NEBULA_SLUG_OUTCOME"/>
+	</choice>
+	<choice req="slug" hidden="true">
+		<text>(Slug Crew) Have your Slug haggle with the merchant.</text>
+		<event>
+			<text>Your Slug and the merchant haggle telepathically for a long time. In the end, the merchant gives in.</text>
+			<item_modify xftlScale="size">
+				<item type="scrap" min="-10" max="-10"/>
+				<item type="fuel" min="4" max="4"/>
+			</item_modify>
+		</event>
+	</choice>
+	<choice>
+		<text>Decline.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_BIG_NEBULA_SLUG_OUTCOME">
+	<event>
+		<text>The fuel is real, if overpriced.</text>
+		<item_modify xftlScale="size">
+			<item type="scrap" min="-20" max="-20"/>
+			<item type="fuel" min="4" max="4"/>
+		</item_modify>
+	</event>
+	<event>
+		<text>The "fuel" turns out to be mostly water. The merchant is long gone.</text>
+		<item_modify xftlScale="size">
+			<item type="scrap" min="-20" max="-20"/>
+			<item type="fuel" min="1" max="1"/>
+		</item_modify>
+	</event>
+</eventList>
+
+<event name="XFTL_BIG_NEBULA_HIDE">
+	<text>The nebula here is thick enough to hide even your ship. Your crew could use the time to make repairs.</text>
+	<environment type="nebula"/>
+	<choice>
+		<text>Stay hidden and repair.</text>
+		<event>
+			<text>Your crew patch up the hull while the nebula hides you. The fleet gets a little closer, though.</text>
+			<damage amount="-3" xftlScale="size"/>
+			<modifyPursuit amount="1"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Keep moving.</text>
+		<event/>
+	</choice>
+</event>
+
+
+<!--
+********************
+ACT 2 SECTORS
+********************
+-->
+
+<event name="XFTL_BIG_REMNANT_FLAGSHIP">
+	<text>The colonies here haven't seen a capital ship in years. Their militia captains, Federation and Rebel alike, hail you as the flagship of their fleet. "Tell us what you need."</text>
+	<choice>
+		<text>Ask for crew.</text>
+		<event>
+			<text>The best of the militia join your crew.</text>
+			<crewMember amount="1" all_skills="1"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Ask for repairs.</text>
+		<event>
+			<text>The militia's engineers patch up your hull.</text>
+			<damage amount="-8" xftlScale="size"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Ask for weapons.</text>
+		<event>
+			<text>The militia hand over a weapon from their armoury.</text>
+			<weapon name="RANDOM"/>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_BIG_ANVIL_SISTER">
+	<text>One of the Anvil Yards' slipways holds an unfinished sister of your ship. The chief engineer offers to strip it for parts. "Better your ship gets them than CONCORD."</text>
+	<choice>
+		<text>Take its systems.</text>
+		<event>
+			<text>The engineers move the unfinished ship's equipment over to yours.</text>
+			<augment name="RANDOM"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Take its hull plating.</text>
+		<event>
+			<text>The engineers weld the sister ship's armour over your hull.</text>
+			<damage amount="-15" xftlScale="size"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Take its reactor.</text>
+		<event>
+			<text>The engineers install the sister ship's reactor alongside yours.</text>
+			<upgrade amount="2" system="reactor"/>
+		</event>
+	</choice>
+</event>

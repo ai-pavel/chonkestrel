@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Made by tools/ship_variants.py from the vanilla rock_fight.xml
+    (copyright (c) 2012 by Subset Games). The wide version of XFTL_HYBRID_BOMBER_ROCK_SLUG, 6 columns wider at column 2.
+-->
+<FTL>
+<img x="-51" y="-65" w="593" h="509"/>
+<offsets>
+	<cloak x="19" y="17"/>
+</offsets>
+<weaponMounts>
+	<mount x="119" y="90" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="473" y="90" rotate="false" mirror="false" slide="right" gib="2"/>
+	<mount x="46" y="236" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="546" y="236" rotate="false" mirror="false" slide="right" gib="2"/>
+	<mount x="173" y="91" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="226" y="91" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="278" y="91" rotate="false" mirror="true" slide="left" gib="1"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>13</x>
+		<y>23</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>296</x>
+		<y>0</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>12</x>
+		<y>254</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>296</x>
+		<y>254</y>
+	</gib4>
+</explosion>
+</FTL>

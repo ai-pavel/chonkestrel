@@ -1,0 +1,47 @@
+<!--
+    The Chonkestrel mod's changes to Advanced Edition's blueprints (the
+    systems it added are here, not in blueprints.xml).
+-->
+<!--
+    Hacking and mind control likewise go to six bars, and the backup battery
+    to four, rather than three and two, with each bar past vanilla's adding
+    less and less: hacking pulses of 12, 14 then 15 seconds (see
+    Hacking.durationFor), mind control of 32, 35 then 37 seconds
+    (MindControl.durationFor), and a battery giving 6 then 7 power
+    (BackupBattery.powerFor). The enemies' go as far too, as the cloak does.
+-->
+<mod:findName type="systemBlueprint" name="(hacking|mind)" regex="true" limit="-1">
+    <mod:findLike type="maxPower">
+        <mod:setValue>6</mod:setValue>
+    </mod:findLike>
+    <mod:findLike type="upgradeCost">
+        <mod-append:level>150</mod-append:level> <!-- level 4 -->
+        <mod-append:level>300</mod-append:level> <!-- level 5 -->
+        <mod-append:level>600</mod-append:level> <!-- level 6 -->
+    </mod:findLike>
+</mod:findName>
+<mod:findName type="systemBlueprint" name="battery">
+    <mod:findLike type="maxPower">
+        <mod:setValue>4</mod:setValue>
+    </mod:findLike>
+    <mod:findLike type="upgradeCost">
+        <mod-append:level>150</mod-append:level> <!-- level 3 -->
+        <mod-append:level>300</mod-append:level> <!-- level 4 -->
+    </mod:findLike>
+</mod:findName>
+
+<!--
+    The clonebay likewise goes to six bars, cloning in 6, 5 then 4.5
+    seconds, and healing 30, 34 then 37 each jump (Clonebay.CLONE_DURATIONS
+    and PASSIVE_HEALING).
+-->
+<mod:findName type="systemBlueprint" name="clonebay">
+    <mod:findLike type="maxPower">
+        <mod:setValue>6</mod:setValue>
+    </mod:findLike>
+    <mod:findLike type="upgradeCost">
+        <mod-append:level>150</mod-append:level> <!-- level 4 -->
+        <mod-append:level>300</mod-append:level> <!-- level 5 -->
+        <mod-append:level>600</mod-append:level> <!-- level 6 -->
+    </mod:findLike>
+</mod:findName>

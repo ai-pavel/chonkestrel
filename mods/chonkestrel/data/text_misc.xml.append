@@ -1,0 +1,10 @@
+<!--
+    The Silent Capital's base, in the last stand, is the Mainframe (see
+    doc/game/mainframe.md): its label and tooltip on the map.
+-->
+<mod:findName type="text" name="map_icon_base">
+	<mod:setValue>MAINFRAME</mod:setValue>
+</mod:findName>
+<mod:findName type="text" name="map_base_loc">
+	<mod:setValue>CONCORD's Mainframe: the core of the Chorus. Destroy it, and the war is over.</mod:setValue>
+</mod:findName>

@@ -1,0 +1,125 @@
+<!--
+    More events for the vanilla Rock sectors. See sector_data.xml.append.
+-->
+
+<eventList name="XFTL_MORE_ROCK">
+	<event load="XFTL_ROCK_MINE"/>
+	<event load="XFTL_ROCK_PREACHER"/>
+	<event load="XFTL_ROCK_LAVA_FORGE"/>
+	<event load="XFTL_ROCK_BLOCKADE"/>
+</eventList>
+
+<event name="XFTL_ROCK_MINE">
+	<text>A Rockman mining colony is digging into the asteroid at this beacon. Their foreman offers to sell you raw ore.</text>
+	<environment type="asteroid"/>
+	<choice>
+		<text>Buy some ore to sell later.</text>
+		<event load="XFTL_ROCK_MINE_OUTCOME"/>
+	</choice>
+	<choice>
+		<text>Ask if anyone wants to leave the mine.</text>
+		<event>
+			<text>One of the miners has had enough of digging, and joins your crew.</text>
+			<crewMember amount="1" class="rock"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Move on.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_ROCK_MINE_OUTCOME">
+	<event>
+		<text>The ore is rich. You'll get a good price for it.</text>
+		<item_modify>
+			<item type="scrap" min="10" max="25"/>
+		</item_modify>
+	</event>
+	<event>
+		<text>The ore turns out to be mostly worthless rock. The Rockmen think this is very funny.</text>
+		<item_modify>
+			<item type="scrap" min="-10" max="-10"/>
+		</item_modify>
+	</event>
+</eventList>
+
+<event name="XFTL_ROCK_PREACHER">
+	<text>A Rockman preacher is broadcasting the crusade's teachings to the sector. "Repent, and give to the crusade!"</text>
+	<choice>
+		<text>Make a donation.</text>
+		<event>
+			<text>The preacher blesses your ship. One of the faithful, moved by your generosity, joins your crew to "watch over your souls".</text>
+			<item_modify>
+				<item type="scrap" min="-15" max="-15"/>
+			</item_modify>
+			<crewMember amount="1" class="rock"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Jam the broadcast.</text>
+		<event>
+			<text>The preacher takes offence. The crusade sends a ship to teach you respect.</text>
+			<ship load="ROCK_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Ignore them.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_ROCK_LAVA_FORGE">
+	<text>A Rockman forge is built into the surface of a volcanic moon. Its smiths make armour plating as thick as a Rockman's skin.</text>
+	<choice>
+		<text>Pay them to reinforce your hull.</text>
+		<event>
+			<text>The smiths bolt slabs of armour onto your hull.</text>
+			<item_modify>
+				<item type="scrap" min="-25" max="-25"/>
+			</item_modify>
+			<damage amount="-8"/>
+		</event>
+	</choice>
+	<choice req="rock" hidden="true">
+		<text>(Rock Crew) Have your Rockman ask the smiths for a favour.</text>
+		<event>
+			<text>The smiths won't take scrap from one of their own. They reinforce your hull for free.</text>
+			<damage amount="-8"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Move on.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_ROCK_BLOCKADE">
+	<text>A Rockman crusade ship is blockading the beacon, and searching every ship for heretics.</text>
+	<choice>
+		<text>Submit to the search.</text>
+		<event load="XFTL_ROCK_BLOCKADE_OUTCOME"/>
+	</choice>
+	<choice>
+		<text>Fight your way through.</text>
+		<event>
+			<text>The crusaders attack.</text>
+			<ship load="ROCK_SHIP" hostile="true"/>
+		</event>
+	</choice>
+</event>
+<eventList name="XFTL_ROCK_BLOCKADE_OUTCOME">
+	<event>
+		<text>The crusaders find nothing heretical, and let you go.</text>
+	</event>
+	<event>
+		<text>The crusaders "confiscate" some of your supplies for the crusade, and let you go.</text>
+		<item_modify>
+			<item type="missiles" min="-2" max="-2"/>
+			<item type="drones" min="-1" max="-1"/>
+		</item_modify>
+	</event>
+	<event>
+		<text>The crusaders decide your crew are heretics. They attack!</text>
+		<ship load="ROCK_SHIP" hostile="true"/>
+	</event>
+</eventList>

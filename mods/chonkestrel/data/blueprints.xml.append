@@ -1,0 +1,462 @@
+<!--
+    The Chonkestrel: a much bigger take on the Kestrel (A), as a ship of its
+    own, so the vanilla Kestrel is still there. It has room to grow into:
+    eight weapon slots, three drone slots per drones system, eighteen crew,
+    sixteen main systems, eight cargo slots and six augments (maxCrew,
+    maxSystems, maxCargo and maxAugments are all XFTL extensions).
+
+    The weapon slots are split between two weapons systems: the one in
+    room 18 controls slots 1-4, and the one in room 19 controls slots 5-8.
+    It has two shields systems from the start, whose layers stack, and two
+    oxygen systems, which refill the air together. There's also room for a
+    second drones system, with its own three drone slots, second hacking
+    and mind control systems, a second backup battery, and a third sensors
+    system, to see into a third enemy ship.
+
+    It starts out much like two vanilla Kestrels side by side: each weapons
+    system has the Kestrel's weapons (an Artemis and a Burst Laser II, with
+    twice the Kestrel's missiles for the two Artemises), and there are six
+    crew, at the piloting, the shields, both weapons systems and both
+    engines. It also has a second shields system, a second engines system,
+    since as a bigger ship it needs both to dodge (each starts at one
+    power), and a second oxygen system, so its reactor is 15 rather than
+    the Kestrel's 8: enough for everything it starts with at once, weapons
+    and all. Everything else can be bought in stores.
+
+    When the XFTL_DEBUG environment variable is set, it instead starts with
+    every system installed and fully upgraded (except the second mind
+    control, which would make seventeen main systems: the engine installs
+    them in the order they're listed, up to maxSystems), a reactor of 80
+    (leaving room for the backup batteries) and lots
+    of resources (all done by the engine), plus the loadout in the xftlDebug
+    element below: a Burst Laser II in every slot, a Combat Drone I in
+    every drone slot, a full cargo hold and set of augments (including four Zoltan
+    shields), and a full crew of two of each race, each at a station.
+
+    The layout (see chonkestrel.txt and chonkestrel.xml) is four rows taller
+    than the Kestrel's, and symmetric top-to-bottom:
+    - Room 5 is a big 4x4 room in the middle of the ship, holding the
+      medbay (or clonebay), with no obstructed cell so it fits all sixteen
+      crew. Above and below it are 4x2 rooms (7 with the cloaking, and 25
+      with room for an eight person teleporter), and then 4x1 rooms with
+      airlocks (6 and 8).
+    - The second shields system (16), the two weapons systems (18 and 19,
+      either side of the medbay) and the shields (4, behind the piloting
+      room) are in a line along the middle of the ship. Room 17, between
+      the second shields and the first weapons system, is left empty.
+    - The two mind control systems (9 and 21) are 2x1 rooms in a column,
+      above and below the first weapons system. The third sensors system
+      (26) is above the top one, and the doors (27) below the bottom one.
+    - The two sensors systems (2 and 23) are mirror images of each other,
+      as are the two hacking systems (3 and 22) next to them, the two
+      backup batteries (10 and 11), the drones (1 and 24), the two engines
+      systems at the rear (13 and 20), and the two oxygen systems at the
+      corners of the rear (12 and 14).
+    - Room 0 (piloting) runs down the middle four cells of the nose, with
+      the pilot in the middle. The nose's top and bottom corners are empty.
+    - Room 15 runs the full height of the rear, with an airlock in every cell.
+-->
+<shipBlueprint name="PLAYER_SHIP_CHONKESTREL" layout="chonkestrel" img="chonkestrel">
+    <class>Chonkestrel Cruiser</class>
+    <name>The Chonkestrel</name>
+    <desc>A much bigger take on the Kestrel, with room for sixteen crew, eight weapons and two of nearly every system. It's twice the size of the ships it meets, so they come in pairs.</desc>
+
+    <!-- Picked by default in the hangar (an XFTL extension) -->
+    <xftlDefaultShip/>
+
+    <weaponSlots>8</weaponSlots>
+    <!-- Each drones system gets this many slots -->
+    <droneSlots>3</droneSlots>
+
+    <systemList>
+        <pilot power="1" room="0" start="true" img="room_pilot_tall">
+            <slot>
+                <direction>right</direction>
+                <number>1</number>
+            </slot>
+        </pilot>
+        <doors power="1" room="27" start="true" img="room_doors">
+            <slot>
+                <direction>up</direction>
+                <number>1</number>
+            </slot>
+        </doors>
+        <sensors power="1" room="23" start="true" img="room_sensors">
+            <slot>
+                <direction>down</direction>
+                <number>1</number>
+            </slot>
+        </sensors>
+        <!--
+            A second sensors system, mirroring the first. As the ship fights two
+            ships at once, each sensors system sees into one of them, left to
+            right, as their windows are (see Ship.sensorsFor).
+        -->
+        <sensors power="1" room="2" start="true" img="room_sensors"/>
+        <!--
+            A third sensors system, for the third enemy ship. It isn't there
+            at the start, but can be bought in stores.
+        -->
+        <sensors power="1" room="26" start="false" img="room_sensors">
+            <slot>
+                <direction>down</direction>
+                <number>1</number>
+            </slot>
+        </sensors>
+        <medbay power="1" room="5" start="true" img="room_medbay_big" xftlStartOff="true">
+            <!-- No obstructed cell -->
+            <slot>
+                <number>-2</number>
+            </slot>
+        </medbay>
+        <clonebay power="1" room="5" start="false">
+            <slot>
+                <number>-2</number>
+            </slot>
+        </clonebay>
+        <oxygen power="1" room="12" start="true" img="room_oxygen"/>
+        <!--
+            A second oxygen system, mirroring the first. The ship's rooms
+            refill at the average of the two systems' rates, so it refills
+            as fast as the vanilla Kestrel with both on, and half as fast
+            with one broken (which only just keeps the air in at level 1).
+        -->
+        <oxygen power="1" room="14" start="true" img="room_oxygen_5"/>
+        <shields power="2" room="4" start="true" img="room_shields"/>
+        <engines power="2" room="13" start="true" img="room_engines"/>
+        <!--
+            A second engines system, mirroring the first. The ship's evasion
+            comes from the weaker of the two, so they both need upgrading.
+        -->
+        <engines power="2" room="20" start="true" img="room_engines"/>
+        <weapons power="3" room="18" start="true" img="room_weapons"/>
+        <drones power="2" room="1" start="false"/>
+        <teleporter power="1" room="25" start="false"/>
+        <!--
+            The cloaking room is 4x2, so its image has the vanilla corner
+            bracket in all four corners, cut down to fit, rather than one
+            bracket in the middle of the room.
+        -->
+        <cloaking power="1" room="7" start="false" img="room_cloaking_wide"/>
+        <battery power="1" room="10" start="false" img="room_battery"/>
+        <mind power="1" room="9" start="false" img="room_mind_5"/>
+        <hacking power="1" room="3" start="false" img="room_hacking">
+            <slot>
+                <direction>down</direction>
+                <number>0</number>
+            </slot>
+        </hacking>
+        <!--
+            Listed after the first weapons system, so it controls slots 5-8.
+            It's installed from the start, so the weapon slots are always
+            split into two groups of four in the UI.
+        -->
+        <weapons power="3" room="19" start="true" img="room_weapons"/>
+        <!--
+            A second shields system, whose layers stack with the first,
+            installed from the start
+        -->
+        <shields power="2" room="16" start="true" img="room_shields"/>
+        <!-- A second drones system, mirroring the first, with its own three drone slots -->
+        <drones power="2" room="24" start="false"/>
+        <!--
+            Second hacking and mind control systems. A ship's hacking or mind
+            control systems can't target the same room at once.
+        -->
+        <hacking power="1" room="22" start="false" img="room_hacking">
+            <slot>
+                <direction>down</direction>
+                <number>0</number>
+            </slot>
+        </hacking>
+        <mind power="1" room="21" start="false" img="room_mind_3"/>
+        <!-- A second backup battery, whose power adds to the first -->
+        <battery power="1" room="11" start="false" img="room_battery"/>
+    </systemList>
+
+    <maxCrew>18</maxCrew>
+    <maxSystems>16</maxSystems>
+
+    <!--
+        The vanilla Kestrel's weapons in each weapons system, mirrored: the
+        second pair starts at the second system's first slot (the slot
+        attribute is an XFTL extension). Twice the Kestrel's missiles, for
+        the two Artemises.
+    -->
+    <!-- The Burst Lasers first in each weapons system, then the Artemis -->
+    <weaponList count="4" missiles="16">
+        <weapon name="LASER_BURST_3"/>
+        <weapon name="MISSILES_2_PLAYER"/>
+        <weapon name="LASER_BURST_3" slot="5"/>
+        <weapon name="MISSILES_2_PLAYER" slot="6"/>
+    </weaponList>
+
+    <droneList count="1" drones="2">
+    </droneList>
+    <health amount="30"/>
+    <!--
+        Eight more than the vanilla Kestrel's reactor, for its second
+        shields, weapons, engines and oxygen systems, and its engines
+        starting at level 2: one short of powering all its systems at once.
+        It starts with the medbay off (xftlStartOff), to save that power.
+    -->
+    <maxPower amount="16"/>
+    <!--
+        Six crew, rather than the vanilla Kestrel's three, at the piloting,
+        the shields, both weapons systems and both engines
+    -->
+    <crewCount amount="1" class="human" room="0"/>
+    <crewCount amount="1" class="human" room="4"/>
+    <crewCount amount="1" class="human" room="18"/>
+    <crewCount amount="1" class="human" room="19"/>
+    <crewCount amount="1" class="human" room="13"/>
+    <crewCount amount="1" class="human" room="20"/>
+    <maxCargo>8</maxCargo>
+    <maxAugments>6</maxAugments>
+
+    <!--
+        It's twice the size of the vanilla ships (an XFTL extension), so it
+        fights two copies of each of them at once, to make up for being so
+        much stronger. The rebel flagship is the same size, see below.
+    -->
+    <shipSize>2</shipSize>
+
+    <!--
+        It fights up to three vanilla ships at once (an XFTL extension; it'd
+        be two by default, from its size). Ships its own size come alone.
+        It starts out fighting one, and there are more and more of them until
+        it's fighting three by the end of the first act (also an XFTL
+        extension), so the early game isn't too hard.
+    -->
+    <opponentShips>3</opponentShips>
+    <opponentShipsAtStart>1</opponentShipsAtStart>
+
+    <!-- The starting loadout when XFTL_DEBUG is set (an XFTL extension) -->
+    <xftlDebug>
+        <!-- Triple Burst Laser IIs in the first weapons system (see
+             doc/game/weapon-sizes.md), and in the second, a triple Glaive Beam
+             and a triple Ion Bomb, with its last two slots empty -->
+        <weaponList count="8" missiles="8">
+            <weapon name="XFTL_X3_LASER_BURST_3"/>
+            <weapon name="XFTL_X3_LASER_BURST_3"/>
+            <weapon name="XFTL_X3_LASER_BURST_3"/>
+            <weapon name="XFTL_X3_LASER_BURST_3"/>
+            <weapon name="XFTL_X3_BEAM_3"/>
+            <weapon name="XFTL_X3_BOMB_ION"/>
+        </weaponList>
+
+        <droneList count="6" drones="8">
+            <drone name="COMBAT_1"/>
+            <drone name="COMBAT_1"/>
+            <drone name="COMBAT_1"/>
+            <drone name="COMBAT_1"/>
+            <drone name="COMBAT_1"/>
+            <drone name="COMBAT_1"/>
+        </droneList>
+
+        <!-- Fill the augments, with the Zoltan shields stacking up. There's
+             no need for long-range scanners, as debug mode scans every beacon. -->
+        <aug name="WEAPON_PREIGNITE"/>
+        <aug name="ENERGY_SHIELD"/>
+        <aug name="ENERGY_SHIELD"/>
+        <aug name="ENERGY_SHIELD"/>
+        <aug name="ENERGY_SHIELD"/>
+        <aug name="ENERGY_SHIELD"/>
+
+        <!-- Fill the cargo hold with goodies (the cargo element is an XFTL
+             extension), including combined weapons (see doc/game/weapon-sizes.md) -->
+        <cargo name="BEAM_3"/>
+        <cargo name="XFTL_X2_BEAM_LONG"/>
+        <cargo name="MISSILES_3"/>
+        <cargo name="LASER_CHAINGUN"/>
+        <cargo name="XFTL_X3_LASER_BURST_1"/>
+        <cargo name="CRYSTAL_HEAVY_1"/>
+        <cargo name="DEFENSE_2"/>
+        <cargo name="COMBAT_BEAM_2"/>
+
+        <!-- Crew with a room man its system, if there's one -->
+        <crewCount amount="1" class="slug" room="0"/>
+        <crewCount amount="1" class="slug" room="4"/>
+        <crewCount amount="1" class="engi" room="18"/>
+        <crewCount amount="1" class="engi" room="19"/>
+        <crewCount amount="1" class="energy" room="13"/>
+        <crewCount amount="1" class="energy" room="20"/>
+        <crewCount amount="1" class="anaerobic" room="2"/>
+        <crewCount amount="1" class="anaerobic" room="23"/>
+        <crewCount amount="1" class="human" room="26"/>
+        <crewCount amount="1" class="human" room="27"/>
+        <!-- Everyone else on the teleporter, filling all eight places -->
+        <crewCount amount="2" class="mantis" room="25"/>
+        <crewCount amount="2" class="rock" room="25"/>
+        <crewCount amount="4" class="crystal" room="25"/>
+    </xftlDebug>
+</shipBlueprint>
+
+<!--
+    Let ships have several Zoltan shields, whose super-shields add up
+    (which XFTL supports, but vanilla doesn't allow).
+-->
+<mod:findName type="augBlueprint" name="ENERGY_SHIELD">
+    <mod:findLike type="stackable">
+        <mod:setValue>true</mod:setValue>
+    </mod:findLike>
+</mod:findName>
+
+<!--
+    The weapons system (Weapon Control) costs 100 rather than vanilla's 20:
+    vanilla barely ever sells it, as every ship has one, but a second one
+    on a big ship is four more weapon slots, which is worth much more.
+-->
+<mod:findName type="systemBlueprint" name="weapons">
+    <mod:findLike type="cost">
+        <mod:setValue>100</mod:setValue>
+    </mod:findLike>
+</mod:findName>
+
+<!--
+    The stores show the systems the ship already has (see
+    StoreData.generateSystems), but piloting, the oxygen (which vanilla
+    gives away for 0 scrap) and the doors are never sold, as the Chonkestrel
+    has all of them it has room for from the start, and the engines cost 60
+    rather than vanilla's 1: vanilla never sells them, as every ship has
+    them, but a big ship can have a second engines room.
+-->
+<mod:findName type="systemBlueprint" name="(pilot|oxygen|doors)" regex="true" limit="-1">
+    <mod:findLike type="rarity">
+        <mod:setValue>0</mod:setValue>
+    </mod:findLike>
+</mod:findName>
+
+<!--
+    The race augments, and the Titanium System Casing, are never sold in
+    vanilla (their rarity is 0), only given by events. Here they can turn up
+    anywhere, as the rarest things (rarity 5), and are much commoner in
+    their race's sectors (see sector_data.xml.append, and
+    tools/hybrid_sectors.py for the hybrid sectors). The Damaged Stasis Pod
+    stays out, as it's a quest's.
+-->
+<mod:findName type="augBlueprint" name="(CREW_STIMS|CRYSTAL_SHARDS|DRONE_SPEED|ENERGY_SHIELD|NANO_MEDBAY|ROCK_ARMOR|SLUG_GEL|SYSTEM_CASING)" regex="true" limit="-1">
+    <mod:findLike type="rarity">
+        <mod:setValue>5</mod:setValue>
+    </mod:findLike>
+</mod:findName>
+<mod:findName type="systemBlueprint" name="engines">
+    <mod:findLike type="cost">
+        <mod:setValue>60</mod:setValue>
+    </mod:findLike>
+</mod:findName>
+
+<!--
+    The cloaking system can be upgraded to six bars, rather than three, so
+    a big ship has one bigger cloak rather than several to take in turns.
+    Past three, each bar costs far more and adds less and less to the cloak
+    (17, 19 then 20 seconds)
+    (see Cloaking.durationFor). The enemies' goes as far, further in
+    (ShipGenerator.pickSystemPowerLimit), unless their ship holds it to
+    less than three.
+-->
+<mod:findName type="systemBlueprint" name="cloaking">
+    <mod:findLike type="maxPower">
+        <mod:setValue>6</mod:setValue>
+    </mod:findLike>
+    <mod:findLike type="upgradeCost">
+        <mod-append:level>150</mod-append:level> <!-- level 4 -->
+        <mod-append:level>300</mod-append:level> <!-- level 5 -->
+        <mod-append:level>600</mod-append:level> <!-- level 6 -->
+    </mod:findLike>
+</mod:findName>
+
+<!--
+    The medbay, oxygen and teleporter likewise go to six bars, with each bar
+    past vanilla's adding less and less: healing 3.75, 4.25 then 4.5 times
+    as fast (see Medbay.speedForLevel), the oxygen refilling 7.5, 8.5 then
+    9 times (Oxygen.refillMultiplier), and the teleporter recharging in 8,
+    7 then 6 seconds (Teleporter.cooldownTime). The clonebay's in
+    dlcBlueprints.xml.append. The enemies' go as far too.
+-->
+<mod:findName type="systemBlueprint" name="(medbay|oxygen|teleporter)" regex="true" limit="-1">
+    <mod:findLike type="maxPower">
+        <mod:setValue>6</mod:setValue>
+    </mod:findLike>
+    <mod:findLike type="upgradeCost">
+        <mod-append:level>150</mod-append:level> <!-- level 4 -->
+        <mod-append:level>300</mod-append:level> <!-- level 5 -->
+        <mod-append:level>600</mod-append:level> <!-- level 6 -->
+    </mod:findLike>
+</mod:findName>
+
+<!--
+    The rebel flagship (BOSS_1-3) and the one under construction in the
+    rebel quest (BOSS_SPECIAL) are as big as the Chonkestrel, so it fights
+    them one at a time. The flagship's per-difficulty versions are in bosses.xml.
+-->
+<mod:findName type="shipBlueprint" name="BOSS_.*" regex="true" limit="-1">
+    <mod-append:shipSize>2</mod-append:shipSize>
+</mod:findName>
+
+<!--
+    The ships the hybrid sectors' events fight (see events.xml.append): every
+    ship hybrids are made from, so in a hybrid sector most of them are the
+    sector's pair's hybrids, and the rest other hybrids or (fewer and fewer
+    through act 2) the ships themselves (see ShipGenerator.hybridFor).
+-->
+<blueprintList name="XFTL_HYBRID_SECTOR_SHIPS">
+	<name>REBEL_SKINNY</name>
+	<name>REBEL_FAT</name>
+	<name>MANTIS_FIGHTER</name>
+	<name>MANTIS_BOMBER</name>
+	<name>ROCK_SCOUT</name>
+	<name>ROCK_FIGHT</name>
+	<name>JELLY_BUTTON</name>
+	<name>JELLY_CROISSANT</name>
+	<name>ANAEROBIC_SCOUT</name>
+	<name>ANAEROBIC_BOMBER</name>
+	<name>CRYSTAL_SCOUT</name>
+	<name>CRYSTAL_BOMBER</name>
+	<name>CIRCLE_SCOUT</name>
+	<name>CIRCLE_BOMBER</name>
+	<name>ZOLTAN_FIGHTER</name>
+	<name>ZOLTAN_BOMBER</name>
+</blueprintList>
+
+<!--
+    The bosses' own augments (see doc/game/bosses.md): each boss gives its
+    own when it's beaten, and they're found nowhere else (rarity 0, so
+    they're never sold).
+-->
+<augBlueprint name="XFTL_HIVE_CORE">
+	<title>Devourer Hive-Core</title>
+	<desc>The Lanius hive-ship's still-living core. One asteroid in four that hits the ship is eaten, repairing a point of hull instead of doing damage.</desc>
+	<cost>90</cost>
+	<bp>8</bp>
+	<rarity>0</rarity>
+	<stackable>false</stackable>
+	<value>0.25</value>
+</augBlueprint>
+<augBlueprint name="XFTL_COMMAND_CODES">
+	<title>Vigilance Command Codes</title>
+	<desc>The blockade's command codes. Rebel automated ships in the second act hesitate when they see them: their weapons charge 20% slower.</desc>
+	<cost>90</cost>
+	<bp>8</bp>
+	<rarity>0</rarity>
+	<stackable>false</stackable>
+	<value>0.2</value>
+</augBlueprint>
+<augBlueprint name="XFTL_RELAY_SHARD">
+	<title>Chorus Relay Shard</title>
+	<desc>A shard of the Stormbreaker's relay dish, still humming. The crew hear the Chorus coming: they can't be mind controlled for the first 10 seconds of a fight.</desc>
+	<cost>90</cost>
+	<bp>8</bp>
+	<rarity>0</rarity>
+	<stackable>false</stackable>
+	<value>10</value>
+</augBlueprint>
+<augBlueprint name="XFTL_OSSUARY_SCHEMATICS">
+	<title>Ossuary Schematics</title>
+	<desc>The salvage ark's reclamation schematics. A destroyed enemy ship's drones are salvaged as drone parts: one for each drone it had.</desc>
+	<cost>90</cost>
+	<bp>8</bp>
+	<rarity>0</rarity>
+	<stackable>false</stackable>
+	<value>1</value>
+</augBlueprint>

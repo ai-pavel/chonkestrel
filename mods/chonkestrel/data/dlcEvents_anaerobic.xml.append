@@ -1,0 +1,116 @@
+<!--
+    More events for the vanilla Lanius sector. See sector_data.xml.append.
+-->
+
+<eventList name="XFTL_MORE_LANIUS">
+	<event load="XFTL_LANIUS_METAL_EATERS"/>
+	<event load="XFTL_LANIUS_TRADE"/>
+	<event load="XFTL_LANIUS_SLEEPER"/>
+	<event load="XFTL_LANIUS_HULK"/>
+</eventList>
+
+<event name="XFTL_LANIUS_METAL_EATERS">
+	<text>A Lanius ship pulls alongside, and you hear something scraping at your hull. They're eating it.</text>
+	<choice>
+		<text>Drive them off.</text>
+		<event>
+			<text>The Lanius ship backs off, and turns its weapons on you.</text>
+			<ship load="LANIUS_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Offer them some scrap instead.</text>
+		<event>
+			<text>The Lanius happily take the scrap, and leave your hull alone. One of them stays, curious about your ship.</text>
+			<item_modify>
+				<item type="scrap" min="-15" max="-15"/>
+			</item_modify>
+			<crewMember amount="1" class="anaerobic"/>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_LANIUS_TRADE">
+	<text>A Lanius trading vessel signals that it wants to trade. Its crew make strange clicking noises that your computer translates as "metal for things".</text>
+	<choice>
+		<text>Trade missiles for drone parts.</text>
+		<event>
+			<text>The Lanius take your missiles, and pay you in drone parts.</text>
+			<item_modify>
+				<item type="missiles" min="-3" max="-3"/>
+				<item type="drones" min="3" max="4"/>
+			</item_modify>
+		</event>
+	</choice>
+	<choice>
+		<text>Trade scrap for fuel.</text>
+		<event>
+			<text>The Lanius take your scrap, and pay you in fuel.</text>
+			<item_modify>
+				<item type="scrap" min="-20" max="-20"/>
+				<item type="fuel" min="4" max="5"/>
+			</item_modify>
+		</event>
+	</choice>
+	<choice>
+		<text>Decline.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_LANIUS_SLEEPER">
+	<text>A Lanius in suspended animation is drifting at the beacon, sealed in a metal pod. It might be valuable, or dangerous.</text>
+	<choice>
+		<text>Bring the pod aboard and open it.</text>
+		<event load="XFTL_LANIUS_SLEEPER_OUTCOME"/>
+	</choice>
+	<choice>
+		<text>Strip the pod for metal.</text>
+		<event>
+			<text>The pod is made of rare alloys.</text>
+			<autoReward level="LOW">scrap_only</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave it.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_LANIUS_SLEEPER_OUTCOME">
+	<event>
+		<text>The Lanius wakes up, confused but grateful. It offers to work for you.</text>
+		<crewMember amount="1" class="anaerobic"/>
+	</event>
+	<event>
+		<text>The Lanius wakes up hungry, and starts draining the air from your ship as it attacks your crew!</text>
+		<boarders min="1" max="1" class="anaerobic"/>
+	</event>
+</eventList>
+
+<event name="XFTL_LANIUS_HULK">
+	<text>The hollowed-out hulk of a Federation cruiser drifts here. The Lanius have eaten most of it, and some are still inside.</text>
+	<choice>
+		<text>Search what's left.</text>
+		<event load="XFTL_LANIUS_HULK_OUTCOME"/>
+	</choice>
+	<choice>
+		<text>Leave the Lanius to their meal.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_LANIUS_HULK_OUTCOME">
+	<event>
+		<text>You find the cruiser's armoury, which the Lanius haven't reached yet.</text>
+		<weapon name="RANDOM"/>
+	</event>
+	<event>
+		<text>The Lanius inside don't want to share their meal. Their ship attacks.</text>
+		<ship load="LANIUS_SHIP" hostile="true"/>
+	</event>
+	<event>
+		<text>There's nothing left but some fuel cells the Lanius couldn't digest.</text>
+		<item_modify>
+			<item type="fuel" min="2" max="3"/>
+		</item_modify>
+	</event>
+</eventList>

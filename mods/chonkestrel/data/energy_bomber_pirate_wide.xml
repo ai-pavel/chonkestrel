@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Made by tools/ship_variants.py from the vanilla energy_bomber_pirate.xml
+    (copyright (c) 2012 by Subset Games). 7 columns wider at column 2.
+-->
+<FTL>
+<img x="-35" y="-86" w="458" h="453"/>
+<offsets>
+	<cloak x="20" y="18"/>
+</offsets>
+<weaponMounts>
+	<mount x="33" y="120" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="422" y="180" rotate="false" mirror="false" slide="right" gib="2"/>
+	<mount x="76" y="45" rotate="false" mirror="true" slide="up" gib="1"/>
+	<mount x="390" y="56" rotate="false" mirror="false" slide="right" gib="2"/>
+	<mount x="166" y="34" rotate="false" mirror="true" slide="up" gib="1"/>
+	<mount x="227" y="34" rotate="false" mirror="true" slide="up" gib="1"/>
+	<mount x="288" y="34" rotate="false" mirror="false" slide="up" gib="2"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>4</x>
+		<y>2</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>229</x>
+		<y>0</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>226</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>229</x>
+		<y>226</y>
+	</gib4>
+</explosion>
+</FTL>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Made by tools/ship_variants.py from the vanilla crystal_bomber.xml
+    (copyright (c) 2012 by Subset Games). The front of crystal_bomber.xml and the back of rebel_squat.xml.
+-->
+<FTL>
+<img x="-80" y="-97" w="362" h="375"/>
+<offsets>
+	<cloak x="18" y="17"/>
+</offsets>
+<weaponMounts>
+	<mount x="105" y="130" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="255" y="70" rotate="false" mirror="false" slide="right" gib="2"/>
+	<mount x="172" y="80" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="307" y="160" rotate="false" mirror="false" slide="right" gib="2"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>51</x>
+		<y>3</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>181</x>
+		<y>0</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>187</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>181</x>
+		<y>187</y>
+	</gib4>
+</explosion>
+</FTL>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Made by tools/ship_variants.py from the vanilla circle_bomber.xml
+    (copyright (c) 2012 by Subset Games). The wide version of XFTL_HYBRID_BOMBER_ENGI_REBEL, 7 columns wider at column 1.
+-->
+<FTL>
+<img x="-80" y="-34" w="607" h="277"/>
+<offsets>
+	<cloak x="20" y="20"/>
+</offsets>
+<weaponMounts>
+	<mount x="497" y="57" rotate="false" mirror="false" slide="up" gib="2"/>
+	<mount x="96" y="38" rotate="false" mirror="true" slide="up" gib="1"/>
+	<mount x="64" y="90" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="556" y="90" rotate="false" mirror="false" slide="right" gib="2"/>
+	<mount x="176" y="36" rotate="false" mirror="true" slide="up" gib="1"/>
+	<mount x="237" y="36" rotate="false" mirror="true" slide="up" gib="1"/>
+	<mount x="298" y="36" rotate="false" mirror="true" slide="up" gib="1"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>5</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>303</x>
+		<y>0</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>138</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>303</x>
+		<y>138</y>
+	</gib4>
+</explosion>
+</FTL>

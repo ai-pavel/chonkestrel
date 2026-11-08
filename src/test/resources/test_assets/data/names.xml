@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<FTL>
+    <nameList race="test_crew">
+        <name>TestName</name>
+    </nameList>
+    <nameList race="human" sex="male">
+        <name>Test Man</name>
+    </nameList>
+    <nameList race="human" sex="female">
+        <name>Test Woman</name>
+    </nameList>
+</FTL>

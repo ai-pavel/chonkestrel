@@ -1,0 +1,174 @@
+<!--
+    More events for the vanilla civilian sectors, so a sixteen-sector game
+    doesn't keep repeating the same ones. See sector_data.xml.append.
+-->
+
+<eventList name="XFTL_MORE_CIVILIAN">
+	<event load="XFTL_CIV_FERRY"/>
+	<event load="XFTL_CIV_RACE"/>
+	<event load="XFTL_CIV_MEDICAL"/>
+	<event load="XFTL_CIV_ARCHIVIST"/>
+	<event load="XFTL_CIV_DESERTER"/>
+</eventList>
+
+<textList name="XFTL_CIV_FERRY">
+	<text>A passenger ferry is stuck at the beacon with a failed jump drive. The passengers are crowding the windows to look at your ship.</text>
+	<text>A colony ferry hails you. Its jump drive is dead, and it's been drifting here for two days.</text>
+</textList>
+<event name="XFTL_CIV_FERRY">
+	<text load="XFTL_CIV_FERRY"/>
+	<choice>
+		<text>Send your crew over to fix the drive.</text>
+		<event load="XFTL_CIV_FERRY_FIX"/>
+	</choice>
+	<choice req="engi" hidden="true">
+		<text>(Engi Crew) Have your Engi rebuild the drive.</text>
+		<event>
+			<text>Your Engi has the drive running better than new within the hour. The captain insists on paying you.</text>
+			<autoReward level="MED">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave them.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_CIV_FERRY_FIX">
+	<event>
+		<text>It takes a while, but the drive spools up. The captain hands over what scrap the passengers could collect.</text>
+		<autoReward level="LOW">scrap_only</autoReward>
+	</event>
+	<event>
+		<text>The drive is beyond repair, but one of the passengers, a former Federation engineer, asks to come with you instead.</text>
+		<crewMember amount="1" class="human"/>
+	</event>
+	<event>
+		<text>The drive explodes as your crew work on it. Nobody's killed, but your ship is damaged by the blast.</text>
+		<damage amount="2"/>
+	</event>
+</eventList>
+
+<event name="XFTL_CIV_RACE">
+	<text>A group of civilian pilots are holding an illegal race through the beacon's debris field. "Fancy a go? Entry is ten scrap, winner takes the pot."</text>
+	<choice>
+		<text>Enter the race.</text>
+		<event load="XFTL_CIV_RACE_OUTCOME"/>
+	</choice>
+	<choice req="engines" lvl="4" hidden="true">
+		<text>(Advanced Engines) Enter the race, and leave them in your wake.</text>
+		<event>
+			<text>The other pilots never stood a chance. You collect the pot.</text>
+			<item_modify>
+				<item type="scrap" min="25" max="35"/>
+			</item_modify>
+		</event>
+	</choice>
+	<choice>
+		<text>Decline.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_CIV_RACE_OUTCOME">
+	<event>
+		<text>You win by a hair, and collect the pot.</text>
+		<item_modify>
+			<item type="scrap" min="15" max="25"/>
+		</item_modify>
+	</event>
+	<event>
+		<text>You come in last, and lose your entry fee.</text>
+		<item_modify>
+			<item type="scrap" min="-10" max="-10"/>
+		</item_modify>
+	</event>
+	<event>
+		<text>You clip a piece of debris on the final turn and lose the race, along with a chunk of your hull.</text>
+		<item_modify>
+			<item type="scrap" min="-10" max="-10"/>
+		</item_modify>
+		<damage amount="2"/>
+	</event>
+</eventList>
+
+<event name="XFTL_CIV_MEDICAL">
+	<text>A medical frigate is treating the wounded from a Rebel raid. Its doctors are exhausted, and short on hands.</text>
+	<choice>
+		<text>Lend them some of your crew for a while.</text>
+		<event>
+			<text>Your crew help out until the worst cases are stable. The doctors give you some of their supplies in thanks.</text>
+			<autoReward level="LOW">stuff</autoReward>
+		</event>
+	</choice>
+	<choice req="medbay" lvl="2" hidden="true">
+		<text>(Upgraded Medbay) Take some of the wounded into your medbay.</text>
+		<event>
+			<text>Your medbay saves several lives. One of the patients, a pilot, asks to join your crew once they're back on their feet.</text>
+			<crewMember amount="1" class="human" pilot="1"/>
+		</event>
+	</choice>
+	<choice>
+		<text>You can't afford the time.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_CIV_ARCHIVIST">
+	<text>An old archivist is broadcasting from a station full of records from before the war. "I've heard whispers of something called Project Chonkestrel. Bring me anything you know, and I'll trade you for it."</text>
+	<choice>
+		<text>Share what's in your data.</text>
+		<event>
+			<text>The archivist is delighted, and gives you a star chart of the sector in return.</text>
+			<reveal_map/>
+		</event>
+	</choice>
+	<choice>
+		<text>Buy one of the archivist's old Federation weapons.</text>
+		<event>
+			<text>The archivist sells you an antique, which still works.</text>
+			<item_modify>
+				<item type="scrap" min="-30" max="-30"/>
+			</item_modify>
+			<weapon name="RANDOM"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_CIV_DESERTER">
+	<text>A Rebel deserter has been hiding on a civilian station. Station security has found them, and the Rebels are offering a reward.</text>
+	<choice>
+		<text>Smuggle the deserter off the station.</text>
+		<event load="XFTL_CIV_DESERTER_OUTCOME"/>
+	</choice>
+	<choice>
+		<text>Stay out of it.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_CIV_DESERTER_OUTCOME">
+	<event>
+		<text>You get the deserter aboard without anyone noticing. They're grateful, and they can fight.</text>
+		<crewMember amount="1" class="human" combat="1"/>
+	</event>
+	<event>
+		<text>Station security notices, and calls the Rebels. A Rebel ship arrives as you leave.</text>
+		<ship load="REBEL" hostile="true"/>
+	</event>
+</eventList>
+
+<!--
+    The fuel seller's fuel (and its price) is for the player's ship's size
+    (xftlScale), as for the refuelling station (see events.xml.append).
+-->
+<mod:findName type="event" name="FUEL_SELLER_DISTRESS">
+	<mod:findLike type="choice" limit="-1">
+		<mod:findLike type="event">
+			<mod:findLike type="item_modify">
+				<mod:setAttributes xftlScale="size"/>
+			</mod:findLike>
+		</mod:findLike>
+	</mod:findLike>
+</mod:findName>

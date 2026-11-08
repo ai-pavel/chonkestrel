@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Scottish crew names, picked with XFTL_NAMES=scottish. See doc/game/names.md.
+    These replace the game's names, and are in the same format as names.xml.
+-->
+<FTL>
+    <nameList race="human" sex="male">
+        <name>Alasdair</name>
+        <name>Angus</name>
+        <name>Archie</name>
+        <name>Arran</name>
+        <name>Blair</name>
+        <name>Brodie</name>
+        <name>Bruce</name>
+        <name>Callum</name>
+        <name>Cameron</name>
+        <name>Craig</name>
+        <name>Dougal</name>
+        <name>Douglas</name>
+        <name>Duncan</name>
+        <name>Ewan</name>
+        <name>Euan</name>
+        <name>Fergus</name>
+        <name>Finlay</name>
+        <name>Fraser</name>
+        <name>Gavin</name>
+        <name>Gordon</name>
+        <name>Graeme</name>
+        <name>Grant</name>
+        <name>Gregor</name>
+        <name>Hamish</name>
+        <name>Hector</name>
+        <name>Iain</name>
+        <name>Innes</name>
+        <name>Jock</name>
+        <name>Keir</name>
+        <name>Kenneth</name>
+        <name>Lachlan</name>
+        <name>Lennox</name>
+        <name>Lewis</name>
+        <name>Malcolm</name>
+        <name>Murdo</name>
+        <name>Neil</name>
+        <name>Norrie</name>
+        <name>Ross</name>
+        <name>Ruaridh</name>
+        <name>Sandy</name>
+        <name>Seumas</name>
+        <name>Sholto</name>
+        <name>Struan</name>
+        <name>Tavish</name>
+        <name>Torquil</name>
+        <name>Wallace</name>
+        <name>Callan</name>
+        <name>Alpin</name>
+        <name>Aonghas</name>
+        <name>Domhnall</name>
+        <name>Eachann</name>
+        <name>Somerled</name>
+        <name>Uisdean</name>
+        <name>Coll</name>
+        <name>Kenzie</name>
+        <name>Angus Grant</name>
+        <name>Arran Wallace</name>
+        <name>Blair Drummond</name>
+        <name>Bruce Paterson</name>
+        <name>Callum Gordon</name>
+        <name>Craig Morrison</name>
+        <name>Dougal Fraser</name>
+        <name>Duncan Lindsay</name>
+        <name>Ewan Dunbar</name>
+        <name>Euan Stewart</name>
+        <name>Fergus Reid</name>
+        <name>Fraser MacKay</name>
+        <name>Gavin Ogilvy</name>
+        <name>Gordon MacLeod</name>
+        <name>Grant Douglas</name>
+        <name>Gregor Graham</name>
+        <name>Hector Ross</name>
+        <name>Iain Munro</name>
+        <name>Innes Cameron</name>
+        <name>Jock MacGregor</name>
+        <name>Keir Murray</name>
+        <name>Kenneth Scott</name>
+        <name>Lachlan Kerr</name>
+        <name>Malcolm Grant</name>
+        <name>Murdo Sinclair</name>
+        <name>Neil Wallace</name>
+        <name>Ross Robertson</name>
+        <name>Sandy Gordon</name>
+        <name>Struan Fraser</name>
+        <name>Wallace Dunbar</name>
+        <name>Callan Stewart</name>
+        <name>Alpin Reid</name>
+        <name>Eachann Ogilvy</name>
+        <name>Coll Douglas</name>
+        <name>Kenzie Graham</name>
+        <name>Angus Ross</name>
+        <name>Archie Munro</name>
+        <name>Arran Cameron</name>
+        <name>Brodie Murray</name>
+        <name>Bruce Scott</name>
+        <name>Callum Kerr</name>
+        <name>Dougal Grant</name>
+        <name>Duncan Wallace</name>
+        <name>Ewan Drummond</name>
+        <name>Euan Robertson</name>
+    </nameList>
+    <nameList race="human" sex="female">
+        <name>Aileen</name>
+        <name>Ailsa</name>
+        <name>Ainsley</name>
+        <name>Alison</name>
+        <name>Annabel</name>
+        <name>Aileas</name>
+        <name>Beathag</name>
+        <name>Bonnie</name>
+        <name>Catriona</name>
+        <name>Elspeth</name>
+        <name>Eilidh</name>
+        <name>Fenella</name>
+        <name>Fiona</name>
+        <name>Flora</name>
+        <name>Gillian</name>
+        <name>Greer</name>
+        <name>Heather</name>
+        <name>Iona</name>
+        <name>Isla</name>
+        <name>Isobel</name>
+        <name>Jean</name>
+        <name>Jessie</name>
+        <name>Kirsty</name>
+        <name>Lorna</name>
+        <name>Lesley</name>
+        <name>Mairi</name>
+        <name>Marsali</name>
+        <name>Morag</name>
+        <name>Moira</name>
+        <name>Mhairi</name>
+        <name>Muriel</name>
+        <name>Nicola</name>
+        <name>Oighrig</name>
+        <name>Peigi</name>
+        <name>Rhona</name>
+        <name>Rowena</name>
+        <name>Seonag</name>
+        <name>Shona</name>
+        <name>Sheena</name>
+        <name>Skye</name>
+        <name>Wilma</name>
+        <name>Ishbel</name>
+        <name>Kenna</name>
+        <name>Effie</name>
+        <name>Ailie</name>
+        <name>Ailsa Scott</name>
+        <name>Aileas MacKay</name>
+        <name>Fiona Murray</name>
+        <name>Flora Munro</name>
+        <name>Gillian Graham</name>
+        <name>Greer MacLeod</name>
+        <name>Iona Dunbar</name>
+        <name>Isla Fraser</name>
+        <name>Isobel Gordon</name>
+        <name>Jean Drummond</name>
+        <name>Jessie Grant</name>
+        <name>Kirsty Kerr</name>
+        <name>Lesley Ross</name>
+        <name>Mairi Douglas</name>
+        <name>Marsali Ogilvy</name>
+        <name>Morag Reid</name>
+        <name>Moira Lindsay</name>
+        <name>Nicola Wallace</name>
+        <name>Peigi Scott</name>
+        <name>Rhona Cameron</name>
+        <name>Shona MacKay</name>
+        <name>Sheena Stewart</name>
+        <name>Skye MacKenzie</name>
+        <name>Kenna Sinclair</name>
+        <name>Effie Hamilton</name>
+        <name>Ailie Murray</name>
+        <name>Aileen Munro</name>
+        <name>Ailsa Graham</name>
+        <name>Annabel Dunbar</name>
+        <name>Aileas Fraser</name>
+        <name>Beathag Gordon</name>
+        <name>Catriona Grant</name>
+        <name>Elspeth Kerr</name>
+        <name>Fenella Ross</name>
+        <name>Fiona Douglas</name>
+        <name>Flora Ogilvy</name>
+        <name>Gillian Reid</name>
+        <name>Greer Lindsay</name>
+        <name>Iona Paterson</name>
+        <name>Isla Wallace</name>
+        <name>Jean Scott</name>
+        <name>Jessie Cameron</name>
+        <name>Lorna Ferguson</name>
+        <name>Lesley MacKay</name>
+        <name>Mairi Stewart</name>
+        <name>Nicola Murray</name>
+        <name>Oighrig Munro</name>
+        <name>Peigi Graham</name>
+        <name>Rhona MacLeod</name>
+        <name>Seonag Dunbar</name>
+        <name>Shona Fraser</name>
+        <name>Sheena Gordon</name>
+        <name>Skye Drummond</name>
+        <name>Wilma Grant</name>
+        <name>Ishbel Kerr</name>
+    </nameList>
+</FTL>

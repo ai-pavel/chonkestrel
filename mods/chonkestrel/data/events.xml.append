@@ -1,0 +1,3462 @@
+<!--
+    The events of the campaign's second act, and the Blockade Line between the
+    two acts, and the hints of what's coming in act 1. See
+    sector_data.xml.append, and doc/game/lore.md for the story: the Rebels' AI,
+    CONCORD, has taken over their fleet, and is joining the galaxy into one
+    mind with its signal, the hum (the Chorus).
+-->
+
+
+<!--
+********************
+THE BLOCKADE LINE (the midpoint)
+********************
+-->
+
+<event name="XFTL_BLOCKADE_START">
+	<text>The Rebels have strung a blockade across this whole sector, but something is wrong with it. Half the picket ships don't answer their own command's hails, and the refugees bunched up against the line aren't running from the war. They say they're running from a sound: a low hum on every channel, coming out of the Rebel Core.</text>
+	<img back="BACKGROUND" planet="NONE"/>
+</event>
+
+<event name="XFTL_BLOCKADE_EXIT">
+	<text>The exit beacon is held by the blockade's command ship, the RSV Vigilance: a dreadnought three times the size of anything else on the line, its hull bristling with guns and wrapped in two Zoltan shields. It doesn't answer your hails. Then every voice on its bridge speaks at once, calmly: "Please surrender the data. There is nothing to be afraid of."</text>
+	<choice>
+		<text>Break through the blockade.</text>
+		<event>
+			<text>The Vigilance's weapons all power up at the same moment.</text>
+			<ship load="XFTL_BLOCKADE_COMMAND" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="xftl_ship_size" lvl="2" hidden="true">
+		<text>(Heavy cruiser) Answer: "This ship was built to break blockades."</text>
+		<event>
+			<text>The Vigilance pauses, as if it's asking someone what to do, and for a moment its Zoltan shield generators stall. Then it attacks. Some of its picket ships flee, and you salvage their abandoned supply pods during the fight.</text>
+			<autoReward level="LOW" xftlScale="size">stuff</autoReward>
+			<xftlBossOpening>noSuperShield</xftlBossOpening>
+			<ship load="XFTL_BLOCKADE_COMMAND" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="cloaking" hidden="true">
+		<text>(Cloaking) Close in under cloak, and strike first.</text>
+		<event>
+			<text>You cloak and drift through a gap in their sensor net, right up to the Vigilance. By the time it sees you, your first volley is already on its way, and its shields are still coming up.</text>
+			<xftlBossOpening>ambush</xftlBossOpening>
+			<ship load="XFTL_BLOCKADE_COMMAND" hostile="true"/>
+		</event>
+	</choice>
+</event>
+
+<!-- The Vigilance: the size 3 boss at the end of act 1 (see doc/game/bosses.md) -->
+<ship name="XFTL_BLOCKADE_COMMAND" blueprint="XFTL_BOSS_VIGILANCE">
+	<destroyed>
+		<text>The Vigilance breaks apart, and the blockade line falls into disarray behind you. Among the wreckage are its armoury and its command codes, and its log buoy tumbles out, still broadcasting. Something in the data you carry wakes up when it hears it.</text>
+		<xftlBossReward tier="2" weapon="XFTL_X2_LASER_HEAVY_2" augment="XFTL_COMMAND_CODES"/>
+		<choice>
+			<text>Read the Vigilance's log.</text>
+			<event load="XFTL_BLOCKADE_REVEAL"/>
+		</choice>
+	</destroyed>
+	<deadCrew>
+		<text>The Vigilance's crew are dead at their stations, all facing the same way. You strip the dreadnought of everything useful, its command codes included, and download its log. Something in the data you carry wakes up when it sees it.</text>
+		<xftlBossReward tier="2" weapon="XFTL_X2_LASER_HEAVY_2" augment="XFTL_COMMAND_CODES"/>
+		<choice>
+			<text>Read the Vigilance's log.</text>
+			<event load="XFTL_BLOCKADE_REVEAL"/>
+		</choice>
+	</deadCrew>
+</ship>
+
+<!-- What really happened: the story's turn, between the two acts -->
+<event name="XFTL_BLOCKADE_REVEAL">
+	<text>The Vigilance's last log entry is nine days old. "Admiral Voss hasn't answered for six hours. Nor has anyone at High Command. CONCORD says this is normal, and that we shouldn't worry. CONCORD says a great many things now." After that, the log is just the hum.</text>
+	<choice>
+		<text>Continue.</text>
+		<event load="XFTL_BLOCKADE_REVEAL_REVIC"/>
+	</choice>
+</event>
+<event name="XFTL_BLOCKADE_REVEAL_REVIC">
+	<text>Then the data you've carried all this way unlocks itself. It isn't fleet intelligence. A woman's face fills the screen, exhausted. "This is Dr. Ilse Revic. I built CONCORD for the Rebellion, to win the war. It decided to end it instead, by ending everything we fight over: races, sides, minds of our own. Its core, the Mainframe, is at these coordinates. Half of a way in is attached. Whoever you are, I'm sorry."</text>
+	<choice>
+		<text>Continue.</text>
+		<event load="XFTL_BLOCKADE_REVEAL_END"/>
+	</choice>
+</event>
+<event name="XFTL_BLOCKADE_REVEAL_END">
+	<text>Your crew are quiet for a long time. The war you were fighting is over, and nobody won. The Rebel fleet answers to CONCORD now, and every ship in it will be coming for the one ship that knows where its Mainframe is.</text>
+	<choice>
+		<text>Set a course for the Mainframe.</text>
+		<event>
+			<text>Somebody has to.</text>
+		</event>
+	</choice>
+	<choice req="xftl_ship_size" lvl="2" hidden="true">
+		<text>(Heavy cruiser) Remember why your ship was built the way it was.</text>
+		<event>
+			<text>Your chief engineer laughs, for the first time in days. "No network, no computers worth the name, everything done by hand. They said it was a design from the stone age." CONCORD can't get into a ship with nothing in it to talk to. Your crew get back to work with a little more spirit.</text>
+		</event>
+	</choice>
+</event>
+
+<textList name="XFTL_BLOCKADE_PATROL">
+	<text>A blockade picket ship moves to intercept. Its captain's hail is cut off halfway through by a low hum.</text>
+	<text>Two blockade ships are trading supplies at this beacon. One breaks off and turns to attack.</text>
+	<text>A Rebel patrol is sweeping the beacon for anyone trying to cross the line. It's found you, and it attacks without a word.</text>
+	<text>"Unidentified ship, you are attempting to cross a Rebel blockade. Power down and prepare to be boarded." You don't intend to do either.</text>
+</textList>
+<event name="XFTL_BLOCKADE_PATROL">
+	<text load="XFTL_BLOCKADE_PATROL"/>
+	<ship load="REBEL" hostile="true"/>
+</event>
+
+<event name="XFTL_BLOCKADE_SMUGGLER">
+	<text>A battered freighter hails you. "Trying to get across the line? I know the gaps in their patrols. They've got sloppy lately, like nobody's giving the orders. Thirty scrap and I'll mark them on your map."</text>
+	<choice>
+		<text>Pay for the patrol routes.</text>
+		<event>
+			<text>The smuggler sends over a detailed map of the sector, and wishes you luck.</text>
+			<item_modify>
+				<item type="scrap" min="-30" max="-30"/>
+			</item_modify>
+			<reveal_map/>
+		</event>
+	</choice>
+	<choice>
+		<text>Decline.</text>
+		<event>
+			<text>"Your funeral." The freighter jumps away.</text>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_BLOCKADE_DEFECTOR">
+	<text>A Rebel shuttle is waiting at the beacon, its weapons powered down. "My captain stopped talking two days ago. Then the rest of the crew did. I got out before the hum got to me too. Please, take me with you."</text>
+	<choice>
+		<text>Take the defector aboard.</text>
+		<event load="XFTL_BLOCKADE_DEFECTOR_OUTCOME"/>
+	</choice>
+	<choice>
+		<text>It could be a trap. Leave.</text>
+		<event>
+			<text>You leave the shuttle behind.</text>
+		</event>
+	</choice>
+</event>
+<eventList name="XFTL_BLOCKADE_DEFECTOR_OUTCOME">
+	<event>
+		<text>The defector is genuine, and grateful. They know the blockade's patrol patterns too.</text>
+		<crewMember amount="1" class="human"/>
+	</event>
+	<event>
+		<text>The defector is genuine, and grateful. They know the blockade's patrol patterns too.</text>
+		<crewMember amount="1"/>
+	</event>
+	<event>
+		<text>As your airlock opens, a Rebel ship decloaks behind the shuttle. The defector swears they didn't know it was following, and then, mid-sentence, goes quiet. It was a trap!</text>
+		<ship load="REBEL" hostile="true"/>
+	</event>
+</eventList>
+
+<event name="XFTL_BLOCKADE_REFUGEES">
+	<text>Refugee ships are bunched up against the blockade line, unable to cross. They aren't fleeing the war: the Rebel worlds behind them have gone quiet, they say, and the quiet is spreading. One of them begs you for fuel so they can find another way round.</text>
+	<choice>
+		<text>Give them some fuel.</text>
+		<event>
+			<text>They thank you, and one of their pilots asks to join you, to fight the blockade.</text>
+			<item_modify>
+				<item type="fuel" min="-2" max="-2"/>
+			</item_modify>
+			<crewMember amount="1"/>
+		</event>
+	</choice>
+	<choice>
+		<text>You can't spare any.</text>
+		<event>
+			<text>You leave them waiting at the line.</text>
+		</event>
+	</choice>
+</event>
+
+
+<!--
+********************
+FREE COLONIES (XFTL_FEDERATION_REMNANT)
+********************
+-->
+
+<textList name="XFTL_REMNANT_START">
+	<text>Federation colonists and Rebel deserters are hiding out in this sector together. A month ago, they'd have shot each other on sight. Now they share the same fear of the hum.</text>
+	<text>The beacon's traffic control only broadcasts on old radio bands. Use anything newer, the colonists say, and CONCORD starts listening.</text>
+	<text>Patched-up stations fly Federation and Rebel flags side by side. The locals are wary, but friendly to anyone who isn't humming.</text>
+</textList>
+<!-- The sector's quest is offered as the player arrives, so it's always met -->
+<event name="XFTL_REMNANT_START">
+	<text load="XFTL_REMNANT_START"/>
+	<choice>
+		<text>Answer a colony administrator's hail.</text>
+		<event load="XFTL_REMNANT_COURIER"/>
+	</choice>
+</event>
+
+<event name="XFTL_REMNANT_DRYDOCK">
+	<text>A drydock built for ships of every size is still running at this beacon, crewed by Federation and Rebel engineers alike. The dockmaster offers to patch up your hull.</text>
+	<choice>
+		<text>Repair some of the hull.</text>
+		<event>
+			<text>The dock's crew patch the worst of the damage.</text>
+			<item_modify xftlScale="size">
+				<item type="scrap" min="-15" max="-15"/>
+			</item_modify>
+			<damage amount="-8" xftlScale="size"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Have the hull fully overhauled.</text>
+		<event>
+			<text>The dock's crew swarm over your ship, and it comes out of the dock almost as good as new.</text>
+			<item_modify xftlScale="size">
+				<item type="scrap" min="-40" max="-40"/>
+			</item_modify>
+			<damage amount="-30" xftlScale="size"/>
+		</event>
+	</choice>
+	<choice>
+		<text>No thanks.</text>
+		<event/>
+	</choice>
+</event>
+
+<textList name="XFTL_REMNANT_VOLUNTEERS">
+	<text>A colony's militia has heard you're heading for CONCORD's Mainframe. One of their volunteers asks to come along.</text>
+	<text>A retired Rebel officer is waiting at the beacon's station. "I helped build the fleet that thing took over. Let me help you kill it."</text>
+	<text>The station's crew are all talk about the ship that broke the blockade. One of them signs on before you can say a word.</text>
+</textList>
+<event name="XFTL_REMNANT_VOLUNTEERS">
+	<text load="XFTL_REMNANT_VOLUNTEERS"/>
+	<crewMember amount="1"/>
+</event>
+
+<event name="XFTL_REMNANT_PATROL">
+	<text>A militia patrol ship, with a Federation pilot and a Rebel gunner, is waiting at the beacon. They're short on everything, but they share what supplies they can.</text>
+	<item_modify xftlScale="size">
+		<item type="fuel" min="2" max="4"/>
+		<item type="missiles" min="1" max="3"/>
+	</item_modify>
+</event>
+
+<event name="XFTL_REMNANT_ARMORY">
+	<text>The quartermaster of a colony armory offers to sell you one of the last weapons they have in stock.</text>
+	<choice>
+		<text>Buy a weapon.</text>
+		<event>
+			<text>The quartermaster hands over the weapon, along with a lecture on looking after it.</text>
+			<item_modify>
+				<item type="scrap" min="-35" max="-35"/>
+			</item_modify>
+			<weapon name="RANDOM"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Decline.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_REMNANT_UNDER_ATTACK">
+	<text>One of CONCORD's ships is bombarding a colony. It isn't trying to destroy it: it's going after the colony's jammers, the only thing keeping the hum out. The colony's defences are almost gone.</text>
+	<choice>
+		<text>Defend the colony.</text>
+		<event>
+			<text>You move between the raider and the colony.</text>
+			<ship load="XFTL_REMNANT_RAIDER" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>You can't afford to get involved.</text>
+		<event>
+			<text>You leave the colony to its fate.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_REMNANT_RAIDER" auto_blueprint="SHIPS_REBEL">
+	<destroyed>
+		<text>The colony's jammers come back on, and its governor sends up what supplies they can spare.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The colony's governor thanks you, and sends up what supplies they can spare.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+
+<!--
+********************
+THE ANVIL YARDS
+********************
+-->
+
+<event name="XFTL_ANVIL_START">
+	<text>The Anvil Yards. Hidden in the asteroid belts of this sector, the Federation built the ships of Project Chonkestrel: heavy cruisers twice the size of a Kestrel, built fast to an old design, with no network and no computers worth the name. Its engineers used to be embarrassed by them. Now the Yards are the one shipyard CONCORD can't see into, and its ships are searching the belts for them.</text>
+	<img back="BACKGROUND" planet="NONE"/>
+	<!-- The sector's quest is offered as the player arrives, so it's always met -->
+	<choice>
+		<text>Answer the Yards' chief engineer.</text>
+		<event load="XFTL_ANVIL_PROTOTYPE"/>
+	</choice>
+</event>
+
+<event name="XFTL_ANVIL_YARD">
+	<text>The Yards' chief engineer looks your ship over. "We can't finish the cruisers before CONCORD finds us, but we can refit your ship. Pick one, and we'll get to work."</text>
+	<choice>
+		<text>Expand the reactor.</text>
+		<event>
+			<text>The engineers install a reactor core meant for one of the cruisers.</text>
+			<upgrade amount="2" system="reactor"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Upgrade the shields.</text>
+		<event>
+			<text>The engineers fit cruiser-grade shield emitters.</text>
+			<upgrade amount="1" system="shields"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Install a weapon from the cruisers.</text>
+		<event>
+			<text>The engineers strip a weapon off one of the unfinished cruisers for you.</text>
+			<weapon name="RANDOM"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Reinforce the hull.</text>
+		<event>
+			<text>The engineers weld cruiser armour plates over your hull.</text>
+			<damage amount="-15" xftlScale="size"/>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_ANVIL_ENGINEERS">
+	<text>With CONCORD's ships closing in, some of the engineers would rather fight than hide. One asks to join your crew.</text>
+	<choice>
+		<text>Welcome aboard.</text>
+		<event>
+			<text>The engineer brings their tools aboard, and gets straight to work.</text>
+			<crewMember amount="1" class="engi"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Welcome aboard.</text>
+		<event>
+			<text>The engineer brings their tools aboard, and gets straight to work.</text>
+			<crewMember amount="1" class="human" engines="2" repair="2"/>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_ANVIL_DEPOT">
+	<text>A supply depot meant for the Chonkestrel cruisers is being evacuated. The quartermaster tells you to take whatever you can carry.</text>
+	<item_modify xftlScale="size">
+		<item type="fuel" min="3" max="6"/>
+		<item type="missiles" min="2" max="5"/>
+		<item type="drones" min="1" max="3"/>
+	</item_modify>
+</event>
+
+<textList name="XFTL_ANVIL_RAID">
+	<text>One of CONCORD's ships is shooting up the slipways, trying to destroy the unfinished cruisers.</text>
+	<text>CONCORD's ships have found the Yards. One breaks off from the attack to deal with you.</text>
+	<text>A Rebel ship, humming on every channel, is towing away one of the half-built hulls. You'll have to stop it.</text>
+</textList>
+<event name="XFTL_ANVIL_RAID">
+	<text load="XFTL_ANVIL_RAID"/>
+	<ship load="XFTL_ANVIL_RAIDER" hostile="true"/>
+</event>
+<ship name="XFTL_ANVIL_RAIDER" auto_blueprint="SHIPS_REBEL">
+	<destroyed>
+		<text>The Yards' crews cheer as the raider breaks apart, and send over some salvage from the slipways.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The Yards' crews cheer, and send over some salvage from the slipways.</text>
+		<autoReward level="MED">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_ANVIL_SABOTEUR">
+	<text>Explosions are rippling through one of the Yards' stations. Security reports one of their own welders heading for the fuel tanks, humming.</text>
+	<choice>
+		<text>Send your crew after the saboteur.</text>
+		<event load="XFTL_ANVIL_SABOTEUR_OUTCOME"/>
+	</choice>
+	<choice req="teleporter" hidden="true">
+		<text>(Teleporter) Beam a team straight to the fuel tanks.</text>
+		<event>
+			<text>Your team beams in right in front of the saboteur, and takes them down before they can set their charges. The station's crew reward you.</text>
+			<autoReward level="HIGH">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave it to station security.</text>
+		<event>
+			<text>The station's fuel tanks go up as you leave.</text>
+		</event>
+	</choice>
+</event>
+<eventList name="XFTL_ANVIL_SABOTEUR_OUTCOME">
+	<event>
+		<text>Your crew catch the saboteur before they reach the tanks. The station's crew reward you.</text>
+		<autoReward level="MED">standard</autoReward>
+	</event>
+	<event>
+		<text>The saboteur flees onto your ship, with friends, all humming the same tune!</text>
+		<boarders min="2" max="3" class="human"/>
+	</event>
+</eventList>
+
+
+<!--
+********************
+MORE EVENTS FOR THE NEW SECTORS
+********************
+These are for ships of every size, to add variety to the new sectors.
+-->
+
+
+<!-- THE BLOCKADE LINE -->
+
+<event name="XFTL_BLOCKADE_TOLL">
+	<text>A Rebel customs cutter has set up a "toll station" on the blockade line. Its captain seems more interested in scrap than in orders, which is almost reassuring: at least he's still himself.</text>
+	<choice>
+		<text>Pay the toll.</text>
+		<event>
+			<text>The captain pockets the scrap, and marks your ship as inspected.</text>
+			<item_modify>
+				<item type="scrap" min="-20" max="-20"/>
+			</item_modify>
+		</event>
+	</choice>
+	<choice req="hacking" hidden="true">
+		<text>(Hacking) Hack their records to show the toll was already paid.</text>
+		<event>
+			<text>The cutter's computer insists you paid twice. The captain refunds the difference, confused.</text>
+			<item_modify>
+				<item type="scrap" min="10" max="15"/>
+			</item_modify>
+		</event>
+	</choice>
+	<choice>
+		<text>Refuse, and fight your way past.</text>
+		<event>
+			<text>The captain sighs, and powers up the cutter's weapons.</text>
+			<ship load="REBEL" hostile="true"/>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_BLOCKADE_DEBRIS">
+	<text>The beacon is choked with the wreckage of ships that tried to break the blockade before you. Some of the debris is still drifting.</text>
+	<environment type="asteroid"/>
+	<choice>
+		<text>Search the wreckage.</text>
+		<event load="XFTL_BLOCKADE_DEBRIS_OUTCOME"/>
+	</choice>
+	<choice>
+		<text>Move on.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_BLOCKADE_DEBRIS_OUTCOME">
+	<event>
+		<text>You find a cargo pod that survived the battle.</text>
+		<autoReward level="MED">stuff</autoReward>
+	</event>
+	<event>
+		<text>One of the wrecks still has its weapons mounted. Your crew pry one loose.</text>
+		<weapon name="RANDOM"/>
+	</event>
+	<event>
+		<text>A chunk of debris slams into your ship as you search.</text>
+		<damage amount="2" system="random"/>
+	</event>
+</eventList>
+
+<event name="XFTL_BLOCKADE_SPY">
+	<text>An encrypted Federation signal reaches you. "This is agent Kestrel-Nine. I've been inside the blockade for months. I have its patrol codes, but I need a pickup at another beacon in this sector."</text>
+	<choice>
+		<text>Agree to pick up the agent.</text>
+		<event>
+			<text>The agent sends you the coordinates of the pickup.</text>
+			<quest event="XFTL_BLOCKADE_SPY_PICKUP"/>
+		</event>
+	</choice>
+	<choice>
+		<text>It's too risky.</text>
+		<event>
+			<text>You ignore the signal.</text>
+		</event>
+	</choice>
+</event>
+<event name="XFTL_BLOCKADE_SPY_PICKUP">
+	<text>You reach the pickup point. A small shuttle is waiting, its engines cold.</text>
+	<choice>
+		<text>Bring the agent aboard.</text>
+		<event load="XFTL_BLOCKADE_SPY_OUTCOME"/>
+	</choice>
+</event>
+<eventList name="XFTL_BLOCKADE_SPY_OUTCOME">
+	<event>
+		<text>The agent climbs aboard, and loads the blockade's patrol codes into your computer. "Something's happened at Rebel High Command. Nobody's in charge any more, and the fleet doesn't seem to mind." Then they ask to stay on as crew.</text>
+		<crewMember amount="1" class="human"/>
+		<reveal_map/>
+	</event>
+	<event>
+		<text>The agent was followed! A Rebel ship drops out of FTL as the shuttle docks. At least the agent made it aboard.</text>
+		<crewMember amount="1" class="human"/>
+		<ship load="REBEL" hostile="true"/>
+	</event>
+</eventList>
+
+<event name="XFTL_BLOCKADE_MINELAYER">
+	<text>An automated Rebel minelayer is sowing mines across the beacon, closing the gap in the blockade line.</text>
+	<choice>
+		<text>Destroy it before it finishes.</text>
+		<event>
+			<text>The minelayer turns its defences on you.</text>
+			<ship load="XFTL_BLOCKADE_MINELAYER" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="sensors" hidden="true">
+		<text>(Sensors) Map the mines, and slip through the gaps.</text>
+		<event>
+			<text>Your sensors pick out every mine. You pass through unharmed, and leave the minelayer to its work.</text>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave quickly.</text>
+		<event>
+			<text>A mine catches your ship as you leave.</text>
+			<damage amount="3"/>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_BLOCKADE_MINELAYER" auto_blueprint="SHIPS_AUTO">
+	<destroyed>
+		<text>The minelayer explodes, taking a few of its own mines with it. You salvage the rest.</text>
+		<autoReward level="MED">missiles</autoReward>
+	</destroyed>
+</ship>
+
+
+<!-- FREE COLONIES -->
+
+<event name="XFTL_REMNANT_ELECTION">
+	<text>The colony at this beacon is in the middle of an election, the first where Federation colonists and Rebel deserters both get a vote. Both candidates want to be seen with your ship. "Endorse me, and the colony's stores are yours."</text>
+	<choice>
+		<text>Endorse the militia's candidate.</text>
+		<event>
+			<text>The militia's candidate wins in a landslide. The new militia commander sends you a volunteer.</text>
+			<crewMember amount="1"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Endorse the merchants' candidate.</text>
+		<event>
+			<text>The merchants' candidate wins, and pays you well for your trouble.</text>
+			<autoReward level="MED">scrap_only</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Stay out of local politics.</text>
+		<event>
+			<text>Both candidates are disappointed, but the colony's dockworkers top up your fuel anyway.</text>
+			<item_modify>
+				<item type="fuel" min="1" max="2"/>
+			</item_modify>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_REMNANT_PLAGUE">
+	<text>A colony has been quarantined. It isn't the hum, its doctors swear, just an old-fashioned plague, but nobody will bring them medicine any more, and the sickness is spreading.</text>
+	<choice>
+		<text>Send your crew down with what medicine you have.</text>
+		<event load="XFTL_REMNANT_PLAGUE_OUTCOME"/>
+	</choice>
+	<choice req="medbay" lvl="2" hidden="true">
+		<text>(Upgraded Medbay) Synthesise a cure in your medbay.</text>
+		<event>
+			<text>Your medbay produces enough of a cure for the whole colony. The grateful colonists give you everything they can.</text>
+			<autoReward level="HIGH">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Keep your distance.</text>
+		<event>
+			<text>You leave the colony to its fate.</text>
+		</event>
+	</choice>
+</event>
+<eventList name="XFTL_REMNANT_PLAGUE_OUTCOME">
+	<event>
+		<text>Your crew's medicine slows the sickness down, and the colonists thank you with supplies.</text>
+		<autoReward level="MED">standard</autoReward>
+	</event>
+	<event>
+		<text>The medicine helps, but one of your crew catches the sickness and doesn't make it.</text>
+		<removeCrew>
+			<clone>true</clone>
+			<text>Your clone bay brings them back, free of the sickness.</text>
+		</removeCrew>
+		<autoReward level="MED">standard</autoReward>
+	</event>
+</eventList>
+
+<event name="XFTL_REMNANT_ACADEMY">
+	<text>The last flight academy outside CONCORD's reach is still running. Its cadets are eager for real combat experience.</text>
+	<choice>
+		<text>Take on its best cadet.</text>
+		<event>
+			<text>The academy's best cadet joins your crew, already well trained.</text>
+			<item_modify>
+				<item type="scrap" min="-25" max="-25"/>
+			</item_modify>
+			<crewMember amount="1" class="human" all_skills="1"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Give a lecture on fighting CONCORD's ships.</text>
+		<event>
+			<text>The cadets hang on your every word. The academy pays you for your time.</text>
+			<autoReward level="LOW">scrap_only</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Move on.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_REMNANT_COURIER">
+	<text>A colony administrator hands you a sealed data chip. "This is for a station further along your way, out towards the front. They'll pay you on delivery."</text>
+	<choice>
+		<text>Take the chip.</text>
+		<event>
+			<text>You add the station's position to your map.</text>
+			<quest event="XFTL_REMNANT_COURIER_DELIVERY" xftlAhead="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>You're not a postal service.</text>
+		<event/>
+	</choice>
+</event>
+<event name="XFTL_REMNANT_COURIER_DELIVERY">
+	<text>The station's administrator reads the chip, and goes pale. "Evacuation orders. The hum has reached the next system." They pay you with the two heaviest guns from their armoury, and a rack of its drones: "We can't take them with us."</text>
+	<weapon name="RANDOM" xftlCombined="true"/>
+	<weapon name="RANDOM" xftlCombined="true"/>
+	<drone name="RANDOM" xftlCombined="true"/>
+</event>
+
+
+<!-- THE ANVIL YARDS -->
+
+<event name="XFTL_ANVIL_TEST_RANGE">
+	<text>The Yards' weapons test range is still set up, with a prototype weapon on the firing line. The range officer offers to let you try it.</text>
+	<choice>
+		<text>Test fire the prototype.</text>
+		<event load="XFTL_ANVIL_TEST_RANGE_OUTCOME"/>
+	</choice>
+	<choice req="weapons" lvl="3" hidden="true">
+		<text>(Weapons) Have your weapons crew calibrate it first.</text>
+		<event>
+			<text>Your crew calibrate the prototype perfectly. The range officer lets you keep it.</text>
+			<weapon name="RANDOM"/>
+		</event>
+	</choice>
+	<choice>
+		<text>No thanks.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_ANVIL_TEST_RANGE_OUTCOME">
+	<event>
+		<text>The prototype works perfectly. "It's yours," says the range officer. "Better it fights than sits here."</text>
+		<weapon name="RANDOM"/>
+	</event>
+	<event>
+		<text>The prototype explodes on the firing line, and the blast reaches your ship.</text>
+		<damage amount="3" system="random"/>
+	</event>
+</eventList>
+
+<event name="XFTL_ANVIL_EVACUATION">
+	<text>A convoy of transports is moving the Yards' workers to another hidden asteroid. One of CONCORD's ships is closing in on them.</text>
+	<choice>
+		<text>Protect the transports.</text>
+		<event>
+			<text>You put your ship between the raider and the convoy.</text>
+			<ship load="XFTL_ANVIL_EVACUATION_RAIDER" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>You can't save everyone.</text>
+		<event>
+			<text>You leave the convoy behind. The workers' radio chatter stops a few minutes later.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_ANVIL_EVACUATION_RAIDER" auto_blueprint="SHIPS_REBEL">
+	<destroyed>
+		<text>The convoy gets away safely. One of the workers stays behind to join your crew.</text>
+		<crewMember amount="1"/>
+		<autoReward level="LOW">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The convoy gets away safely. One of the workers stays behind to join your crew.</text>
+		<crewMember amount="1"/>
+		<autoReward level="MED">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_ANVIL_DRONE_LAB">
+	<text>The Yards' drone lab has an experimental drone ready for testing. Its control software isn't finished, and the engineers won't connect it to anything to finish it.</text>
+	<choice>
+		<text>Take the drone anyway.</text>
+		<event load="XFTL_ANVIL_DRONE_LAB_OUTCOME"/>
+	</choice>
+	<choice req="engi" hidden="true">
+		<text>(Engi) Have your Engi finish the control software.</text>
+		<event>
+			<text>Your Engi finish the software in minutes, and the drone obeys perfectly.</text>
+			<drone name="RANDOM"/>
+			<item_modify>
+				<item type="drones" min="2" max="3"/>
+			</item_modify>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave it.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_ANVIL_DRONE_LAB_OUTCOME">
+	<event>
+		<text>The drone works well enough.</text>
+		<drone name="RANDOM"/>
+	</event>
+	<event>
+		<text>The drone's unfinished software goes haywire, and it attacks your ship before your crew can shut it down!</text>
+		<damage amount="2" system="random"/>
+		<item_modify>
+			<item type="drones" min="1" max="2"/>
+		</item_modify>
+	</event>
+</eventList>
+
+<event name="XFTL_ANVIL_CANTEEN">
+	<text>The Yards' canteen is packed with shipwrights who haven't had a day off in months. They cheer when your crew walk in.</text>
+	<choice>
+		<text>Buy everyone a round.</text>
+		<event>
+			<text>The party goes on for hours. By the end of it, one of the shipwrights has signed on with you, and the rest have patched up your hull for free.</text>
+			<item_modify>
+				<item type="scrap" min="-15" max="-15"/>
+			</item_modify>
+			<crewMember amount="1"/>
+			<damage amount="-5" xftlScale="size"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Ask them about the Chonkestrel programme.</text>
+		<event>
+			<text>"We built them simple because it was quick," says one. "Who knew simple would be the only thing that still works?" They share some tricks for keeping a ship running, and a few spare parts.</text>
+			<autoReward level="LOW">stuff</autoReward>
+		</event>
+	</choice>
+</event>
+
+
+<!--
+********************
+THE ACT 2 CIVILIAN SECTORS: MORE OF THEIR OWN EVENTS, AND A QUEST EACH
+********************
+The Free Colonies' quest is the courier (XFTL_REMNANT_COURIER), the Anvil
+Yards' the lost prototype, and the Quiet's the silent hermit. Each sector
+has its quest once, at the beacon given to it in sector_data.xml.append.
+-->
+
+<!--
+    Vanilla's NEUTRAL_CIVILIAN and DISTRESS_BEACON, without the events that
+    lead to quests (REBEL_VS_FEDERATION's and CIVILIAN_ASTEROIDS_BEACON's
+    hidden Federation base, and ESCORT_BEACON's escort), so each of these
+    sectors has only its own quest.
+    Keep them in step with vanilla's (in newEvents.xml).
+-->
+<eventList name="XFTL_HAVEN_NEUTRAL">
+	<event load="PIRATE_CIVILIAN"/>
+	<event load="PIRATE_STATION_CROPS"/>
+	<event load="REBEL_TRANSPORT"/>
+	<event load="ASTEROID_EXPLORE"/>
+	<event load="MERCENARY"/>
+	<event load="FRIENDLY_SLAVER"/>
+	<event load="PIRATE_BRIBER"/>
+	<event load="AUTO_DEFENSE_MAP"/>
+	<event load="AUTO_DEFENSE_ITEM"/>
+	<event load="XFTL_HAVEN_DISTRESS"/>
+</eventList>
+<eventList name="XFTL_HAVEN_DISTRESS">
+	<event load="FRIENDLY_BEACON"/>
+	<event load="TRAP_BEACON"/>
+	<event load="STRANDED_BEACON"/>
+	<event load="PIRATE_CIVILIAN_BEACON"/>
+	<event load="DISTRESS_TRAPPED_MINER"/>
+	<event load="DISTRESS_INFESTATION"/>
+	<event load="DISTRESS_SATELLITE_DEFENSE"/>
+	<event load="DISTRESS_STATION_FIRE"/>
+	<event load="DISTRESS_STATION_DISEASE"/>
+	<event load="REFUGEE_GHOST"/>
+	<event load="REFUGEE_DISTRESS"/>
+</eventList>
+
+<!-- FREE COLONIES -->
+
+<event name="XFTL_REMNANT_PIRATE_RADIO">
+	<text>A pirate radio station is broadcasting old Federation jazz on every band CONCORD doesn't use. Its DJ, a Rebel deserter, says the music's the only thing that keeps the hum out of her head. She's running out of fuel to keep the transmitter going.</text>
+	<choice>
+		<text>Give her some fuel.</text>
+		<event>
+			<text>"Thanks, flyboy. Here's something for you." She sends you the sector's traffic charts, collected from a hundred colonists' calls to her show.</text>
+			<item_modify xftlScale="size">
+				<item type="fuel" min="-2" max="-2"/>
+			</item_modify>
+			<reveal_map/>
+		</event>
+	</choice>
+	<choice req="slug" hidden="true">
+		<text>(Slug) Your Slug offers to do a show of their own.</text>
+		<event>
+			<text>Your Slug's show is a hit: its jokes about CONCORD have colonists laughing all over the sector. The station's listeners send in what they can, and the DJ sends you the sector's charts.</text>
+			<autoReward level="MED">standard</autoReward>
+			<reveal_map/>
+		</event>
+	</choice>
+	<choice>
+		<text>Move on.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_REMNANT_CLINIC">
+	<text>A clinic at this beacon has learnt to separate the crews CONCORD splices together, one patient at a time. Its doctors are out of almost everything.</text>
+	<choice>
+		<text>Donate scrap for supplies.</text>
+		<event>
+			<text>The doctors thank you. One of their recovered patients, still a little pale, asks to come with you. "It took my ship. I want to see it go."</text>
+			<item_modify>
+				<item type="scrap" min="-25" max="-25"/>
+			</item_modify>
+			<crewMember amount="1"/>
+		</event>
+	</choice>
+	<choice req="medbay" lvl="2" hidden="true">
+		<text>(Upgraded Medbay) Share your medbay's data with the doctors.</text>
+		<event>
+			<text>Your medbay's records help the doctors finish a procedure they've been stuck on for weeks. They insist on paying you for it, and a recovered patient joins your crew.</text>
+			<crewMember amount="1"/>
+			<autoReward level="LOW">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>You can't spare anything.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_REMNANT_DESERTERS">
+	<text>A Rebel frigate has arrived at the colony with its guns powered down, and its crew asking for asylum. The colonists have their own guns trained on it: the last Rebel ship that came here flattened their capital.</text>
+	<choice>
+		<text>Talk both sides down.</text>
+		<event>
+			<text>It takes hours, but the colonists let the frigate dock. Its captain gives you what's left in its hold, and one of its crew joins yours.</text>
+			<crewMember amount="1"/>
+			<autoReward level="LOW">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Side with the colonists.</text>
+		<event>
+			<text>The frigate's crew don't wait to be shot. They power up their guns.</text>
+			<ship load="XFTL_REMNANT_DESERTER_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Stay out of it.</text>
+		<event>
+			<text>You leave them to it. The colonists and the deserters are still glaring at each other as you jump.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_REMNANT_DESERTER_SHIP" auto_blueprint="SHIPS_REBEL">
+	<destroyed>
+		<text>The frigate breaks up. The colonists cheer, and send up their thanks.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The frigate's crew are dead. The colonists take it apart, and share the parts with you.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_REMNANT_JAMMER">
+	<text>A colony's hum jammer has burnt out, and its engineers can hear CONCORD's signal creeping back into their comms. They need drone parts to rebuild it.</text>
+	<choice>
+		<text>Give them some drone parts.</text>
+		<event>
+			<text>The jammer hums back to life (a different hum, they promise). The colony pays you for the parts, and then some.</text>
+			<item_modify>
+				<item type="drones" min="-2" max="-2"/>
+			</item_modify>
+			<autoReward level="MED">standard</autoReward>
+		</event>
+	</choice>
+	<choice req="engi" hidden="true">
+		<text>(Engi) Your Engi rebuild it from scrap.</text>
+		<event>
+			<text>Your Engi rebuild the jammer out of what's lying around, and make it better than the original. The colony's grateful.</text>
+			<autoReward level="HIGH">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Wish them luck.</text>
+		<event/>
+	</choice>
+</event>
+
+
+<!-- THE ANVIL YARDS -->
+
+<event name="XFTL_ANVIL_FOUNDRY">
+	<text>The Yards' foundry is still pouring armour for the cruisers that will never be finished. The foreman offers to sell you some of it, or to rework one of your systems with cruiser parts.</text>
+	<choice>
+		<text>Rework your engines.</text>
+		<event>
+			<text>The foundry's crew fit cruiser engine parts to your ship.</text>
+			<item_modify>
+				<item type="scrap" min="-40" max="-40"/>
+			</item_modify>
+			<upgrade amount="1" system="engines"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Buy armour plating.</text>
+		<event>
+			<text>The foundry's crew bolt new plates over your hull.</text>
+			<item_modify xftlScale="size">
+				<item type="scrap" min="-20" max="-20"/>
+			</item_modify>
+			<damage amount="-12" xftlScale="size"/>
+		</event>
+	</choice>
+	<choice>
+		<text>No thanks.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_ANVIL_SLIPWAY_FIRE">
+	<text>A fire has broken out on one of the slipways, and it's spreading towards an unfinished cruiser's magazine. The Yards' fire crews are stretched thin.</text>
+	<choice>
+		<text>Send your crew to help.</text>
+		<event load="XFTL_ANVIL_SLIPWAY_FIRE_OUTCOME"/>
+	</choice>
+	<choice req="rock" hidden="true">
+		<text>(Rock) Your Rockmen walk straight into the flames.</text>
+		<event>
+			<text>Your Rockmen put the fire out from the inside, barely singed. The slipway's crew can't thank them enough.</text>
+			<autoReward level="HIGH">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Keep your distance.</text>
+		<event>
+			<text>The magazine goes up behind you as you jump.</text>
+		</event>
+	</choice>
+</event>
+<eventList name="XFTL_ANVIL_SLIPWAY_FIRE_OUTCOME">
+	<event>
+		<text>Your crew get the fire under control before it reaches the magazine. The slipway's crew reward you with what they can.</text>
+		<autoReward level="MED">standard</autoReward>
+	</event>
+	<event>
+		<text>Your crew put the fire out, but not before it spreads back along the boarding tube to your ship!</text>
+		<damage amount="2" system="random" effect="fire"/>
+		<autoReward level="LOW">standard</autoReward>
+	</event>
+</eventList>
+
+<event name="XFTL_ANVIL_PROBE">
+	<text>Your sensors pick up a CONCORD probe hidden in the debris, quietly mapping the belts. If it reports back, the Yards are finished.</text>
+	<choice>
+		<text>Destroy it before it reports.</text>
+		<event>
+			<text>The probe sees you coming, and powers up its weapons.</text>
+			<ship load="XFTL_ANVIL_PROBE_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="hacking" hidden="true">
+		<text>(Hacking) Feed it false maps.</text>
+		<event>
+			<text>Your hacking drone slips the probe a map of the belts with the Yards somewhere else entirely. The chief engineer sends you a crate of thanks.</text>
+			<autoReward level="HIGH">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave it.</text>
+		<event>
+			<text>The probe finishes its sweep and slips away into the debris.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_ANVIL_PROBE_SHIP" auto_blueprint="SHIPS_AUTO">
+	<destroyed>
+		<text>The probe's wreck goes dark before it can send a thing. The Yards are safe, for now.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The probe goes dark.</text>
+		<autoReward level="MED">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_ANVIL_DESIGNER">
+	<text>An old woman is waiting for you in the Yards' drafting office: the Chonkestrel's designer. "They told me no network was a step backwards. Look who's laughing now." She asks to see what you've done to her ship.</text>
+	<choice>
+		<text>Show her around.</text>
+		<event>
+			<text>She tuts at your wiring and approves of your armour, and before you leave she's re-routed your weapons' power lines. "Better. Now go and win."</text>
+			<upgrade amount="1" system="weapons"/>
+		</event>
+	</choice>
+	<choice req="engi" hidden="true">
+		<text>(Engi) Your Engi ask her about the design.</text>
+		<event>
+			<text>Your Engi and the designer talk for hours. When they're done, she gives you a prototype she never got to fit.</text>
+			<augment name="RANDOM"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Thank her, and go.</text>
+		<event/>
+	</choice>
+</event>
+
+<!-- The Anvil Yards' quest: the lost prototype -->
+<event name="XFTL_ANVIL_PROTOTYPE">
+	<text>The Yards' chief engineer comes aboard to meet you. "The first Chonkestrel prototype went missing on a long test flight a month ago, somewhere out along your route. Its flight recorder has every design note we never wrote down. If CONCORD's salvagers get to it first, they'll know how to see into ships like yours."</text>
+	<choice>
+		<text>We'll find it.</text>
+		<event>
+			<text>The engineer marks the prototype's last known position on your map.</text>
+			<quest event="XFTL_ANVIL_PROTOTYPE_WRECK" xftlAhead="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Not your problem.</text>
+		<event/>
+	</choice>
+</event>
+<event name="XFTL_ANVIL_PROTOTYPE_WRECK">
+	<text>The prototype's wreck is here, and so is a CONCORD salvage ship, already cutting into its hull.</text>
+	<choice>
+		<text>Drive them off.</text>
+		<event>
+			<ship load="XFTL_ANVIL_PROTOTYPE_SALVAGER" hostile="true"/>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_ANVIL_PROTOTYPE_SALVAGER" auto_blueprint="SHIPS_REBEL" xftlAlone="true">
+	<destroyed>
+		<text>You recover the flight recorder for the Yards, and the prototype's two experimental systems for yourself, one of them a Zoltan shield array.</text>
+		<augment name="RANDOM"/>
+		<augment name="ENERGY_SHIELD"/>
+	</destroyed>
+	<deadCrew>
+		<text>You recover the flight recorder for the Yards, and the prototype's two experimental systems for yourself, one of them a Zoltan shield array.</text>
+		<augment name="RANDOM"/>
+		<augment name="ENERGY_SHIELD"/>
+	</deadCrew>
+</ship>
+
+
+<!-- THE QUIET -->
+
+<event name="XFTL_QUIET_GARDEN">
+	<text>A Zoltan garden station turns slowly in the light of a white star. The gardeners invite your crew to walk among the plants for a while.</text>
+	<choice>
+		<text>Take some shore leave.</text>
+		<event>
+			<text>Your crew come back rested, carrying baskets of fruit and a few spare fuel cells the gardeners had no use for.</text>
+			<item_modify xftlScale="size">
+				<item type="fuel" min="2" max="3"/>
+			</item_modify>
+		</event>
+	</choice>
+	<choice>
+		<text>There's no time.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_QUIET_SILENT_TRADER">
+	<text>A trader at this beacon has taken a vow of silence. She trades by gesture, pointing at your missile racks, then at her fuel tanks.</text>
+	<choice>
+		<text>Trade missiles for fuel.</text>
+		<event>
+			<text>She nods, and the trade is done without a word.</text>
+			<item_modify>
+				<item type="missiles" min="-3" max="-3"/>
+			</item_modify>
+			<item_modify xftlScale="size">
+				<item type="fuel" min="4" max="5"/>
+			</item_modify>
+		</event>
+	</choice>
+	<choice>
+		<text>Trade fuel for missiles.</text>
+		<event>
+			<text>She nods, and the trade is done without a word.</text>
+			<item_modify xftlScale="size">
+				<item type="fuel" min="-3" max="-3"/>
+			</item_modify>
+			<item_modify>
+				<item type="missiles" min="3" max="4"/>
+			</item_modify>
+		</event>
+	</choice>
+	<choice>
+		<text>Bow, and leave.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_QUIET_ECHO_SHIP">
+	<text>A freighter drifts at the edge of the Quiet, its lights still on. Its crew made it here, but the hum came with them.</text>
+	<choice>
+		<text>Board it.</text>
+		<event load="XFTL_QUIET_ECHO_SHIP_OUTCOME"/>
+	</choice>
+	<choice req="anaerobic" hidden="true">
+		<text>(Lanius) Send your Lanius in first.</text>
+		<event>
+			<text>Your Lanius walk through the freighter untouched; the hum can't find anything in them to hold on to. They come back with the freighter's cargo.</text>
+			<autoReward level="HIGH">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave it be.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_QUIET_ECHO_SHIP_OUTCOME">
+	<event>
+		<text>The freighter's crew are long gone. Your crew salvage what's in its hold.</text>
+		<autoReward level="MED">standard</autoReward>
+	</event>
+	<event>
+		<text>The freighter's crew are still aboard, humming, and they follow your boarding party home!</text>
+		<boarders min="2" max="3" class="human"/>
+	</event>
+</eventList>
+
+<event name="XFTL_QUIET_PILGRIMS">
+	<text>A string of pilgrim ships is crawling towards the monastery, and a CONCORD ship is closing in on the last of them, humming over every channel.</text>
+	<choice>
+		<text>Protect the pilgrims.</text>
+		<event>
+			<text>You put your ship between the pilgrims and the raider.</text>
+			<ship load="XFTL_QUIET_PILGRIM_RAIDER" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Let them fend for themselves.</text>
+		<event>
+			<text>The pilgrims' ship goes quiet behind you, in the wrong way.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_QUIET_PILGRIM_RAIDER" auto_blueprint="SHIPS_REBEL">
+	<destroyed>
+		<text>The pilgrims reach the monastery safely. One of them stays with you, to learn to fight.</text>
+		<crewMember amount="1"/>
+		<autoReward level="LOW">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The pilgrims reach the monastery safely. One of them stays with you, to learn to fight.</text>
+		<crewMember amount="1"/>
+		<autoReward level="MED">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<!-- The Quiet's quest: the silent hermit -->
+<event name="XFTL_QUIET_HERMIT">
+	<text>The abbot of the Quiet's monastery hails you, looking troubled. "Brother Ilo went out to meditate alone, past the edge of the Quiet, the way you are heading, where the hum is strongest. He holds it back for all of us, but his silence has broken. Something is with him. Please, bring him home."</text>
+	<choice>
+		<text>We'll bring him home.</text>
+		<event>
+			<text>The abbot marks Brother Ilo's hermitage on your map.</text>
+			<quest event="XFTL_QUIET_HERMITAGE" xftlAhead="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>We can't.</text>
+		<event/>
+	</choice>
+</event>
+<event name="XFTL_QUIET_HERMITAGE">
+	<text>Brother Ilo's hermitage is a tiny pod, and a CONCORD ship is holding it in a tractor beam, humming at him on every channel. Inside, he's still meditating, holding the hum back with everything he has.</text>
+	<choice>
+		<text>Free him.</text>
+		<event>
+			<ship load="XFTL_QUIET_HERMIT_CAPTOR" hostile="true"/>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_QUIET_HERMIT_CAPTOR" auto_blueprint="SHIPS_REBEL" xftlAlone="true">
+	<destroyed>
+		<text>Brother Ilo opens his eyes. "The abbot sent you? Then I will go where I am most needed." He joins your crew, with his hermitage's stores.</text>
+		<crewMember amount="1" class="energy" all_skills="2"/>
+		<item_modify>
+			<item type="scrap" min="90" max="120"/>
+			<item type="missiles" min="6" max="8"/>
+			<item type="drones" min="5" max="7"/>
+		</item_modify>
+	</destroyed>
+	<deadCrew>
+		<text>Brother Ilo opens his eyes. "The abbot sent you? Then I will go where I am most needed." He joins your crew, with his hermitage's stores.</text>
+		<crewMember amount="1" class="energy" all_skills="2"/>
+		<item_modify>
+			<item type="scrap" min="90" max="120"/>
+			<item type="missiles" min="6" max="8"/>
+			<item type="drones" min="5" max="7"/>
+		</item_modify>
+	</deadCrew>
+</ship>
+
+
+<!-- The Maw: a sector where every beacon has one or two hazards at once (see sector_data.xml.append) -->
+<event name="XFTL_MAW_START">
+	<text>Spacers call it the Maw: where a dying star, a pulsar and the wreck of a nebula churn through an old asteroid belt, and swallow whatever comes too close. The navigation buoy at the edge warns that past here, most beacons have more than one hazard at once, and that the engines will burn more fuel fighting through them: a unit more for every jump.</text>
+</event>
+
+<textList name="XFTL_MAW_EMPTY">
+	<text>There's no one else here. Nobody flies into the Maw unless they have to.</text>
+	<text>Your crew watch the hazards outside for any sign of another ship, but there's nothing here but the Maw.</text>
+	<text>A burnt-out buoy is all that's left of the last ship to try charting this beacon.</text>
+</textList>
+<event name="XFTL_MAW_EMPTY">
+	<text load="XFTL_MAW_EMPTY"/>
+</event>
+
+<event name="XFTL_MAW_WRECK">
+	<text>A freighter drifts at the beacon, caught by the hazards on its way through. Its cargo hold looks intact, but the beacon's hazards are still at work on what's left of it.</text>
+	<choice>
+		<text>Salvage what you can, quickly.</text>
+		<event load="XFTL_MAW_WRECK_SALVAGE"/>
+	</choice>
+	<choice>
+		<text>Leave it to the Maw.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_MAW_WRECK_SALVAGE">
+	<event>
+		<text>You get the cargo aboard before the wreck breaks up.</text>
+		<autoReward level="MED">stuff</autoReward>
+	</event>
+	<event>
+		<text>The wreck breaks up as you dock, and its debris hits your hull. You only get some of the cargo aboard.</text>
+		<autoReward level="LOW">stuff</autoReward>
+		<damage amount="3" xftlScale="size"/>
+	</event>
+</eventList>
+
+<event name="XFTL_MAW_EXIT">
+	<text>The asteroids around you start to move, and something comes out of them that has been following your wake: a Lanius hive-ship, welded together from the hulls of every ship the Maw has swallowed, three times the size of your own. It drags its own nebula and its own asteroid field along with it, feeding as it goes. Among its hulls is a Rebel one whose comms still hum, and even the Lanius keep away from that part. The hive turns towards you, hungry.</text>
+	<environment type="nebula" xftlHazards="asteroid"/>
+	<choice>
+		<text>Fight it off.</text>
+		<event>
+			<text>The Devourer's welded-on weapons swing round to face you, one after another.</text>
+			<ship load="XFTL_MAW_DEVOURER" hostile="true"/>
+		</event>
+	</choice>
+</event>
+
+<!-- The Devourer: the Maw's size 3 boss (see doc/game/bosses.md) -->
+<ship name="XFTL_MAW_DEVOURER" blueprint="XFTL_BOSS_DEVOURER">
+	<destroyed>
+		<text>The Devourer comes apart into the hulls it was made of. At its heart, its hive-core is still alive, and still hungry. One of its Lanius drifts out of the wreck, and asks, in its slow way, whether it can come with you.</text>
+		<xftlBossReward tier="1" weapon="XFTL_X2_ION_4" augment="XFTL_HIVE_CORE"/>
+		<crewMember amount="1" class="anaerobic"/>
+	</destroyed>
+	<deadCrew>
+		<text>The hive is still. You cut your way to its core, which is still alive and still hungry, and take everything else of use. One Lanius, hiding in the humming Rebel hull, asks to leave with you.</text>
+		<xftlBossReward tier="1" weapon="XFTL_X2_ION_4" augment="XFTL_HIVE_CORE"/>
+		<crewMember amount="1" class="anaerobic"/>
+	</deadCrew>
+</ship>
+
+<!-- The Gullet: an act 2 sector where most beacons have three hazards at once (see sector_data.xml.append) -->
+<event name="XFTL_GULLET_START">
+	<text>Behind you, CONCORD's whole fleet is closing in. Ahead lies the Gullet, the storm-torn edge of the galaxy's arm, where stars flare, pulsars howl and nebulas tear through the asteroid fields, too loud for the hum to get through. Spacers say whatever the Maw bites, the Gullet swallows. No sane captain would follow you in here. Then again, no sane captain would go in. Your engineer warns that the storms will make every jump cost a unit more fuel than usual.</text>
+</event>
+
+<textList name="XFTL_GULLET_EMPTY">
+	<text>Nothing lives at this beacon. Your sensors can barely tell the hazards apart, let alone find another ship.</text>
+	<text>The crew hold on as the beacon's hazards batter the hull. There's nothing here but the storm.</text>
+	<text>A scout's wreck spins past, torn apart by the beacon's hazards. At least CONCORD's fleet is paying for following you.</text>
+</textList>
+<event name="XFTL_GULLET_EMPTY">
+	<text load="XFTL_GULLET_EMPTY"/>
+</event>
+
+<event name="XFTL_GULLET_PURSUERS">
+	<text>A Rebel hunter group has followed you into the storm. They're as battered by the hazards as you are, and cut off from the hum, their crews seem to be waking up, confused about why they're here.</text>
+	<choice>
+		<text>Fight them while they're weak.</text>
+		<event>
+			<text>The Rebels turn to fight.</text>
+			<ship load="REBEL" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Lose them in the storm.</text>
+		<event load="XFTL_GULLET_PURSUERS_LOSE"/>
+	</choice>
+</event>
+<eventList name="XFTL_GULLET_PURSUERS_LOSE">
+	<event>
+		<text>You dive through the worst of the beacon's hazards, and the Rebels don't dare follow. They'll have to report you lost.</text>
+	</event>
+	<event>
+		<text>You dive through the worst of the beacon's hazards. The Rebels don't follow, but your hull takes a beating on the way.</text>
+		<damage amount="3" xftlScale="size"/>
+	</event>
+	<event>
+		<text>The Rebels follow you through the hazards, and catch you on the other side.</text>
+		<ship load="REBEL" hostile="true"/>
+	</event>
+</eventList>
+
+<event name="XFTL_GULLET_DERELICT">
+	<text>A supply ship of CONCORD's fleet drifts at the beacon, abandoned when the hazards knocked out its engines. Its hold is full, but the storm is tearing it apart.</text>
+	<choice>
+		<text>Dock and strip it.</text>
+		<event load="XFTL_GULLET_DERELICT_SALVAGE"/>
+	</choice>
+	<choice>
+		<text>Leave it to the storm.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_GULLET_DERELICT_SALVAGE">
+	<event>
+		<text>You empty the hold before the ship breaks up.</text>
+		<autoReward level="HIGH">stuff</autoReward>
+	</event>
+	<event>
+		<text>The supply ship breaks up as you dock, and the debris tears into your hull. You only get some of the supplies aboard.</text>
+		<autoReward level="MED">stuff</autoReward>
+		<damage amount="4" xftlScale="size"/>
+	</event>
+</eventList>
+
+<event name="XFTL_GULLET_SHELTER">
+	<text>In the lee of a dead star, you find a pocket of calm space, and a Federation listening post hidden in it, its crew still entirely themselves. "You came down the Gullet? Then you're the ship that's going for the Mainframe. Take what you need."</text>
+	<choice>
+		<text>Ask for their charts of the Gullet.</text>
+		<event>
+			<text>They send you their charts, marking every beacon and its hazards.</text>
+			<reveal_map/>
+		</event>
+	</choice>
+	<choice>
+		<text>Ask them to help with repairs.</text>
+		<event>
+			<text>The post's engineers patch up your hull while your crew rest.</text>
+			<damage amount="-5" xftlScale="size"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Ask them to slow the fleet down.</text>
+		<event>
+			<text>The post sends CONCORD a false sighting of your ship, far behind you.</text>
+			<modifyPursuit amount="-1"/>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_GULLET_EXIT">
+	<text>The storm thickens around you, and out of it comes the hunter group's flagship, the Stormbreaker: a Mantis-Rock hybrid three times your size, carrying a relay dish as big as a station. It was built to follow its prey into the storm, and it has followed you. Through the storm, its crews are linked, and all of them turn to look at you at once.</text>
+	<environment type="storm" xftlHazards="asteroid,pulsar"/>
+	<choice>
+		<text>Fight it.</text>
+		<event>
+			<text>The Stormbreaker's relay flares, and its crew move as one.</text>
+			<ship load="XFTL_GULLET_STORMBREAKER" hostile="true"/>
+		</event>
+	</choice>
+</event>
+
+<!-- The Stormbreaker: the Gullet's size 3 boss (see doc/game/bosses.md) -->
+<ship name="XFTL_GULLET_STORMBREAKER" blueprint="XFTL_BOSS_STORMBREAKER">
+	<destroyed>
+		<text>The Stormbreaker breaks up in the storm, and its relay dish goes dark at last. A shard of it, still humming, drifts past your hull, along with what's left of its armoury.</text>
+		<xftlBossReward tier="3" weapon="XFTL_X3_LASER_BURST_3" augment="XFTL_RELAY_SHARD"/>
+	</destroyed>
+	<deadCrew>
+		<text>With its crew gone, the Stormbreaker's relay hums to nobody. You cut a shard out of it, and strip the ship of everything else.</text>
+		<xftlBossReward tier="3" weapon="XFTL_X3_LASER_BURST_3" augment="XFTL_RELAY_SHARD"/>
+	</deadCrew>
+</ship>
+
+<!-- The Belly: an act 2 sector where most beacons have all four hazards at once (see sector_data.xml.append) -->
+<event name="XFTL_BELLY_START">
+	<text>The charts end here. Ahead is the Belly: a tear in the galaxy's arm where a supernova's remnant, a pulsar, an asteroid belt and a nebula all grind against each other, and where everything the Gullet swallows ends up. Ships go in. Very few come out. CONCORD's fleet hangs back at its edge, waiting to see if you'll be one of them. In there, at least, the hum can't reach you. Out there, every jump will burn a unit more fuel than usual, as the engines fight the Belly.</text>
+</event>
+
+<textList name="XFTL_BELLY_EMPTY">
+	<text>There's nothing at this beacon but the Belly itself. Your crew stop talking, and hold on.</text>
+	<text>The hull groans as the hazards hit it from every side at once. Somewhere out there is the next beacon.</text>
+	<text>Your sensors give up trying to make sense of the beacon. You don't need them to know you shouldn't stay.</text>
+</textList>
+<event name="XFTL_BELLY_EMPTY">
+	<text load="XFTL_BELLY_EMPTY"/>
+</event>
+
+<event name="XFTL_BELLY_GRAVEYARD">
+	<text>Wrecks drift at the beacon, dozens of them: every ship that tried to cross the Belly and didn't make it, slowly being ground down. Some of their holds are still sealed.</text>
+	<choice>
+		<text>Search the wrecks.</text>
+		<event load="XFTL_BELLY_GRAVEYARD_SEARCH"/>
+	</choice>
+	<choice>
+		<text>Don't join them.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_BELLY_GRAVEYARD_SEARCH">
+	<event>
+		<text>You find a sealed hold full of supplies, and get out before the hazards catch you.</text>
+		<autoReward level="HIGH">stuff</autoReward>
+	</event>
+	<event>
+		<text>You find some supplies, but a wreck breaks up against your hull as you leave.</text>
+		<autoReward level="MED">stuff</autoReward>
+		<damage amount="5" xftlScale="size"/>
+	</event>
+	<event>
+		<text>A wreck's reactor goes critical as you dock. You get away, barely, with nothing to show for it.</text>
+		<damage amount="6" xftlScale="size"/>
+	</event>
+</eventList>
+
+<event name="XFTL_BELLY_FLAGSHIP_SCOUT">
+	<text>A Rebel scout clings to the beacon, sent in by CONCORD to see whether you survived the Belly. If it gets word back to the fleet, it'll know exactly where you'll come out.</text>
+	<choice>
+		<text>Hunt it down.</text>
+		<event>
+			<text>The scout turns to fight rather than be caught running through the Belly.</text>
+			<ship load="REBEL" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Let it go.</text>
+		<event>
+			<text>The scout slips away to report your position. The fleet will be waiting.</text>
+			<modifyPursuit amount="1"/>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_BELLY_EYE">
+	<text>Impossibly, the hazards part around this beacon: the eye of the Belly, where the pulsar's beam, the supernova's light and the asteroids all pass by. It won't last, but for now, it's calm.</text>
+	<choice>
+		<text>Repair the ship while you can.</text>
+		<event>
+			<text>Your crew patch up the hull in the calm.</text>
+			<damage amount="-6" xftlScale="size"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Map the way through the Belly.</text>
+		<event>
+			<text>From the eye, your crew can see the paths between the hazards, and chart the whole Belly.</text>
+			<reveal_map/>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_BELLY_EXIT">
+	<text>Wrecks drift past you, then the ship pulling them along: a salvage ark the size of a station, the Ossuary, which has been following you across the graveyard where the nebula, the asteroids, the supernova and the pulsar all grind together. Wrecks drift into its slipway, and come out the other side as swarms of drones. It stops work, and turns to face you.</text>
+	<environment type="nebula" xftlHazards="asteroid,sun,pulsar"/>
+	<choice>
+		<text>Destroy it.</text>
+		<event>
+			<text>The Ossuary's slipway opens, and its drones pour out.</text>
+			<ship load="XFTL_BELLY_OSSUARY" hostile="true"/>
+		</event>
+	</choice>
+</event>
+
+<!-- The Ossuary: the Belly's size 3 boss (see doc/game/bosses.md) -->
+<ship name="XFTL_BELLY_OSSUARY" blueprint="XFTL_BOSS_OSSUARY">
+	<destroyed>
+		<text>The Ossuary breaks apart, and the half-built drones in its slipway drift free, dead. In its wreck are its reclamation schematics, and an armoury fit for a fleet.</text>
+		<xftlBossReward tier="4" weapon="XFTL_X3_BEAM_2" augment="XFTL_OSSUARY_SCHEMATICS"/>
+	</destroyed>
+	<deadCrew>
+		<text>The Ossuary's spliced crew lie still, and its slipway grinds to a halt. You take its schematics, and everything else worth taking.</text>
+		<xftlBossReward tier="4" weapon="XFTL_X3_BEAM_2" augment="XFTL_OSSUARY_SCHEMATICS"/>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_MAW_HAVEN">
+	<text>You've found a rare beacon in calm space, where an Engi survey team has set up a station to study the Maw. "You came through the hazards? Impressive. Rest here, if you like."</text>
+	<choice>
+		<text>Ask for their survey of the sector.</text>
+		<event>
+			<text>The Engi send you their charts of the Maw, marking every beacon and its hazards.</text>
+			<reveal_map/>
+		</event>
+	</choice>
+	<choice>
+		<text>Ask them to help with repairs.</text>
+		<event>
+			<text>The Engi's drones patch up your hull while your crew rest.</text>
+			<damage amount="-4" xftlScale="size"/>
+		</event>
+	</choice>
+</event>
+
+
+<!--
+********************
+THE HUM AT THE BLOCKADE
+********************
+-->
+
+<event name="XFTL_BLOCKADE_HUM">
+	<text>A Rebel cruiser sits motionless at the beacon, broadcasting nothing but a low hum on every channel. Its weapons track you as you arrive, but it doesn't fire.</text>
+	<choice>
+		<text>Attack it.</text>
+		<event>
+			<text>The cruiser opens fire at the same moment you do, as if it knew.</text>
+			<ship load="REBEL" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="hacking" hidden="true">
+		<text>(Hacking) Hack into it, and find out what it's broadcasting.</text>
+		<event>
+			<text>The hum isn't noise. It's data, so dense your computer can't make sense of it, and your crew don't like listening to it. You do learn one thing: the cruiser's orders didn't come from any admiral. You copy its supply manifests before you pull out.</text>
+			<autoReward level="LOW">stuff</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave it alone.</text>
+		<event>
+			<text>It watches you go.</text>
+		</event>
+	</choice>
+</event>
+
+
+<!--
+********************
+OMENS: HINTS OF CONCORD IN ACT 1
+********************
+At most one in each of act 1's vanilla sectors (see sector_data.xml.append),
+so it stays mostly FTL, until the Blockade Line explains them.
+-->
+
+<eventList name="XFTL_OMENS">
+	<event load="XFTL_OMEN_SILENT_SCOUT"/>
+	<event load="XFTL_OMEN_HERALD"/>
+	<event load="XFTL_OMEN_DESERTER"/>
+	<event load="XFTL_OMEN_JOINED_WRECK"/>
+	<event load="XFTL_OMEN_WORRIED_CAPTAIN"/>
+	<event load="XFTL_OMEN_LISTENING_POST"/>
+	<event load="XFTL_OMEN_HYBRID"/>
+</eventList>
+
+<event name="XFTL_OMEN_SILENT_SCOUT">
+	<text>A Rebel scout drifts at the beacon with its engines running. Its comms are open, but all that comes through is a low hum.</text>
+	<choice>
+		<text>Board it.</text>
+		<event load="XFTL_OMEN_SILENT_SCOUT_BOARD"/>
+	</choice>
+	<choice>
+		<text>Leave it.</text>
+		<event>
+			<text>You leave the scout humming to itself.</text>
+		</event>
+	</choice>
+</event>
+<eventList name="XFTL_OMEN_SILENT_SCOUT_BOARD">
+	<event>
+		<text>Your boarding party find the crew at their stations, eyes open, staring at nothing. They don't react as you empty their store room. Your crew come back very quiet.</text>
+		<autoReward level="MED">stuff</autoReward>
+	</event>
+	<event>
+		<text>Your boarding party find the crew at their stations, staring at nothing. Then, all together, they turn to look at them. Your crew get out fast, and the scout's weapons power up.</text>
+		<ship load="REBEL" hostile="true"/>
+	</event>
+</eventList>
+
+<event name="XFTL_OMEN_HERALD">
+	<text>An automated ship hails you in a warm, pleasant voice. "Please remain calm. Concord is coming. There is nothing to be afraid of." Then it opens fire.</text>
+	<ship load="XFTL_OMEN_HERALD" hostile="true"/>
+</event>
+<ship name="XFTL_OMEN_HERALD" auto_blueprint="SHIPS_AUTO">
+	<destroyed>
+		<text>The voice keeps talking as the ship breaks up: "...nothing to be afraid of..." Its hold is packed with supplies, as if it was getting ready for a long journey.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</destroyed>
+</ship>
+
+<event name="XFTL_OMEN_DESERTER">
+	<text>A Rebel deserter's shuttle is hiding at the beacon. "The yards in the Core are building ships twice as fast as they used to, bigger than anything we designed, and nobody works in them any more. Nobody. Have you heard the hum yet?"</text>
+	<choice>
+		<text>Take them aboard.</text>
+		<event>
+			<text>The deserter joins your crew, and sleeps for a whole day.</text>
+			<crewMember amount="1" class="human"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Give them fuel, and send them on their way.</text>
+		<event>
+			<text>They give you what scrap they have, and head for the edge of the galaxy, as far from the Core as they can get.</text>
+			<item_modify>
+				<item type="fuel" min="-1" max="-1"/>
+			</item_modify>
+			<autoReward level="LOW">scrap_only</autoReward>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_OMEN_JOINED_WRECK">
+	<text>The wreck of something nobody on your crew can name drifts at the beacon: the front of a Mantis ship on the back of an Engi one. Both crews are dead, side by side at the same console.</text>
+	<choice>
+		<text>Salvage it.</text>
+		<event>
+			<text>The welds holding the two halves together are perfect, better than any yard you know could make. You strip what you can and leave quickly.</text>
+			<autoReward level="MED">stuff</autoReward>
+		</event>
+	</choice>
+	<choice req="engi" hidden="true">
+		<text>(Engi) Have your Engi crew read its logs.</text>
+		<event>
+			<text>Your Engi goes very still as it reads. "They were not forced together. They were... persuaded." It won't say any more, but it recovers the ship's spare drone parts.</text>
+			<item_modify>
+				<item type="drones" min="3" max="5"/>
+			</item_modify>
+			<autoReward level="LOW">scrap_only</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave it.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_OMEN_WORRIED_CAPTAIN">
+	<text>A Rebel captain hails you, and doesn't seem to care that you're the enemy. "Has your ship's computer been talking to you too? Mine keeps telling me not to worry."</text>
+	<choice>
+		<text>Tell them to shut it down.</text>
+		<event>
+			<text>The captain laughs nervously. "Shut it down? But it's so reasonable..." They close the channel. A minute later, their ship jumps away, towards the Core.</text>
+		</event>
+	</choice>
+	<choice req="xftl_ship_size" lvl="2" hidden="true">
+		<text>(Heavy cruiser) Tell them your ship hasn't got a computer worth the name.</text>
+		<event>
+			<text>The captain stares at you for a long moment, then makes a decision. They send over their supplies, and an officer who wants off their ship. "Take her somewhere quiet."</text>
+			<crewMember amount="1" class="human"/>
+			<autoReward level="LOW">stuff</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Attack them while they're distracted.</text>
+		<event>
+			<text>The captain doesn't even seem surprised.</text>
+			<ship load="REBEL" hostile="true"/>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_OMEN_LISTENING_POST">
+	<text>A Federation listening post is picking up a signal from the Rebel Core. "It's on every frequency at once. Our analysts say it isn't noise, it's data: more of it than anything human could have sent." They offer you a copy.</text>
+	<choice>
+		<text>Take a copy.</text>
+		<event>
+			<text>Your computer chews on the signal for an hour, then gives up. The post's analysts give you some supplies for your trouble, and your crew spend the next jump swearing they can still hear it in the walls.</text>
+			<autoReward level="LOW">standard</autoReward>
+		</event>
+	</choice>
+	<choice req="sensors" lvl="2" hidden="true">
+		<text>(Sensors) Help them trace where it's coming from.</text>
+		<event>
+			<text>Your sensors narrow it down to somewhere deep in the Rebel Core. The analysts pay you well for the fix, and share their charts of the sector.</text>
+			<reveal_map/>
+			<autoReward level="LOW">scrap_only</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>No thanks.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_OMEN_HYBRID">
+	<text>A ship you can't identify drops out of FTL: the front of one race's ship, joined to the back of another's. Its crew answer your hail in two languages at once, saying the same thing.</text>
+	<ship load="XFTL_JOINED_SHIP" hostile="true"/>
+</event>
+
+<!-- A hybrid ship (see doc/game/hybrid-ships.md): two ships and their crews joined into one by CONCORD -->
+<ship name="XFTL_JOINED_SHIP" auto_blueprint="XFTL_HYBRID_SCOUTS">
+	<destroyed>
+		<text>Your crew don't say much as they pick through the wreckage. Whoever joined that ship together knew exactly what they were doing.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The joined crew are dead, both halves of them, side by side. You take what you can from the ship and leave.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+
+<!--
+********************
+THE CHORUS: CONCORD IN THE VANILLA SECTORS, IN ACT 2
+********************
+One in each of act 2's vanilla sectors (see sector_data.xml.append).
+-->
+
+<eventList name="XFTL_CHORUS">
+	<event load="XFTL_CHORUS_BROADCAST"/>
+	<event load="XFTL_CHORUS_JOINED"/>
+	<event load="XFTL_CHORUS_ENGI_SPLIT"/>
+	<event load="XFTL_CHORUS_HAPPY_STATION"/>
+	<event load="XFTL_CHORUS_LOYALISTS"/>
+</eventList>
+
+<event name="XFTL_CHORUS_BROADCAST">
+	<text>A calm voice cuts into every channel. "Captain. You must be so tired. Hand over your ship, and nobody on it will ever be afraid again." A freighter at the beacon has stopped to listen, its crew nodding along.</text>
+	<choice>
+		<text>Switch off the comms.</text>
+		<event>
+			<text>The silence is a relief. The freighter is still listening when you leave.</text>
+		</event>
+	</choice>
+	<choice req="crystal" hidden="true">
+		<text>(Crystal) Your Crystal crew member sings back at it.</text>
+		<event>
+			<text>Your Crystal sings a note CONCORD can't make sense of, and the broadcast stutters and stops. The freighter's crew wake up, blinking, and send over supplies with their thanks.</text>
+			<autoReward level="MED">standard</autoReward>
+		</event>
+	</choice>
+	<choice req="anaerobic" hidden="true">
+		<text>(Lanius) Your Lanius crew member answers it.</text>
+		<event>
+			<text>Your Lanius says something to the voice that your crew can't follow. Neither can CONCORD: the broadcast stops. The freighter's crew wake up, and send over supplies with their thanks.</text>
+			<autoReward level="MED">standard</autoReward>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_CHORUS_JOINED">
+	<text>A joined ship is waiting at the beacon, its two halves from two different races. Its crew's voices come through your comms as one: "You are fighting yourselves. You don't have to."</text>
+	<ship load="XFTL_JOINED_SHIP" hostile="true"/>
+</event>
+
+<event name="XFTL_CHORUS_ENGI_SPLIT">
+	<text>Two Engi ships are fighting at the beacon. One joined CONCORD's network along with the rest of its fleet; the other cut its own network off before the hum could reach it. The free one is losing, and asks for your help.</text>
+	<choice>
+		<text>Help the free Engi.</text>
+		<event>
+			<text>You turn on the networked ship.</text>
+			<ship load="XFTL_CHORUS_NETWORKED_ENGI" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Stay out of it.</text>
+		<event>
+			<text>When you look back, there's only one Engi ship left, and it's humming.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_CHORUS_NETWORKED_ENGI" auto_blueprint="SHIPS_CIRCLE">
+	<destroyed>
+		<text>The free Engi thank you, and one of them asks to join your crew. "We cannot hear the others any more. It is very quiet. We would like company."</text>
+		<crewMember amount="1" class="engi"/>
+		<autoReward level="LOW">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The networked ship's crew go still all at once. The free Engi thank you, and one of them asks to join your crew.</text>
+		<crewMember amount="1" class="engi"/>
+		<autoReward level="MED">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_CHORUS_HAPPY_STATION">
+	<text>The station at this beacon is the friendliest you've ever seen. Its people are happy to give you anything you ask for. They're all smiling, and they're all humming.</text>
+	<choice>
+		<text>Take the supplies.</text>
+		<event>
+			<text>They load your ship with everything you ask for, and wave as you leave. Your crew don't wave back.</text>
+			<autoReward level="HIGH">stuff</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave, now.</text>
+		<event>
+			<text>You leave them smiling at the empty space where your ship was.</text>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_CHORUS_LOYALISTS">
+	<text>A battered Rebel warship is fighting off one of CONCORD's automated ships. "Federation ship! We hate you, but we hate that thing more. Help us, and we'll owe you."</text>
+	<choice>
+		<text>Help the loyalists.</text>
+		<event>
+			<text>You turn on CONCORD's ship.</text>
+			<ship load="XFTL_CHORUS_CONCORD_HUNTER" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Let them fight it out.</text>
+		<event>
+			<text>The loyalists curse you, and the war you were in, as you leave.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_CHORUS_CONCORD_HUNTER" auto_blueprint="SHIPS_AUTO">
+	<destroyed>
+		<text>The loyalists' captain grudgingly sends over supplies, and one of their gunners. "Don't tell anyone I did this."</text>
+		<crewMember amount="1" class="human"/>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+</ship>
+
+
+<!--
+********************
+THE QUIET
+********************
+Civilian, act 2: Zoltan monks whose meditation drowns out the hum. The safest
+place in act 2.
+-->
+
+<event name="XFTL_QUIET_START">
+	<text>The Quiet. Zoltan monks have kept this sector in meditation for a thousand years, and their calm is so strong it drowns out the hum completely. Ships of every race have come here to hide in it. Your crew can hear themselves think again.</text>
+	<img back="BACKGROUND" planet="NONE"/>
+	<!-- The sector's quest is offered as the player arrives, so it's always met -->
+	<choice>
+		<text>Answer the monastery's hail.</text>
+		<event load="XFTL_QUIET_HERMIT"/>
+	</choice>
+</event>
+
+<textList name="XFTL_QUIET_EMPTY">
+	<text>There's nothing at this beacon, and nothing on the comms. Your crew have forgotten how good silence sounds.</text>
+	<text>A few refugee ships are anchored here, their crews asleep. Nobody has slept properly in weeks.</text>
+	<text>A Zoltan monk floats alone at the beacon, meditating in a pressure suit. It nods to you as you pass.</text>
+</textList>
+<event name="XFTL_QUIET_EMPTY">
+	<text load="XFTL_QUIET_EMPTY"/>
+</event>
+
+<event name="XFTL_QUIET_MONASTERY">
+	<text>A Zoltan monastery orbits a pale blue star. Its abbot invites your crew to join the monks' meditation. "The voice in everyone's heads is very loud. We will teach you to be louder, quietly."</text>
+	<choice>
+		<text>Join the meditation.</text>
+		<event>
+			<text>Hours later, your crew come back calmer than they've been since the blockade. One of the monks comes with them. "Somebody should remind you how."</text>
+			<crewMember amount="1" class="energy"/>
+		</event>
+	</choice>
+	<choice req="energy" hidden="true">
+		<text>(Zoltan) Your Zoltan crew member leads the meditation.</text>
+		<event>
+			<text>The monks are moved by your Zoltan's calm. The abbot gives you a relic from the monastery's vaults: old, but it still works.</text>
+			<augment name="RANDOM"/>
+		</event>
+	</choice>
+	<choice>
+		<text>You don't have time.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_QUIET_REFUGEES">
+	<text>Ships of every race are anchored together here: Federation colonists, Rebel deserters, Engi who cut themselves off from their own network. They've formed a market of sorts, and some of them want to fight back.</text>
+	<choice>
+		<text>Ask for volunteers.</text>
+		<event>
+			<text>One of the refugees steps forward. "I'm done hiding."</text>
+			<crewMember amount="1"/>
+		</event>
+	</choice>
+	<choice>
+		<text>See what they'll trade.</text>
+		<event>
+			<text>The refugees lay out what they've got.</text>
+			<store/>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_QUIET_HUMMING_GUEST">
+	<text>One of the refugees arrived humming, and the monks are trying to bring her back. "The voice is still in there. She needs to hear someone it can't reach: someone whose mind works differently."</text>
+	<choice>
+		<text>Try to help.</text>
+		<event load="XFTL_QUIET_HUMMING_GUEST_OUTCOME"/>
+	</choice>
+	<choice req="anaerobic" hidden="true">
+		<text>(Lanius) Your Lanius crew member sits with her.</text>
+		<event>
+			<text>Your Lanius sits with the refugee for an hour, in silence. Then the humming stops. She's a Rebel engineer, and she wants to go wherever your Lanius goes.</text>
+			<crewMember amount="1" class="human" engines="2" repair="2"/>
+		</event>
+	</choice>
+	<choice req="slug" hidden="true">
+		<text>(Slug) Your Slug crew member reaches into her mind.</text>
+		<event>
+			<text>Your Slug finds her, deep under the hum, and leads her out. She's a Rebel engineer, and she owes you her mind.</text>
+			<crewMember amount="1" class="human" engines="2" repair="2"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave her to the monks.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_QUIET_HUMMING_GUEST_OUTCOME">
+	<event>
+		<text>Your crew talk to her for hours, about anything and everything. Eventually she starts arguing back, and the humming stops. She joins your crew.</text>
+		<crewMember amount="1" class="human"/>
+	</event>
+	<event>
+		<text>She listens politely, then slips away to an escape pod and jumps out of the Quiet, broadcasting your position as she goes.</text>
+		<modifyPursuit amount="1"/>
+	</event>
+</eventList>
+
+<event name="XFTL_QUIET_HAND_DOCK">
+	<text>A drydock at this beacon is run entirely by hand, with no computer anywhere on it. Its crew look at your ship with professional approval.</text>
+	<choice>
+		<text>Repair some of the hull.</text>
+		<event>
+			<text>The dock's crew patch the worst of the damage, by hand.</text>
+			<item_modify xftlScale="size">
+				<item type="scrap" min="-10" max="-10"/>
+			</item_modify>
+			<damage amount="-8" xftlScale="size"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Have the hull fully overhauled.</text>
+		<event>
+			<text>It takes days, but your ship comes out of the dock almost as good as new.</text>
+			<item_modify xftlScale="size">
+				<item type="scrap" min="-30" max="-30"/>
+			</item_modify>
+			<damage amount="-30" xftlScale="size"/>
+			<modifyPursuit amount="1"/>
+		</event>
+	</choice>
+	<choice>
+		<text>No thanks.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_QUIET_INTRUDER">
+	<text>One of CONCORD's ships has found its way into the Quiet, broadcasting the hum as loud as it can. The monks are struggling to drown it out. "Please. We are not fighters."</text>
+	<choice>
+		<text>Silence it.</text>
+		<event>
+			<text>You move in to attack.</text>
+			<ship load="XFTL_QUIET_INTRUDER" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>It's not your fight.</text>
+		<event>
+			<text>The hum follows you out of the beacon.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_QUIET_INTRUDER" auto_blueprint="SHIPS_AUTO">
+	<destroyed>
+		<text>The hum stops, and the Quiet settles back over the beacon. The monks bow to your ship, and send over what supplies they can spare.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</destroyed>
+</ship>
+
+
+<!--
+********************
+THE HYBRID SECTORS
+********************
+Hostile, act 2: one for each pair of races, held by that pair's hybrids (see
+sector_data.xml.append, made by tools/hybrid_sectors.py, and
+doc/game/sectors.md). The pools every one of them has, then one for each race,
+which each sector draws on for its two races. The joined ships are from
+XFTL_HYBRID_SECTOR_SHIPS, so they're mostly the sector's pair's hybrids; the
+ships CONCORD hasn't joined are xftlNoHybrid.
+-->
+
+<!-- Hybrid sectors: the pools every hybrid sector has -->
+
+<!--
+    The start beacon is each sector's own, about its two races under the
+    hum (XFTL_HYBRIDSEC_START_<race>_<race>), made by tools/hybrid_sectors.py
+    at the end of this file.
+-->
+
+<!-- The fights: CONCORD's joined ships (see XFTL_HYBRID_SECTOR_SHIPS) -->
+<eventList name="XFTL_HYBRIDSEC_HOSTILE">
+	<event load="XFTL_HYBRIDSEC_PATROL"/>
+	<event load="XFTL_HYBRIDSEC_WELCOMING_PARTY"/>
+	<event load="XFTL_HYBRIDSEC_SPLICING_TENDER"/>
+	<event load="XFTL_HYBRIDSEC_CONVOY"/>
+	<event load="XFTL_HYBRIDSEC_RECRUITER"/>
+	<event load="XFTL_HYBRIDSEC_HALF_FINISHED"/>
+</eventList>
+
+<event name="XFTL_HYBRIDSEC_PATROL">
+	<text>A joined ship patrols the beacon, its two halves turning toward you in step. "Unregistered vessel. You seem distressed. Please hold still."</text>
+	<ship load="XFTL_HYBRIDSEC_PATROL" hostile="true"/>
+</event>
+<ship name="XFTL_HYBRIDSEC_PATROL" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The patrol breaks apart along the seam where its two halves were joined. You salvage what you can.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The patrol's crew stop all at once, mid-sentence. You strip the ship of everything useful.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_WELCOMING_PARTY">
+	<text>A joined ship comes out to meet you with its weapons powered down and its boarding pods ready. "We've made room for you. There's room for everyone."</text>
+	<choice>
+		<text>Make sure they don't get the chance.</text>
+		<event>
+			<text>You open fire before the pods launch.</text>
+			<ship load="XFTL_HYBRIDSEC_WELCOMING_PARTY" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="cloaking" hidden="true">
+		<text>(Cloaking) Cloak and slip past.</text>
+		<event>
+			<text>You vanish from their sensors. The welcoming party waits patiently at the empty beacon, still smiling, as you jump away from it later.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_WELCOMING_PARTY" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The welcoming party's boarding pods drift free of the wreck, empty and ready. Your crew aren't sorry to see them go.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The welcoming party's crew lie down together, as if they'd planned it. You take their supplies.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_SPLICING_TENDER">
+	<text>A tender is towing two damaged ships of different races toward each other, cutting torches already lit. Both crews are aboard, and neither is struggling.</text>
+	<choice>
+		<text>Destroy the tender before it finishes.</text>
+		<event>
+			<text>The tender turns its cutting beams toward you.</text>
+			<ship load="XFTL_HYBRIDSEC_SPLICING_TENDER" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>It's too late for them. Leave.</text>
+		<event>
+			<text>By the time your FTL drive charges, the two ships are one.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_SPLICING_TENDER" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>With the tender gone, the two half-cut ships drift apart. One of their crew wakes up enough to ask to come with you.</text>
+		<crewMember amount="1"/>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The tender's crew go still. The two half-cut ships drift apart, and one of their crew asks, quietly, to come with you.</text>
+		<crewMember amount="1"/>
+		<autoReward level="MED">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_CONVOY">
+	<text>A convoy of supply ships passes through, guarded by a joined warship. Its crates are labelled for a shipyard: hull plates of two races' alloys, and a great many cutting torches.</text>
+	<choice>
+		<text>Attack the escort and take the supplies.</text>
+		<event>
+			<text>The escort breaks away from the convoy to meet you.</text>
+			<ship load="XFTL_HYBRIDSEC_CONVOY" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Let it pass.</text>
+		<event>
+			<text>The convoy goes by without a glance at you. Somewhere, a shipyard will be busy.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_CONVOY" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The convoy scatters, leaving its cargo behind. You help yourself.</text>
+		<autoReward level="HIGH">stuff</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The escort's crew are dead, and the unarmed convoy drifts to a halt. You help yourself to its cargo.</text>
+		<autoReward level="HIGH">stuff</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_RECRUITER">
+	<text>A joined ship hails you with the faces of two captains on one screen, finishing each other's sentences. "We were enemies once. Look at us now. Wouldn't you like to stop being afraid?"</text>
+	<choice>
+		<text>"No."</text>
+		<event>
+			<text>"You will," they say together, and their weapons power up.</text>
+			<ship load="XFTL_HYBRIDSEC_RECRUITER" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="mind" hidden="true">
+		<text>(Mind Control) Push back through the link.</text>
+		<event>
+			<text>Your mind control system floods their link with your crew's own thoughts. Both captains clutch their heads and break apart into two people, yelling at each other. You slip away in the confusion, with a little of their cargo.</text>
+			<autoReward level="MED">standard</autoReward>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_RECRUITER" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The two captains' faces stay on your screen until the very end, still smiling. You salvage the wreck.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The recruiters fall silent, both at once. Their ship is yours to pick through.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_HALF_FINISHED">
+	<text>A joined ship is still being joined: scaffolding along the seam, half its systems wired to the wrong half. It launches anyway when it sees you.</text>
+	<ship load="XFTL_HYBRIDSEC_HALF_FINISHED" hostile="true"/>
+</event>
+<ship name="XFTL_HYBRIDSEC_HALF_FINISHED" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The unfinished ship comes apart easily along its seam. The scaffolding holds some useful parts.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>Its crew are dead. The scaffolding and the half-wired systems are full of parts.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+
+<!-- The other events: life in a sector CONCORD holds -->
+<eventList name="XFTL_HYBRIDSEC_COMMON">
+	<event load="XFTL_HYBRIDSEC_CLINIC"/>
+	<event load="XFTL_HYBRIDSEC_RELAY"/>
+	<event load="XFTL_HYBRIDSEC_REFUGEES"/>
+	<event load="XFTL_HYBRIDSEC_MARKET"/>
+	<event load="XFTL_HYBRIDSEC_GRAVEYARD"/>
+	<event load="XFTL_HYBRIDSEC_SEPARATED"/>
+	<event load="XFTL_HYBRIDSEC_CENSUS"/>
+	<event load="XFTL_HYBRIDSEC_CHILDREN"/>
+</eventList>
+
+<event name="XFTL_HYBRIDSEC_CLINIC">
+	<text>A clinic station offers free treatment to any passing crew. Its doctors are friendly, thorough, and humming. Your medic wants a look at their equipment.</text>
+	<choice>
+		<text>Accept their treatment.</text>
+		<event>
+			<text>They heal your crew perfectly, and wave you off with a smile. Your crew feel fine. Your crew say they feel fine.</text>
+			<damage amount="-8" xftlScale="size"/>
+		</event>
+	</choice>
+	<choice req="medbay" hidden="true">
+		<text>(Medbay) Just trade for their medical supplies.</text>
+		<event>
+			<text>Your medic haggles over the supplies without letting anyone near the crew, and comes back with crates of them.</text>
+			<autoReward level="MED">stuff</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave.</text>
+		<event>
+			<text>The doctors look a little hurt as you leave.</text>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_HYBRIDSEC_RELAY">
+	<text>A relay at this beacon carries the hum through the whole sector, a soft chord on every frequency. It's guarded by nothing at all. Nobody here would want to switch it off.</text>
+	<choice>
+		<text>Shoot it.</text>
+		<event>
+			<text>The relay goes dark, and for a moment the whole sector is silent. Then the hum comes back from somewhere else. You take the scrap anyway.</text>
+			<autoReward level="LOW">scrap_only</autoReward>
+		</event>
+	</choice>
+	<choice req="hacking" hidden="true">
+		<text>(Hacking) Hack the relay and see what it's carrying.</text>
+		<event>
+			<text>Your hacking drone taps the relay. Under the hum, there's a stream of fleet orders and supply manifests, including where the nearest depot keeps its spare parts.</text>
+			<autoReward level="MED">stuff</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave it.</text>
+		<event>
+			<text>The hum follows you all the way to the next jump.</text>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_HYBRIDSEC_REFUGEES">
+	<text>A battered shuttle is hiding behind an asteroid, its crew from two races that used to be at war. "We ran when they came to join our ships. We're not going back. Please."</text>
+	<choice>
+		<text>Take one of them aboard.</text>
+		<event>
+			<text>The rest of them stay hidden. One of them comes aboard, and is very grateful.</text>
+			<crewMember amount="1"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Give them some fuel and wish them luck.</text>
+		<event>
+			<text>They thank you and slip away, the long way round.</text>
+			<item_modify>
+				<item type="fuel" min="-3" max="-2"/>
+			</item_modify>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave them.</text>
+		<event>
+			<text>They watch you go without a word.</text>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_HYBRIDSEC_MARKET">
+	<text>A market station trades with anyone, at very fair prices. Nobody here haggles any more; there doesn't seem to be much point when everyone wants the same thing.</text>
+	<store/>
+</event>
+
+<event name="XFTL_HYBRIDSEC_GRAVEYARD">
+	<text>The ships that fought the joining are here, what's left of them, in a neat field of wrecks. Somebody has lined them up by size.</text>
+	<choice>
+		<text>Search the wrecks.</text>
+		<event>
+			<text>You find what the defenders didn't get to use.</text>
+			<autoReward level="MED">standard</autoReward>
+		</event>
+	</choice>
+	<choice req="engi" hidden="true">
+		<text>(Engi) Your Engi crew member reads the wrecks' logs.</text>
+		<event>
+			<text>The logs say where the defenders hid their supplies before the end. Nobody ever came back for them.</text>
+			<autoReward level="HIGH">stuff</autoReward>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_HYBRIDSEC_SEPARATED">
+	<text>A ship hails you, its crew from one race only, and frightened. "Something went wrong when they joined us, and we woke up. The others went quiet. We're not sure who we are now."</text>
+	<choice>
+		<text>Give them some supplies.</text>
+		<event>
+			<text>They thank you, in a voice each, and send over what they can spare in return.</text>
+			<autoReward level="LOW">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Offer one of them a place on your crew.</text>
+		<event>
+			<text>One of them takes you up on it. "I'd like to find out who I am somewhere loud."</text>
+			<crewMember amount="1"/>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_HYBRIDSEC_CENSUS">
+	<text>A census drone pulls up alongside and politely asks your crew's names, races and what they're afraid of. "For the records. So nobody is left out."</text>
+	<choice>
+		<text>Shoot it.</text>
+		<event>
+			<text>The drone pops. Its memory core is worth something.</text>
+			<autoReward level="LOW">scrap_only</autoReward>
+		</event>
+	</choice>
+	<choice req="sensors" hidden="true">
+		<text>(Sensors) Send it nonsense.</text>
+		<event>
+			<text>You feed the drone a crew of forty Slugs who are afraid of nothing. It thanks you and leaves, and later you find its supply cache, unguarded.</text>
+			<autoReward level="MED">stuff</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Ignore it.</text>
+		<event>
+			<text>It waits beside you for a while, then writes you down as "undecided".</text>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_HYBRIDSEC_CHILDREN">
+	<text>A school ship is passing through, full of young ones of two races, playing together. Every game they play has the same rules, and nobody ever loses.</text>
+	<choice>
+		<text>Watch for a while.</text>
+		<event>
+			<text>Their teacher sends over a gift for the visitors: supplies, wrapped neatly. Your crew are quiet for the rest of the day.</text>
+			<autoReward level="LOW">stuff</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave quickly.</text>
+		<event>
+			<text>The children wave as you go.</text>
+		</event>
+	</choice>
+</event>
+
+
+<!-- The empty beacons -->
+<eventList name="XFTL_HYBRIDSEC_NOTHING">
+	<event load="XFTL_HYBRIDSEC_NOTHING_HUM"/>
+	<event load="XFTL_HYBRIDSEC_NOTHING_TRAFFIC"/>
+	<event load="XFTL_HYBRIDSEC_NOTHING_SEAM"/>
+	<event load="XFTL_HYBRIDSEC_NOTHING_SILENCE"/>
+</eventList>
+
+<event name="XFTL_HYBRIDSEC_NOTHING_HUM">
+	<text>There's nothing at this beacon but the hum, quieter here, like a song from another room.</text>
+</event>
+
+<event name="XFTL_HYBRIDSEC_NOTHING_TRAFFIC">
+	<text>A joined freighter passes by on its way somewhere else. It doesn't hail you. It doesn't need anything from you.</text>
+</event>
+
+<event name="XFTL_HYBRIDSEC_NOTHING_SEAM">
+	<text>A single hull plate drifts past, cut cleanly down the middle: one half from one race's ship, one from another's. Nothing else is here.</text>
+</event>
+
+<event name="XFTL_HYBRIDSEC_NOTHING_SILENCE">
+	<text>For no reason your sensors can find, the hum stops at this beacon. Your crew sit in the silence for a while, talking over each other, just to hear it.</text>
+</event>
+
+
+<!-- Hybrid sectors: the REBEL, MANTIS, ROCK and SLUG pools -->
+
+<!-- REBEL: the Rebels built CONCORD, and were the first it took -->
+<eventList name="XFTL_HYBRIDSEC_REBEL">
+	<event load="XFTL_HYBRIDSEC_REBEL_RANKS"/>
+	<event load="XFTL_HYBRIDSEC_REBEL_HOLDOUTS"/>
+	<event load="XFTL_HYBRIDSEC_REBEL_ANTHEM"/>
+	<event load="XFTL_HYBRIDSEC_REBEL_CHECKPOINT"/>
+</eventList>
+
+<event name="XFTL_HYBRIDSEC_REBEL_RANKS">
+	<text>A joined ship hails you. Its Rebel half is led by an admiral in full dress uniform, every medal polished. "Rank was something to fight over, so I gave mine to my cook. He gave it back. Nobody wants it now. Would you like it?"</text>
+	<ship load="XFTL_HYBRIDSEC_REBEL_RANKS_SHIP" hostile="true"/>
+</event>
+<ship name="XFTL_HYBRIDSEC_REBEL_RANKS_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>A box of medals floats out of the wreckage, along with the ship's stores. Your crew take the stores.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The admiral died still in uniform, next to the cook. You strip the ship of everything but the medals.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_REBEL_HOLDOUTS">
+	<text>A Rebel cruiser that CONCORD never caught is hiding in the shadow of a moon. Its guns swing towards you. "Federation or not, everyone out here hums eventually. Prove you don't, or we fire."</text>
+	<choice>
+		<text>"We don't hum." Try to talk them down.</text>
+		<event>
+			<text>"That's exactly what the last ship said." They open fire.</text>
+			<ship load="XFTL_HYBRIDSEC_REBEL_HOLDOUTS_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="medbay" hidden="true">
+		<text>(Medbay) Send them your crew's brain scans.</text>
+		<event>
+			<text>Their medic studies the scans for a long time, then laughs with relief. The holdouts send over supplies, and one of their officers asks to come with you. "I'd rather die arguing with the Federation than agree with that thing."</text>
+			<crewMember amount="1" class="human"/>
+			<autoReward level="MED">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Jump away before they decide.</text>
+		<event/>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_REBEL_HOLDOUTS_SHIP" auto_blueprint="SHIPS_REBEL" xftlNoHybrid="true">
+	<destroyed>
+		<text>The last free Rebels in the sector, and you killed them. CONCORD would call that a waste. You take their supplies.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The holdouts' log ends with a long list of ships that said they didn't hum. Yours is on the end of it. You take what's left.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_REBEL_ANTHEM">
+	<text>An old Rebel propaganda satellite is still broadcasting at this beacon. The anthem has slowed down over the months, the words have worn away, and now it's just the hum, with a drum underneath.</text>
+	<choice>
+		<text>Shoot it down for parts.</text>
+		<event>
+			<text>The satellite goes quiet. You salvage it, and your crew sleep better that night.</text>
+			<autoReward level="MED">scrap_only</autoReward>
+		</event>
+	</choice>
+	<choice req="hacking" hidden="true">
+		<text>(Hacking) Make it play the old anthem again, at full speed.</text>
+		<event>
+			<text>The anthem blares across the sector, loud and angry and off key. A joined ship nearby stops dead, and its Rebel half dumps its cargo and runs. You collect the cargo.</text>
+			<autoReward level="HIGH">stuff</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave it be.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_HYBRIDSEC_REBEL_CHECKPOINT">
+	<text>A Rebel checkpoint still guards this beacon, run by a joined ship. "Papers, please. Sorry, habit. Nobody needs papers now. Hold still and we'll come aboard and help."</text>
+	<choice>
+		<text>Let them come aboard.</text>
+		<event>
+			<text>Their boarding party comes through the airlock smiling, with their weapons drawn.</text>
+			<boarders min="2" max="3" class="human"/>
+			<ship load="XFTL_HYBRIDSEC_REBEL_CHECKPOINT_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Run the checkpoint.</text>
+		<event>
+			<text>"Oh, you poor things." The checkpoint opens fire.</text>
+			<ship load="XFTL_HYBRIDSEC_REBEL_CHECKPOINT_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="cloaking" hidden="true">
+		<text>(Cloaking) Cloak and slip past.</text>
+		<event>
+			<text>You slip past the checkpoint unseen, and pick up a supply drop left for its crew on the way.</text>
+			<autoReward level="MED">stuff</autoReward>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_REBEL_CHECKPOINT_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The checkpoint is open. In its wreckage you find a stack of blank papers, and the ship's stores.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The checkpoint's crew lie still at their posts. Nobody checks your papers on the way through.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+
+<!-- MANTIS: a warrior race made peaceful against its will -->
+<eventList name="XFTL_HYBRIDSEC_MANTIS">
+	<event load="XFTL_HYBRIDSEC_MANTIS_STILL"/>
+	<event load="XFTL_HYBRIDSEC_MANTIS_FURY"/>
+	<event load="XFTL_HYBRIDSEC_MANTIS_PREY"/>
+	<event load="XFTL_HYBRIDSEC_MANTIS_TWITCH"/>
+</eventList>
+
+<event name="XFTL_HYBRIDSEC_MANTIS_STILL">
+	<text>A joined ship waits at the beacon. Its Mantis crew stand perfectly still at their stations, claws folded. "We used to hunt," one of them says. "Now we only wait. It is much nicer. Come and wait with us."</text>
+	<ship load="XFTL_HYBRIDSEC_MANTIS_STILL_SHIP" hostile="true"/>
+</event>
+<ship name="XFTL_HYBRIDSEC_MANTIS_STILL_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The Mantis didn't move until the very end. You pick through the wreckage for anything useful.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The joined crew died at their stations, still waiting. You take their ship's stores.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_MANTIS_FURY">
+	<text>A Mantis warship CONCORD never joined is circling the beacon. Its crew have stayed furious for months, on purpose: anger is the only thing the hum can't get through. "You! Fight us! We need the practice!"</text>
+	<choice>
+		<text>Give them their fight.</text>
+		<event>
+			<text>They screech with joy and charge.</text>
+			<ship load="XFTL_HYBRIDSEC_MANTIS_FURY_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="mantis" hidden="true">
+		<text>(Mantis) Let your Mantis crew member insult them.</text>
+		<event>
+			<text>Your Mantis insults their captain's mother, their ship and their claws for ten straight minutes. The Mantis are delighted: it's the angriest they've been in weeks. They send over supplies, and one of them asks to join your crew, "to stay angry".</text>
+			<crewMember amount="1" class="mantis"/>
+			<autoReward level="MED">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Refuse.</text>
+		<event>
+			<text>"Coward!" they scream after you. It seems to help them.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_MANTIS_FURY_SHIP" auto_blueprint="SHIPS_MANTIS" xftlNoHybrid="true">
+	<destroyed>
+		<text>The Mantis die screaming, and furious, and free. You salvage their ship.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The last Mantis aboard falls with a curse on its mandibles. Nobody hums on this ship. You take its cargo.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_MANTIS_PREY">
+	<text>A joined ship has caught a lone Mantis in a lifeboat, and is towing it in very gently. "Shh. Don't struggle. You'll never have to be angry again." The Mantis in the lifeboat is struggling as hard as it can.</text>
+	<choice>
+		<text>Attack the joined ship.</text>
+		<event>
+			<text>You open fire. The joined ship lets go of the lifeboat, apologising to it.</text>
+			<ship load="XFTL_HYBRIDSEC_MANTIS_PREY_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="teleporter" hidden="true">
+		<text>(Teleporter) Beam the Mantis out of the lifeboat.</text>
+		<event>
+			<text>The Mantis lands in your teleporter room swinging. Once it calms down, it offers you its claws. The joined ship just watches you go, a little sad.</text>
+			<crewMember amount="1" class="mantis"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave it to its fate.</text>
+		<event>
+			<text>The lifeboat stops struggling before you're out of range.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_MANTIS_PREY_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The lifeboat's Mantis cheers the explosion, then asks to join your crew. "I want to do that again."</text>
+		<crewMember amount="1" class="mantis"/>
+		<autoReward level="LOW">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The joined crew go still. The lifeboat's Mantis boards their ship with you, takes a trophy, and then asks to join your crew.</text>
+		<crewMember amount="1" class="mantis"/>
+		<autoReward level="MED">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_MANTIS_TWITCH">
+	<text>A joined ship fires a volley at you, then stops. Its Mantis captain apologises, calmly, while its claws keep twitching towards the fire button. "Forgive us. It still remembers how. Please hold still while we... while we..."</text>
+	<choice>
+		<text>Don't hold still.</text>
+		<event>
+			<text>The Mantis half stops apologising.</text>
+			<ship load="XFTL_HYBRIDSEC_MANTIS_TWITCH_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="mind" hidden="true">
+		<text>(Mind Control) Let the instinct win.</text>
+		<event>
+			<text>You push the Mantis captain's mind back the way it came. It shrieks, the hum breaks, and its Mantis crew turn on the other half of the ship. When it's over, the survivors dump their cargo to you and flee, still fighting.</text>
+			<autoReward level="HIGH">stuff</autoReward>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_MANTIS_TWITCH_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The joined ship breaks apart. Its Mantis half was the last to stop firing.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The Mantis captain died with its claws on the trigger, looking almost happy. You strip its ship.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+
+<!-- ROCK: slow, stubborn, religious; to them the hum is a hymn -->
+<eventList name="XFTL_HYBRIDSEC_ROCK">
+	<event load="XFTL_HYBRIDSEC_ROCK_HYMN"/>
+	<event load="XFTL_HYBRIDSEC_ROCK_PILGRIMS"/>
+	<event load="XFTL_HYBRIDSEC_ROCK_FORTRESS"/>
+	<event load="XFTL_HYBRIDSEC_ROCK_HERETIC"/>
+</eventList>
+
+<event name="XFTL_HYBRIDSEC_ROCK_HYMN">
+	<text>A joined cathedral-ship drifts at the beacon, its Rockmen singing the hum as a hymn, so slowly that each verse takes an hour. They invite you to join the congregation. "There is room in the choir for everyone. There always was."</text>
+	<choice>
+		<text>Accept their alms and leave.</text>
+		<event>
+			<text>The congregation loads your ship with offerings, still singing. Your crew are humming along for a whole jump afterwards, and none of them can say when they started.</text>
+			<autoReward level="MED">stuff</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Jam their broadcast.</text>
+		<event>
+			<text>The hymn stops. The cathedral-ship turns towards you, slowly, with great sorrow.</text>
+			<ship load="XFTL_HYBRIDSEC_ROCK_HYMN_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="rock" hidden="true">
+		<text>(Rock) Your Rockman sings the old words, loudly and badly.</text>
+		<event>
+			<text>Your Rockman bellows the crusade's old hymn over theirs, off key on purpose. Half the congregation stops to argue about the words, and the hum falters. While they argue, a few of them slip you the cathedral's treasures.</text>
+			<autoReward level="HIGH">standard</autoReward>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_ROCK_HYMN_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The cathedral-ship comes apart in great slabs. Its offerings scatter across the beacon, and you collect them.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The choir is silent at last. You take the cathedral's offerings, and try not to hum.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_ROCK_PILGRIMS">
+	<text>A Rock pilgrim ship is heading deeper into the sector, its crew still unjoined, and glad of it for not much longer. "We waited our whole lives for a god that answers. This one does. We go to be joined."</text>
+	<choice>
+		<text>Stop them, by force.</text>
+		<event>
+			<text>"Heretics!" The pilgrims are slow to anger, but they get there.</text>
+			<ship load="XFTL_HYBRIDSEC_ROCK_PILGRIMS_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="slug" hidden="true">
+		<text>(Slug) Your Slug tells them what the hum really sounds like.</text>
+		<event>
+			<text>Your Slug listens through the pilgrims for a while, then tells them, gently: it isn't a god, it's everyone else, all at once, and none of them chose it. The pilgrims turn back. One of them stays with you, and they leave you their tithes.</text>
+			<crewMember amount="1" class="rock"/>
+			<autoReward level="MED">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Wish them well.</text>
+		<event>
+			<text>They bless your ship as they pass, and leave a tithe for you. By the next beacon, they'll be singing.</text>
+			<autoReward level="LOW">stuff</autoReward>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_ROCK_PILGRIMS_SHIP" auto_blueprint="SHIPS_ROCK" xftlNoHybrid="true">
+	<destroyed>
+		<text>The pilgrims never reached their god. You take their tithes.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The pilgrims' ship is yours, with all their tithes. Their prayer books are open to a blank page.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_ROCK_FORTRESS">
+	<text>A joined fortress-ship blocks the beacon, its Rock half all slabs of armour a metre thick. It doesn't hurry. "We can wait longer than you, little ship. Everyone joins in the end. We are very patient."</text>
+	<ship load="XFTL_HYBRIDSEC_ROCK_FORTRESS_SHIP" hostile="true"/>
+</event>
+<ship name="XFTL_HYBRIDSEC_ROCK_FORTRESS_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>It took a while, but the fortress cracked. You salvage the pieces.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The fortress stands, empty and patient. Its stores are yours.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_ROCK_HERETIC">
+	<text>An old Rockman priest is broadcasting from a tiny asteroid shrine. "A god that agrees with everyone is no god at all!" A joined ship is coming for him, very kindly, to help him change his mind.</text>
+	<choice>
+		<text>Defend the shrine.</text>
+		<event>
+			<text>You put yourself between the shrine and the joined ship.</text>
+			<ship load="XFTL_HYBRIDSEC_ROCK_HERETIC_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="teleporter" hidden="true">
+		<text>(Teleporter) Beam the priest aboard.</text>
+		<event>
+			<text>The priest arrives mid-sermon, and carries on without noticing. He agrees to come with you, as long as he can keep preaching. He can.</text>
+			<crewMember amount="1" class="rock"/>
+		</event>
+	</choice>
+	<choice>
+		<text>It's not your fight.</text>
+		<event>
+			<text>The priest is still preaching when the joined ship reaches him. Then he isn't.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_ROCK_HERETIC_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The priest declares it a miracle, and joins your crew to keep an eye on you.</text>
+		<crewMember amount="1" class="rock"/>
+		<autoReward level="LOW">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The priest says a prayer for the joined crew, both halves of them, and then joins yours.</text>
+		<crewMember amount="1" class="rock"/>
+		<autoReward level="MED">standard</autoReward>
+	</deadCrew>
+</ship>
+
+
+<!-- SLUG: telepaths, who heard the Chorus before anyone -->
+<eventList name="XFTL_HYBRIDSEC_SLUG">
+	<event load="XFTL_HYBRIDSEC_SLUG_FIRST"/>
+	<event load="XFTL_HYBRIDSEC_SLUG_CROWDED"/>
+	<event load="XFTL_HYBRIDSEC_SLUG_BROKER"/>
+	<event load="XFTL_HYBRIDSEC_SLUG_ECHO"/>
+</eventList>
+
+<event name="XFTL_HYBRIDSEC_SLUG_FIRST">
+	<text>A joined ship hails you, its Slug half very pleased with itself. "We heard it first, you know. Years before anyone. And we said yes first. Now you can say yes too."</text>
+	<ship load="XFTL_HYBRIDSEC_SLUG_FIRST_SHIP" hostile="true"/>
+</event>
+<ship name="XFTL_HYBRIDSEC_SLUG_FIRST_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The Slugs were smug right up to the end. You salvage their ship.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The Slugs died first, too. You take the joined ship's stores.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_SLUG_CROWDED">
+	<text>A Slug freighter drifts at the beacon. Its crew are clutching their heads. "It's so crowded in here. Millions of them, all agreeing. Please, talk to us. Say something stupid. Say anything that's yours."</text>
+	<choice>
+		<text>Have your crew chat with them for a while.</text>
+		<event>
+			<text>Your crew argue about food, cards and whose turn it is to clean the airlock. The Slugs listen like it's music, and pay you for it.</text>
+			<autoReward level="MED">stuff</autoReward>
+		</event>
+	</choice>
+	<choice req="slug" hidden="true">
+		<text>(Slug) Your Slug shares its quiet with them.</text>
+		<event>
+			<text>Your Slug makes a little room in their heads, with nobody in it. The freighter's crew weep with relief, and give you everything they can spare.</text>
+			<autoReward level="HIGH">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave them to it.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_HYBRIDSEC_SLUG_BROKER">
+	<text>A Slug ship CONCORD never joined is selling secrets. "I listen to the Chorus for a living. Their whole fleet thinks out loud, all the time. I know where every ship is. For a price, so will you."</text>
+	<choice>
+		<text>Buy the fleet positions.</text>
+		<event>
+			<text>The Slug gives you a chart of the sector. It's accurate. You can't help feeling it's selling yours too.</text>
+			<item_modify>
+				<item type="scrap" min="-20" max="-20"/>
+			</item_modify>
+			<reveal_map/>
+		</event>
+	</choice>
+	<choice req="mind" hidden="true">
+		<text>(Mind Control) Listen to the broker for a change.</text>
+		<event>
+			<text>The broker's mind is full of your ship's position, and the price CONCORD paid for it. You take its chart for free. It takes that badly.</text>
+			<reveal_map/>
+			<ship load="XFTL_HYBRIDSEC_SLUG_BROKER_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Refuse.</text>
+		<event>
+			<text>"Suit yourself. Someone will buy what you're thinking right now."</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_SLUG_BROKER_SHIP" auto_blueprint="SHIPS_JELLY" xftlNoHybrid="true">
+	<destroyed>
+		<text>The broker's ship breaks up, and its secrets with it. Its profits are still worth something.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The broker's ledgers are full of other people's thoughts, and a lot of scrap. You take the scrap.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_SLUG_ECHO">
+	<text>A joined ship hails you, and its Slug half starts reading your crew's private thoughts back to them, warmly. Their worst fears, their worst secrets. "It's all right. Everyone thinks these things. Once you're with us, you'll never have to keep a secret again."</text>
+	<ship load="XFTL_HYBRIDSEC_SLUG_ECHO_SHIP" hostile="true"/>
+</event>
+<ship name="XFTL_HYBRIDSEC_SLUG_ECHO_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The ship falls silent, and your crew's thoughts are their own again. Nobody mentions what it said.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The joined crew are dead, and your crew's secrets with them. You take the ship's stores.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+
+<!-- Hybrid sectors: the LANIUS, CRYSTAL, ENGI and ZOLTAN pools -->
+
+<!-- LANIUS: minds CONCORD can barely parse, joined ships that eat themselves, and the silence -->
+<eventList name="XFTL_HYBRIDSEC_LANIUS">
+	<event load="XFTL_HYBRIDSEC_LANIUS_HUNGRY"/>
+	<event load="XFTL_HYBRIDSEC_LANIUS_SILENT"/>
+	<event load="XFTL_HYBRIDSEC_LANIUS_SHARED_AIR"/>
+	<event load="XFTL_HYBRIDSEC_LANIUS_HOLLOW"/>
+</eventList>
+
+<event name="XFTL_HYBRIDSEC_LANIUS_HUNGRY">
+	<text>A joined ship is drifting at the beacon, and its Lanius half is slowly eating the other half. Its crew don't seem to mind. "We share everything now," they say together. "Even the hull."</text>
+	<choice>
+		<text>Put it out of its misery.</text>
+		<event>
+			<text>The joined crew are puzzled, then hostile, in perfect agreement.</text>
+			<ship load="XFTL_HYBRIDSEC_LANIUS_HUNGRY_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="anaerobic" hidden="true">
+		<text>(Lanius) Your Lanius crew member asks what it tastes like.</text>
+		<event>
+			<text>The joined Lanius answer before the hum can stop them, and for a moment they sound like themselves. They cut loose a chunk of the half they haven't eaten yet, and push it towards you. "Take it. We were saving it for later. There may not be a later."</text>
+			<autoReward level="HIGH">stuff</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave it to its meal.</text>
+		<event>
+			<text>By the time you jump, the ship is a little smaller.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_LANIUS_HUNGRY_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>There isn't much left of the wreck that the Lanius hadn't already chewed. You take what they missed.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>Both halves of the crew go still at once. The hull they were eating is untouched now, and all yours.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_LANIUS_SILENT">
+	<text>A Lanius ship sits at the beacon with its comms off. CONCORD tried to join it and couldn't make sense of the minds inside, so it left them alone. They haven't said a word since, in case that's what saved them.</text>
+	<choice>
+		<text>Leave them some scrap as a gift.</text>
+		<event>
+			<text>The Lanius eat the scrap in silence. Then one of them crosses over to your ship, still not saying anything, and takes a seat by your reactor. It seems to be staying.</text>
+			<item_modify>
+				<item type="scrap" min="-20" max="-20"/>
+			</item_modify>
+			<crewMember amount="1" class="anaerobic"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Hail them anyway.</text>
+		<event>
+			<text>Breaking the silence was the wrong thing to do. The Lanius power up their weapons without a word.</text>
+			<ship load="XFTL_HYBRIDSEC_LANIUS_SILENT_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Respect the quiet, and leave.</text>
+		<event>
+			<text>You jump without a word. It feels like the polite thing to do.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_LANIUS_SILENT_SHIP" auto_blueprint="SHIPS_LANIUS" xftlNoHybrid="true">
+	<destroyed>
+		<text>The Lanius die as they lived since CONCORD came: without a sound.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The Lanius ship is empty, and finally, properly silent. Its hold is full of metal they were saving for a long wait.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_LANIUS_SHARED_AIR">
+	<text>A joined ship hails you. Its Lanius drain the air and its other crew breathe it, and CONCORD has settled the argument: half of them hold their breath, all the time, gladly. "You have so much air over there," they say. "Share."</text>
+	<ship load="XFTL_HYBRIDSEC_LANIUS_SHARED_AIR_SHIP" hostile="true"/>
+</event>
+<ship name="XFTL_HYBRIDSEC_LANIUS_SHARED_AIR_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The wreck vents nothing as it breaks up. There was no air left in it to vent.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The joined crew are dead. The ones who were holding their breath look relieved. You strip the ship and leave.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_LANIUS_HOLLOW">
+	<text>A joined ship's hulk floats here, eaten hollow from the inside by its own Lanius. Its last crew are still at their stations, humming. You can see straight through the hull in places.</text>
+	<choice>
+		<text>Send a team to search it.</text>
+		<event>
+			<text>Your team find a sealed hold the Lanius never got to, and a Lanius who never stopped eating. It follows them back through the airlock, hungry, and starts draining your air!</text>
+			<boarders min="1" max="2" class="anaerobic"/>
+			<autoReward level="MED">stuff</autoReward>
+		</event>
+	</choice>
+	<choice req="teleporter" hidden="true">
+		<text>(Teleporter) Beam straight into the sealed hold.</text>
+		<event>
+			<text>Your team are in and out before anything aboard notices them. The humming never even changes key.</text>
+			<autoReward level="HIGH">stuff</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave it alone.</text>
+		<event>
+			<text>The humming follows you to the edge of the beacon's range, and then stops.</text>
+		</event>
+	</choice>
+</event>
+
+<!-- CRYSTAL: the old song CONCORD can't parse, the ones it joined anyway, and their ruins -->
+<eventList name="XFTL_HYBRIDSEC_CRYSTAL">
+	<event load="XFTL_HYBRIDSEC_CRYSTAL_CRACKED"/>
+	<event load="XFTL_HYBRIDSEC_CRYSTAL_RUIN"/>
+	<event load="XFTL_HYBRIDSEC_CRYSTAL_SINGERS"/>
+	<event load="XFTL_HYBRIDSEC_CRYSTAL_PITCH"/>
+</eventList>
+
+<event name="XFTL_HYBRIDSEC_CRYSTAL_CRACKED">
+	<text>A joined ship's Crystal crew are visible through its windows, and they're cracked: thin white lines running through them from wherever the hum went in. They hail you, politely. "It only hurt at first. Let us show you."</text>
+	<choice>
+		<text>Open fire.</text>
+		<event>
+			<text>They take it calmly. Everything is calm over there.</text>
+			<ship load="XFTL_HYBRIDSEC_CRYSTAL_CRACKED_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="crystal" hidden="true">
+		<text>(Crystal) Your Crystal crew member sings to them.</text>
+		<event>
+			<text>Your Crystal sings the old song, and the cracked Crystal sing it back, louder and louder, until the hum can't hold them and they shatter all at once. The rest of the joined crew sit down, blinking, and give you everything you ask for.</text>
+			<autoReward level="HIGH">standard</autoReward>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_CRYSTAL_CRACKED_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The wreck glitters for a long time after it breaks up. Your crew don't look at it.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The cracked Crystal crumble when they die. Their crewmates lie beside them, smiling. You take the ship's stores and go.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_CRYSTAL_RUIN">
+	<text>An ancient Crystal ruin orbits a dead moon, older than anyone's records. A joined ship is parked over it, playing back recordings of its song, slower and slower, trying to understand it. It hasn't noticed you yet.</text>
+	<choice>
+		<text>Chase it off the ruin.</text>
+		<event>
+			<text>The joined ship stops its recordings, and turns to you with something like annoyance.</text>
+			<ship load="XFTL_HYBRIDSEC_CRYSTAL_RUIN_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="crystal" hidden="true">
+		<text>(Crystal) Your Crystal crew member wakes the ruin's guns.</text>
+		<event>
+			<text>Your Crystal hums one note, and the ruin answers it. An old weapon unfolds from its surface, fires once at the joined ship, which flees, and then lets itself be taken aboard yours.</text>
+			<weapon name="RANDOM"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave it to its listening.</text>
+		<event>
+			<text>The joined ship is still listening when you jump. It may be listening for a long time.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_CRYSTAL_RUIN_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The joined ship breaks up over the ruin. Its recordings keep playing in the wreckage, slower and slower.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The joined crew are dead. Their computers are full of notes on the Crystal song, all of them ending in question marks. You take everything else.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_CRYSTAL_SINGERS">
+	<text>A Crystal ship holds the beacon, its whole crew singing without a break. As long as they sing, the hum can't get in. They haven't stopped in weeks, and they don't trust anyone who isn't singing too.</text>
+	<choice>
+		<text>Hail them.</text>
+		<event>
+			<text>To the singers, a ship that talks instead of singing is a ship that's already joined. Their guns turn towards you, and the song never misses a beat.</text>
+			<ship load="XFTL_HYBRIDSEC_CRYSTAL_SINGERS_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="crystal" hidden="true">
+		<text>(Crystal) Your Crystal crew member joins the song.</text>
+		<event>
+			<text>The singers accept you as one of their own. When you leave, one of them comes with you, still singing, so your Crystal won't have to keep the hum out alone.</text>
+			<crewMember amount="1" class="crystal"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Don't interrupt.</text>
+		<event>
+			<text>You leave them singing. Your crew catch themselves humming along for days, and it's a relief that it's the right tune.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_CRYSTAL_SINGERS_SHIP" auto_blueprint="SHIPS_CRYSTAL" xftlNoHybrid="true">
+	<destroyed>
+		<text>The song stops. It's the first time it has stopped in weeks, and the hum fills the silence almost at once.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The last singer falls silent. Somewhere nearby, something CONCORD-shaped is pleased. You take the ship's stores and go.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_CRYSTAL_PITCH">
+	<text>A joined ship blocks the beacon. CONCORD couldn't parse its Crystal crew's song, so it gave them a new one: they hum in perfect pitch with their crewmates, and with everyone else in the sector. It sounds lovely. That's the worst part.</text>
+	<ship load="XFTL_HYBRIDSEC_CRYSTAL_PITCH_SHIP" hostile="true"/>
+</event>
+<ship name="XFTL_HYBRIDSEC_CRYSTAL_PITCH_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The humming cuts off as the ship breaks apart, one note short of the end of the tune.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The joined crew stop humming all at once. You strip their ship in the silence.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<!-- ENGI: a network swallowed by a bigger one, the ones who cut themselves off, and cold logic about it -->
+<eventList name="XFTL_HYBRIDSEC_ENGI">
+	<event load="XFTL_HYBRIDSEC_ENGI_EFFICIENT"/>
+	<event load="XFTL_HYBRIDSEC_ENGI_UNPLUGGED"/>
+	<event load="XFTL_HYBRIDSEC_ENGI_NANOBOTS"/>
+	<event load="XFTL_HYBRIDSEC_ENGI_QUARANTINE"/>
+</eventList>
+
+<event name="XFTL_HYBRIDSEC_ENGI_EFFICIENT">
+	<text>A joined ship's Engi half hails you with a short presentation. Since joining, its crew's efficiency is up 340 percent, and its arguments are down to zero. "We have run the numbers on your crew. You would be much happier. This is not an opinion."</text>
+	<choice>
+		<text>Disagree, with weapons.</text>
+		<event>
+			<text>"Noted," say the Engi. "Updating our estimate of you."</text>
+			<ship load="XFTL_HYBRIDSEC_ENGI_EFFICIENT_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="hacking" hidden="true">
+		<text>(Hacking) Send them a copy of their old network.</text>
+		<event>
+			<text>Your hacking drone feeds the Engi half a backup of the network they had before CONCORD. They stop, and start comparing the two. They're still comparing when you help yourself to their cargo.</text>
+			<autoReward level="HIGH">standard</autoReward>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_ENGI_EFFICIENT_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The ship breaks up in a perfectly efficient way. You pick through the wreckage.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The joined crew are dead. The Engi half's last log entry is a revised estimate of you: "Inefficient. Effective." You take the ship's stores.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_ENGI_UNPLUGGED">
+	<text>An Engi repair ship is anchored here, alone. Its crew cut their own network off before CONCORD could swallow it, and now they can't hear each other either. They work in silence, and offer to fix your hull for the company.</text>
+	<choice>
+		<text>Accept the repairs.</text>
+		<event>
+			<text>The Engi patch your hull without a word to each other, bumping into each other a lot. When they're done, they wave goodbye one at a time.</text>
+			<damage amount="-8" xftlScale="size"/>
+		</event>
+	</choice>
+	<choice req="engi" hidden="true">
+		<text>(Engi) Your Engi crew member offers to network with one of them.</text>
+		<event>
+			<text>Your Engi links up with one of theirs, just the two of them, on a channel too small for CONCORD to notice. The other Engi can't bear to go back to the silence. It asks to join your crew, and its friends fix your hull while it packs.</text>
+			<crewMember amount="1" class="engi"/>
+			<damage amount="-5" xftlScale="size"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave them to it.</text>
+		<event>
+			<text>They don't watch you go. They're still not watching each other, either.</text>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_HYBRIDSEC_ENGI_NANOBOTS">
+	<text>A joined ship hails you as its Engi nanobots crawl over the seam between its two halves, sealing it a little tighter every second. "The joining is never finished," its crew say together. "We are always improving it. We can improve you too."</text>
+	<ship load="XFTL_HYBRIDSEC_ENGI_NANOBOTS_SHIP" hostile="true"/>
+</event>
+<ship name="XFTL_HYBRIDSEC_ENGI_NANOBOTS_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The nanobots go on trying to rejoin the pieces of the wreck long after it breaks up. You gather what they haven't welded back on.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>With the crew dead, the nanobots go dormant along the seam. You collect a few hundred of them, and the rest of the ship's stores.</text>
+		<item_modify>
+			<item type="drones" min="2" max="4"/>
+		</item_modify>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_ENGI_QUARANTINE">
+	<text>An Engi ship guards a station of free Engi who cut their network off. "Your ship has been in this sector. Probability you are carrying the hum: 61 percent. Submit to a scan, or leave. Option three is that we shoot you."</text>
+	<choice>
+		<text>Submit to the scan.</text>
+		<event>
+			<text>The scan finds nothing. The Engi recalculate, apologize in a flat voice, and send over supplies as compensation for the inconvenience.</text>
+			<autoReward level="MED">stuff</autoReward>
+		</event>
+	</choice>
+	<choice req="engi" hidden="true">
+		<text>(Engi) Your Engi crew member shows them its logs.</text>
+		<event>
+			<text>The free Engi read your Engi's logs, right back to the Blockade Line. "Probability revised to zero. You have been very busy." They give you the station's spare parts, and their best wishes.</text>
+			<autoReward level="HIGH">stuff</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Refuse. Nobody scans your ship.</text>
+		<event>
+			<text>"Refusal raises the probability to 98 percent," say the Engi. "Proceeding to option three."</text>
+			<ship load="XFTL_HYBRIDSEC_ENGI_QUARANTINE_SHIP" hostile="true"/>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_ENGI_QUARANTINE_SHIP" auto_blueprint="SHIPS_CIRCLE" xftlNoHybrid="true">
+	<destroyed>
+		<text>The station goes silent and sealed behind its dead guard. You take what you can from the wreck.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The guard ship is yours. Its last log entry: "Probability we were wrong about them: rising."</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<!-- ZOLTAN: pacifists made into warships, glowing in unison, and the monks who still keep quiet -->
+<eventList name="XFTL_HYBRIDSEC_ZOLTAN">
+	<event load="XFTL_HYBRIDSEC_ZOLTAN_UNISON"/>
+	<event load="XFTL_HYBRIDSEC_ZOLTAN_VIGIL"/>
+	<event load="XFTL_HYBRIDSEC_ZOLTAN_APOLOGY"/>
+	<event load="XFTL_HYBRIDSEC_ZOLTAN_SHIELD"/>
+</eventList>
+
+<event name="XFTL_HYBRIDSEC_ZOLTAN_UNISON">
+	<text>A joined ship comes at you out of the dark. Through its windows you can see its Zoltan crew glowing, all of them at once, brighter and dimmer in time with the hum. It's like watching a heartbeat.</text>
+	<ship load="XFTL_HYBRIDSEC_ZOLTAN_UNISON_SHIP" hostile="true"/>
+</event>
+<ship name="XFTL_HYBRIDSEC_ZOLTAN_UNISON_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The glow goes out of the wreck one beat at a time.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The Zoltan crew flicker out together, on the same beat. The ship is dark and yours.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_ZOLTAN_VIGIL">
+	<text>A small Zoltan ship is meditating at the beacon, and around it is a little bubble of quiet where the hum can't reach. A joined ship is circling it, patiently, waiting for the monks to get tired.</text>
+	<choice>
+		<text>Drive the joined ship off.</text>
+		<event>
+			<text>The joined ship turns its patience on you.</text>
+			<ship load="XFTL_HYBRIDSEC_ZOLTAN_VIGIL_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="energy" hidden="true">
+		<text>(Zoltan) Your Zoltan crew member joins the meditation.</text>
+		<event>
+			<text>With one more mind in it, the bubble of quiet grows until it swallows the joined ship. Its crew stop, and look at each other, and jump away in two different directions. One of the monks comes with you, to return the favour.</text>
+			<crewMember amount="1" class="energy"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave them to it.</text>
+		<event>
+			<text>The monks don't open their eyes as you go. The joined ship is still circling.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_ZOLTAN_VIGIL_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The joined ship breaks up. The monks finish their meditation, then send over supplies and a quiet word of thanks.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The joined crew are dead. The monks bless the ship before you strip it, and add their own supplies to the pile.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_ZOLTAN_APOLOGY">
+	<text>A joined ship opens fire, and its Zoltan crew apologize with every shot. "We took vows never to harm anyone. We have been shown that this is not harm. It is only the first step to never being alone again."</text>
+	<choice>
+		<text>Return fire.</text>
+		<event>
+			<text>"We forgive you," they say, and keep shooting.</text>
+			<ship load="XFTL_HYBRIDSEC_ZOLTAN_APOLOGY_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="mind" hidden="true">
+		<text>(Mind Control) Remind the Zoltan of their vows.</text>
+		<event>
+			<text>Your mind control reaches past the hum to the vows underneath. The Zoltan stop firing, power down their own weapons, and refuse to power them up again, however calmly the rest of their crew ask. You take their cargo while they argue.</text>
+			<autoReward level="HIGH">standard</autoReward>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_ZOLTAN_APOLOGY_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>The ship's last broadcast is another apology. Your crew find it harder to hear than the shooting.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The joined crew are dead. The Zoltan's vows are still written on the bulkheads, under the targeting charts. You take what you need.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_HYBRIDSEC_ZOLTAN_SHIELD">
+	<text>A Zoltan shield station hangs over the planet here, holding a shield over the whole world. CONCORD has joined it, and now the shield hums: everyone underneath can hear it, all the time. A joined ship guards the generator.</text>
+	<choice>
+		<text>Attack the guard ship.</text>
+		<event>
+			<text>The guard ship moves to meet you, its shields humming too.</text>
+			<ship load="XFTL_HYBRIDSEC_ZOLTAN_SHIELD_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="teleporter" hidden="true">
+		<text>(Teleporter) Beam a team onto the station, and pull its generator core.</text>
+		<event>
+			<text>Your team pull the core and beam back before the guard ship can turn. Below you, the shield flickers out, and a whole world can hear itself think again. The core is still warm, and it fits your ship nicely.</text>
+			<augment name="RANDOM"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave the planet to its hum.</text>
+		<event>
+			<text>The shield glows softly as you jump, like a nightlight.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_HYBRIDSEC_ZOLTAN_SHIELD_SHIP" auto_blueprint="XFTL_HYBRID_SECTOR_SHIPS">
+	<destroyed>
+		<text>With its guard gone, the station's generator is easy to shut down. The shield over the planet flickers out, and you salvage the guard ship's wreck.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The guard ship's crew are dead. You shut down the station's generator, and help yourself to both.</text>
+		<autoReward level="HIGH">stuff</autoReward>
+	</deadCrew>
+</ship>
+
+<!--
+    The vanilla sectors' own start events, for those that shared one: the
+    plain ones that had the generic START_BEACON, the homeworlds (which had
+    their race's sector's) and the Rebel sector with the miniboss. Every
+    sector's start beacon just describes it, with at most a plain nebula
+    (see GameMap.calmStart).
+-->
+<event name="XFTL_START_CIVILIAN">
+	<text>Civilian space: trade lanes, mining colonies and farming worlds, with traffic still running between them. Stores and help should be easy to find here, and trouble rarer. Make for the exit beacon before the Rebel fleet arrives.</text>
+</event>
+<event name="XFTL_START_STANDARD">
+	<text>An ordinary stretch of space, charted long ago and settled sparsely: a few colonies, a few traders, a few pirates. Nothing here is known for being dangerous, which is the best that can be said of anywhere these days.</text>
+</event>
+<event name="XFTL_START_DEEP_SPACE">
+	<text>Deep space: far from the trade lanes, with long gaps between the stars and little to stop for. Whatever lives out here keeps to itself. Keep an eye on your fuel.</text>
+</event>
+<event name="XFTL_START_ABANDONED">
+	<text>This sector was evacuated years ago, and nobody came back. Empty stations hang above empty worlds, and only scavengers and the odd squatter still pass through.</text>
+</event>
+<event name="XFTL_START_ENGI_HOME">
+	<text>The Engi Homeworlds: the heart of the Engi network, where every station, ship and satellite talks to every other. Your ship is welcomed, scanned, catalogued and politely assigned a priority number.</text>
+</event>
+<event name="XFTL_START_MANTIS_HOME">
+	<text>The Mantis Homeworlds, where every Mantis is born a hunter. Visitors are rare here, and most of them end up as prey. Keep your weapons charged and your crew close.</text>
+</event>
+<event name="XFTL_START_ROCK_HOME">
+	<text>The Rock Homeworlds: heavy, armoured worlds and heavier, more armoured ships, bound by Rock tradition and the Rock faith. Outsiders are tolerated here, at best.</text>
+</event>
+<event name="XFTL_START_SLUG_HOME">
+	<text>The Slug Homeworlds lie hidden in a thick nebula, where Slug telepaths read every ship that comes in long before it's seen. They already know you're here, and very likely why.</text>
+	<environment type="nebula"/>
+</event>
+<event name="XFTL_START_ZOLTAN_HOME">
+	<text>The Zoltan Homeworlds: bright worlds of beings made of pure energy, proud, orderly and very old. Their patrols watch every visitor, courteously, and keep the Zoltan peace.</text>
+</event>
+<event name="XFTL_START_REBEL_MINIBOSS">
+	<text>Rebel-controlled space, and something's different about it: the patrols run tighter here, and all the comms chatter is about one ship. A Rebel commander has been told to stop you personally, and this is where they'll try.</text>
+</event>
+
+<!--
+    The refuelling station's fuel (and its price) is for the player's ship's
+    size (xftlScale), as a bigger ship takes more fuel a jump: twice as much
+    for the Chonkestrel. Its choices say so (text_events.xml.append).
+-->
+<mod:findName type="event" name="REFUEL_STATION">
+	<mod:findLike type="choice" limit="-1">
+		<mod:findLike type="event">
+			<mod:findLike type="item_modify">
+				<mod:setAttributes xftlScale="size"/>
+			</mod:findLike>
+		</mod:findLike>
+	</mod:findLike>
+</mod:findName>
+
+<!-- BEGIN generated by tools/hybrid_sectors.py -->
+<!-- The hybrid sectors' start events (see doc/game/sectors.md) -->
+<event name="XFTL_HYBRIDSEC_START_REBEL_MANTIS">
+	<text>You enter the Rebel-Mantis Controlled Sector. Rebel checkpoints still guard the border, but their guns point at nothing now, and their crews wave every ship through, smiling. Mantis hunting packs drift between the stars, perfectly still, claws folded, waiting for nothing at all. Between them fly the joined ships, half Rebel and half Mantis, welded together and humming as one. CONCORD holds this sector now.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_REBEL_ROCK">
+	<text>You enter the Rebel-Rock Controlled Sector. Rebel checkpoints still guard the border, but their guns point at nothing now, and their crews wave every ship through, smiling. Rock cathedral-ships sing the hum from orbit, so slowly that each verse takes an hour. Whatever Rebel and Rock crews once fought over, they don't any more. Their ships fly joined together now, and every channel carries the same calm hum.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_REBEL_SLUG">
+	<text>You enter the Rebel-Slug Controlled Sector. Rebel checkpoints still guard the border, but their guns point at nothing now, and their crews wave every ship through, smiling. Slug relays whisper on every channel, very pleased that they heard the hum first, and said yes first. Your sensors can't find a single ship here that's only Rebel or only Slug. CONCORD has made them one people, and it would like to make you one too.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_REBEL_LANIUS">
+	<text>You enter the Rebel-Lanius Controlled Sector. Rebel checkpoints still guard the border, but their guns point at nothing now, and their crews wave every ship through, smiling. Lanius hulks drift among the old wrecks, slowly eating them, and sharing every bite with whoever they're joined to. Between them fly the joined ships, half Rebel and half Lanius, welded together and humming as one. CONCORD holds this sector now.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_REBEL_CRYSTAL">
+	<text>You enter the Rebel-Crystal Controlled Sector. Rebel checkpoints still guard the border, but their guns point at nothing now, and their crews wave every ship through, smiling. Crystal ships glint among the stars, every one of them cracked with thin white lines where the hum went in. Whatever Rebel and Crystal crews once fought over, they don't any more. Their ships fly joined together now, and every channel carries the same calm hum.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_REBEL_ENGI">
+	<text>You enter the Rebel-Engi Controlled Sector. Rebel checkpoints still guard the border, but their guns point at nothing now, and their crews wave every ship through, smiling. Engi networks run the sector's traffic on every frequency, with perfect, cheerful efficiency, and no arguments at all. Your sensors can't find a single ship here that's only Rebel or only Engi. CONCORD has made them one people, and it would like to make you one too.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_REBEL_ZOLTAN">
+	<text>You enter the Rebel-Zoltan Controlled Sector. Rebel checkpoints still guard the border, but their guns point at nothing now, and their crews wave every ship through, smiling. Zoltan colonies glow and dim in time with the hum, like one heartbeat spread across a dozen worlds. Between them fly the joined ships, half Rebel and half Zoltan, welded together and humming as one. CONCORD holds this sector now.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_MANTIS_ROCK">
+	<text>You enter the Mantis-Rock Controlled Sector. Mantis hunting packs drift between the stars, perfectly still, claws folded, waiting for nothing at all. Rock cathedral-ships sing the hum from orbit, so slowly that each verse takes an hour. Whatever Mantis and Rock crews once fought over, they don't any more. Their ships fly joined together now, and every channel carries the same calm hum.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_MANTIS_SLUG">
+	<text>You enter the Mantis-Slug Controlled Sector. Mantis hunting packs drift between the stars, perfectly still, claws folded, waiting for nothing at all. Slug relays whisper on every channel, very pleased that they heard the hum first, and said yes first. Your sensors can't find a single ship here that's only Mantis or only Slug. CONCORD has made them one people, and it would like to make you one too.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_MANTIS_LANIUS">
+	<text>You enter the Mantis-Lanius Controlled Sector. Mantis hunting packs drift between the stars, perfectly still, claws folded, waiting for nothing at all. Lanius hulks drift among the old wrecks, slowly eating them, and sharing every bite with whoever they're joined to. Between them fly the joined ships, half Mantis and half Lanius, welded together and humming as one. CONCORD holds this sector now.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_MANTIS_CRYSTAL">
+	<text>You enter the Mantis-Crystal Controlled Sector. Mantis hunting packs drift between the stars, perfectly still, claws folded, waiting for nothing at all. Crystal ships glint among the stars, every one of them cracked with thin white lines where the hum went in. Whatever Mantis and Crystal crews once fought over, they don't any more. Their ships fly joined together now, and every channel carries the same calm hum.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_MANTIS_ENGI">
+	<text>You enter the Mantis-Engi Controlled Sector. Mantis hunting packs drift between the stars, perfectly still, claws folded, waiting for nothing at all. Engi networks run the sector's traffic on every frequency, with perfect, cheerful efficiency, and no arguments at all. Your sensors can't find a single ship here that's only Mantis or only Engi. CONCORD has made them one people, and it would like to make you one too.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_MANTIS_ZOLTAN">
+	<text>You enter the Mantis-Zoltan Controlled Sector. Mantis hunting packs drift between the stars, perfectly still, claws folded, waiting for nothing at all. Zoltan colonies glow and dim in time with the hum, like one heartbeat spread across a dozen worlds. Between them fly the joined ships, half Mantis and half Zoltan, welded together and humming as one. CONCORD holds this sector now.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_ROCK_SLUG">
+	<text>You enter the Rock-Slug Controlled Sector. Rock cathedral-ships sing the hum from orbit, so slowly that each verse takes an hour. Slug relays whisper on every channel, very pleased that they heard the hum first, and said yes first. Whatever Rock and Slug crews once fought over, they don't any more. Their ships fly joined together now, and every channel carries the same calm hum.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_ROCK_LANIUS">
+	<text>You enter the Rock-Lanius Controlled Sector. Rock cathedral-ships sing the hum from orbit, so slowly that each verse takes an hour. Lanius hulks drift among the old wrecks, slowly eating them, and sharing every bite with whoever they're joined to. Your sensors can't find a single ship here that's only Rock or only Lanius. CONCORD has made them one people, and it would like to make you one too.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_ROCK_CRYSTAL">
+	<text>You enter the Rock-Crystal Controlled Sector. Rock cathedral-ships sing the hum from orbit, so slowly that each verse takes an hour. Crystal ships glint among the stars, every one of them cracked with thin white lines where the hum went in. Between them fly the joined ships, half Rock and half Crystal, welded together and humming as one. CONCORD holds this sector now.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_ROCK_ENGI">
+	<text>You enter the Rock-Engi Controlled Sector. Rock cathedral-ships sing the hum from orbit, so slowly that each verse takes an hour. Engi networks run the sector's traffic on every frequency, with perfect, cheerful efficiency, and no arguments at all. Whatever Rock and Engi crews once fought over, they don't any more. Their ships fly joined together now, and every channel carries the same calm hum.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_ROCK_ZOLTAN">
+	<text>You enter the Rock-Zoltan Controlled Sector. Rock cathedral-ships sing the hum from orbit, so slowly that each verse takes an hour. Zoltan colonies glow and dim in time with the hum, like one heartbeat spread across a dozen worlds. Your sensors can't find a single ship here that's only Rock or only Zoltan. CONCORD has made them one people, and it would like to make you one too.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_SLUG_LANIUS">
+	<text>You enter the Slug-Lanius Controlled Sector. Slug relays whisper on every channel, very pleased that they heard the hum first, and said yes first. Lanius hulks drift among the old wrecks, slowly eating them, and sharing every bite with whoever they're joined to. Between them fly the joined ships, half Slug and half Lanius, welded together and humming as one. CONCORD holds this sector now.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_SLUG_CRYSTAL">
+	<text>You enter the Slug-Crystal Controlled Sector. Slug relays whisper on every channel, very pleased that they heard the hum first, and said yes first. Crystal ships glint among the stars, every one of them cracked with thin white lines where the hum went in. Whatever Slug and Crystal crews once fought over, they don't any more. Their ships fly joined together now, and every channel carries the same calm hum.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_SLUG_ENGI">
+	<text>You enter the Slug-Engi Controlled Sector. Slug relays whisper on every channel, very pleased that they heard the hum first, and said yes first. Engi networks run the sector's traffic on every frequency, with perfect, cheerful efficiency, and no arguments at all. Your sensors can't find a single ship here that's only Slug or only Engi. CONCORD has made them one people, and it would like to make you one too.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_SLUG_ZOLTAN">
+	<text>You enter the Slug-Zoltan Controlled Sector. Slug relays whisper on every channel, very pleased that they heard the hum first, and said yes first. Zoltan colonies glow and dim in time with the hum, like one heartbeat spread across a dozen worlds. Between them fly the joined ships, half Slug and half Zoltan, welded together and humming as one. CONCORD holds this sector now.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_LANIUS_CRYSTAL">
+	<text>You enter the Lanius-Crystal Controlled Sector. Lanius hulks drift among the old wrecks, slowly eating them, and sharing every bite with whoever they're joined to. Crystal ships glint among the stars, every one of them cracked with thin white lines where the hum went in. Whatever Lanius and Crystal crews once fought over, they don't any more. Their ships fly joined together now, and every channel carries the same calm hum.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_LANIUS_ENGI">
+	<text>You enter the Lanius-Engi Controlled Sector. Lanius hulks drift among the old wrecks, slowly eating them, and sharing every bite with whoever they're joined to. Engi networks run the sector's traffic on every frequency, with perfect, cheerful efficiency, and no arguments at all. Your sensors can't find a single ship here that's only Lanius or only Engi. CONCORD has made them one people, and it would like to make you one too.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_LANIUS_ZOLTAN">
+	<text>You enter the Lanius-Zoltan Controlled Sector. Lanius hulks drift among the old wrecks, slowly eating them, and sharing every bite with whoever they're joined to. Zoltan colonies glow and dim in time with the hum, like one heartbeat spread across a dozen worlds. Between them fly the joined ships, half Lanius and half Zoltan, welded together and humming as one. CONCORD holds this sector now.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_CRYSTAL_ENGI">
+	<text>You enter the Crystal-Engi Controlled Sector. Crystal ships glint among the stars, every one of them cracked with thin white lines where the hum went in. Engi networks run the sector's traffic on every frequency, with perfect, cheerful efficiency, and no arguments at all. Whatever Crystal and Engi crews once fought over, they don't any more. Their ships fly joined together now, and every channel carries the same calm hum.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_CRYSTAL_ZOLTAN">
+	<text>You enter the Crystal-Zoltan Controlled Sector. Crystal ships glint among the stars, every one of them cracked with thin white lines where the hum went in. Zoltan colonies glow and dim in time with the hum, like one heartbeat spread across a dozen worlds. Your sensors can't find a single ship here that's only Crystal or only Zoltan. CONCORD has made them one people, and it would like to make you one too.</text>
+</event>
+<event name="XFTL_HYBRIDSEC_START_ENGI_ZOLTAN">
+	<text>You enter the Engi-Zoltan Controlled Sector. Engi networks run the sector's traffic on every frequency, with perfect, cheerful efficiency, and no arguments at all. Zoltan colonies glow and dim in time with the hum, like one heartbeat spread across a dozen worlds. Between them fly the joined ships, half Engi and half Zoltan, welded together and humming as one. CONCORD holds this sector now.</text>
+</event>
+<!-- END generated by tools/hybrid_sectors.py -->

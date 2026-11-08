@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<FTL>
+    <!-- The ship we can use for most tests -->
+    <shipBlueprint name="TEST_SHIP" layout="test_ship" img="test_ship">
+        <health amount="30"/>
+        <maxPower amount="30"/>
+
+        <systemList>
+            <oxygen power="1" max="1" room="0"/>
+            <pilot power="1" max="1" room="1"/>
+            <engines power="1" max="1" room="2"/>
+            <weapons power="1" max="1" room="3"/>
+            <medbay power="1" max="1" room="4">
+                <!-- No obstruction -->
+                <slot>
+                    <number>-2</number>
+                </slot>
+            </medbay>
+        </systemList>
+    </shipBlueprint>
+
+    <!-- Use with custom crew classes -->
+    <crewBlueprint name="test_crew">
+        <cost>1</cost>
+    </crewBlueprint>
+
+    <!-- Real crew, made as the game makes them (see testkit/TestCrew) -->
+    <crewBlueprint name="human">
+        <cost>1</cost>
+    </crewBlueprint>
+
+    <!-- The systems -->
+    <systemBlueprint name="pilot">
+        <type>pilot</type>
+        <startPower>1</startPower>
+        <maxPower>3</maxPower>
+        <cost>1</cost>
+        <upgradeCost/>
+    </systemBlueprint>
+
+    <systemBlueprint name="engines">
+        <type>engines</type>
+        <startPower>1</startPower>
+        <maxPower>10</maxPower>
+        <cost>1</cost>
+        <upgradeCost/>
+    </systemBlueprint>
+
+    <systemBlueprint name="oxygen">
+        <type>oxygen</type>
+        <startPower>1</startPower>
+        <maxPower>3</maxPower>
+        <cost>1</cost>
+        <upgradeCost/>
+    </systemBlueprint>
+
+    <systemBlueprint name="weapons">
+        <type>weapons</type>
+        <startPower>1</startPower>
+        <maxPower>10</maxPower>
+        <cost>1</cost>
+        <upgradeCost/>
+    </systemBlueprint>
+
+    <systemBlueprint name="medbay">
+        <type>medbay</type>
+        <startPower>1</startPower>
+        <maxPower>1</maxPower>
+        <cost>1</cost>
+        <upgradeCost/>
+    </systemBlueprint>
+
+    <!-- Some basic weapons -->
+
+    <weaponBlueprint name="TEST_BEAM">
+        <type>BEAM</type>
+        <length>1</length>
+        <weaponArt>generic_test_weapon</weaponArt>
+        <image>dummy_anim</image>
+    </weaponBlueprint>
+
+    <weaponBlueprint name="TEST_LASER">
+        <type>LASER</type>
+        <weaponArt>generic_test_weapon</weaponArt>
+        <iconImage>dummy_anim</iconImage>
+    </weaponBlueprint>
+</FTL>

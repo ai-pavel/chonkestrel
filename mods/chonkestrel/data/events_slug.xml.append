@@ -1,0 +1,132 @@
+<!--
+    More events for the vanilla Slug sectors. See sector_data.xml.append.
+-->
+
+<eventList name="XFTL_MORE_SLUG">
+	<event load="XFTL_SLUG_PSYCHIC"/>
+	<event load="XFTL_SLUG_INSURANCE"/>
+	<event load="XFTL_SLUG_SPA"/>
+	<event load="XFTL_SLUG_MAP_SELLER"/>
+</eventList>
+
+<event name="XFTL_SLUG_PSYCHIC">
+	<text>A Slug fortune teller offers to read your future, for a small fee. "I see... a great fleet behind you, and a greater ship ahead."</text>
+	<environment type="nebula"/>
+	<choice>
+		<text>Pay for the reading.</text>
+		<event load="XFTL_SLUG_PSYCHIC_OUTCOME"/>
+	</choice>
+	<choice req="slug" hidden="true">
+		<text>(Slug Crew) Have your Slug read the fortune teller's mind instead.</text>
+		<event>
+			<text>Your Slug learns that the "fortune teller" is a pirate scout, and where its friends hide their loot.</text>
+			<autoReward level="MED">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>No thanks.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_SLUG_PSYCHIC_OUTCOME">
+	<event>
+		<text>The Slug's "visions" turn out to be a remarkably accurate map of the sector.</text>
+		<item_modify>
+			<item type="scrap" min="-10" max="-10"/>
+		</item_modify>
+		<reveal_map/>
+	</event>
+	<event>
+		<text>The Slug tells you nothing useful, and takes your scrap.</text>
+		<item_modify>
+			<item type="scrap" min="-10" max="-10"/>
+		</item_modify>
+	</event>
+</eventList>
+
+<event name="XFTL_SLUG_INSURANCE">
+	<text>A Slug salesman offers you "hull insurance". "Pay me now, and if anything bad happens to your ship, I'll make it right."</text>
+	<environment type="nebula"/>
+	<choice>
+		<text>Buy the insurance.</text>
+		<event load="XFTL_SLUG_INSURANCE_OUTCOME"/>
+	</choice>
+	<choice>
+		<text>Decline.</text>
+		<event>
+			<text>"Your loss. Literally." The salesman leaves.</text>
+		</event>
+	</choice>
+</event>
+<eventList name="XFTL_SLUG_INSURANCE_OUTCOME">
+	<event>
+		<text>The salesman takes your scrap, and sends a repair drone over to patch up your hull. It's actually a fair deal.</text>
+		<item_modify>
+			<item type="scrap" min="-20" max="-20"/>
+		</item_modify>
+		<damage amount="-5"/>
+	</event>
+	<event>
+		<text>The salesman takes your scrap and vanishes into the nebula. You check the fine print: you're insured against Slug attacks only.</text>
+		<item_modify>
+			<item type="scrap" min="-20" max="-20"/>
+		</item_modify>
+	</event>
+</eventList>
+
+<event name="XFTL_SLUG_SPA">
+	<text>A Slug-run spa station offers rest and relaxation for weary crews. Their prices are outrageous, but your crew look exhausted.</text>
+	<environment type="nebula"/>
+	<choice>
+		<text>Give your crew some shore leave.</text>
+		<event load="XFTL_SLUG_SPA_OUTCOME"/>
+	</choice>
+	<choice>
+		<text>No time for that.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_SLUG_SPA_OUTCOME">
+	<event>
+		<text>Your crew come back refreshed. While they were away, one of the spa's staff decided to sign up with you.</text>
+		<item_modify>
+			<item type="scrap" min="-15" max="-15"/>
+		</item_modify>
+		<crewMember amount="1" class="slug"/>
+	</event>
+	<event>
+		<text>Your crew come back refreshed, and much poorer.</text>
+		<item_modify>
+			<item type="scrap" min="-25" max="-25"/>
+		</item_modify>
+	</event>
+</eventList>
+
+<event name="XFTL_SLUG_MAP_SELLER">
+	<text>A Slug offers to sell you the location of a "secret pirate treasure" hidden in this sector.</text>
+	<environment type="nebula"/>
+	<choice>
+		<text>Buy the location.</text>
+		<event load="XFTL_SLUG_MAP_SELLER_OUTCOME"/>
+	</choice>
+	<choice>
+		<text>Decline.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_SLUG_MAP_SELLER_OUTCOME">
+	<event>
+		<text>The treasure is real, though smaller than promised.</text>
+		<item_modify>
+			<item type="scrap" min="-15" max="-15"/>
+		</item_modify>
+		<autoReward level="MED">stuff</autoReward>
+	</event>
+	<event>
+		<text>The "treasure" is guarded by the pirates who own it. The Slug forgot to mention that.</text>
+		<item_modify>
+			<item type="scrap" min="-15" max="-15"/>
+		</item_modify>
+		<ship load="PIRATE" hostile="true"/>
+	</event>
+</eventList>

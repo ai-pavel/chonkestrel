@@ -1,0 +1,142 @@
+<!--
+    More events for the vanilla Engi sectors. See sector_data.xml.append.
+-->
+
+<eventList name="XFTL_MORE_ENGI">
+	<event load="XFTL_ENGI_NANITE_SWARM"/>
+	<event load="XFTL_ENGI_LIBRARY"/>
+	<event load="XFTL_ENGI_DRONE_FACTORY"/>
+	<event load="XFTL_ENGI_ROGUE_AI"/>
+</eventList>
+
+<event name="XFTL_ENGI_NANITE_SWARM">
+	<text>A cloud of loose Engi nanites is drifting at the beacon. They start settling on your hull, and trying to "improve" it.</text>
+	<choice>
+		<text>Let them work.</text>
+		<event load="XFTL_ENGI_NANITE_OUTCOME"/>
+	</choice>
+	<choice req="engi" hidden="true">
+		<text>(Engi Crew) Have your Engi give the nanites instructions.</text>
+		<event>
+			<text>Your Engi communes with the swarm, and the nanites seal every crack in your hull before drifting off.</text>
+			<damage amount="-6"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Jump away before they get inside.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_ENGI_NANITE_OUTCOME">
+	<event>
+		<text>The nanites patch up your hull, then lose interest.</text>
+		<damage amount="-4"/>
+	</event>
+	<event>
+		<text>The nanites take apart one of your systems to "improve" it, and don't quite manage to put it back together.</text>
+		<damage amount="1" system="random"/>
+	</event>
+	<event>
+		<text>The nanites reorganise your reactor's wiring. It actually works better.</text>
+		<upgrade amount="1" system="reactor"/>
+	</event>
+</eventList>
+
+<event name="XFTL_ENGI_LIBRARY">
+	<text>An Engi data library offers to trade knowledge. "Your vessel carries information of high value. Exchange is proposed."</text>
+	<choice>
+		<text>Trade some of your data for their schematics.</text>
+		<event>
+			<text>The Engi send you a drone schematic in return.</text>
+			<drone name="RANDOM"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Trade for a map of the sector.</text>
+		<event>
+			<text>The Engi send you a precise map of the sector.</text>
+			<reveal_map/>
+		</event>
+	</choice>
+	<choice>
+		<text>Your data stays private.</text>
+		<event>
+			<text>"Regrettable." The library closes the channel.</text>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_ENGI_DRONE_FACTORY">
+	<text>An automated Engi drone factory is still producing drones, though its owners left long ago. Its defence drones haven't noticed you yet.</text>
+	<choice>
+		<text>Raid the factory's stores.</text>
+		<event load="XFTL_ENGI_DRONE_FACTORY_OUTCOME"/>
+	</choice>
+	<choice req="hacking" hidden="true">
+		<text>(Hacking) Hack the factory, and order it to make parts for you.</text>
+		<event>
+			<text>The factory obediently fills your hold with drone parts.</text>
+			<item_modify>
+				<item type="drones" min="3" max="5"/>
+			</item_modify>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave it alone.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_ENGI_DRONE_FACTORY_OUTCOME">
+	<event>
+		<text>You get in and out with a load of drone parts before the defences wake up.</text>
+		<item_modify>
+			<item type="drones" min="2" max="4"/>
+		</item_modify>
+	</event>
+	<event>
+		<text>The factory's defences wake up, and its automated guard ship moves to attack!</text>
+		<ship load="XFTL_ENGI_FACTORY_GUARD" hostile="true"/>
+	</event>
+</eventList>
+<ship name="XFTL_ENGI_FACTORY_GUARD" auto_blueprint="SHIPS_AUTO">
+	<destroyed>
+		<text>With the guard ship gone, you strip the factory's stores.</text>
+		<item_modify>
+			<item type="drones" min="2" max="4"/>
+		</item_modify>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+</ship>
+
+<event name="XFTL_ENGI_ROGUE_AI">
+	<text>An Engi ship hails you. "Assistance requested. Our ship's computer has become... uncooperative. It is attempting to vent our atmosphere."</text>
+	<choice>
+		<text>Disable the ship, so its crew can regain control.</text>
+		<event>
+			<text>You'll have to fight the ship's computer for control.</text>
+			<ship load="XFTL_ENGI_ROGUE_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="hacking" hidden="true">
+		<text>(Hacking) Hack the rogue computer, and shut it down.</text>
+		<event>
+			<text>Your hacking drone shuts the computer down. The grateful Engi reward you, and one of them joins you.</text>
+			<crewMember amount="1" class="engi"/>
+			<autoReward level="LOW">standard</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>It's not your problem.</text>
+		<event/>
+	</choice>
+</event>
+<ship name="XFTL_ENGI_ROGUE_SHIP" auto_blueprint="SHIPS_CIRCLE">
+	<destroyed>
+		<text>You destroy the ship. Its crew get to the escape pods in time, and give you what supplies they saved.</text>
+		<autoReward level="LOW">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The ship's computer killed its crew before you could stop it. You salvage what you can.</text>
+		<autoReward level="MED">standard</autoReward>
+	</deadCrew>
+</ship>

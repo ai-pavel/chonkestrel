@@ -1,0 +1,180 @@
+<!--
+    More events for the vanilla pirate sectors. See sector_data.xml.append.
+-->
+
+<eventList name="XFTL_MORE_PIRATE">
+	<event load="XFTL_PIRATE_AUCTION"/>
+	<event load="XFTL_PIRATE_DUEL"/>
+	<event load="XFTL_PIRATE_RANSOM"/>
+	<event load="XFTL_PIRATE_TOLL"/>
+	<event load="XFTL_PIRATE_MUTINY"/>
+</eventList>
+
+<event name="XFTL_PIRATE_AUCTION">
+	<text>A pirate auction is under way at the beacon, selling stolen goods to anyone with scrap. Nobody asks questions.</text>
+	<choice>
+		<text>Bid on a crate of stolen weapons.</text>
+		<event load="XFTL_PIRATE_AUCTION_OUTCOME"/>
+	</choice>
+	<choice>
+		<text>Bid on a slave's contract, and free them.</text>
+		<event>
+			<text>You win the contract, and tear it up. The freed captive gladly joins your crew.</text>
+			<item_modify>
+				<item type="scrap" min="-25" max="-25"/>
+			</item_modify>
+			<crewMember amount="1"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_PIRATE_AUCTION_OUTCOME">
+	<event>
+		<text>The crate holds a working weapon.</text>
+		<item_modify>
+			<item type="scrap" min="-30" max="-30"/>
+		</item_modify>
+		<weapon name="RANDOM"/>
+	</event>
+	<event>
+		<text>The crate is full of rusted parts. You've been had.</text>
+		<item_modify>
+			<item type="scrap" min="-30" max="-30"/>
+			<item type="missiles" min="1" max="2"/>
+		</item_modify>
+	</event>
+</eventList>
+
+<event name="XFTL_PIRATE_DUEL">
+	<text>A pirate captain challenges you to a duel. "Just you and me, no tricks. Winner takes the other's cargo."</text>
+	<choice>
+		<text>Accept the duel.</text>
+		<event>
+			<text>"That's the spirit!" The captain's ship powers up its weapons.</text>
+			<ship load="XFTL_PIRATE_DUELLIST" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Decline.</text>
+		<event>
+			<text>"Coward!" The captain jumps away, laughing.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_PIRATE_DUELLIST" auto_blueprint="SHIPS_PIRATE">
+	<destroyed>
+		<text>The duel is yours. The captain's cargo drifts among the wreckage.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The duel is yours. You help yourself to the captain's cargo.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_PIRATE_RANSOM">
+	<text>Pirates are holding a merchant's family for ransom. The merchant begs you to pay it, promising to pay you back double.</text>
+	<choice>
+		<text>Pay the ransom.</text>
+		<event load="XFTL_PIRATE_RANSOM_OUTCOME"/>
+	</choice>
+	<choice>
+		<text>Attack the pirates instead.</text>
+		<event>
+			<text>The pirates weren't expecting a fight.</text>
+			<ship load="XFTL_PIRATE_KIDNAPPERS" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Stay out of it.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_PIRATE_RANSOM_OUTCOME">
+	<event>
+		<text>The family is released, and the merchant keeps their word.</text>
+		<item_modify>
+			<item type="scrap" min="-20" max="-20"/>
+		</item_modify>
+		<autoReward level="MED">scrap_only</autoReward>
+	</event>
+	<event>
+		<text>The family is released, but the merchant disappears without paying you back.</text>
+		<item_modify>
+			<item type="scrap" min="-20" max="-20"/>
+		</item_modify>
+	</event>
+</eventList>
+<ship name="XFTL_PIRATE_KIDNAPPERS" auto_blueprint="SHIPS_PIRATE">
+	<destroyed>
+		<text>The family's escape pod gets away before the pirate ship explodes. The merchant rewards you.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>You free the family from the pirate ship. The merchant rewards you, and you take the pirates' loot too.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_PIRATE_TOLL">
+	<text>A pirate gang has claimed this beacon. "Toll's fifteen scrap, or we take it out of your hull."</text>
+	<choice>
+		<text>Pay the toll.</text>
+		<event>
+			<text>The pirates let you pass.</text>
+			<item_modify>
+				<item type="scrap" min="-15" max="-15"/>
+			</item_modify>
+		</event>
+	</choice>
+	<choice>
+		<text>Refuse.</text>
+		<event>
+			<text>"Your choice." The pirates attack.</text>
+			<ship load="PIRATE" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="cloaking" hidden="true">
+		<text>(Cloaking) Cloak, and slip past.</text>
+		<event>
+			<text>By the time the pirates realise you were there, you've gone.</text>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_PIRATE_MUTINY">
+	<text>A pirate ship's crew has mutinied, and the two halves are fighting each other for control. One side hails you for help.</text>
+	<choice>
+		<text>Help the mutineers.</text>
+		<event load="XFTL_PIRATE_MUTINY_OUTCOME"/>
+	</choice>
+	<choice>
+		<text>Attack them both while they're busy.</text>
+		<event>
+			<text>The pirates stop fighting each other long enough to fight you.</text>
+			<ship load="PIRATE" hostile="true"/>
+			<status type="limit" target="enemy" system="weapons" amount="2"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave them to it.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_PIRATE_MUTINY_OUTCOME">
+	<event>
+		<text>With your help, the mutineers take the ship. Their new captain shares the old captain's stash with you.</text>
+		<autoReward level="MED">standard</autoReward>
+	</event>
+	<event>
+		<text>The mutineers take the ship, and one of them, tired of piracy, asks to join you.</text>
+		<crewMember amount="1"/>
+	</event>
+	<event>
+		<text>The mutineers lose. The captain isn't happy that you took sides.</text>
+		<ship load="PIRATE" hostile="true"/>
+	</event>
+</eventList>

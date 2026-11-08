@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Star Trek characters crew names, picked with XFTL_NAMES=startrek. See doc/game/names.md.
+    These replace the game's names, and are in the same format as names.xml.
+-->
+<FTL>
+    <nameList race="human" sex="male">
+        <name>Kirk</name>
+        <name>Spock</name>
+        <name>McCoy</name>
+        <name>Scotty</name>
+        <name>Sulu</name>
+        <name>Chekov</name>
+        <name>Picard</name>
+        <name>Riker</name>
+        <name>Data</name>
+        <name>Worf</name>
+        <name>La Forge</name>
+        <name>Wesley</name>
+        <name>O'Brien</name>
+        <name>Sisko</name>
+        <name>Odo</name>
+        <name>Quark</name>
+        <name>Bashir</name>
+        <name>Garak</name>
+        <name>Nog</name>
+        <name>Rom</name>
+        <name>Chakotay</name>
+        <name>Tuvok</name>
+        <name>Tom Paris</name>
+        <name>Harry Kim</name>
+        <name>Neelix</name>
+        <name>Archer</name>
+        <name>Trip</name>
+        <name>Reed</name>
+        <name>Mayweather</name>
+        <name>Phlox</name>
+        <name>Saru</name>
+        <name>Pike</name>
+        <name>Boimler</name>
+        <name>Rutherford</name>
+        <name>Gowron</name>
+        <name>Martok</name>
+        <name>Barclay</name>
+        <name>Lorca</name>
+        <name>Culber</name>
+        <name>Sarek</name>
+        <name>Kang</name>
+        <name>Koloth</name>
+        <name>Kor</name>
+        <name>Khan</name>
+        <name>Gorkon</name>
+        <name>Chang</name>
+        <name>Kruge</name>
+        <name>Sybok</name>
+        <name>Decker</name>
+        <name>Mitchell</name>
+        <name>Mudd</name>
+        <name>Cyrano</name>
+        <name>Arex</name>
+        <name>Kyle</name>
+        <name>Cartwright</name>
+        <name>Morrow</name>
+        <name>Styles</name>
+        <name>Esteban</name>
+        <name>Harriman</name>
+        <name>Pressman</name>
+        <name>Jellico</name>
+        <name>Maxwell</name>
+        <name>Tomalak</name>
+        <name>Lore</name>
+        <name>Soong</name>
+        <name>Kurn</name>
+        <name>Duras</name>
+        <name>Alexander</name>
+        <name>Hugh</name>
+        <name>Dukat</name>
+        <name>Damar</name>
+        <name>Weyoun</name>
+        <name>Eddington</name>
+        <name>Jake</name>
+        <name>Joseph</name>
+        <name>Vic</name>
+        <name>Morn</name>
+        <name>Brunt</name>
+        <name>Zek</name>
+        <name>Shakaar</name>
+        <name>Bareil</name>
+        <name>Vorik</name>
+        <name>Carey</name>
+        <name>Icheb</name>
+        <name>The Doctor</name>
+        <name>Chell</name>
+        <name>Suder</name>
+        <name>Shran</name>
+        <name>Soval</name>
+        <name>Hayes</name>
+        <name>Forrest</name>
+        <name>Stamets</name>
+        <name>Ash Tyler</name>
+        <name>Kol</name>
+        <name>Voq</name>
+        <name>Book</name>
+        <name>Rios</name>
+        <name>Elnor</name>
+        <name>Narek</name>
+        <name>Ransom</name>
+    </nameList>
+    <nameList race="human" sex="female">
+        <name>Uhura</name>
+        <name>Chapel</name>
+        <name>Rand</name>
+        <name>Crusher</name>
+        <name>Troi</name>
+        <name>Tasha Yar</name>
+        <name>Guinan</name>
+        <name>Ro Laren</name>
+        <name>Kira</name>
+        <name>Jadzia</name>
+        <name>Ezri</name>
+        <name>Kasidy</name>
+        <name>Janeway</name>
+        <name>Torres</name>
+        <name>Seven</name>
+        <name>Kes</name>
+        <name>Hoshi</name>
+        <name>T'Pol</name>
+        <name>Burnham</name>
+        <name>Tilly</name>
+        <name>Georgiou</name>
+        <name>Number One</name>
+        <name>Mariner</name>
+        <name>Tendi</name>
+        <name>Raffi</name>
+        <name>Soji</name>
+        <name>Lwaxana</name>
+        <name>Keiko</name>
+        <name>Leeta</name>
+        <name>Ziyal</name>
+        <name>Shelby</name>
+        <name>Pulaski</name>
+        <name>Saavik</name>
+        <name>Valeris</name>
+        <name>Detmer</name>
+        <name>Owosekun</name>
+        <name>Airiam</name>
+        <name>Amanda</name>
+        <name>Nechayev</name>
+        <name>Sela</name>
+        <name>Vash</name>
+        <name>Ogawa</name>
+        <name>Gomez</name>
+        <name>Winn</name>
+        <name>Opaka</name>
+        <name>Ishka</name>
+        <name>Seska</name>
+        <name>Jurati</name>
+        <name>Gwyn</name>
+        <name>Rok-Tahk</name>
+        <name>La'An</name>
+        <name>Ortegas</name>
+        <name>Batel</name>
+        <name>T'Pring</name>
+        <name>T'Pau</name>
+        <name>Edith Keeler</name>
+        <name>Carol Marcus</name>
+        <name>Gillian</name>
+        <name>M'Ress</name>
+        <name>Nella Daren</name>
+        <name>Leah Brahms</name>
+        <name>Ishara</name>
+        <name>Kamala</name>
+        <name>Robin Lefler</name>
+        <name>Sito</name>
+        <name>Naomi</name>
+        <name>Samantha</name>
+        <name>Ballard</name>
+        <name>Tal Celes</name>
+        <name>Jennifer</name>
+        <name>Lursa</name>
+        <name>B'Etor</name>
+        <name>K'Ehleyr</name>
+        <name>Grilka</name>
+        <name>Azetbur</name>
+        <name>T'Lar</name>
+        <name>T'Les</name>
+        <name>Hernandez</name>
+        <name>Nhan</name>
+        <name>L'Rell</name>
+        <name>Cornwell</name>
+        <name>Adira</name>
+        <name>Dahj</name>
+        <name>Ramdha</name>
+        <name>Freeman</name>
+        <name>T'Ana</name>
+        <name>Barnes</name>
+        <name>Pelia</name>
+        <name>Kestra</name>
+        <name>Mora Pol</name>
+        <name>Laris</name>
+        <name>Ro Sha</name>
+        <name>Zora</name>
+        <name>Moll</name>
+        <name>Lily Sloane</name>
+        <name>Alandra</name>
+        <name>Noel</name>
+        <name>Kim Briggs</name>
+        <name>Marla</name>
+        <name>Tasha</name>
+    </nameList>
+</FTL>

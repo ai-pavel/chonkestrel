@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Made by tools/boss_ships.py from the vanilla boss_1.xml
+    (copyright (c) 2012 by Subset Games). Glued into a size 4 boss: glued from the left half of the Slug bomber, the Rebel flagship, and the right half of the Fed bomber, then 4 columns at column 15, then 4 columns at column 3.
+-->
+<FTL>
+<img x="-51" y="-90" w="1077" h="571"/>
+<offsets>
+	<cloak x="32" y="32"/>
+</offsets>
+<weaponMounts>
+	<mount x="487" y="50" rotate="false" mirror="false" slide="up" gib="1"/>
+	<mount x="870" y="120" rotate="false" mirror="true" slide="left" gib="2"/>
+	<mount x="884" y="118" rotate="false" mirror="true" slide="left" gib="2"/>
+	<mount x="951" y="152" rotate="false" mirror="false" slide="right" gib="2"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>13</x>
+		<y>0</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>538</x>
+		<y>1</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>12</x>
+		<y>285</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>538</x>
+		<y>285</y>
+	</gib4>
+</explosion>
+</FTL>

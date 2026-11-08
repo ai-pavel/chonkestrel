@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FTL>
+    <!--
+    Custom XFTL strings.
+    All string IDs must be prefixed with 'xftl_' to make their origin obvious in code
+    Try to use vanilla strings where possible (eg for ok/cancel) as they're already translated.
+    -->
+
+    <text name="xftl_edit_ship">EDIT SHIP</text>
+    <text name="xftl_clear_edit_ship">DISCARD CHANGES</text>
+
+    <text name="xftl_select_datafile_title">Find your copy of FTL</text>
+    <text name="xftl_select_datafile_desc">
+        This game runs on the assets of FTL: Faster Than Light, so it needs your copy of the game.
+        Installs from Steam, GOG and Epic Games are found automatically, and so is FTL while it's running.
+    </text>
+    <text name="xftl_select_datafile_found">Found on this computer</text>
+    <text name="xftl_select_datafile_not_found">Nothing yet. Start FTL, or pick it below.</text>
+    <text name="xftl_select_datafile_running">Running FTL</text>
+    <text name="xftl_select_datafile_drop">Drop ftl.dat here</text>
+    <text name="xftl_select_datafile_browse">or click to browse for it, or for the game's executable or app</text>
+    <text name="xftl_select_datafile_browsing">Choosing a file...</text>
+    <text name="xftl_select_datafile_browse_title">Select FTL's ftl.dat, or the FTL app</text>
+    <text name="xftl_select_datafile_path_file">You can also put the full path to ftl.dat in \1</text>
+    <text name="xftl_select_datafile_invalid">That isn't FTL's ftl.dat file, and there's no ftl.dat next to it: \1</text>
+
+    <text name="xftl_options_display">Configure Display Settings</text>
+    <text name="xftl_button_back">BACK</text>
+    <text name="xftl_display_title">DISPLAY SETTINGS</text>
+    <text name="xftl_display_desc">The interface needs at least 1920x1080.</text>
+
+    <!-- The main menu, which also uses vanilla's mainmenu_* strings -->
+    <text name="xftl_mainmenu_statistics">STATISTICS</text>
+    <text name="xftl_mainmenu_exit">EXIT</text>
+    <!-- The main menu's new game window -->
+    <text name="xftl_new_game_names">CREW NAMES</text>
+    <text name="xftl_difficulty_fourth">INSANE</text>
+    <text name="xftl_names_default">Default</text>
+    <text name="xftl_names_random">Random</text>
+    <text name="xftl_names_all">ALL</text>
+    <text name="xftl_names_american">American</text>
+    <text name="xftl_names_english">English</text>
+    <text name="xftl_names_irish">Irish</text>
+    <text name="xftl_names_scottish">Scottish</text>
+    <text name="xftl_names_french">French</text>
+    <text name="xftl_names_spanish">Spanish</text>
+    <text name="xftl_names_italian">Italian</text>
+    <text name="xftl_names_german">German</text>
+    <text name="xftl_names_russian">Russian</text>
+    <text name="xftl_names_arabic">Arabic</text>
+    <text name="xftl_names_turkish">Turkish</text>
+    <text name="xftl_names_indian">Indian</text>
+    <text name="xftl_names_chinese">Chinese</text>
+    <text name="xftl_names_japanese">Japanese</text>
+    <text name="xftl_names_korean">Korean</text>
+    <text name="xftl_names_starwars">Star Wars</text>
+    <text name="xftl_names_startrek">Star Trek</text>
+    <text name="xftl_names_masseffect">Mass Effect</text>
+    <text name="xftl_confirm_overwrite_save">Are you sure?\nThis will overwrite\nyour save file.</text>
+    <text name="xftl_fleet_rewards">With the enemy ships dealt with, you salvage what's left of them:\n</text>
+    <text name="xftl_reward_scrap">\1 scrap</text>
+    <text name="xftl_reward_fuel">\1 fuel</text>
+    <text name="xftl_reward_missiles">\1 missiles</text>
+    <text name="xftl_reward_drones">\1 drone parts</text>
+    <text name="xftl_reward_nothing">nothing</text>
+    <text name="xftl_max_piercing">Max Piercing: \1</text>
+    <text name="xftl_weapon_combined">\1 in one: fires at up to \1 enemy ships at once</text>
+    <text name="xftl_weapon_combined_beam">\1 in one: one long beam, through up to \1 enemy ships</text>
+    <text name="xftl_weapon_title_x2">Twin \1</text>
+    <text name="xftl_weapon_title_x3">Triple \1</text>
+    <text name="xftl_weapon_short_x2">\1 (x2)</text>
+    <text name="xftl_weapon_short_x3">\1 (x3)</text>
+    <text name="xftl_level_manned">Manned</text>
+    <text name="xftl_crew_killed">CREW KILLED</text>
+    <text name="xftl_mind_duration">Lasts \1 seconds</text>
+    <text name="xftl_fleet_surrender">Their captain speaks for the whole group: if you accept, the other ships will stand down too.</text>
+    <text name="xftl_fleet_reward_single">With the enemy ship dealt with, you salvage what's left of it.</text>
+
+    <text name="xftl_screen_small_title">Your screen is too small</text>
+    <text name="xftl_screen_small_desc">
+        Project Chonkestrel needs a screen of at least \1 to fit the big ships' interface,
+        and your main screen (\2) is \3.
+    </text>
+    <text name="xftl_screen_small_fix">
+        Choose a higher resolution in your display settings, or connect a bigger screen,
+        then start the game again.
+    </text>
+    <text name="xftl_screen_small_other">
+        Your other screen, \1, is big enough at \2: make it your main display,
+        then start the game again.
+    </text>
+    <text name="xftl_screen_small_quit">Quit</text>
+
+    <!-- Hotkeys -->
+    <text name="xftl_hotkeys_crew_group">CREW MANAGEMENT</text>
+    <text name="xftl_hotkeys_system_power_group">SYSTEM POWER</text>
+    <text name="xftl_hotkeys_weapons_group">WEAPONS AND DRONES</text>
+    <text name="xftl_hotkeys_system_actions_group">SYSTEM ACTIONS</text>
+    <text name="xftl_hotkeys_ui_group">GAME CONTROL</text>
+    <text name="xftl_hotkeys_dev_group">CHEATS AND MODDING</text>
+    <text name="xftl_hotkeys_default_tooltip">Default: \1</text>
+    <text name="xftl_hotkeys_default_tooltip_none">Default: none</text>
+    <text name="xftl_hotkeys_conflicts_tooltip">Conflicts with:</text>
+
+    <text name="xftl_hotkeys_crew9">Select Crew 9</text>
+    <text name="xftl_hotkeys_crew10">Select Crew 10</text>
+    <text name="xftl_hotkeys_crew11">Select Crew 11</text>
+    <text name="xftl_hotkeys_crew12">Select Crew 12</text>
+    <text name="xftl_hotkeys_crew13">Select Crew 13</text>
+    <text name="xftl_hotkeys_crew14">Select Crew 14</text>
+    <text name="xftl_hotkeys_crew15">Select Crew 15</text>
+    <text name="xftl_hotkeys_crew16">Select Crew 16</text>
+
+    <text name="xftl_hotkeys_weapon5">Weapon 5</text>
+    <text name="xftl_hotkeys_weapon6">Weapon 6</text>
+    <text name="xftl_hotkeys_weapon7">Weapon 7</text>
+    <text name="xftl_hotkeys_weapon8">Weapon 8</text>
+
+    <text name="xftl_hotkeys_console">Debug console</text>
+    <text name="xftl_hotkeys_frame_step">Unpause for 10ms</text>
+    <text name="xftl_hotkeys_fast_forward">Fast-forward</text>
+
+    <!-- XFTL's own nebulas, see doc/game/nebulas.md -->
+    <text name="xftl_big_ship_salvage">The rest of the bigger ship's wreckage has more to salvage.</text>
+    <text name="xftl_sector_legend_hazard">Hazardous</text>
+    <text name="xftl_sector_hazard">Unidentified Hazardous Sector</text>
+    <text name="xftl_sensors_nebula">Blocked by the nebula: your sensors don't work here.</text>
+    <text name="xftl_map_extreme_loc">EXTREME HAZARD: two hazards at once.</text>
+    <text name="xftl_map_catastrophic_loc">CATASTROPHIC HAZARD: three hazards at once.</text>
+    <text name="xftl_map_apocalyptic_loc">APOCALYPTIC HAZARD: a nebula, asteroids, a sun and a pulsar, all at once.</text>
+    <text name="xftl_map_radiation_loc">Radiation Nebula. The radiation here will slowly hurt any crew outside the medbay or clonebay, and disrupt your sensors.</text>
+    <text name="xftl_map_mirage_loc">Mirage Nebula. Sensor ghosts here make your map unreliable: ships and hazards may not be what they seem.</text>
+    <text name="xftl_map_dark_loc">Dark Nebula. Nothing gets through this nebula: your sensors and drones won't work here.</text>
+    <text name="xftl_map_mirage_confused">Your sensors are confused by the mirage nebula. This may not be accurate.</text>
+    <text name="xftl_map_chorus_loc">Chorus-held. CONCORD's signal is so strong here that your sensors show what it wants them to: ships and hazards may not be what they seem.</text>
+    <text name="xftl_warning_radiation">RADIATION NEBULA</text>
+    <text name="xftl_warning_mirage">MIRAGE\nVISION IS UNRELIABLE</text>
+    <text name="xftl_warning_dark">DARKNESS\nDRONES OFFLINE</text>
+    <text name="xftl_map_boss_loc">The sector's boss holds the exit: you can't leave the sector until it's beaten.</text>
+    <text name="xftl_zoltan_shield_boarded">Your boarders have taken two ships with Zoltan shields. Your engineers strip the better of the two shield generators, and wire it into your own ship.</text>
+    <text name="xftl_exit_hold_broken">With the command ship gone, the blockade falls apart, and the Rebel fleet behind you surges forward to close the gap. Its ships are already at the line's other exits. There's only one way left: onwards, out of the sector.</text>
+</FTL>

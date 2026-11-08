@@ -1,0 +1,82 @@
+<!--
+    More events for the vanilla Crystal homeworld sector. See
+    sector_data.xml.append.
+-->
+
+<eventList name="XFTL_MORE_CRYSTAL">
+	<event load="XFTL_CRYSTAL_RESONANCE"/>
+	<event load="XFTL_CRYSTAL_GUARDIAN"/>
+	<event load="XFTL_CRYSTAL_SHARDS"/>
+</eventList>
+
+<event name="XFTL_CRYSTAL_RESONANCE">
+	<text>The asteroids at this beacon are made of living crystal, and they're humming in resonance with your ship's reactor.</text>
+	<choice>
+		<text>Tune your reactor to the resonance.</text>
+		<event load="XFTL_CRYSTAL_RESONANCE_OUTCOME"/>
+	</choice>
+	<choice req="crystal" hidden="true">
+		<text>(Crystal Crew) Have your Crystal crew sing to the asteroids.</text>
+		<event>
+			<text>The asteroids answer your Crystal's song, and shed shards of pure energy crystal into your hold.</text>
+			<autoReward level="HIGH">scrap_only</autoReward>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave before the humming gets louder.</text>
+		<event/>
+	</choice>
+</event>
+<eventList name="XFTL_CRYSTAL_RESONANCE_OUTCOME">
+	<event>
+		<text>The resonance boosts your reactor's output.</text>
+		<upgrade amount="1" system="reactor"/>
+	</event>
+	<event>
+		<text>The resonance builds until something in your ship shatters.</text>
+		<damage amount="2" system="random"/>
+	</event>
+</eventList>
+
+<event name="XFTL_CRYSTAL_GUARDIAN">
+	<text>A Crystal guardian ship is protecting a sacred site. "Outsiders are not permitted here. Leave, or be shattered."</text>
+	<choice>
+		<text>Leave peacefully.</text>
+		<event>
+			<text>The guardian watches you go.</text>
+		</event>
+	</choice>
+	<choice>
+		<text>Challenge the guardian.</text>
+		<event>
+			<text>The guardian charges its weapons.</text>
+			<ship load="XFTL_CRYSTAL_GUARDIAN_SHIP" hostile="true"/>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_CRYSTAL_GUARDIAN_SHIP" auto_blueprint="SHIPS_CRYSTAL">
+	<destroyed>
+		<text>The guardian shatters. Among the shards of its ship is a weapon unlike any you've seen.</text>
+		<weapon name="RANDOM"/>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The guardian's crew are dead. Their ship, made of crystal, is worth a fortune.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_CRYSTAL_SHARDS">
+	<text>A Crystal hermit lives alone on an asteroid. "I have been waiting for someone to carry my song to the stars." They ask to join your crew.</text>
+	<choice>
+		<text>Welcome them aboard.</text>
+		<event>
+			<text>The hermit brings nothing but their song, and their fists.</text>
+			<crewMember amount="1" class="crystal"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Politely decline.</text>
+		<event/>
+	</choice>
+</event>

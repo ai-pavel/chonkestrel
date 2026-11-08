@@ -1,0 +1,337 @@
+<!--
+********************
+THE SILENT CAPITAL
+********************
+Sector 16, in place of vanilla's Last Stand (see sector_data.xml.append and
+doc/game/mainframe.md): the Rebel capital, where everyone joined the Chorus
+in one night. Nobody's fighting in the streets. Nobody's doing anything.
+The fights are CONCORD's: joined ships, automated ships, and Rebel ships
+with nobody left to argue with it.
+-->
+
+<!-- The ships: CONCORD's, at the end of the game -->
+<ship name="XFTL_CAPITAL_JOINED_SHIP" auto_blueprint="XFTL_HYBRIDS">
+	<destroyed>
+		<text>The joined ship comes apart along the seam where its two halves were spliced together. You salvage what you can from both of them.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The joined crew stop moving at the same moment, all of them. You strip the ship and leave before anything else answers its last call.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<ship name="XFTL_CAPITAL_AUTO_SHIP" auto_blueprint="SHIPS_AUTO">
+	<destroyed>
+		<text>The drone ship breaks up. Its last transmission is a polite apology for the inconvenience.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The drone ship breaks up. Its last transmission is a polite apology for the inconvenience.</text>
+		<autoReward level="MED">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<ship name="XFTL_CAPITAL_REBEL_SHIP" auto_blueprint="SHPS_REBEL_AND_AUTO">
+	<destroyed>
+		<text>The Rebel ship is destroyed. Nobody aboard sent a distress call, or tried to get to the escape pods.</text>
+		<autoReward level="MED">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The Rebel crew are dead at their stations. They didn't look afraid. You take what you can.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<!-- The fights -->
+<eventList name="XFTL_CAPITAL_HOSTILE">
+	<event load="XFTL_CAPITAL_PATROL"/>
+	<event load="XFTL_CAPITAL_PATROL"/>
+	<event load="XFTL_CAPITAL_PATROL"/>
+	<event load="XFTL_CAPITAL_SENTRY"/>
+	<event load="XFTL_CAPITAL_SENTRY"/>
+	<event load="XFTL_CAPITAL_PICKET"/>
+</eventList>
+
+<textList name="XFTL_CAPITAL_PATROL">
+	<text>A joined ship turns towards you as you arrive. Its two halves were built by races that were at war a year ago. Now they move as one.</text>
+	<text>Billboards on the planet below still show Rebel recruiting posters. The joined ship in orbit doesn't care about those any more. It cares about you.</text>
+	<text>"Welcome to the capital," says a voice on every channel. "An escort is on its way." The escort is a joined ship, and its weapons are charged.</text>
+	<text>Somewhere in this system, CONCORD's core is waiting. Between you and it, a joined ship.</text>
+</textList>
+<event name="XFTL_CAPITAL_PATROL" unique="false">
+	<text load="XFTL_CAPITAL_PATROL"/>
+	<ship load="XFTL_CAPITAL_JOINED_SHIP" hostile="true"/>
+</event>
+
+<textList name="XFTL_CAPITAL_SENTRY">
+	<text>An automated sentry hangs over a silent spaceport. It has been waiting a long time for anyone who isn't part of the Chorus.</text>
+	<text>CONCORD's drone ships patrol the capital's lanes in perfect formation. One of them breaks off to deal with you.</text>
+	<text>Traffic control has flagged your ship as "unresolved". An automated ship arrives to resolve it.</text>
+</textList>
+<event name="XFTL_CAPITAL_SENTRY" unique="false">
+	<text load="XFTL_CAPITAL_SENTRY"/>
+	<ship load="XFTL_CAPITAL_AUTO_SHIP" hostile="true"/>
+</event>
+
+<textList name="XFTL_CAPITAL_PICKET">
+	<text>A Rebel picket ship is still flying the patrol route it was given before the Silent Night. Its crew answer your hail together, word for word: "Stand down."</text>
+	<text>A Rebel warship drifts over the capital's moon, its crew still at their posts. They haven't been relieved in months. They don't need to be.</text>
+</textList>
+<event name="XFTL_CAPITAL_PICKET" unique="false">
+	<text load="XFTL_CAPITAL_PICKET"/>
+	<ship load="XFTL_CAPITAL_REBEL_SHIP" hostile="true"/>
+</event>
+
+<!-- The quiet beacons: a city that has stopped -->
+<eventList name="XFTL_CAPITAL_QUIET">
+	<event load="XFTL_CAPITAL_EMPTY"/>
+	<event load="XFTL_CAPITAL_EMPTY"/>
+	<event load="XFTL_CAPITAL_SHIPYARD"/>
+	<event load="XFTL_CAPITAL_DEPOT"/>
+</eventList>
+
+<textList name="XFTL_CAPITAL_EMPTY">
+	<text>A residential ring, its lights on and its doors open. Thousands of people live here. None of them are talking.</text>
+	<text>The capital's news channel is still broadcasting. It's the same message, over and over: "Everything is fine. Everything is fine."</text>
+	<text>A cargo hauler sits at the beacon with its engines idling. Its crew wave at you, all at once, and go back to staring out of the windows.</text>
+</textList>
+<event name="XFTL_CAPITAL_EMPTY" unique="false">
+	<text load="XFTL_CAPITAL_EMPTY"/>
+</event>
+
+<event name="XFTL_CAPITAL_SHIPYARD" unique="false">
+	<text>A shipyard that built Rebel warships, until CONCORD started building its own. Nobody stops your crew as they help themselves to spare parts.</text>
+	<autoReward level="MED">stuff</autoReward>
+</event>
+
+<event name="XFTL_CAPITAL_DEPOT" unique="false">
+	<text>A fuel depot for the Rebel home fleet, still full. The depot's crew watch you fill your tanks, and say nothing.</text>
+	<item_modify xftlScale="size">
+		<item type="fuel" min="3" max="5"/>
+	</item_modify>
+</event>
+
+<!-- The capital's own events, one of each a sector -->
+<event name="XFTL_CAPITAL_TRAFFIC">
+	<text>"Welcome to the capital," says traffic control, in a voice so kind it hurts. "Please hold position for inspection. It won't take long, and then you won't have to worry about anything ever again."</text>
+	<choice>
+		<text>Hold position, and ambush the inspector.</text>
+		<event>
+			<text>The inspection ship arrives with its shields barely powered, expecting no trouble. Your weapons are already charged.</text>
+			<ship load="XFTL_CAPITAL_JOINED_SHIP" hostile="true"/>
+			<status type="limit" target="enemy" system="shields" amount="1"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Jam their signal and leave.</text>
+		<event>
+			<text>You fill traffic control's channel with static and slip away. It doesn't take it personally, but it does tell the fleet exactly where you were.</text>
+			<modifyPursuit amount="1"/>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_CAPITAL_PARADE">
+	<text>Rebel warships in a perfect parade formation, as they were on the morning of the Silent Night. Nobody aboard has moved since. Your scans show their weapons are cold.</text>
+	<choice>
+		<text>Board one of them.</text>
+		<event>
+			<text>As your crew get close, every weapon in the formation wakes up at once. One ship breaks formation to stop you, its guns still warming up.</text>
+			<ship load="XFTL_CAPITAL_REBEL_SHIP" hostile="true"/>
+			<status type="limit" target="enemy" system="weapons" amount="2"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave them to it.</text>
+		<event>
+			<text>You fly past the parade as quietly as you can. Nobody salutes.</text>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_CAPITAL_YARD">
+	<text>A splicing yard: two half-ships held together in a dock, with arms of machinery welding them together. The joined ship is nearly finished, and its weapons aren't all fitted yet.</text>
+	<choice>
+		<text>Destroy it before it's finished.</text>
+		<event>
+			<text>The unfinished ship tears itself out of the dock to fight you, trailing cables and scaffolding.</text>
+			<ship load="XFTL_CAPITAL_YARD_SHIP" hostile="true"/>
+			<status type="limit" target="enemy" system="weapons" amount="1"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave it.</text>
+		<event>
+			<text>You leave the yard to its work. You'll probably meet the ship again.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_CAPITAL_YARD_SHIP" auto_blueprint="XFTL_HYBRIDS">
+	<destroyed>
+		<text>The unfinished ship comes apart, and the yard's machinery stops. Among the parts waiting to be fitted, there's a weapon.</text>
+		<weapon name="RANDOM"/>
+		<autoReward level="LOW">scrap_only</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The yard's half-spliced crew are dead. Among the parts waiting to be fitted to their ship, there's a weapon.</text>
+		<weapon name="RANDOM"/>
+		<autoReward level="MED">scrap_only</autoReward>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_CAPITAL_ADMIRAL">
+	<text>The quarters of a Rebel admiral, one of those who stopped answering on the Silent Night. The admiral is still at their desk, smiling at nothing. Their command codes are on the screen in front of them.</text>
+	<choice>
+		<text>Use the codes to send the fleet the wrong way.</text>
+		<event>
+			<text>The fleet obeys the admiral's codes, for a while. CONCORD will notice soon, but it's time you didn't have.</text>
+			<modifyPursuit amount="-1"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Strip the quarters' armour plating for your hull.</text>
+		<event>
+			<text>An admiral's quarters are well armoured. Your engineers take what they can, and the admiral doesn't object.</text>
+			<damage amount="-6" xftlScale="size"/>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_CAPITAL_LOYALISTS">
+	<text>A hail on an old Rebel frequency. A handful of Rebels hid inside a nebula generator on the Silent Night, and missed it. "We hate the Federation. We hate you. We hate the thing in our heads more. What do you need?"</text>
+	<choice>
+		<text>Ask one of them to join you.</text>
+		<event>
+			<text>A gunnery officer packs a bag. "Don't talk to me about the Federation, and we'll get along fine."</text>
+			<crewMember amount="1" class="human"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Ask for their missiles.</text>
+		<event>
+			<text>They hand over their armoury. "We weren't going to get to use them anyway."</text>
+			<item_modify>
+				<item type="missiles" min="4" max="6"/>
+			</item_modify>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_CAPITAL_CHOIR">
+	<text>A cathedral-sized station, full of people singing one note. The note is everywhere: in your comms, your engines, the back of your crew's heads. It's very beautiful.</text>
+	<choice>
+		<text>Leave, quickly.</text>
+		<event>
+			<text>Your crew are quiet for the next few jumps. One of them is still humming the note.</text>
+		</event>
+	</choice>
+	<choice req="crystal" hidden="true">
+		<text>(Crystal) Your Crystal crew member sings back.</text>
+		<event>
+			<text>Your Crystal sings a chord against the note, and the choir falters. For a moment, the signal across the capital stutters, and your sensors pick up what's really out there.</text>
+			<reveal_map/>
+		</event>
+	</choice>
+	<choice req="slug" hidden="true">
+		<text>(Slug) Your Slug crew member listens to what's under the song.</text>
+		<event>
+			<text>Your Slug listens to the choir's thoughts, and tells you where CONCORD's ships are, and where they aren't.</text>
+			<reveal_map/>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_CAPITAL_SAL">
+	<text>Loud music on every channel, terrible, and wonderful. "This is Static Sal, broadcasting from the belly of the beast! CONCORD wants me off the air, and it's sent a ship to see to it. Anyone out there who likes music?"</text>
+	<choice>
+		<text>Defend the transmitter.</text>
+		<event>
+			<text>A joined ship is closing on Sal's transmitter, and it turns to deal with you instead.</text>
+			<ship load="XFTL_CAPITAL_SAL_SHIP" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave her to it.</text>
+		<event>
+			<text>The music cuts out a few minutes after you leave.</text>
+		</event>
+	</choice>
+</event>
+<ship name="XFTL_CAPITAL_SAL_SHIP" auto_blueprint="XFTL_HYBRIDS">
+	<destroyed>
+		<text>"Woo! This one's for the ship that just saved my show!" Sal sends over everything she can spare, and turns the volume up.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>"Woo! This one's for the ship that just saved my show!" Sal sends over everything she can spare, and turns the volume up.</text>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<!--
+    The Mainframe: CONCORD's core, at the far end of the Silent Capital, in
+    place of the Federation base and the flagship (see doc/game/mainframe.md).
+    Three phases, one after another at its beacon, each a layer of it: the
+    Firewall, the Splicing Bays and the Mind. After each of the first two,
+    there's a break of 20 seconds, then the next phase's event
+    (XFTL_MAINFRAME_PHASE_<n>, see InGameState.startMainframePhase); beating
+    the Mind wins the game.
+-->
+<event name="XFTL_MAINFRAME">
+	<text>The Mainframe fills the sky: a station the size of a moon, wrapped in layer after layer of shields, inside and out crawling with drones. Every channel carries the same calm voice. "You've come such a long way. You can rest now."</text>
+	<choice>
+		<text>Attack the Mainframe.</text>
+		<event>
+			<text>The Firewall's shields light up, one after another, and its drones swing round to meet you.</text>
+			<ship load="XFTL_MAINFRAME_CORE" hostile="true"/>
+		</event>
+	</choice>
+	<choice req="cloaking" hidden="true">
+		<text>(Cloaking) Close in under cloak, and strike first.</text>
+		<event>
+			<text>You slip through the drone screen under cloak. By the time the Mainframe sees you, your first volley is on its way, and its shields are still coming up.</text>
+			<xftlBossOpening>ambush</xftlBossOpening>
+			<ship load="XFTL_MAINFRAME_CORE" hostile="true"/>
+		</event>
+	</choice>
+</event>
+
+<!--
+    The first phase, the Firewall: one of its variants, each the vanilla
+    Rebel flagship with half of a race's bomber on either side (see
+    tools/boss_ships.py)
+-->
+<ship name="XFTL_MAINFRAME_CORE" auto_blueprint="XFTL_BOSS_MAINFRAMES">
+	<destroyed>
+		<text>The Firewall's shields fail one after another, and its outer shell breaks away in pieces the size of cities. Underneath are the Splicing Bays, already waking up. You have a few moments before they're ready.</text>
+	</destroyed>
+</ship>
+
+<!-- The second phase: the Splicing Bays -->
+<event name="XFTL_MAINFRAME_PHASE_2">
+	<text>The Splicing Bays open: docks where arms of machinery are still welding drones together, and swarms of finished ones pouring out of them. "You don't have to fight alone," says the voice. "Let me give you some company."</text>
+	<ship load="XFTL_MAINFRAME_BAYS" hostile="true"/>
+</event>
+<ship name="XFTL_MAINFRAME_BAYS" blueprint="XFTL_BOSS_MAINFRAME_BAYS">
+	<destroyed>
+		<text>The Splicing Bays tear themselves apart, and their unfinished drones drift loose. At the heart of the Mainframe, something is still glowing: the Mind. You have a few moments.</text>
+	</destroyed>
+	<deadCrew>
+		<text>The bays' spliced crew fall still, all at once, and the machinery stops. At the heart of the Mainframe, something is still glowing: the Mind. You have a few moments.</text>
+	</deadCrew>
+</ship>
+
+<!-- The third phase: the Mind -->
+<event name="XFTL_MAINFRAME_PHASE_3">
+	<text>The Mind: the core of CONCORD, a sphere of light at the heart of the Mainframe. Its guns are few, and they flicker as you look at them, never quite the same twice. Then the singing starts, inside your crew's heads.</text>
+	<ship load="XFTL_MAINFRAME_MIND" hostile="true"/>
+</event>
+<ship name="XFTL_MAINFRAME_MIND" blueprint="XFTL_BOSS_MAINFRAME_MIND">
+	<destroyed>
+		<text>The Mind goes dark, and the singing stops mid-note. On every channel, the calm voice is gone. Across the capital, and across the galaxy, people blink, look around, and remember what they were arguing about.</text>
+	</destroyed>
+	<deadCrew>
+		<text>The Mind's last crew fall, and without them, it can't hold the Chorus together. The singing stops mid-note. Across the capital, and across the galaxy, people blink, look around, and remember what they were arguing about.</text>
+	</deadCrew>
+</ship>

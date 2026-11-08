@@ -1,0 +1,55 @@
+<!--
+    The fuel stations' choices, for the Chonkestrel, which buys twice as much
+    fuel there (for twice the scrap), as each jump takes it two (see the
+    events' xftlScale, in events.xml.append and events_fuel.xml.append).
+-->
+<mod:findName type="text" name="event_REFUEL_STATION_c1_choice">
+	<mod:setValue>Buy 12 fuel for 24 scrap.</mod:setValue>
+</mod:findName>
+<mod:findName type="text" name="event_REFUEL_STATION_c2_choice">
+	<mod:setValue>Buy 6 fuel for 12 scrap.</mod:setValue>
+</mod:findName>
+<mod:findName type="text" name="event_REFUEL_STATION_c3_choice">
+	<mod:setValue>Buy 2 fuel for 4 scrap.</mod:setValue>
+</mod:findName>
+<mod:findName type="text" name="event_FUEL_SELLER_DISTRESS_c2_choice">
+	<mod:setValue>Buy 10 fuel for 40 scrap.</mod:setValue>
+</mod:findName>
+<mod:findName type="text" name="event_FUEL_SELLER_DISTRESS_c3_choice">
+	<mod:setValue>Buy 4 fuel for 16 scrap.</mod:setValue>
+</mod:findName>
+
+<!--
+    The Silent Capital (sector 16, in place of the Last Stand, see
+    doc/game/mainframe.md): its start and its repair stations.
+-->
+<mod:findName type="text" name="event_LAST_STAND_START_text">
+	<mod:setValue>You come out of the jump at the edge of the Rebel capital. Every world in the system is lit up, and every channel is silent. Then a hail, on an old Federation frequency: a listening post, hidden in the debris of a moon. "Identify yourselves. Quickly."</mod:setValue>
+</mod:findName>
+<mod:findName type="text" name="event_LAST_STAND_START_c1_choice">
+	<mod:setValue>Tell them about Revic's data.</mod:setValue>
+</mod:findName>
+<mod:findName type="text" name="event_LAST_STAND_START_c1_text">
+	<mod:setValue>There's a long pause. "So it's real. The Mainframe's at the far side of the system: CONCORD's core, the thing that's singing in everyone's heads. Nobody's got close enough to touch it."</mod:setValue>
+</mod:findName>
+<mod:findName type="text" name="event_LAST_STAND_START_c1_c1_choice">
+	<mod:setValue>Ask for what they can spare.</mod:setValue>
+</mod:findName>
+<mod:findName type="text" name="event_LAST_STAND_START_c1_c1_text">
+	<mod:setValue>"Take the fuel, and our engineers. There are a few more of us hidden across the capital, and they'll help you too. Get to the Mainframe before CONCORD's fleet runs you down. And don't trust your sensors near the core: the Chorus is so strong there that they'll show you what it wants."</mod:setValue>
+</mod:findName>
+<mod:findName type="text" name="text_BOSS_REPAIR_STATION_1">
+	<mod:setValue>A Federation safehouse, hidden in a derelict freighter. Its engineers have been waiting months for a ship worth helping. They patch you up and fill your hold.</mod:setValue>
+</mod:findName>
+<mod:findName type="text" name="text_BOSS_REPAIR_STATION_2">
+	<mod:setValue>An Engi maintenance platform that cut its own network off on the Silent Night. Its drones swarm over your hull, fixing what they can, and its crew load you with supplies.</mod:setValue>
+</mod:findName>
+<mod:findName type="text" name="text_BOSS_REPAIR_STATION_3">
+	<mod:setValue>A Free Colony smuggler's dock, tucked behind an asteroid. "Anyone going for the Mainframe gets the works, on the house."</mod:setValue>
+</mod:findName>
+<mod:findName type="text" name="text_BOSS_REPAIR_STATION_4">
+	<mod:setValue>A Rebel repair yard whose crew hid in a shielded vault and missed the Silent Night. They don't like you, but they like CONCORD less, and they patch up your ship.</mod:setValue>
+</mod:findName>
+<mod:findName type="text" name="text_BOSS_REPAIR_STATION_5">
+	<mod:setValue>Federation spies, living on an abandoned trade station for years. They've been saving their supplies for a ship like yours.</mod:setValue>
+</mod:findName>

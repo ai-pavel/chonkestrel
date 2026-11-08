@@ -1,0 +1,1787 @@
+<!--
+    The second act of the campaign (see doc/game/lore.md). XFTL games are twice as
+    long as vanilla, so they're split into two acts by the Blockade Line, a
+    sector every game goes through halfway (xftlMidpoint), where the player
+    finds out about CONCORD. After it come new sectors only found in act 2
+    (xftlAct), alongside the vanilla ones.
+-->
+
+<!-- The sector between the two acts -->
+<sectorDescription name="XFTL_BLOCKADE" minSector="0" unique="true" xftlMidpoint="true" xftlFleetSpeed="1.15" xftlExits="3">
+	<nameList>
+		<name id="sectorname_XFTL_BLOCKADE" short="sectorname_short_XFTL_BLOCKADE"/>
+	</nameList>
+	<trackList>
+		<track>colonial</track>
+		<track>wasteland</track>
+		<track>hacking</track>
+	</trackList>
+	<startEvent>XFTL_BLOCKADE_START</startEvent>
+	<xftlFinishEvent>XFTL_BLOCKADE_EXIT</xftlFinishEvent>
+	<event name="STORE_REBEL" min="1" max="2"/>
+	<event name="ITEMS" min="1" max="2"/>
+	<event name="HOSTILE_REBEL" min="3" max="4"/>
+	<event name="XFTL_BLOCKADE_PATROL" min="3" max="4"/>
+	<event name="XFTL_BLOCKADE_SMUGGLER" min="1" max="1"/>
+	<event name="XFTL_BLOCKADE_DEFECTOR" min="1" max="1"/>
+	<event name="XFTL_BLOCKADE_REFUGEES" min="1" max="1"/>
+	<event name="DISTRESS_BEACON_REBEL" min="1" max="2"/>
+	<event name="NOTHING_REBEL" min="1" max="2"/>
+	<event name="NEUTRAL_REBEL" min="2" max="3"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_BLOCKADE_TOLL" min="1" max="1"/>
+	<event name="XFTL_BLOCKADE_DEBRIS" min="1" max="2"/>
+	<event name="XFTL_BLOCKADE_SPY" min="1" max="1"/>
+	<event name="XFTL_BLOCKADE_MINELAYER" min="1" max="1"/>
+	<event name="XFTL_BLOCKADE_HUM" min="1" max="1"/>
+</sectorDescription>
+
+<!--
+    Act 2: civilian. XFTL_FEDERATION_REMNANT is the Free Colonies. The three
+    act 2 civilian sectors are each unique, so there's at most one of each on
+    the map, and their stores sell double and triple weapons far more often
+    than a civilian store does (xftlStoreDoubleChance, xftlStoreTripleChance):
+    they're the last free shipyards. Each has a quest of its own, offered by
+    its start event, so it's always met (see events.xml.append).
+-->
+<sectorDescription name="XFTL_FEDERATION_REMNANT" minSector="0" unique="true" xftlAct="2" xftlStoreDoubleChance="0.35" xftlStoreTripleChance="0.12">
+	<nameList>
+		<name id="sectorname_XFTL_FEDERATION_REMNANT" short="sectorname_short_XFTL_FEDERATION_REMNANT"/>
+	</nameList>
+	<trackList>
+		<track>civilian</track>
+		<track>colonial</track>
+		<track>milkyway</track>
+	</trackList>
+	<startEvent>XFTL_REMNANT_START</startEvent>
+	<event name="STORE" min="2" max="3"/>
+	<event name="ITEMS" min="1" max="2"/>
+	<event name="XFTL_REMNANT_DRYDOCK" min="1" max="1"/>
+	<event name="XFTL_REMNANT_VOLUNTEERS" min="1" max="2"/>
+	<event name="XFTL_REMNANT_PATROL" min="1" max="2"/>
+	<event name="XFTL_REMNANT_ARMORY" min="1" max="1"/>
+	<event name="XFTL_REMNANT_UNDER_ATTACK" min="2" max="3"/>
+	<event name="XFTL_HAVEN_NEUTRAL" min="1" max="2"/>
+	<event name="XFTL_HAVEN_DISTRESS" min="1" max="2"/>
+	<event name="HOSTILE_CIVILIAN" min="2" max="3"/>
+	<event name="XFTL_BIG_CIVILIAN" min="2" max="3" xftlMinShipSize="2"/>
+	<event name="XFTL_BIG_REMNANT_FLAGSHIP" min="1" max="1" xftlMinShipSize="2"/>
+	<event name="XFTL_REMNANT_ELECTION" min="1" max="1"/>
+	<event name="XFTL_REMNANT_PLAGUE" min="1" max="1"/>
+	<event name="XFTL_REMNANT_ACADEMY" min="1" max="1"/>
+	<event name="XFTL_REMNANT_PIRATE_RADIO" min="1" max="1"/>
+	<event name="XFTL_REMNANT_CLINIC" min="1" max="1"/>
+	<event name="XFTL_REMNANT_DESERTERS" min="1" max="1"/>
+	<event name="XFTL_REMNANT_JAMMER" min="1" max="1"/>
+</sectorDescription>
+
+<sectorDescription name="XFTL_ANVIL_YARDS" minSector="0" unique="true" xftlAct="2" xftlStoreDoubleChance="0.35" xftlStoreTripleChance="0.12">
+	<nameList>
+		<name id="sectorname_XFTL_ANVIL_YARDS" short="sectorname_short_XFTL_ANVIL_YARDS"/>
+	</nameList>
+	<trackList>
+		<track>engi</track>
+		<track>cosmos</track>
+		<track>milkyway</track>
+	</trackList>
+	<startEvent>XFTL_ANVIL_START</startEvent>
+	<event name="XFTL_ANVIL_YARD" min="1" max="1"/>
+	<event name="XFTL_ANVIL_ENGINEERS" min="1" max="1"/>
+	<event name="XFTL_ANVIL_DEPOT" min="1" max="2"/>
+	<event name="XFTL_ANVIL_RAID" min="3" max="4"/>
+	<event name="XFTL_ANVIL_SABOTEUR" min="1" max="1"/>
+	<event name="STORE" min="2" max="2"/>
+	<event name="ITEMS" min="2" max="2"/>
+	<event name="XFTL_HAVEN_NEUTRAL" min="1" max="2"/>
+	<event name="HOSTILE_REBEL" min="2" max="3"/>
+	<event name="XFTL_HAVEN_DISTRESS" min="1" max="2"/>
+	<event name="XFTL_BIG_CIVILIAN" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_BIG_ANVIL_SISTER" min="1" max="1" xftlMinShipSize="2"/>
+	<event name="XFTL_ANVIL_TEST_RANGE" min="1" max="1"/>
+	<event name="XFTL_ANVIL_EVACUATION" min="1" max="2"/>
+	<event name="XFTL_ANVIL_DRONE_LAB" min="1" max="1"/>
+	<event name="XFTL_ANVIL_CANTEEN" min="1" max="1"/>
+	<event name="XFTL_ANVIL_FOUNDRY" min="1" max="1"/>
+	<event name="XFTL_ANVIL_SLIPWAY_FIRE" min="1" max="1"/>
+	<event name="XFTL_ANVIL_PROBE" min="1" max="1"/>
+	<event name="XFTL_ANVIL_DESIGNER" min="1" max="1"/>
+</sectorDescription>
+
+<!-- Act 2: the new sectors of the story about CONCORD (see events.xml.append) -->
+<sectorDescription name="XFTL_QUIET" minSector="0" unique="true" xftlAct="2" xftlStoreDoubleChance="0.35" xftlStoreTripleChance="0.12">
+	<nameList>
+		<name id="sectorname_XFTL_QUIET" short="sectorname_short_XFTL_QUIET"/>
+	</nameList>
+	<trackList>
+		<track>zoltan</track>
+		<track>cosmos</track>
+		<track>milkyway</track>
+	</trackList>
+	<startEvent>XFTL_QUIET_START</startEvent>
+	<event name="XFTL_QUIET_EMPTY" min="2" max="3"/>
+	<event name="XFTL_QUIET_MONASTERY" min="1" max="1"/>
+	<event name="XFTL_QUIET_REFUGEES" min="1" max="2"/>
+	<event name="XFTL_QUIET_HUMMING_GUEST" min="1" max="1"/>
+	<event name="XFTL_QUIET_HAND_DOCK" min="1" max="1"/>
+	<event name="XFTL_QUIET_INTRUDER" min="2" max="3"/>
+	<event name="XFTL_QUIET_GARDEN" min="1" max="1"/>
+	<event name="XFTL_QUIET_SILENT_TRADER" min="1" max="1"/>
+	<event name="XFTL_QUIET_ECHO_SHIP" min="1" max="1"/>
+	<event name="XFTL_QUIET_PILGRIMS" min="1" max="1"/>
+	<event name="STORE" min="2" max="2"/>
+	<event name="ITEMS" min="1" max="2"/>
+	<event name="XFTL_HAVEN_NEUTRAL" min="1" max="2"/>
+	<event name="XFTL_HAVEN_DISTRESS" min="1" max="2"/>
+	<event name="HOSTILE_CIVILIAN" min="1" max="2"/>
+	<event name="XFTL_BIG_CIVILIAN" min="1" max="2" xftlMinShipSize="2"/>
+</sectorDescription>
+
+<!--
+    Hazardous, in the second quarter of the game (sectors 5-8, before the
+    blockade, see xftlSectors), and twice as likely as each vanilla
+    sector. Every beacon has a hazard, and often two or three at once (any
+    kind of nebula, asteroids, a sun or a pulsar, see xftlHazards and
+    GameMap.addHazards), besides the start, stores, quests and the events
+    marked xftlNoHazards. There's no Rebel fleet here: the Devourer hunts
+    the player instead, a beacon every two jumps (xftlHunter, see
+    HunterBoss).
+-->
+<sectorDescription name="XFTL_MAW" minSector="0" unique="true" xftlAlways="true" xftlSectors="5-8" xftlWeight="2" xftlHazards="true" xftlExtraFuel="1" xftlHunter="2">
+	<nameList>
+		<name id="sectorname_XFTL_MAW" short="sectorname_short_XFTL_MAW"/>
+	</nameList>
+	<trackList>
+		<track>void</track>
+		<track>deepspace</track>
+		<track>rock</track>
+	</trackList>
+	<startEvent>XFTL_MAW_START</startEvent>
+	<xftlFinishEvent>XFTL_MAW_EXIT</xftlFinishEvent>
+	<event name="XFTL_MAW_EMPTY" min="2" max="3"/>
+	<event name="XFTL_MAW_WRECK" min="1" max="2"/>
+	<event name="XFTL_MAW_HAVEN" min="1" max="1" xftlNoHazards="true"/>
+	<event name="STORE" min="1" max="1"/>
+	<event name="STORE_PIRATE" min="0" max="1"/>
+	<event name="ITEMS" min="1" max="2"/>
+	<event name="HOSTILE_REBEL" min="3" max="4"/>
+	<event name="HOSTILE_PIRATE" min="2" max="3"/>
+	<event name="BOARDERS_PIRATE" min="1" max="1"/>
+	<event name="NEUTRAL_REBEL" min="1" max="2"/>
+	<event name="NOTHING_REBEL" min="1" max="2"/>
+	<event name="DISTRESS_BEACON" min="1" max="2"/>
+	<event name="XFTL_BIG_HOSTILE" min="2" max="3" xftlMinShipSize="2"/>
+</sectorDescription>
+
+<!--
+    Catastrophic, in the third quarter of the game (sectors 9-12), just
+    after the blockade. The storm-torn edge of the galaxy's arm, which the
+    player can take to stay ahead of the Rebel fleet.
+    Every beacon has two or three hazards at once, mostly three
+    (xftlHazards="catastrophic"), besides the start, stores, quests and the
+    events marked xftlNoHazards. There's no Rebel fleet here: the
+    Stormbreaker hunts the player instead, a beacon every jump (xftlHunter,
+    see HunterBoss).
+-->
+<sectorDescription name="XFTL_GULLET" minSector="0" unique="true" xftlAlways="true" xftlAct="2" xftlSectors="9-12" xftlHazards="catastrophic" xftlExtraFuel="1" xftlHunter="1">
+	<nameList>
+		<name id="sectorname_XFTL_GULLET" short="sectorname_short_XFTL_GULLET"/>
+	</nameList>
+	<trackList>
+		<track>void</track>
+		<track>deepspace</track>
+		<track>debris</track>
+	</trackList>
+	<startEvent>XFTL_GULLET_START</startEvent>
+	<xftlFinishEvent>XFTL_GULLET_EXIT</xftlFinishEvent>
+	<event name="XFTL_GULLET_EMPTY" min="2" max="3"/>
+	<event name="XFTL_GULLET_PURSUERS" min="1" max="2"/>
+	<event name="XFTL_GULLET_DERELICT" min="1" max="2"/>
+	<event name="XFTL_GULLET_SHELTER" min="1" max="1" xftlNoHazards="true"/>
+	<event name="STORE" min="0" max="1"/>
+	<event name="ITEMS" min="1" max="2"/>
+	<event name="HOSTILE_REBEL" min="3" max="4"/>
+	<event name="HOSTILE_PIRATE" min="1" max="2"/>
+	<event name="NOTHING_REBEL" min="1" max="2"/>
+	<event name="DISTRESS_BEACON" min="1" max="2"/>
+	<event name="XFTL_BIG_HOSTILE" min="2" max="3" xftlMinShipSize="2"/>
+</sectorDescription>
+
+<!--
+    Apocalyptic, in sectors 11-15 only: the most impassable sector in the
+    game. A tear in the galaxy's arm where a supernova's remnant, a pulsar,
+    an asteroid belt and a nebula all collide, so most beacons have all four
+    at once (xftlHazards="apocalyptic"), besides the start, stores, quests
+    and the events marked xftlNoHazards. There's no Rebel fleet here: the
+    Ossuary hunts the player instead, a beacon every two jumps (xftlHunter,
+    see HunterBoss).
+-->
+<sectorDescription name="XFTL_BELLY" minSector="0" unique="true" xftlAlways="true" xftlAct="2" xftlSectors="11-15" xftlHazards="apocalyptic" xftlExtraFuel="1" xftlHunter="2">
+	<nameList>
+		<name id="sectorname_XFTL_BELLY" short="sectorname_short_XFTL_BELLY"/>
+	</nameList>
+	<trackList>
+		<track>void</track>
+		<track>debris</track>
+		<track>deepspace</track>
+	</trackList>
+	<startEvent>XFTL_BELLY_START</startEvent>
+	<xftlFinishEvent>XFTL_BELLY_EXIT</xftlFinishEvent>
+	<event name="XFTL_BELLY_EMPTY" min="3" max="4"/>
+	<event name="XFTL_BELLY_GRAVEYARD" min="1" max="2"/>
+	<event name="XFTL_BELLY_FLAGSHIP_SCOUT" min="1" max="1"/>
+	<event name="XFTL_BELLY_EYE" min="1" max="1" xftlNoHazards="true"/>
+	<event name="STORE_PIRATE" min="0" max="1"/>
+	<event name="ITEMS" min="1" max="2"/>
+	<event name="HOSTILE_REBEL" min="3" max="4"/>
+	<event name="HOSTILE_PIRATE" min="1" max="2"/>
+	<event name="DISTRESS_BEACON" min="1" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="2" max="3" xftlMinShipSize="2"/>
+</sectorDescription>
+
+<!--
+    Nebula sectors where most beacons (90%) are one of XFTL's own kinds of
+    nebula (xftlNebula, see doc/game/nebulas.md). They can turn up in either act,
+    from sector 5 (xftlSectors). Every beacon has hazards (xftlHazards),
+    besides the start, stores, quests and the sector's peaceful events
+    (xftlNoHazards), which keep only their nebula.
+-->
+<sectorDescription name="XFTL_RADIATION_FIELDS" minSector="0" unique="false" xftlSectors="5-" xftlHazards="true" xftlNebula="RADIATION">
+	<nameList>
+		<name id="sectorname_XFTL_RADIATION_FIELDS" short="sectorname_short_XFTL_RADIATION_FIELDS"/>
+	</nameList>
+	<trackList>
+		<track>deepspace</track>
+		<track>void</track>
+		<track>rock</track>
+	</trackList>
+	<startEvent>XFTL_RADFIELDS_START</startEvent>
+	<event name="XFTL_RADIATION_NEBULA" min="3" max="4"/>
+	<event name="XFTL_RADFIELDS_COLONY" min="1" max="1" xftlNoHazards="true"/>
+	<event name="XFTL_RADFIELDS_PIRATE_BASE" min="1" max="1"/>
+	<event name="XFTL_RADFIELDS_PILGRIMS" min="1" max="1" xftlNoHazards="true"/>
+	<event name="STORE" min="1" max="1"/>
+	<event name="NEBULA_STORE" min="1" max="1"/>
+	<event name="ITEMS" min="1" max="2"/>
+	<event name="NEBULA_HOSTILE" min="3" max="4"/>
+	<event name="NEBULA_NEUTRAL" min="3" max="4"/>
+	<event name="DISTRESS_BEACON" min="1" max="2"/>
+	<event name="XFTL_MORE_NEBULA" min="0" max="1"/>
+	<event name="XFTL_BIG_NEBULA" min="1" max="2" xftlMinShipSize="2"/>
+</sectorDescription>
+
+<sectorDescription name="XFTL_MIRAGE_EXPANSE" minSector="0" unique="false" xftlSectors="5-" xftlHazards="true" xftlNebula="MIRAGE">
+	<nameList>
+		<name id="sectorname_XFTL_MIRAGE_EXPANSE" short="sectorname_short_XFTL_MIRAGE_EXPANSE"/>
+	</nameList>
+	<trackList>
+		<track>deepspace</track>
+		<track>void</track>
+		<track>slug</track>
+	</trackList>
+	<startEvent>XFTL_MIRAGE_EXPANSE_START</startEvent>
+	<event name="XFTL_MIRAGE_NEBULA" min="3" max="4"/>
+	<event name="XFTL_MIRAGE_DISTRESS" min="1" max="2"/>
+	<event name="XFTL_MIRAGE_ILLUSIONISTS" min="1" max="1" xftlNoHazards="true"/>
+	<event name="XFTL_MIRAGE_REFLECTION" min="1" max="1" xftlNoHazards="true"/>
+	<event name="STORE" min="1" max="1"/>
+	<event name="NEBULA_STORE" min="1" max="1"/>
+	<event name="ITEMS" min="1" max="2"/>
+	<event name="NEBULA_HOSTILE" min="3" max="4"/>
+	<event name="NEBULA_NEUTRAL" min="3" max="4"/>
+	<event name="XFTL_MORE_SLUG" min="0" max="1"/>
+	<event name="XFTL_BIG_NEBULA" min="1" max="2" xftlMinShipSize="2"/>
+</sectorDescription>
+
+<sectorDescription name="XFTL_DARK_REACH" minSector="0" unique="false" xftlSectors="5-" xftlHazards="true" xftlNebula="DARK">
+	<nameList>
+		<name id="sectorname_XFTL_DARK_REACH" short="sectorname_short_XFTL_DARK_REACH"/>
+	</nameList>
+	<trackList>
+		<track>deepspace</track>
+		<track>void</track>
+		<track>shrike</track>
+	</trackList>
+	<startEvent>XFTL_DARK_REACH_START</startEvent>
+	<event name="XFTL_DARK_NEBULA" min="3" max="4"/>
+	<event name="XFTL_DARK_LIGHTHOUSE" min="1" max="1" xftlNoHazards="true"/>
+	<event name="XFTL_DARK_LURKERS" min="1" max="1"/>
+	<event name="XFTL_DARK_BLIND_TRADER" min="1" max="1" xftlNoHazards="true"/>
+	<event name="STORE" min="1" max="1"/>
+	<event name="NEBULA_STORE" min="1" max="1"/>
+	<event name="ITEMS" min="1" max="2"/>
+	<event name="NEBULA_HOSTILE" min="3" max="4"/>
+	<event name="NEBULA_NEUTRAL" min="3" max="4"/>
+	<event name="XFTL_MORE_LANIUS" min="0" max="1"/>
+	<event name="XFTL_BIG_NEBULA" min="1" max="2" xftlMinShipSize="2"/>
+</sectorDescription>
+
+<!--
+    Add the act 2 sectors to the sector classes (and the AE versions). Act
+    2's hostile sectors are the hybrid sectors, at the end (made by
+    tools/hybrid_sectors.py), and the hazardous ones.
+-->
+<mod:findName type="sectorType" name="CIVILIAN">
+	<mod-append:sector>XFTL_FEDERATION_REMNANT</mod-append:sector>
+	<mod-append:sector>XFTL_ANVIL_YARDS</mod-append:sector>
+	<mod-append:sector>XFTL_QUIET</mod-append:sector>
+</mod:findName>
+<mod:findName type="sectorType" name="HOSTILE">
+	<mod-append:sector>XFTL_MAW</mod-append:sector>
+	<mod-append:sector>XFTL_GULLET</mod-append:sector>
+	<mod-append:sector>XFTL_BELLY</mod-append:sector>
+	<mod-append:sector>CRYSTAL_HOME</mod-append:sector>
+</mod:findName>
+<mod:findName type="sectorType" name="OVERRIDE_HOSTILE">
+	<mod-append:sector>XFTL_MAW</mod-append:sector>
+	<mod-append:sector>XFTL_GULLET</mod-append:sector>
+	<mod-append:sector>XFTL_BELLY</mod-append:sector>
+	<mod-append:sector>CRYSTAL_HOME</mod-append:sector>
+</mod:findName>
+
+<!--
+    The race augments are much commoner in their race's stores (rarity 2
+    or 3, rather than the 5 they have everywhere else, see
+    blueprints.xml.append): the Engi's med-bots and drone booster, the
+    Mantis pheromones, the Slug gel, the Zoltan shield, and the Rock
+    plating and Crystal vengeance, each a little in the other's sectors.
+    The hybrid sectors get the same (see tools/hybrid_sectors.py, which
+    must be kept matching). The Titanium System Casing is commoner in the
+    civilian sectors, which have no rarity list of their own.
+-->
+<mod:findName type="sectorDescription" name="ENGI_SECTOR">
+	<mod:findLike type="rarityList">
+		<mod-append:blueprint name="NANO_MEDBAY" rarity="2"/>
+		<mod-append:blueprint name="DRONE_SPEED" rarity="3"/>
+	</mod:findLike>
+</mod:findName>
+<mod:findName type="sectorDescription" name="ENGI_HOME">
+	<mod:findLike type="rarityList">
+		<mod-append:blueprint name="NANO_MEDBAY" rarity="2"/>
+		<mod-append:blueprint name="DRONE_SPEED" rarity="3"/>
+	</mod:findLike>
+</mod:findName>
+<mod:findName type="sectorDescription" name="MANTIS_SECTOR">
+	<mod:findLike type="rarityList">
+		<mod-append:blueprint name="CREW_STIMS" rarity="2"/>
+	</mod:findLike>
+</mod:findName>
+<mod:findName type="sectorDescription" name="MANTIS_HOME">
+	<mod:findLike type="rarityList">
+		<mod-append:blueprint name="CREW_STIMS" rarity="2"/>
+	</mod:findLike>
+</mod:findName>
+<mod:findName type="sectorDescription" name="SLUG_SECTOR">
+	<mod:findLike type="rarityList">
+		<mod-append:blueprint name="SLUG_GEL" rarity="2"/>
+	</mod:findLike>
+</mod:findName>
+<mod:findName type="sectorDescription" name="SLUG_HOME">
+	<mod:findLike type="rarityList">
+		<mod-append:blueprint name="SLUG_GEL" rarity="2"/>
+	</mod:findLike>
+</mod:findName>
+<mod:findName type="sectorDescription" name="ZOLTAN_SECTOR">
+	<mod:findLike type="rarityList">
+		<mod-append:blueprint name="ENERGY_SHIELD" rarity="3"/>
+	</mod:findLike>
+</mod:findName>
+<mod:findName type="sectorDescription" name="ZOLTAN_HOME">
+	<mod:findLike type="rarityList">
+		<mod-append:blueprint name="ENERGY_SHIELD" rarity="3"/>
+	</mod:findLike>
+</mod:findName>
+<mod:findName type="sectorDescription" name="ROCK_SECTOR">
+	<mod:findLike type="rarityList">
+		<mod-append:blueprint name="ROCK_ARMOR" rarity="2"/>
+		<mod-append:blueprint name="CRYSTAL_SHARDS" rarity="4"/>
+	</mod:findLike>
+</mod:findName>
+<mod:findName type="sectorDescription" name="ROCK_HOME">
+	<mod:findLike type="rarityList">
+		<mod-append:blueprint name="ROCK_ARMOR" rarity="2"/>
+		<mod-append:blueprint name="CRYSTAL_SHARDS" rarity="4"/>
+	</mod:findLike>
+</mod:findName>
+<mod:findName type="sectorDescription" name="CRYSTAL_HOME">
+	<mod:findLike type="rarityList">
+		<mod-append:blueprint name="CRYSTAL_SHARDS" rarity="2"/>
+		<mod-append:blueprint name="ROCK_ARMOR" rarity="4"/>
+	</mod:findLike>
+</mod:findName>
+<mod:findName type="sectorDescription" name="CIVILIAN_SECTOR">
+	<mod-append:rarityList>
+		<blueprint name="SYSTEM_CASING" rarity="3"/>
+	</mod-append:rarityList>
+</mod:findName>
+
+<!--
+    In vanilla, the Crystal Homeworlds can only be reached through a secret
+    sector, which XFTL doesn't support yet. Instead, it can turn up (once) on
+    the map in act 2, as a hostile sector.
+-->
+<mod:findName type="sectorDescription" name="CRYSTAL_HOME">
+	<mod:setAttributes xftlAct="2"/>
+</mod:findName>
+
+<!--
+    Every sector's start beacon describes it, with its own start event (see
+    events.xml.append): the plain sectors had the generic START_BEACON, the
+    homeworlds their race's sector's, and the miniboss's Rebel sector the
+    plain one's.
+-->
+<mod:findName type="sectorDescription" name="CIVILIAN_SECTOR">
+	<mod-append:startEvent>XFTL_START_CIVILIAN</mod-append:startEvent>
+</mod:findName>
+<mod:findName type="sectorDescription" name="STANDARD_SPACE">
+	<mod-append:startEvent>XFTL_START_STANDARD</mod-append:startEvent>
+</mod:findName>
+<mod:findName type="sectorDescription" name="DEEP_SPACE_SECTOR">
+	<mod-append:startEvent>XFTL_START_DEEP_SPACE</mod-append:startEvent>
+</mod:findName>
+<mod:findName type="sectorDescription" name="ABANDONED_SECTOR">
+	<mod-append:startEvent>XFTL_START_ABANDONED</mod-append:startEvent>
+</mod:findName>
+<mod:findName type="sectorDescription" name="ENGI_HOME">
+	<mod:findLike type="startEvent">
+		<mod:setValue>XFTL_START_ENGI_HOME</mod:setValue>
+	</mod:findLike>
+</mod:findName>
+<mod:findName type="sectorDescription" name="MANTIS_HOME">
+	<mod:findLike type="startEvent">
+		<mod:setValue>XFTL_START_MANTIS_HOME</mod:setValue>
+	</mod:findLike>
+</mod:findName>
+<mod:findName type="sectorDescription" name="ROCK_HOME">
+	<mod:findLike type="startEvent">
+		<mod:setValue>XFTL_START_ROCK_HOME</mod:setValue>
+	</mod:findLike>
+</mod:findName>
+<mod:findName type="sectorDescription" name="SLUG_HOME">
+	<mod:findLike type="startEvent">
+		<mod:setValue>XFTL_START_SLUG_HOME</mod:setValue>
+	</mod:findLike>
+</mod:findName>
+<mod:findName type="sectorDescription" name="ZOLTAN_HOME">
+	<mod:findLike type="startEvent">
+		<mod:setValue>XFTL_START_ZOLTAN_HOME</mod:setValue>
+	</mod:findLike>
+</mod:findName>
+<mod:findName type="sectorDescription" name="REBEL_SECTOR_MINIBOSS">
+	<mod:findLike type="startEvent">
+		<mod:setValue>XFTL_START_REBEL_MINIBOSS</mod:setValue>
+	</mod:findLike>
+</mod:findName>
+
+<!--
+    The Federation's and the factions' own sectors are only in act 1: by act
+    2, the Federation's space is behind the Rebel lines, and CONCORD's
+    hybrids hold the rest (see the hybrid sectors), the Slugs' nebulas too.
+    The homeworlds and the Nebula sectors can still turn up in act 2, the
+    homeworlds if they haven't in act 1.
+-->
+<mod:findName type="sectorDescription" name="(CIVILIAN_SECTOR|ENGI_SECTOR|ZOLTAN_SECTOR|REBEL_SECTOR|REBEL_SECTOR_MINIBOSS|PIRATE_SECTOR|MANTIS_SECTOR|ROCK_SECTOR|LANIUS_SECTOR|SLUG_SECTOR)" regex="true" limit="-1">
+	<mod:setAttributes xftlAct="1"/>
+</mod:findName>
+<mod:findName type="sectorType" name="NEBULA">
+	<mod-append:sector>XFTL_RADIATION_FIELDS</mod-append:sector>
+	<mod-append:sector>XFTL_MIRAGE_EXPANSE</mod-append:sector>
+	<mod-append:sector>XFTL_DARK_REACH</mod-append:sector>
+</mod:findName>
+
+<!--
+    Events for big player ships (see newEvents.xml.append) in the vanilla
+    sectors: rarely in act 1, so the vanilla events still come first, and
+    more often in act 2.
+-->
+<mod:findName type="sectorDescription" name="(CIVILIAN_SECTOR|ENGI_SECTOR|ENGI_HOME|ZOLTAN_SECTOR|ZOLTAN_HOME|STANDARD_SPACE)" regex="true" limit="-1">
+	<mod-append:event name="XFTL_BIG_CIVILIAN" min="0" max="1" xftlMinShipSize="2" xftlAct="1"/>
+	<mod-append:event name="XFTL_BIG_CIVILIAN" min="2" max="3" xftlMinShipSize="2" xftlAct="2"/>
+</mod:findName>
+<mod:findName type="sectorDescription" name="(REBEL_SECTOR|REBEL_SECTOR_MINIBOSS|PIRATE_SECTOR|MANTIS_SECTOR|MANTIS_HOME|ROCK_SECTOR|ROCK_HOME|LANIUS_SECTOR)" regex="true" limit="-1">
+	<mod-append:event name="XFTL_BIG_HOSTILE" min="0" max="1" xftlMinShipSize="2" xftlAct="1"/>
+	<mod-append:event name="XFTL_BIG_HOSTILE" min="2" max="3" xftlMinShipSize="2" xftlAct="2"/>
+</mod:findName>
+<mod:findName type="sectorDescription" name="(NEBULA_SECTOR|SLUG_SECTOR|SLUG_HOME)" regex="true" limit="-1">
+	<mod-append:event name="XFTL_BIG_NEBULA" min="0" max="1" xftlMinShipSize="2" xftlAct="1"/>
+	<mod-append:event name="XFTL_BIG_NEBULA" min="1" max="2" xftlMinShipSize="2" xftlAct="2"/>
+</mod:findName>
+
+<!--
+    More events for the vanilla sectors (see the events_*.xml.append files),
+    so sixteen-sector games don't keep repeating the same ones. The game
+    starts out mostly vanilla, with more of them further in: two or four a
+    sector in sectors 1-5 (as lists of more than one are doubled for XFTL's
+    bigger maps, see Sector.BEACON_COUNT_SCALE), and four or six from sector
+    6 and in act 2. With the omens and the events for big ships, that's
+    about 10% of a sector's beacons at first, and 12-20% after.
+-->
+<mod:findName type="sectorDescription" name="(CIVILIAN_SECTOR|STANDARD_SPACE)" regex="true" limit="-1">
+	<mod-append:event name="XFTL_MORE_CIVILIAN" min="1" max="2" xftlAct="1" xftlSectors="1-5"/>
+	<mod-append:event name="XFTL_MORE_CIVILIAN" min="2" max="3" xftlAct="1" xftlSectors="6-"/>
+	<mod-append:event name="XFTL_MORE_CIVILIAN" min="2" max="3" xftlAct="2"/>
+</mod:findName>
+<mod:findName type="sectorDescription" name="(ENGI_SECTOR|ENGI_HOME)" regex="true" limit="-1">
+	<mod-append:event name="XFTL_MORE_ENGI" min="1" max="2" xftlAct="1" xftlSectors="1-5"/>
+	<mod-append:event name="XFTL_MORE_ENGI" min="2" max="3" xftlAct="1" xftlSectors="6-"/>
+	<mod-append:event name="XFTL_MORE_ENGI" min="2" max="3" xftlAct="2"/>
+</mod:findName>
+<mod:findName type="sectorDescription" name="(ZOLTAN_SECTOR|ZOLTAN_HOME)" regex="true" limit="-1">
+	<mod-append:event name="XFTL_MORE_ZOLTAN" min="1" max="2" xftlAct="1" xftlSectors="1-5"/>
+	<mod-append:event name="XFTL_MORE_ZOLTAN" min="2" max="3" xftlAct="1" xftlSectors="6-"/>
+	<mod-append:event name="XFTL_MORE_ZOLTAN" min="2" max="3" xftlAct="2"/>
+</mod:findName>
+<mod:findName type="sectorDescription" name="(REBEL_SECTOR|REBEL_SECTOR_MINIBOSS)" regex="true" limit="-1">
+	<mod-append:event name="XFTL_MORE_REBEL" min="1" max="2" xftlAct="1" xftlSectors="1-5"/>
+	<mod-append:event name="XFTL_MORE_REBEL" min="2" max="3" xftlAct="1" xftlSectors="6-"/>
+	<mod-append:event name="XFTL_MORE_REBEL" min="2" max="3" xftlAct="2"/>
+</mod:findName>
+<mod:findName type="sectorDescription" name="PIRATE_SECTOR" regex="true" limit="-1">
+	<mod-append:event name="XFTL_MORE_PIRATE" min="1" max="2" xftlAct="1" xftlSectors="1-5"/>
+	<mod-append:event name="XFTL_MORE_PIRATE" min="2" max="3" xftlAct="1" xftlSectors="6-"/>
+	<mod-append:event name="XFTL_MORE_PIRATE" min="2" max="3" xftlAct="2"/>
+</mod:findName>
+<mod:findName type="sectorDescription" name="(MANTIS_SECTOR|MANTIS_HOME)" regex="true" limit="-1">
+	<mod-append:event name="XFTL_MORE_MANTIS" min="1" max="2" xftlAct="1" xftlSectors="1-5"/>
+	<mod-append:event name="XFTL_MORE_MANTIS" min="2" max="3" xftlAct="1" xftlSectors="6-"/>
+	<mod-append:event name="XFTL_MORE_MANTIS" min="2" max="3" xftlAct="2"/>
+</mod:findName>
+<mod:findName type="sectorDescription" name="(ROCK_SECTOR|ROCK_HOME)" regex="true" limit="-1">
+	<mod-append:event name="XFTL_MORE_ROCK" min="1" max="2" xftlAct="1" xftlSectors="1-5"/>
+	<mod-append:event name="XFTL_MORE_ROCK" min="2" max="3" xftlAct="1" xftlSectors="6-"/>
+	<mod-append:event name="XFTL_MORE_ROCK" min="2" max="3" xftlAct="2"/>
+</mod:findName>
+<mod:findName type="sectorDescription" name="LANIUS_SECTOR" regex="true" limit="-1">
+	<mod-append:event name="XFTL_MORE_LANIUS" min="1" max="2" xftlAct="1" xftlSectors="1-5"/>
+	<mod-append:event name="XFTL_MORE_LANIUS" min="2" max="3" xftlAct="1" xftlSectors="6-"/>
+	<mod-append:event name="XFTL_MORE_LANIUS" min="2" max="3" xftlAct="2"/>
+</mod:findName>
+<mod:findName type="sectorDescription" name="(SLUG_SECTOR|SLUG_HOME)" regex="true" limit="-1">
+	<mod-append:event name="XFTL_MORE_SLUG" min="1" max="2" xftlAct="1" xftlSectors="1-5"/>
+	<mod-append:event name="XFTL_MORE_SLUG" min="2" max="3" xftlAct="1" xftlSectors="6-"/>
+	<mod-append:event name="XFTL_MORE_SLUG" min="2" max="3" xftlAct="2"/>
+</mod:findName>
+<mod:findName type="sectorDescription" name="NEBULA_SECTOR" regex="true" limit="-1">
+	<mod-append:event name="XFTL_MORE_NEBULA" min="1" max="2" xftlAct="1" xftlSectors="1-5"/>
+	<mod-append:event name="XFTL_MORE_NEBULA" min="2" max="3" xftlAct="1" xftlSectors="6-"/>
+	<mod-append:event name="XFTL_MORE_NEBULA" min="2" max="3" xftlAct="2"/>
+</mod:findName>
+<mod:findName type="sectorDescription" name="CRYSTAL_HOME" regex="true" limit="-1">
+	<mod-append:event name="XFTL_MORE_CRYSTAL" min="1" max="2" xftlAct="1" xftlSectors="1-5"/>
+	<mod-append:event name="XFTL_MORE_CRYSTAL" min="2" max="3" xftlAct="1" xftlSectors="6-"/>
+	<mod-append:event name="XFTL_MORE_CRYSTAL" min="2" max="3" xftlAct="2"/>
+</mod:findName>
+
+<!--
+    XFTL's own nebulas (see events_nebula.xml.append and doc/game/nebulas.md) in
+    the vanilla nebula sectors: rarely in act 1, and more often in act 2.
+-->
+<mod:findName type="sectorDescription" name="NEBULA_SECTOR">
+	<mod-append:event name="XFTL_RADIATION_NEBULA" min="0" max="1" xftlAct="1"/>
+	<mod-append:event name="XFTL_DARK_NEBULA" min="0" max="1" xftlAct="1"/>
+	<mod-append:event name="XFTL_RADIATION_NEBULA" min="1" max="2" xftlAct="2"/>
+	<mod-append:event name="XFTL_DARK_NEBULA" min="1" max="2" xftlAct="2"/>
+	<mod-append:event name="XFTL_MIRAGE_NEBULA" min="1" max="1" xftlAct="2"/>
+</mod:findName>
+<mod:findName type="sectorDescription" name="(SLUG_SECTOR|SLUG_HOME)" regex="true" limit="-1">
+	<mod-append:event name="XFTL_MIRAGE_NEBULA" min="0" max="1" xftlAct="1"/>
+	<mod-append:event name="XFTL_MIRAGE_NEBULA" min="1" max="2" xftlAct="2"/>
+</mod:findName>
+
+<!--
+    The story about CONCORD (see events.xml.append and doc/game/lore.md) in the
+    vanilla sectors: a hint of what's coming in each act 1 sector, so it
+    stays mostly vanilla, and CONCORD's events in act 2, one a sector.
+-->
+<mod:findName type="sectorDescription" name="(CIVILIAN_SECTOR|STANDARD_SPACE|ENGI_SECTOR|ENGI_HOME|ZOLTAN_SECTOR|ZOLTAN_HOME|REBEL_SECTOR|REBEL_SECTOR_MINIBOSS|PIRATE_SECTOR|MANTIS_SECTOR|MANTIS_HOME|ROCK_SECTOR|ROCK_HOME|LANIUS_SECTOR|NEBULA_SECTOR|SLUG_SECTOR|SLUG_HOME|CRYSTAL_HOME)" regex="true" limit="-1">
+	<mod-append:event name="XFTL_OMENS" min="1" max="1" xftlAct="1"/>
+	<mod-append:event name="XFTL_CHORUS" min="1" max="1" xftlAct="2"/>
+</mod:findName>
+
+<!--
+    Sector 16, the Silent Capital: the Rebel capital, which CONCORD took on
+    the Silent Night, in place of vanilla's Last Stand (see
+    doc/game/mainframe.md). Its own events (events_boss.xml.append) in place
+    of vanilla's, two stores, and the repair stations, now Federation
+    spies' safehouses. The beacons near the exit are Chorus-held, and the
+    map lies about them (Sector.chorusHeld). At the end, in place of the
+    Federation base and the flagship, is the Mainframe (its finish event,
+    XFTL_MAINFRAME): beating it wins the game.
+-->
+<mod:findName type="sectorDescription" name="FINAL">
+	<mod-append:xftlFinishEvent>XFTL_MAINFRAME</mod-append:xftlFinishEvent>
+	<mod:findLike type="event" limit="-1">
+		<mod:removeTag/>
+	</mod:findLike>
+	<mod-append:event name="STORE" min="1" max="1"/>
+	<mod-append:event name="STORE" min="1" max="1"/>
+	<mod-append:event name="BOSS_REPAIR_STATION" min="3" max="3"/>
+	<mod-append:event name="XFTL_CAPITAL_HOSTILE" min="6" max="7"/>
+	<mod-append:event name="XFTL_CAPITAL_QUIET" min="3" max="4"/>
+	<mod-append:event name="XFTL_CAPITAL_TRAFFIC" min="1" max="1"/>
+	<mod-append:event name="XFTL_CAPITAL_PARADE" min="1" max="1"/>
+	<mod-append:event name="XFTL_CAPITAL_YARD" min="1" max="1"/>
+	<mod-append:event name="XFTL_CAPITAL_ADMIRAL" min="1" max="1"/>
+	<mod-append:event name="XFTL_CAPITAL_LOYALISTS" min="1" max="1"/>
+	<mod-append:event name="XFTL_CAPITAL_CHOIR" min="1" max="1"/>
+	<mod-append:event name="XFTL_CAPITAL_SAL" min="1" max="1"/>
+</mod:findName>
+
+<!-- BEGIN generated by tools/hybrid_sectors.py -->
+<!--
+    The hybrid sectors of act 2 (see doc/game/sectors.md). Don't edit these by
+    hand: change tools/hybrid_sectors.py and run it again.
+-->
+<sectorDescription name="XFTL_HYBRID_REBEL_MANTIS" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="REBEL MANTIS">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_REBEL_MANTIS" short="sectorname_short_XFTL_HYBRID_REBEL_MANTIS"/>
+	</nameList>
+	<trackList>
+		<track>colonial</track>
+		<track>wasteland</track>
+		<track>lostship</track>
+		<track>hacking</track>
+		<track>mantis</track>
+		<track>debris</track>
+		<track>void</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="3"/>
+		<blueprint name="mantis" rarity="1"/>
+		<blueprint name="energy" rarity="0"/>
+		<blueprint name="slug" rarity="0"/>
+		<blueprint name="rock" rarity="4"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="CREW_STIMS" rarity="2"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_REBEL_MANTIS</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_REBEL" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_MANTIS" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_REBEL" min="0" max="1"/>
+	<event name="NEUTRAL_REBEL" min="0" max="1"/>
+	<event name="XFTL_MORE_REBEL" min="0" max="1"/>
+	<event name="HOSTILE_MANTIS" min="0" max="1"/>
+	<event name="NEUTRAL_MANTIS" min="0" max="1"/>
+	<event name="XFTL_MORE_MANTIS" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_REBEL_ROCK" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="REBEL ROCK">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_REBEL_ROCK" short="sectorname_short_XFTL_HYBRID_REBEL_ROCK"/>
+	</nameList>
+	<trackList>
+		<track>colonial</track>
+		<track>wasteland</track>
+		<track>lostship</track>
+		<track>hacking</track>
+		<track>rock</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="0"/>
+		<blueprint name="mantis" rarity="0"/>
+		<blueprint name="energy" rarity="3"/>
+		<blueprint name="slug" rarity="0"/>
+		<blueprint name="rock" rarity="1"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="ROCK_ARMOR" rarity="2"/>
+		<blueprint name="CRYSTAL_SHARDS" rarity="4"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_REBEL_ROCK</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_REBEL" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_ROCK" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_REBEL" min="0" max="1"/>
+	<event name="NEUTRAL_REBEL" min="0" max="1"/>
+	<event name="XFTL_MORE_REBEL" min="0" max="1"/>
+	<event name="HOSTILE_ROCK" min="0" max="1"/>
+	<event name="NEUTRAL_ROCK" min="0" max="1"/>
+	<event name="XFTL_MORE_ROCK" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_REBEL_SLUG" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="REBEL SLUG">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_REBEL_SLUG" short="sectorname_short_XFTL_HYBRID_REBEL_SLUG"/>
+	</nameList>
+	<trackList>
+		<track>colonial</track>
+		<track>wasteland</track>
+		<track>lostship</track>
+		<track>hacking</track>
+		<track>slug</track>
+		<track>debris</track>
+		<track>deepspace</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="4"/>
+		<blueprint name="mantis" rarity="4"/>
+		<blueprint name="energy" rarity="4"/>
+		<blueprint name="slug" rarity="2"/>
+		<blueprint name="rock" rarity="4"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="SLUG_GEL" rarity="2"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_REBEL_SLUG</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_REBEL" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_SLUG" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_REBEL" min="0" max="1"/>
+	<event name="NEUTRAL_REBEL" min="0" max="1"/>
+	<event name="XFTL_MORE_REBEL" min="0" max="1"/>
+	<event name="HOSTILE_SLUG" min="0" max="1"/>
+	<event name="NEBULA_NEUTRAL_SLUG" min="0" max="1"/>
+	<event name="XFTL_MORE_SLUG" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_REBEL_LANIUS" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="REBEL LANIUS">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_REBEL_LANIUS" short="sectorname_short_XFTL_HYBRID_REBEL_LANIUS"/>
+	</nameList>
+	<trackList>
+		<track>colonial</track>
+		<track>wasteland</track>
+		<track>lostship</track>
+		<track>hacking</track>
+		<track>shrike</track>
+		<track>deepspace</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="3"/>
+		<blueprint name="mantis" rarity="3"/>
+		<blueprint name="energy" rarity="4"/>
+		<blueprint name="slug" rarity="4"/>
+		<blueprint name="rock" rarity="3"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="anaerobic" rarity="2"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_REBEL_LANIUS</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_REBEL" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_LANIUS" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_REBEL" min="0" max="1"/>
+	<event name="NEUTRAL_REBEL" min="0" max="1"/>
+	<event name="XFTL_MORE_REBEL" min="0" max="1"/>
+	<event name="HOSTILE_LANIUS" min="0" max="1"/>
+	<event name="NEUTRAL_LANIUS" min="0" max="1"/>
+	<event name="XFTL_MORE_LANIUS" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_REBEL_CRYSTAL" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="REBEL CRYSTAL">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_REBEL_CRYSTAL" short="sectorname_short_XFTL_HYBRID_REBEL_CRYSTAL"/>
+	</nameList>
+	<trackList>
+		<track>colonial</track>
+		<track>wasteland</track>
+		<track>lostship</track>
+		<track>hacking</track>
+		<track>debris</track>
+		<track>deepspace</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="0"/>
+		<blueprint name="mantis" rarity="0"/>
+		<blueprint name="energy" rarity="0"/>
+		<blueprint name="slug" rarity="0"/>
+		<blueprint name="rock" rarity="0"/>
+		<blueprint name="human" rarity="0"/>
+		<blueprint name="crystal" rarity="1"/>
+		<blueprint name="CRYSTAL_SHARDS" rarity="2"/>
+		<blueprint name="ROCK_ARMOR" rarity="4"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_REBEL_CRYSTAL</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_REBEL" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_CRYSTAL" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_REBEL" min="0" max="1"/>
+	<event name="NEUTRAL_REBEL" min="0" max="1"/>
+	<event name="XFTL_MORE_REBEL" min="0" max="1"/>
+	<event name="HOSTILE_CRYSTAL" min="0" max="1"/>
+	<event name="NEUTRAL_CRYSTAL" min="0" max="1"/>
+	<event name="XFTL_MORE_CRYSTAL" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_REBEL_ENGI" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="REBEL ENGI">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_REBEL_ENGI" short="sectorname_short_XFTL_HYBRID_REBEL_ENGI"/>
+	</nameList>
+	<trackList>
+		<track>colonial</track>
+		<track>wasteland</track>
+		<track>lostship</track>
+		<track>hacking</track>
+		<track>engi</track>
+		<track>cosmos</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="1"/>
+		<blueprint name="mantis" rarity="0"/>
+		<blueprint name="energy" rarity="4"/>
+		<blueprint name="slug" rarity="0"/>
+		<blueprint name="rock" rarity="0"/>
+		<blueprint name="human" rarity="3"/>
+		<blueprint name="NANO_MEDBAY" rarity="2"/>
+		<blueprint name="DRONE_SPEED" rarity="3"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_REBEL_ENGI</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_REBEL" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_ENGI" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_REBEL" min="0" max="1"/>
+	<event name="NEUTRAL_REBEL" min="0" max="1"/>
+	<event name="XFTL_MORE_REBEL" min="0" max="1"/>
+	<event name="HOSTILE_ENGI" min="0" max="1"/>
+	<event name="NEUTRAL_ENGI" min="0" max="1"/>
+	<event name="XFTL_MORE_ENGI" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_REBEL_ZOLTAN" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="REBEL ZOLTAN">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_REBEL_ZOLTAN" short="sectorname_short_XFTL_HYBRID_REBEL_ZOLTAN"/>
+	</nameList>
+	<trackList>
+		<track>colonial</track>
+		<track>wasteland</track>
+		<track>lostship</track>
+		<track>hacking</track>
+		<track>zoltan</track>
+		<track>cosmos</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="3"/>
+		<blueprint name="mantis" rarity="3"/>
+		<blueprint name="energy" rarity="1"/>
+		<blueprint name="slug" rarity="3"/>
+		<blueprint name="rock" rarity="3"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="ENERGY_SHIELD" rarity="3"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_REBEL_ZOLTAN</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_REBEL" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_ZOLTAN" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_REBEL" min="0" max="1"/>
+	<event name="NEUTRAL_REBEL" min="0" max="1"/>
+	<event name="XFTL_MORE_REBEL" min="0" max="1"/>
+	<event name="HOSTILE_ZOLTAN" min="0" max="1"/>
+	<event name="NEUTRAL_ZOLTAN" min="0" max="1"/>
+	<event name="XFTL_MORE_ZOLTAN" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_MANTIS_ROCK" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="MANTIS ROCK">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_MANTIS_ROCK" short="sectorname_short_XFTL_HYBRID_MANTIS_ROCK"/>
+	</nameList>
+	<trackList>
+		<track>mantis</track>
+		<track>debris</track>
+		<track>void</track>
+		<track>rock</track>
+		<track>wasteland</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="3"/>
+		<blueprint name="mantis" rarity="1"/>
+		<blueprint name="energy" rarity="3"/>
+		<blueprint name="slug" rarity="0"/>
+		<blueprint name="rock" rarity="1"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="CREW_STIMS" rarity="2"/>
+		<blueprint name="ROCK_ARMOR" rarity="2"/>
+		<blueprint name="CRYSTAL_SHARDS" rarity="4"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_MANTIS_ROCK</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_MANTIS" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_ROCK" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_MANTIS" min="0" max="1"/>
+	<event name="NEUTRAL_MANTIS" min="0" max="1"/>
+	<event name="XFTL_MORE_MANTIS" min="0" max="1"/>
+	<event name="HOSTILE_ROCK" min="0" max="1"/>
+	<event name="NEUTRAL_ROCK" min="0" max="1"/>
+	<event name="XFTL_MORE_ROCK" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_MANTIS_SLUG" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="MANTIS SLUG">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_MANTIS_SLUG" short="sectorname_short_XFTL_HYBRID_MANTIS_SLUG"/>
+	</nameList>
+	<trackList>
+		<track>mantis</track>
+		<track>debris</track>
+		<track>void</track>
+		<track>slug</track>
+		<track>wasteland</track>
+		<track>deepspace</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="3"/>
+		<blueprint name="mantis" rarity="1"/>
+		<blueprint name="energy" rarity="4"/>
+		<blueprint name="slug" rarity="2"/>
+		<blueprint name="rock" rarity="4"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="CREW_STIMS" rarity="2"/>
+		<blueprint name="SLUG_GEL" rarity="2"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_MANTIS_SLUG</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_MANTIS" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_SLUG" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_MANTIS" min="0" max="1"/>
+	<event name="NEUTRAL_MANTIS" min="0" max="1"/>
+	<event name="XFTL_MORE_MANTIS" min="0" max="1"/>
+	<event name="HOSTILE_SLUG" min="0" max="1"/>
+	<event name="NEBULA_NEUTRAL_SLUG" min="0" max="1"/>
+	<event name="XFTL_MORE_SLUG" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_MANTIS_LANIUS" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="MANTIS LANIUS">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_MANTIS_LANIUS" short="sectorname_short_XFTL_HYBRID_MANTIS_LANIUS"/>
+	</nameList>
+	<trackList>
+		<track>mantis</track>
+		<track>debris</track>
+		<track>void</track>
+		<track>shrike</track>
+		<track>deepspace</track>
+		<track>wasteland</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="3"/>
+		<blueprint name="mantis" rarity="1"/>
+		<blueprint name="energy" rarity="4"/>
+		<blueprint name="slug" rarity="4"/>
+		<blueprint name="rock" rarity="3"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="anaerobic" rarity="2"/>
+		<blueprint name="CREW_STIMS" rarity="2"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_MANTIS_LANIUS</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_MANTIS" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_LANIUS" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_MANTIS" min="0" max="1"/>
+	<event name="NEUTRAL_MANTIS" min="0" max="1"/>
+	<event name="XFTL_MORE_MANTIS" min="0" max="1"/>
+	<event name="HOSTILE_LANIUS" min="0" max="1"/>
+	<event name="NEUTRAL_LANIUS" min="0" max="1"/>
+	<event name="XFTL_MORE_LANIUS" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_MANTIS_CRYSTAL" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="MANTIS CRYSTAL">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_MANTIS_CRYSTAL" short="sectorname_short_XFTL_HYBRID_MANTIS_CRYSTAL"/>
+	</nameList>
+	<trackList>
+		<track>mantis</track>
+		<track>debris</track>
+		<track>void</track>
+		<track>wasteland</track>
+		<track>deepspace</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="3"/>
+		<blueprint name="mantis" rarity="1"/>
+		<blueprint name="energy" rarity="0"/>
+		<blueprint name="slug" rarity="0"/>
+		<blueprint name="rock" rarity="4"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="crystal" rarity="1"/>
+		<blueprint name="CREW_STIMS" rarity="2"/>
+		<blueprint name="CRYSTAL_SHARDS" rarity="2"/>
+		<blueprint name="ROCK_ARMOR" rarity="4"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_MANTIS_CRYSTAL</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_MANTIS" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_CRYSTAL" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_MANTIS" min="0" max="1"/>
+	<event name="NEUTRAL_MANTIS" min="0" max="1"/>
+	<event name="XFTL_MORE_MANTIS" min="0" max="1"/>
+	<event name="HOSTILE_CRYSTAL" min="0" max="1"/>
+	<event name="NEUTRAL_CRYSTAL" min="0" max="1"/>
+	<event name="XFTL_MORE_CRYSTAL" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_MANTIS_ENGI" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="MANTIS ENGI">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_MANTIS_ENGI" short="sectorname_short_XFTL_HYBRID_MANTIS_ENGI"/>
+	</nameList>
+	<trackList>
+		<track>mantis</track>
+		<track>debris</track>
+		<track>void</track>
+		<track>engi</track>
+		<track>cosmos</track>
+		<track>hacking</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="1"/>
+		<blueprint name="mantis" rarity="1"/>
+		<blueprint name="energy" rarity="4"/>
+		<blueprint name="slug" rarity="0"/>
+		<blueprint name="rock" rarity="4"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="CREW_STIMS" rarity="2"/>
+		<blueprint name="NANO_MEDBAY" rarity="2"/>
+		<blueprint name="DRONE_SPEED" rarity="3"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_MANTIS_ENGI</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_MANTIS" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_ENGI" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_MANTIS" min="0" max="1"/>
+	<event name="NEUTRAL_MANTIS" min="0" max="1"/>
+	<event name="XFTL_MORE_MANTIS" min="0" max="1"/>
+	<event name="HOSTILE_ENGI" min="0" max="1"/>
+	<event name="NEUTRAL_ENGI" min="0" max="1"/>
+	<event name="XFTL_MORE_ENGI" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_MANTIS_ZOLTAN" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="MANTIS ZOLTAN">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_MANTIS_ZOLTAN" short="sectorname_short_XFTL_HYBRID_MANTIS_ZOLTAN"/>
+	</nameList>
+	<trackList>
+		<track>mantis</track>
+		<track>debris</track>
+		<track>void</track>
+		<track>zoltan</track>
+		<track>cosmos</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="3"/>
+		<blueprint name="mantis" rarity="1"/>
+		<blueprint name="energy" rarity="1"/>
+		<blueprint name="slug" rarity="3"/>
+		<blueprint name="rock" rarity="3"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="CREW_STIMS" rarity="2"/>
+		<blueprint name="ENERGY_SHIELD" rarity="3"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_MANTIS_ZOLTAN</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_MANTIS" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_ZOLTAN" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_MANTIS" min="0" max="1"/>
+	<event name="NEUTRAL_MANTIS" min="0" max="1"/>
+	<event name="XFTL_MORE_MANTIS" min="0" max="1"/>
+	<event name="HOSTILE_ZOLTAN" min="0" max="1"/>
+	<event name="NEUTRAL_ZOLTAN" min="0" max="1"/>
+	<event name="XFTL_MORE_ZOLTAN" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_ROCK_SLUG" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="ROCK SLUG">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_ROCK_SLUG" short="sectorname_short_XFTL_HYBRID_ROCK_SLUG"/>
+	</nameList>
+	<trackList>
+		<track>rock</track>
+		<track>wasteland</track>
+		<track>slug</track>
+		<track>debris</track>
+		<track>deepspace</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="4"/>
+		<blueprint name="mantis" rarity="4"/>
+		<blueprint name="energy" rarity="3"/>
+		<blueprint name="slug" rarity="2"/>
+		<blueprint name="rock" rarity="1"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="ROCK_ARMOR" rarity="2"/>
+		<blueprint name="CRYSTAL_SHARDS" rarity="4"/>
+		<blueprint name="SLUG_GEL" rarity="2"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_ROCK_SLUG</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_ROCK" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_SLUG" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_ROCK" min="0" max="1"/>
+	<event name="NEUTRAL_ROCK" min="0" max="1"/>
+	<event name="XFTL_MORE_ROCK" min="0" max="1"/>
+	<event name="HOSTILE_SLUG" min="0" max="1"/>
+	<event name="NEBULA_NEUTRAL_SLUG" min="0" max="1"/>
+	<event name="XFTL_MORE_SLUG" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_ROCK_LANIUS" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="ROCK LANIUS">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_ROCK_LANIUS" short="sectorname_short_XFTL_HYBRID_ROCK_LANIUS"/>
+	</nameList>
+	<trackList>
+		<track>rock</track>
+		<track>wasteland</track>
+		<track>shrike</track>
+		<track>deepspace</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="3"/>
+		<blueprint name="mantis" rarity="3"/>
+		<blueprint name="energy" rarity="3"/>
+		<blueprint name="slug" rarity="4"/>
+		<blueprint name="rock" rarity="1"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="anaerobic" rarity="2"/>
+		<blueprint name="ROCK_ARMOR" rarity="2"/>
+		<blueprint name="CRYSTAL_SHARDS" rarity="4"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_ROCK_LANIUS</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_ROCK" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_LANIUS" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_ROCK" min="0" max="1"/>
+	<event name="NEUTRAL_ROCK" min="0" max="1"/>
+	<event name="XFTL_MORE_ROCK" min="0" max="1"/>
+	<event name="HOSTILE_LANIUS" min="0" max="1"/>
+	<event name="NEUTRAL_LANIUS" min="0" max="1"/>
+	<event name="XFTL_MORE_LANIUS" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_ROCK_CRYSTAL" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="ROCK CRYSTAL">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_ROCK_CRYSTAL" short="sectorname_short_XFTL_HYBRID_ROCK_CRYSTAL"/>
+	</nameList>
+	<trackList>
+		<track>rock</track>
+		<track>wasteland</track>
+		<track>debris</track>
+		<track>deepspace</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="0"/>
+		<blueprint name="mantis" rarity="0"/>
+		<blueprint name="energy" rarity="3"/>
+		<blueprint name="slug" rarity="0"/>
+		<blueprint name="rock" rarity="1"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="crystal" rarity="1"/>
+		<blueprint name="ROCK_ARMOR" rarity="2"/>
+		<blueprint name="CRYSTAL_SHARDS" rarity="2"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_ROCK_CRYSTAL</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_ROCK" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_CRYSTAL" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_ROCK" min="0" max="1"/>
+	<event name="NEUTRAL_ROCK" min="0" max="1"/>
+	<event name="XFTL_MORE_ROCK" min="0" max="1"/>
+	<event name="HOSTILE_CRYSTAL" min="0" max="1"/>
+	<event name="NEUTRAL_CRYSTAL" min="0" max="1"/>
+	<event name="XFTL_MORE_CRYSTAL" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_ROCK_ENGI" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="ROCK ENGI">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_ROCK_ENGI" short="sectorname_short_XFTL_HYBRID_ROCK_ENGI"/>
+	</nameList>
+	<trackList>
+		<track>rock</track>
+		<track>wasteland</track>
+		<track>engi</track>
+		<track>cosmos</track>
+		<track>hacking</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="1"/>
+		<blueprint name="mantis" rarity="0"/>
+		<blueprint name="energy" rarity="3"/>
+		<blueprint name="slug" rarity="0"/>
+		<blueprint name="rock" rarity="1"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="ROCK_ARMOR" rarity="2"/>
+		<blueprint name="CRYSTAL_SHARDS" rarity="4"/>
+		<blueprint name="NANO_MEDBAY" rarity="2"/>
+		<blueprint name="DRONE_SPEED" rarity="3"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_ROCK_ENGI</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_ROCK" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_ENGI" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_ROCK" min="0" max="1"/>
+	<event name="NEUTRAL_ROCK" min="0" max="1"/>
+	<event name="XFTL_MORE_ROCK" min="0" max="1"/>
+	<event name="HOSTILE_ENGI" min="0" max="1"/>
+	<event name="NEUTRAL_ENGI" min="0" max="1"/>
+	<event name="XFTL_MORE_ENGI" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_ROCK_ZOLTAN" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="ROCK ZOLTAN">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_ROCK_ZOLTAN" short="sectorname_short_XFTL_HYBRID_ROCK_ZOLTAN"/>
+	</nameList>
+	<trackList>
+		<track>rock</track>
+		<track>wasteland</track>
+		<track>zoltan</track>
+		<track>cosmos</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="3"/>
+		<blueprint name="mantis" rarity="3"/>
+		<blueprint name="energy" rarity="1"/>
+		<blueprint name="slug" rarity="3"/>
+		<blueprint name="rock" rarity="1"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="ROCK_ARMOR" rarity="2"/>
+		<blueprint name="CRYSTAL_SHARDS" rarity="4"/>
+		<blueprint name="ENERGY_SHIELD" rarity="3"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_ROCK_ZOLTAN</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_ROCK" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_ZOLTAN" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_ROCK" min="0" max="1"/>
+	<event name="NEUTRAL_ROCK" min="0" max="1"/>
+	<event name="XFTL_MORE_ROCK" min="0" max="1"/>
+	<event name="HOSTILE_ZOLTAN" min="0" max="1"/>
+	<event name="NEUTRAL_ZOLTAN" min="0" max="1"/>
+	<event name="XFTL_MORE_ZOLTAN" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_SLUG_LANIUS" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="SLUG LANIUS">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_SLUG_LANIUS" short="sectorname_short_XFTL_HYBRID_SLUG_LANIUS"/>
+	</nameList>
+	<trackList>
+		<track>slug</track>
+		<track>debris</track>
+		<track>wasteland</track>
+		<track>deepspace</track>
+		<track>shrike</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="3"/>
+		<blueprint name="mantis" rarity="3"/>
+		<blueprint name="energy" rarity="4"/>
+		<blueprint name="slug" rarity="2"/>
+		<blueprint name="rock" rarity="3"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="anaerobic" rarity="2"/>
+		<blueprint name="SLUG_GEL" rarity="2"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_SLUG_LANIUS</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_SLUG" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_LANIUS" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_SLUG" min="0" max="1"/>
+	<event name="NEBULA_NEUTRAL_SLUG" min="0" max="1"/>
+	<event name="XFTL_MORE_SLUG" min="0" max="1"/>
+	<event name="HOSTILE_LANIUS" min="0" max="1"/>
+	<event name="NEUTRAL_LANIUS" min="0" max="1"/>
+	<event name="XFTL_MORE_LANIUS" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_SLUG_CRYSTAL" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="SLUG CRYSTAL">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_SLUG_CRYSTAL" short="sectorname_short_XFTL_HYBRID_SLUG_CRYSTAL"/>
+	</nameList>
+	<trackList>
+		<track>slug</track>
+		<track>debris</track>
+		<track>wasteland</track>
+		<track>deepspace</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="4"/>
+		<blueprint name="mantis" rarity="4"/>
+		<blueprint name="energy" rarity="4"/>
+		<blueprint name="slug" rarity="2"/>
+		<blueprint name="rock" rarity="4"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="crystal" rarity="1"/>
+		<blueprint name="SLUG_GEL" rarity="2"/>
+		<blueprint name="CRYSTAL_SHARDS" rarity="2"/>
+		<blueprint name="ROCK_ARMOR" rarity="4"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_SLUG_CRYSTAL</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_SLUG" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_CRYSTAL" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_SLUG" min="0" max="1"/>
+	<event name="NEBULA_NEUTRAL_SLUG" min="0" max="1"/>
+	<event name="XFTL_MORE_SLUG" min="0" max="1"/>
+	<event name="HOSTILE_CRYSTAL" min="0" max="1"/>
+	<event name="NEUTRAL_CRYSTAL" min="0" max="1"/>
+	<event name="XFTL_MORE_CRYSTAL" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_SLUG_ENGI" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="SLUG ENGI">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_SLUG_ENGI" short="sectorname_short_XFTL_HYBRID_SLUG_ENGI"/>
+	</nameList>
+	<trackList>
+		<track>slug</track>
+		<track>debris</track>
+		<track>wasteland</track>
+		<track>deepspace</track>
+		<track>engi</track>
+		<track>cosmos</track>
+		<track>hacking</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="1"/>
+		<blueprint name="mantis" rarity="4"/>
+		<blueprint name="energy" rarity="4"/>
+		<blueprint name="slug" rarity="2"/>
+		<blueprint name="rock" rarity="4"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="SLUG_GEL" rarity="2"/>
+		<blueprint name="NANO_MEDBAY" rarity="2"/>
+		<blueprint name="DRONE_SPEED" rarity="3"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_SLUG_ENGI</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_SLUG" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_ENGI" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_SLUG" min="0" max="1"/>
+	<event name="NEBULA_NEUTRAL_SLUG" min="0" max="1"/>
+	<event name="XFTL_MORE_SLUG" min="0" max="1"/>
+	<event name="HOSTILE_ENGI" min="0" max="1"/>
+	<event name="NEUTRAL_ENGI" min="0" max="1"/>
+	<event name="XFTL_MORE_ENGI" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_SLUG_ZOLTAN" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="SLUG ZOLTAN">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_SLUG_ZOLTAN" short="sectorname_short_XFTL_HYBRID_SLUG_ZOLTAN"/>
+	</nameList>
+	<trackList>
+		<track>slug</track>
+		<track>debris</track>
+		<track>wasteland</track>
+		<track>deepspace</track>
+		<track>zoltan</track>
+		<track>cosmos</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="3"/>
+		<blueprint name="mantis" rarity="3"/>
+		<blueprint name="energy" rarity="1"/>
+		<blueprint name="slug" rarity="2"/>
+		<blueprint name="rock" rarity="3"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="SLUG_GEL" rarity="2"/>
+		<blueprint name="ENERGY_SHIELD" rarity="3"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_SLUG_ZOLTAN</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_SLUG" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_ZOLTAN" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_SLUG" min="0" max="1"/>
+	<event name="NEBULA_NEUTRAL_SLUG" min="0" max="1"/>
+	<event name="XFTL_MORE_SLUG" min="0" max="1"/>
+	<event name="HOSTILE_ZOLTAN" min="0" max="1"/>
+	<event name="NEUTRAL_ZOLTAN" min="0" max="1"/>
+	<event name="XFTL_MORE_ZOLTAN" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_LANIUS_CRYSTAL" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="LANIUS CRYSTAL">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_LANIUS_CRYSTAL" short="sectorname_short_XFTL_HYBRID_LANIUS_CRYSTAL"/>
+	</nameList>
+	<trackList>
+		<track>shrike</track>
+		<track>deepspace</track>
+		<track>wasteland</track>
+		<track>debris</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="3"/>
+		<blueprint name="mantis" rarity="3"/>
+		<blueprint name="energy" rarity="4"/>
+		<blueprint name="slug" rarity="4"/>
+		<blueprint name="rock" rarity="3"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="anaerobic" rarity="2"/>
+		<blueprint name="crystal" rarity="1"/>
+		<blueprint name="CRYSTAL_SHARDS" rarity="2"/>
+		<blueprint name="ROCK_ARMOR" rarity="4"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_LANIUS_CRYSTAL</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_LANIUS" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_CRYSTAL" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_LANIUS" min="0" max="1"/>
+	<event name="NEUTRAL_LANIUS" min="0" max="1"/>
+	<event name="XFTL_MORE_LANIUS" min="0" max="1"/>
+	<event name="HOSTILE_CRYSTAL" min="0" max="1"/>
+	<event name="NEUTRAL_CRYSTAL" min="0" max="1"/>
+	<event name="XFTL_MORE_CRYSTAL" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_LANIUS_ENGI" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="LANIUS ENGI">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_LANIUS_ENGI" short="sectorname_short_XFTL_HYBRID_LANIUS_ENGI"/>
+	</nameList>
+	<trackList>
+		<track>shrike</track>
+		<track>deepspace</track>
+		<track>wasteland</track>
+		<track>engi</track>
+		<track>cosmos</track>
+		<track>hacking</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="1"/>
+		<blueprint name="mantis" rarity="3"/>
+		<blueprint name="energy" rarity="4"/>
+		<blueprint name="slug" rarity="4"/>
+		<blueprint name="rock" rarity="3"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="anaerobic" rarity="2"/>
+		<blueprint name="NANO_MEDBAY" rarity="2"/>
+		<blueprint name="DRONE_SPEED" rarity="3"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_LANIUS_ENGI</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_LANIUS" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_ENGI" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_LANIUS" min="0" max="1"/>
+	<event name="NEUTRAL_LANIUS" min="0" max="1"/>
+	<event name="XFTL_MORE_LANIUS" min="0" max="1"/>
+	<event name="HOSTILE_ENGI" min="0" max="1"/>
+	<event name="NEUTRAL_ENGI" min="0" max="1"/>
+	<event name="XFTL_MORE_ENGI" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_LANIUS_ZOLTAN" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="LANIUS ZOLTAN">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_LANIUS_ZOLTAN" short="sectorname_short_XFTL_HYBRID_LANIUS_ZOLTAN"/>
+	</nameList>
+	<trackList>
+		<track>shrike</track>
+		<track>deepspace</track>
+		<track>wasteland</track>
+		<track>zoltan</track>
+		<track>cosmos</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="3"/>
+		<blueprint name="mantis" rarity="3"/>
+		<blueprint name="energy" rarity="1"/>
+		<blueprint name="slug" rarity="3"/>
+		<blueprint name="rock" rarity="3"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="anaerobic" rarity="2"/>
+		<blueprint name="ENERGY_SHIELD" rarity="3"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_LANIUS_ZOLTAN</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_LANIUS" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_ZOLTAN" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_LANIUS" min="0" max="1"/>
+	<event name="NEUTRAL_LANIUS" min="0" max="1"/>
+	<event name="XFTL_MORE_LANIUS" min="0" max="1"/>
+	<event name="HOSTILE_ZOLTAN" min="0" max="1"/>
+	<event name="NEUTRAL_ZOLTAN" min="0" max="1"/>
+	<event name="XFTL_MORE_ZOLTAN" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_CRYSTAL_ENGI" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="CRYSTAL ENGI">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_CRYSTAL_ENGI" short="sectorname_short_XFTL_HYBRID_CRYSTAL_ENGI"/>
+	</nameList>
+	<trackList>
+		<track>debris</track>
+		<track>wasteland</track>
+		<track>deepspace</track>
+		<track>engi</track>
+		<track>cosmos</track>
+		<track>hacking</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="1"/>
+		<blueprint name="mantis" rarity="0"/>
+		<blueprint name="energy" rarity="4"/>
+		<blueprint name="slug" rarity="0"/>
+		<blueprint name="rock" rarity="0"/>
+		<blueprint name="human" rarity="3"/>
+		<blueprint name="crystal" rarity="1"/>
+		<blueprint name="CRYSTAL_SHARDS" rarity="2"/>
+		<blueprint name="ROCK_ARMOR" rarity="4"/>
+		<blueprint name="NANO_MEDBAY" rarity="2"/>
+		<blueprint name="DRONE_SPEED" rarity="3"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_CRYSTAL_ENGI</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_CRYSTAL" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_ENGI" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_CRYSTAL" min="0" max="1"/>
+	<event name="NEUTRAL_CRYSTAL" min="0" max="1"/>
+	<event name="XFTL_MORE_CRYSTAL" min="0" max="1"/>
+	<event name="HOSTILE_ENGI" min="0" max="1"/>
+	<event name="NEUTRAL_ENGI" min="0" max="1"/>
+	<event name="XFTL_MORE_ENGI" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_CRYSTAL_ZOLTAN" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="CRYSTAL ZOLTAN">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_CRYSTAL_ZOLTAN" short="sectorname_short_XFTL_HYBRID_CRYSTAL_ZOLTAN"/>
+	</nameList>
+	<trackList>
+		<track>debris</track>
+		<track>wasteland</track>
+		<track>deepspace</track>
+		<track>zoltan</track>
+		<track>cosmos</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="3"/>
+		<blueprint name="mantis" rarity="3"/>
+		<blueprint name="energy" rarity="1"/>
+		<blueprint name="slug" rarity="3"/>
+		<blueprint name="rock" rarity="3"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="crystal" rarity="1"/>
+		<blueprint name="CRYSTAL_SHARDS" rarity="2"/>
+		<blueprint name="ROCK_ARMOR" rarity="4"/>
+		<blueprint name="ENERGY_SHIELD" rarity="3"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_CRYSTAL_ZOLTAN</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_CRYSTAL" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_ZOLTAN" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_CRYSTAL" min="0" max="1"/>
+	<event name="NEUTRAL_CRYSTAL" min="0" max="1"/>
+	<event name="XFTL_MORE_CRYSTAL" min="0" max="1"/>
+	<event name="HOSTILE_ZOLTAN" min="0" max="1"/>
+	<event name="NEUTRAL_ZOLTAN" min="0" max="1"/>
+	<event name="XFTL_MORE_ZOLTAN" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<sectorDescription name="XFTL_HYBRID_ENGI_ZOLTAN" minSector="0" unique="false" xftlAct="2" xftlWeight="0.5" xftlHybrids="ENGI ZOLTAN">
+	<nameList>
+		<name id="sectorname_XFTL_HYBRID_ENGI_ZOLTAN" short="sectorname_short_XFTL_HYBRID_ENGI_ZOLTAN"/>
+	</nameList>
+	<trackList>
+		<track>engi</track>
+		<track>cosmos</track>
+		<track>hacking</track>
+		<track>zoltan</track>
+	</trackList>
+	<rarityList>
+		<blueprint name="engi" rarity="1"/>
+		<blueprint name="mantis" rarity="3"/>
+		<blueprint name="energy" rarity="1"/>
+		<blueprint name="slug" rarity="3"/>
+		<blueprint name="rock" rarity="3"/>
+		<blueprint name="human" rarity="2"/>
+		<blueprint name="NANO_MEDBAY" rarity="2"/>
+		<blueprint name="DRONE_SPEED" rarity="3"/>
+		<blueprint name="ENERGY_SHIELD" rarity="3"/>
+	</rarityList>
+	<startEvent>XFTL_HYBRIDSEC_START_ENGI_ZOLTAN</startEvent>
+	<event name="XFTL_HYBRIDSEC_HOSTILE" min="5" max="7"/>
+	<event name="XFTL_HYBRIDSEC_COMMON" min="3" max="4"/>
+	<event name="XFTL_HYBRIDSEC_ENGI" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_ZOLTAN" min="2" max="3"/>
+	<event name="XFTL_HYBRIDSEC_NOTHING" min="2" max="3"/>
+	<event name="STORE" min="1" max="2"/>
+	<event name="ITEMS" min="0" max="1"/>
+	<event name="HOSTILE_ENGI" min="0" max="1"/>
+	<event name="NEUTRAL_ENGI" min="0" max="1"/>
+	<event name="XFTL_MORE_ENGI" min="0" max="1"/>
+	<event name="HOSTILE_ZOLTAN" min="0" max="1"/>
+	<event name="NEUTRAL_ZOLTAN" min="0" max="1"/>
+	<event name="XFTL_MORE_ZOLTAN" min="0" max="1"/>
+	<event name="XFTL_BIG_HOSTILE" min="1" max="2" xftlMinShipSize="2"/>
+	<event name="XFTL_CHORUS" min="1" max="1"/>
+</sectorDescription>
+<mod:findName type="sectorType" name="HOSTILE">
+	<mod-append:sector>XFTL_HYBRID_REBEL_MANTIS</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_REBEL_ROCK</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_REBEL_SLUG</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_REBEL_LANIUS</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_REBEL_CRYSTAL</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_REBEL_ENGI</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_REBEL_ZOLTAN</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_MANTIS_ROCK</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_MANTIS_SLUG</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_MANTIS_LANIUS</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_MANTIS_CRYSTAL</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_MANTIS_ENGI</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_MANTIS_ZOLTAN</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_ROCK_SLUG</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_ROCK_LANIUS</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_ROCK_CRYSTAL</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_ROCK_ENGI</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_ROCK_ZOLTAN</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_SLUG_LANIUS</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_SLUG_CRYSTAL</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_SLUG_ENGI</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_SLUG_ZOLTAN</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_LANIUS_CRYSTAL</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_LANIUS_ENGI</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_LANIUS_ZOLTAN</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_CRYSTAL_ENGI</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_CRYSTAL_ZOLTAN</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_ENGI_ZOLTAN</mod-append:sector>
+</mod:findName>
+<mod:findName type="sectorType" name="OVERRIDE_HOSTILE">
+	<mod-append:sector>XFTL_HYBRID_REBEL_MANTIS</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_REBEL_ROCK</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_REBEL_SLUG</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_REBEL_LANIUS</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_REBEL_CRYSTAL</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_REBEL_ENGI</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_REBEL_ZOLTAN</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_MANTIS_ROCK</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_MANTIS_SLUG</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_MANTIS_LANIUS</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_MANTIS_CRYSTAL</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_MANTIS_ENGI</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_MANTIS_ZOLTAN</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_ROCK_SLUG</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_ROCK_LANIUS</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_ROCK_CRYSTAL</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_ROCK_ENGI</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_ROCK_ZOLTAN</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_SLUG_LANIUS</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_SLUG_CRYSTAL</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_SLUG_ENGI</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_SLUG_ZOLTAN</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_LANIUS_CRYSTAL</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_LANIUS_ENGI</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_LANIUS_ZOLTAN</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_CRYSTAL_ENGI</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_CRYSTAL_ZOLTAN</mod-append:sector>
+	<mod-append:sector>XFTL_HYBRID_ENGI_ZOLTAN</mod-append:sector>
+</mod:findName>
+<!-- END generated by tools/hybrid_sectors.py -->

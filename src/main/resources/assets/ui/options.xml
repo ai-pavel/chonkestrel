@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui>
+    <widget type="free">
+        <widget type="window" w="400" h="250" pLeft="0">
+            <title font="HL2" text="options_frame_video" scale="2" colour="text-dark"/>
+
+            <!-- The window sizes the game can be shown at (see DisplayWindow) -->
+            <widget type="button" pTop="45" pLeft="15" id="display">
+                <widget type="label" text="xftl_options_display"/>
+            </widget>
+        </widget>
+
+        <widget type="window" w="400" h="250" pLeft="450" pRight="0">
+            <title font="HL2" text="options_frame_gameplay" scale="2" colour="text-dark"/>
+
+            <!-- TODO gameplay options -->
+
+            <widget type="button" pTop="45" pLeft="15" id="keybinds">
+                <widget type="label" text="configure_controls"/>
+            </widget>
+        </widget>
+
+        <widget type="window" w="400" h="150" pLeft="0" pTop="300" pBottom="0">
+            <title font="HL2" text="options_frame_audio" scale="2" colour="text-dark"/>
+
+            <widget type="label" class="main-label" text="sound_volume" pLeft="30" pTop="50"/>
+            <widget type="slider" id="sound" pLeft="200" pTop="47" pRight="30"/>
+
+            <widget type="label" class="main-label" text="music_volume" pLeft="30" pTop="90"/>
+            <widget type="slider" id="music" pLeft="200" pTop="87" pRight="30"/>
+        </widget>
+
+        <!-- In the corner below the gameplay window, beside the audio one -->
+        <widget type="button" pRight="0" pBottom="0" id="back" bordered="true">
+            <!-- Bigger than the other buttons' labels (set here, as the
+                 style below would otherwise win) -->
+            <widget type="label" text="xftl_button_back" font="HL2" scale="4"
+                    pLeft="28" pRight="28" pTop="12" pBottom="12"/>
+        </widget>
+    </widget>
+
+    <style>
+        .main-label {
+        font: "JustinFont12Bold";
+        scale: 1;
+        colour: "glow-white";
+        }
+
+        button > label {
+        font: "JustinFont10";
+        scale: 1;
+        colour: "text-dark";
+
+        pLeft: 3;
+        pRight: 3;
+        pTop: 4;
+        pBottom: 4;
+        }
+    </style>
+</ui>

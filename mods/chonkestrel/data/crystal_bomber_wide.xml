@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Made by tools/ship_variants.py from the vanilla crystal_bomber.xml
+    (copyright (c) 2012 by Subset Games). 7 columns wider at column 3.
+-->
+<FTL>
+<img x="-68" y="-97" w="537" h="437"/>
+<offsets>
+	<cloak x="18" y="17"/>
+</offsets>
+<weaponMounts>
+	<mount x="58" y="130" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="453" y="70" rotate="false" mirror="false" slide="right" gib="2"/>
+	<mount x="125" y="80" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="505" y="160" rotate="false" mirror="false" slide="right" gib="2"/>
+	<mount x="234" y="45" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="295" y="45" rotate="false" mirror="false" slide="right" gib="2"/>
+	<mount x="356" y="45" rotate="false" mirror="false" slide="right" gib="2"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>0</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>268</x>
+		<y>2</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>218</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>268</x>
+		<y>218</y>
+	</gib4>
+</explosion>
+</FTL>

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Star Wars characters crew names, picked with XFTL_NAMES=starwars. See doc/game/names.md.
+    These replace the game's names, and are in the same format as names.xml.
+-->
+<FTL>
+    <nameList race="human" sex="male">
+        <name>Luke</name>
+        <name>Han</name>
+        <name>Lando</name>
+        <name>Wedge</name>
+        <name>Biggs</name>
+        <name>Obi-Wan</name>
+        <name>Anakin</name>
+        <name>Qui-Gon</name>
+        <name>Mace</name>
+        <name>Poe</name>
+        <name>Finn</name>
+        <name>Cassian</name>
+        <name>Bodhi</name>
+        <name>Kanan</name>
+        <name>Ezra</name>
+        <name>Zeb</name>
+        <name>Din</name>
+        <name>Cad Bane</name>
+        <name>Boba</name>
+        <name>Jango</name>
+        <name>Dooku</name>
+        <name>Kylo</name>
+        <name>Ackbar</name>
+        <name>Tarkin</name>
+        <name>Piett</name>
+        <name>Veers</name>
+        <name>Dengar</name>
+        <name>Bossk</name>
+        <name>Chewie</name>
+        <name>Nien Nunb</name>
+        <name>Wicket</name>
+        <name>Rex</name>
+        <name>Cody</name>
+        <name>Fives</name>
+        <name>Hondo</name>
+        <name>Galen</name>
+        <name>Krennic</name>
+        <name>Thrawn</name>
+        <name>Kit Fisto</name>
+        <name>Plo Koon</name>
+        <name>Greedo</name>
+        <name>Porkins</name>
+        <name>Dak</name>
+        <name>Hobbie</name>
+        <name>Wes Janson</name>
+        <name>Owen</name>
+        <name>Lobot</name>
+        <name>Bail Organa</name>
+        <name>Watto</name>
+        <name>Sebulba</name>
+        <name>Nute Gunray</name>
+        <name>Sifo-Dyas</name>
+        <name>Ki-Adi-Mundi</name>
+        <name>Saesee Tiin</name>
+        <name>Agen Kolar</name>
+        <name>Eeth Koth</name>
+        <name>Quinlan Vos</name>
+        <name>Grievous</name>
+        <name>Maul</name>
+        <name>Palpatine</name>
+        <name>Snoke</name>
+        <name>Hux</name>
+        <name>Mitaka</name>
+        <name>Kallus</name>
+        <name>Konstantine</name>
+        <name>Saw Gerrera</name>
+        <name>Baze</name>
+        <name>Chirrut</name>
+        <name>Tobias Beckett</name>
+        <name>Rio</name>
+        <name>Dryden Vos</name>
+        <name>Snap Wexley</name>
+        <name>Kes Dameron</name>
+        <name>Lor San Tekka</name>
+        <name>Unkar</name>
+        <name>Teedo</name>
+        <name>Dutch Vander</name>
+        <name>Tiree</name>
+        <name>Zev Senesca</name>
+        <name>Kyle Katarn</name>
+        <name>Corran Horn</name>
+        <name>Talon Karrde</name>
+        <name>Garm Bel Iblis</name>
+        <name>Jacen Solo</name>
+        <name>Kyp Durron</name>
+        <name>Bib Fortuna</name>
+        <name>Jabba</name>
+        <name>Max Rebo</name>
+        <name>Momaw Nadon</name>
+        <name>Ponda Baba</name>
+        <name>Evazan</name>
+        <name>Cliegg</name>
+        <name>Fenn Rau</name>
+        <name>Gar Saxon</name>
+        <name>Pre Vizsla</name>
+        <name>Paz Vizsla</name>
+        <name>Greef Karga</name>
+        <name>Kuiil</name>
+        <name>Moff Gideon</name>
+        <name>Migs Mayfeld</name>
+    </nameList>
+    <nameList race="human" sex="female">
+        <name>Leia</name>
+        <name>Padme</name>
+        <name>Rey</name>
+        <name>Jyn</name>
+        <name>Hera</name>
+        <name>Sabine</name>
+        <name>Ahsoka</name>
+        <name>Mon Mothma</name>
+        <name>Rose</name>
+        <name>Holdo</name>
+        <name>Phasma</name>
+        <name>Shmi</name>
+        <name>Beru</name>
+        <name>Bo-Katan</name>
+        <name>Asajj</name>
+        <name>Aayla</name>
+        <name>Shaak Ti</name>
+        <name>Luminara</name>
+        <name>Barriss</name>
+        <name>Mara Jade</name>
+        <name>Satine</name>
+        <name>Breha</name>
+        <name>Qi'ra</name>
+        <name>Val</name>
+        <name>Cara Dune</name>
+        <name>Omega</name>
+        <name>Fennec</name>
+        <name>Enfys</name>
+        <name>Jocasta</name>
+        <name>Sly Moore</name>
+        <name>Zam</name>
+        <name>Aurra Sing</name>
+        <name>Jaina</name>
+        <name>Iden</name>
+        <name>Trilla</name>
+        <name>Yaddle</name>
+        <name>Depa Billaba</name>
+        <name>Adi Gallia</name>
+        <name>Stass Allie</name>
+        <name>Pryce</name>
+        <name>Sloane</name>
+        <name>Maz</name>
+        <name>Bazine</name>
+        <name>Paige</name>
+        <name>Jessika</name>
+        <name>Kaydel</name>
+        <name>Korr Sella</name>
+        <name>Sy Snootles</name>
+        <name>Ketsu</name>
+        <name>Bix</name>
+        <name>Vel</name>
+        <name>Dedra</name>
+        <name>Cinta</name>
+        <name>Kleya</name>
+        <name>Maarva</name>
+        <name>Jan Ors</name>
+        <name>Mirax</name>
+        <name>Iella</name>
+        <name>Tenel Ka</name>
+        <name>Tahiri</name>
+        <name>Allana</name>
+        <name>Vestara</name>
+        <name>Callista</name>
+        <name>Teneniel</name>
+        <name>Ventress</name>
+        <name>Merrin</name>
+        <name>Cere</name>
+        <name>Talzin</name>
+        <name>Riyo</name>
+        <name>Ursa</name>
+        <name>Tiplar</name>
+        <name>Tiplee</name>
+        <name>Steela</name>
+        <name>Rafa</name>
+        <name>Trace</name>
+        <name>Cid</name>
+        <name>Peli Motto</name>
+        <name>Omera</name>
+        <name>Winta</name>
+        <name>Koska</name>
+        <name>Elia Kane</name>
+        <name>Fern</name>
+        <name>KB</name>
+        <name>Nala Se</name>
+        <name>Kaeden</name>
+        <name>Miara</name>
+        <name>Norra</name>
+        <name>Evaan</name>
+        <name>Shara Bey</name>
+        <name>Zay</name>
+        <name>Aphra</name>
+        <name>Lyra</name>
+        <name>Lina Soh</name>
+        <name>Sana Starros</name>
+        <name>Zorii</name>
+        <name>Vi Moradi</name>
+        <name>Tallie</name>
+        <name>Oola</name>
+        <name>Taun We</name>
+        <name>Dorme</name>
+    </nameList>
+</FTL>

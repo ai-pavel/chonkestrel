@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Made by tools/ship_variants.py from the vanilla jelly_croissant.xml
+    (copyright (c) 2012 by Subset Games). The long version of XFTL_HYBRID_BOMBER_SLUG_CRYSTAL, 6 rows longer at row 5.
+-->
+<FTL>
+<img x="-156" y="-60" w="383" h="540"/>
+<offsets>
+	<cloak x="32" y="32"/>
+</offsets>
+<weaponMounts>
+	<mount x="87" y="84" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="296" y="84" rotate="false" mirror="false" slide="right" gib="2"/>
+	<mount x="90" y="81" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="295" y="81" rotate="false" mirror="false" slide="right" gib="2"/>
+	<mount x="132" y="340" rotate="false" mirror="true" slide="left" gib="3"/>
+	<mount x="269" y="340" rotate="false" mirror="false" slide="right" gib="4"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>49</x>
+		<y>12</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>191</x>
+		<y>12</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>92</x>
+		<y>270</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>191</x>
+		<y>270</y>
+	</gib4>
+</explosion>
+</FTL>

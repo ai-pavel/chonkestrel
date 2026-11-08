@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Made by tools/ship_variants.py from the vanilla rebel_long.xml
+    (copyright (c) 2012 by Subset Games). The wide version of XFTL_HYBRID_REBEL_ZOLTAN, 6 columns wider at column 1.
+-->
+<FTL>
+<img x="-86" y="-45" w="556" h="378"/>
+<offsets>
+	<cloak x="20" y="19"/>
+</offsets>
+<weaponMounts>
+	<mount x="471" y="149" rotate="false" mirror="false" slide="right" gib="2"/>
+	<mount x="84" y="219" rotate="false" mirror="true" slide="left" gib="3"/>
+	<mount x="340" y="169" rotate="false" mirror="true" slide="up" gib="2"/>
+	<mount x="348" y="101" rotate="false" mirror="true" slide="left" gib="2"/>
+	<mount x="191" y="178" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="261" y="178" rotate="false" mirror="true" slide="left" gib="1"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>58</x>
+		<y>75</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>278</x>
+		<y>0</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>56</x>
+		<y>189</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>278</x>
+		<y>189</y>
+	</gib4>
+</explosion>
+</FTL>

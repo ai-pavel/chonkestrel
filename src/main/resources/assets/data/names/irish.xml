@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Irish (without accents) crew names, picked with XFTL_NAMES=irish. See doc/game/names.md.
+    These replace the game's names, and are in the same format as names.xml.
+-->
+<FTL>
+    <nameList race="human" sex="male">
+        <name>Aidan</name>
+        <name>Aodh</name>
+        <name>Aodhan</name>
+        <name>Ardal</name>
+        <name>Barry</name>
+        <name>Bran</name>
+        <name>Brendan</name>
+        <name>Brian</name>
+        <name>Cathal</name>
+        <name>Cian</name>
+        <name>Ciaran</name>
+        <name>Colm</name>
+        <name>Conall</name>
+        <name>Conan</name>
+        <name>Conor</name>
+        <name>Cormac</name>
+        <name>Daithi</name>
+        <name>Darragh</name>
+        <name>Declan</name>
+        <name>Dermot</name>
+        <name>Desmond</name>
+        <name>Diarmuid</name>
+        <name>Donal</name>
+        <name>Donncha</name>
+        <name>Eamon</name>
+        <name>Emmet</name>
+        <name>Enda</name>
+        <name>Eoghan</name>
+        <name>Eoin</name>
+        <name>Fearghal</name>
+        <name>Fergal</name>
+        <name>Fiachra</name>
+        <name>Finbar</name>
+        <name>Fintan</name>
+        <name>Fionn</name>
+        <name>Garret</name>
+        <name>Gearoid</name>
+        <name>Kevin</name>
+        <name>Killian</name>
+        <name>Lorcan</name>
+        <name>Malachy</name>
+        <name>Niall</name>
+        <name>Odhran</name>
+        <name>Oisin</name>
+        <name>Oscar</name>
+        <name>Padraig</name>
+        <name>Paddy</name>
+        <name>Peadar</name>
+        <name>Proinsias</name>
+        <name>Ronan</name>
+        <name>Ruairi</name>
+        <name>Seamus</name>
+        <name>Sean</name>
+        <name>Senan</name>
+        <name>Setanta</name>
+        <name>Shane</name>
+        <name>Tadhg</name>
+        <name>Tiernan</name>
+        <name>Tomas</name>
+        <name>Turlough</name>
+        <name>Ultan</name>
+        <name>Aidan Murphy</name>
+        <name>Aodh Doyle</name>
+        <name>Aodhan Moore</name>
+        <name>Ardal Clarke</name>
+        <name>Barry Sheehan</name>
+        <name>Bran Murphy</name>
+        <name>Brendan Doyle</name>
+        <name>Brian Moore</name>
+        <name>Cathal Clarke</name>
+        <name>Cian Sheehan</name>
+        <name>Ciaran Murphy</name>
+        <name>Colm Doyle</name>
+        <name>Conall Moore</name>
+        <name>Conan Clarke</name>
+        <name>Conor Sheehan</name>
+        <name>Cormac Murphy</name>
+        <name>Daithi Doyle</name>
+        <name>Darragh Moore</name>
+        <name>Declan Clarke</name>
+        <name>Dermot Sheehan</name>
+        <name>Desmond Murphy</name>
+        <name>Diarmuid Doyle</name>
+        <name>Donal Moore</name>
+        <name>Donncha Clarke</name>
+        <name>Eamon Sheehan</name>
+        <name>Emmet Murphy</name>
+        <name>Enda Doyle</name>
+        <name>Eoghan Moore</name>
+        <name>Eoin Clarke</name>
+        <name>Fergal Murphy</name>
+        <name>Fiachra Doyle</name>
+        <name>Finbar Moore</name>
+        <name>Fintan Clarke</name>
+        <name>Fionn Sheehan</name>
+        <name>Garret Murphy</name>
+        <name>Gearoid Doyle</name>
+        <name>Kevin Moore</name>
+        <name>Killian Clarke</name>
+        <name>Lorcan Sheehan</name>
+    </nameList>
+    <nameList race="human" sex="female">
+        <name>Aine</name>
+        <name>Aisling</name>
+        <name>Aoibheann</name>
+        <name>Aoife</name>
+        <name>Bernadette</name>
+        <name>Blathnaid</name>
+        <name>Brid</name>
+        <name>Brigid</name>
+        <name>Caitlin</name>
+        <name>Caoimhe</name>
+        <name>Ciara</name>
+        <name>Clodagh</name>
+        <name>Colleen</name>
+        <name>Dearbhla</name>
+        <name>Deirdre</name>
+        <name>Eabha</name>
+        <name>Eileen</name>
+        <name>Eimear</name>
+        <name>Eithne</name>
+        <name>Emer</name>
+        <name>Fiadh</name>
+        <name>Fionnuala</name>
+        <name>Grainne</name>
+        <name>Ide</name>
+        <name>Kathleen</name>
+        <name>Maeve</name>
+        <name>Mairead</name>
+        <name>Mairin</name>
+        <name>Maura</name>
+        <name>Muireann</name>
+        <name>Nessa</name>
+        <name>Niamh</name>
+        <name>Noirin</name>
+        <name>Nora</name>
+        <name>Nuala</name>
+        <name>Orla</name>
+        <name>Orlaith</name>
+        <name>Roisin</name>
+        <name>Saoirse</name>
+        <name>Sadhbh</name>
+        <name>Sheila</name>
+        <name>Sinead</name>
+        <name>Siobhan</name>
+        <name>Sorcha</name>
+        <name>Una</name>
+        <name>Treasa</name>
+        <name>Peig</name>
+        <name>Meabh</name>
+        <name>Ailbhe</name>
+        <name>Grace</name>
+        <name>Aine Murphy</name>
+        <name>Aoife Hogan</name>
+        <name>Brid Flanagan</name>
+        <name>Brigid Doyle</name>
+        <name>Caoimhe Whelan</name>
+        <name>Ciara Walsh</name>
+        <name>Colleen Reilly</name>
+        <name>Dearbhla Ryan</name>
+        <name>Deirdre Moore</name>
+        <name>Eabha Maguire</name>
+        <name>Eileen Kelly</name>
+        <name>Eimear Lynch</name>
+        <name>Eithne Hughes</name>
+        <name>Emer Boyle</name>
+        <name>Fiadh Doherty</name>
+        <name>Ide McCarthy</name>
+        <name>Kathleen Burke</name>
+        <name>Maeve Fahy</name>
+        <name>Mairin Daly</name>
+        <name>Maura Sheehan</name>
+        <name>Nessa Carroll</name>
+        <name>Niamh Nolan</name>
+        <name>Noirin Byrne</name>
+        <name>Nora Quinn</name>
+        <name>Nuala Keane</name>
+        <name>Orla Murphy</name>
+        <name>Roisin Dunne</name>
+        <name>Saoirse Hogan</name>
+        <name>Sheila Collins</name>
+        <name>Siobhan Doyle</name>
+        <name>Sorcha Brennan</name>
+        <name>Una Whelan</name>
+        <name>Treasa Walsh</name>
+        <name>Peig Connolly</name>
+        <name>Meabh Reilly</name>
+        <name>Ailbhe Ryan</name>
+        <name>Grace Moore</name>
+        <name>Aine Maguire</name>
+        <name>Aisling Kelly</name>
+        <name>Aoife Hughes</name>
+        <name>Brid Clarke</name>
+        <name>Brigid Kearney</name>
+        <name>Caoimhe Burke</name>
+        <name>Ciara Fahy</name>
+        <name>Colleen Daly</name>
+        <name>Eabha Carroll</name>
+        <name>Eileen Nolan</name>
+        <name>Eimear Byrne</name>
+        <name>Eithne Quinn</name>
+        <name>Emer Keane</name>
+    </nameList>
+</FTL>

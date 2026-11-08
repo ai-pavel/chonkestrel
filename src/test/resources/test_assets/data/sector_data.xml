@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<FTL>
+    <!-- Must exist, accessed by Java/Kotlin -->
+    <sectorDescription name="CIVILIAN_SECTOR" minSector="0" unique="false">
+        <nameList>
+            <name>Testing civilian sector</name>
+        </nameList>
+        <trackList/>
+    </sectorDescription>
+    <sectorDescription name="FINAL" minSector="0" unique="false">
+        <nameList>
+            <name>Testing last stand</name>
+        </nameList>
+        <trackList/>
+    </sectorDescription>
+
+    <!-- Each SectorClass must have at least one type -->
+    <sectorType name="CIVILIAN">
+        <sector>CIVILIAN_SECTOR</sector>
+    </sectorType>
+    <sectorType name="HOSTILE">
+        <sector>CIVILIAN_SECTOR</sector>
+    </sectorType>
+    <sectorType name="NEBULA">
+        <sector>CIVILIAN_SECTOR</sector>
+    </sectorType>
+</FTL>

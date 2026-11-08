@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<FTL>
+    <!-- Something for per-test animations to reference -->
+    <animSheet name="dummy_sheet" w="152" h="114" fw="1" fh="1">ship/test_ship_base.png</animSheet>
+    <anim name="dummy_anim">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+
+    <weaponAnim name="generic_test_weapon">
+        <sheet>dummy_sheet</sheet>
+        <desc length="10" x="0" y="0"/>
+        <chargedFrame>2</chargedFrame>
+        <fireFrame>5</fireFrame>
+        <firePoint x="0" y="0"/>
+        <mountPoint x="0" y="0"/>
+    </weaponAnim>
+
+    <!-- Crew testing -->
+    <anim name="test_crew_portrait">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_shoot_up">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_shoot_down">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_walk_up">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_walk_down">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_walk_left">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_walk_right">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <!-- The rest of the test crew's animations, so they can fight, repair,
+         man systems, put out fires, teleport and die (see testkit/TestCrew) -->
+    <anim name="test_crew_punch_up">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_type_up">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_fire_up">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_punch_down">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_type_down">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_fire_down">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_shoot_left">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_punch_left">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_type_left">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_fire_left">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_shoot_right">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_punch_right">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_type_right">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_fire_right">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_repair">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_death_right">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="test_crew_teleport">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <!-- Humans, so living crew can be made the way the game does (and
+         loaded from a saved game), see testkit/TestCrew -->
+    <anim name="human_portrait">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_repair">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_death_right">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_teleport">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_shoot_up">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_walk_up">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_punch_up">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_type_up">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_fire_up">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_shoot_down">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_walk_down">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_punch_down">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_type_down">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_fire_down">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_shoot_left">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_walk_left">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_punch_left">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_type_left">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_fire_left">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_shoot_right">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_walk_right">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_punch_right">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_type_right">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="human_fire_right">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <!-- A system breaking, from sabotage say -->
+    <anim name="explosion1">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <!-- Breaches, and drones exploding -->
+    <anim name="breach">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="explosion_big2">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="explosion_big3">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+    <anim name="explosion_big4">
+        <sheet>dummy_sheet</sheet>
+        <desc length="1" x="0" y="0"/>
+        <time>1</time>
+    </anim>
+</FTL>

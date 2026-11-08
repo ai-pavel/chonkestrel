@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Made by tools/ship_variants.py from the vanilla crystal_scout.xml
+    (copyright (c) 2012 by Subset Games). The wide version of XFTL_HYBRID_CRYSTAL_REBEL, 7 columns wider at column 3.
+-->
+<FTL>
+<img x="-86" y="-95" w="591" h="509"/>
+<offsets>
+	<cloak x="19" y="17"/>
+</offsets>
+<weaponMounts>
+	<mount x="118" y="70" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="181" y="80" rotate="false" mirror="false" slide="right" gib="1"/>
+	<mount x="138" y="170" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="452" y="170" rotate="false" mirror="false" slide="right" gib="2"/>
+	<mount x="272" y="87" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="354" y="87" rotate="false" mirror="false" slide="right" gib="2"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>6</x>
+		<y>0</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>295</x>
+		<y>46</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>254</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>295</x>
+		<y>254</y>
+	</gib4>
+</explosion>
+</FTL>

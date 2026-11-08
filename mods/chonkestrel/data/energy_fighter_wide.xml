@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Made by tools/ship_variants.py from the vanilla energy_fighter.xml
+    (copyright (c) 2012 by Subset Games). 7 columns wider at column 3.
+-->
+<FTL>
+<img x="-30" y="-56" w="487" h="389"/>
+<offsets>
+	<cloak x="20" y="18"/>
+</offsets>
+<weaponMounts>
+	<mount x="95" y="80" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="450" y="160" rotate="false" mirror="false" slide="right" gib="2"/>
+	<mount x="28" y="230" rotate="false" mirror="true" slide="left" gib="3"/>
+	<mount x="74" y="180" rotate="false" mirror="true" slide="up" gib="1"/>
+	<mount x="216" y="34" rotate="false" mirror="true" slide="left" gib="1"/>
+	<mount x="298" y="34" rotate="false" mirror="false" slide="right" gib="2"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>4</x>
+		<y>0</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>243</x>
+		<y>0</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>194</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>243</x>
+		<y>194</y>
+	</gib4>
+</explosion>
+</FTL>

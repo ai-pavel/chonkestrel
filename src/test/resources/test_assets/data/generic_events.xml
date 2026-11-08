@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<FTL>
+    <!-- These events are accessed from Java/Kotlin and thus must exist -->
+    <event name="START_GAME"/>
+    <event name="START_BEACON"/>
+    <event name="NEUTRAL"/>
+    <event name="FINISH_BEACON"/>
+    <event name="FINISH_BEACON_NEBULA"/>
+    <event name="FEDERATION_BASE"/>
+
+    <imageList name="BACKGROUND">
+        <img>nullResource.png</img>
+    </imageList>
+    <imageList name="PLANET">
+        <img>nullResource.png</img>
+    </imageList>
+</FTL>

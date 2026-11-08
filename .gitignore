@@ -1,0 +1,47 @@
+# FTL's own data file, copied or linked here for the Makefile (see BUILD.md)
+/ftl.dat
+
+# Ignore Gradle project-specific cache directory
+/.gradle
+/slipstream/.gradle
+
+# Ignore Gradle build output directory
+/build
+/slipstream/build
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# IntelliJ IDEA files
+/out
+/slipstream/out
+/*.iml
+/.idea/*
+!/.idea/codeStyles
+
+# LWJGL Natives
+/natives
+
+# Ignore the user's debug savefiles (TODO move this to the regular saves dir)
+/debug-saves
+/cache
+
+# Ignore .DS_Store files in MacOs filesystems
+.DS_Store
+
+
+# Everything the Makefile makes for people to look at or ship: releases,
+# videos, screenshots of the ships, and the site's deploy checkout
+/dist
+__pycache__/
+
+# Claude Code local state (worktrees, settings)
+/.claude
+
+# The mod's art and the app's icons, all made from ftl.dat by `make art`
+# and `make icon` (see BUILD.md)
+/mods/chonkestrel/img/**/*.png
+/mods/chonkestrel/img/.generated
+/tools/release/chonkestrel-hangar.png
+/tools/release/icon/
+/src/main/resources/assets/img/xftl_icon.png

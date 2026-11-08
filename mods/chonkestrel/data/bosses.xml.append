@@ -1,0 +1,7 @@
+<!--
+    The rebel flagship is as big as the Chonkestrel (an XFTL extension), so it
+    fights it on its own. See blueprints.xml.append.
+-->
+<mod:findName type="shipBlueprint" name="BOSS_.*" regex="true" limit="-1">
+    <mod-append:shipSize>2</mod-append:shipSize>
+</mod:findName>

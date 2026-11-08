@@ -1,0 +1,187 @@
+<!--
+    More crew names, as the Chonkestrel has room for sixteen crew and the
+    game only has 169 English ones. These go in the first English lists of
+    male and female names (the localised lists come later in the file, and
+    have a language attribute), rather than new lists, since the game picks a
+    list before picking a name from it, so a new list would make its names
+    much more common than the others.
+
+    There's 140 male and 29 female names, the same as vanilla's English ones,
+    and none of them are already in the game.
+-->
+<mod:findLike type="nameList" limit="1">
+    <mod:selector race="human" sex="male"/>
+    <mod-append:name>Aarav</mod-append:name>
+    <mod-append:name>Abel</mod-append:name>
+    <mod-append:name>Ahmet</mod-append:name>
+    <mod-append:name>Aiden</mod-append:name>
+    <mod-append:name>Akira</mod-append:name>
+    <mod-append:name>Alaric</mod-append:name>
+    <mod-append:name>Aldo</mod-append:name>
+    <mod-append:name>Amir</mod-append:name>
+    <mod-append:name>Anders</mod-append:name>
+    <mod-append:name>Andrei</mod-append:name>
+    <mod-append:name>Anton</mod-append:name>
+    <mod-append:name>Arjun</mod-append:name>
+    <mod-append:name>Arlo</mod-append:name>
+    <mod-append:name>Arvid</mod-append:name>
+    <mod-append:name>Asher</mod-append:name>
+    <mod-append:name>Axel</mod-append:name>
+    <mod-append:name>Babak</mod-append:name>
+    <mod-append:name>Balin</mod-append:name>
+    <mod-append:name>Basil</mod-append:name>
+    <mod-append:name>Benedek</mod-append:name>
+    <mod-append:name>Bram</mod-append:name>
+    <mod-append:name>Brennan</mod-append:name>
+    <mod-append:name>Caius</mod-append:name>
+    <mod-append:name>Callum</mod-append:name>
+    <mod-append:name>Cassius</mod-append:name>
+    <mod-append:name>Cedric</mod-append:name>
+    <mod-append:name>Chen Wei</mod-append:name>
+    <mod-append:name>Cian</mod-append:name>
+    <mod-append:name>Cormac</mod-append:name>
+    <mod-append:name>Cyrus</mod-append:name>
+    <mod-append:name>Dai</mod-append:name>
+    <mod-append:name>Dario</mod-append:name>
+    <mod-append:name>Dax</mod-append:name>
+    <mod-append:name>Desmond</mod-append:name>
+    <mod-append:name>Dmitri</mod-append:name>
+    <mod-append:name>Dorian</mod-append:name>
+    <mod-append:name>Duncan</mod-append:name>
+    <mod-append:name>Dusan</mod-append:name>
+    <mod-append:name>Edgar</mod-append:name>
+    <mod-append:name>Einar</mod-append:name>
+    <mod-append:name>Elias</mod-append:name>
+    <mod-append:name>Emeka</mod-append:name>
+    <mod-append:name>Emil</mod-append:name>
+    <mod-append:name>Enrique</mod-append:name>
+    <mod-append:name>Ezra</mod-append:name>
+    <mod-append:name>Fabio</mod-append:name>
+    <mod-append:name>Farid</mod-append:name>
+    <mod-append:name>Felix</mod-append:name>
+    <mod-append:name>Fergus</mod-append:name>
+    <mod-append:name>Finn</mod-append:name>
+    <mod-append:name>Florian</mod-append:name>
+    <mod-append:name>Gael</mod-append:name>
+    <mod-append:name>Gideon</mod-append:name>
+    <mod-append:name>Goran</mod-append:name>
+    <mod-append:name>Gunnar</mod-append:name>
+    <mod-append:name>Hakon</mod-append:name>
+    <mod-append:name>Hamid</mod-append:name>
+    <mod-append:name>Haruto</mod-append:name>
+    <mod-append:name>Hiro</mod-append:name>
+    <mod-append:name>Hugo</mod-append:name>
+    <mod-append:name>Idris</mod-append:name>
+    <mod-append:name>Igor</mod-append:name>
+    <mod-append:name>Ilya</mod-append:name>
+    <mod-append:name>Imran</mod-append:name>
+    <mod-append:name>Ivo</mod-append:name>
+    <mod-append:name>Jabari</mod-append:name>
+    <mod-append:name>Jasper</mod-append:name>
+    <mod-append:name>Jian</mod-append:name>
+    <mod-append:name>Joaquin</mod-append:name>
+    <mod-append:name>Jonah</mod-append:name>
+    <mod-append:name>Jorge</mod-append:name>
+    <mod-append:name>Kael</mod-append:name>
+    <mod-append:name>Kaito</mod-append:name>
+    <mod-append:name>Kasimir</mod-append:name>
+    <mod-append:name>Kazuo</mod-append:name>
+    <mod-append:name>Kenji</mod-append:name>
+    <mod-append:name>Kofi</mod-append:name>
+    <mod-append:name>Kwame</mod-append:name>
+    <mod-append:name>Lars</mod-append:name>
+    <mod-append:name>Leif</mod-append:name>
+    <mod-append:name>Leon</mod-append:name>
+    <mod-append:name>Lev</mod-append:name>
+    <mod-append:name>Linus</mod-append:name>
+    <mod-append:name>Lorcan</mod-append:name>
+    <mod-append:name>Luca</mod-append:name>
+    <mod-append:name>Lucian</mod-append:name>
+    <mod-append:name>Magnus</mod-append:name>
+    <mod-append:name>Malik</mod-append:name>
+    <mod-append:name>Marek</mod-append:name>
+    <mod-append:name>Mateo</mod-append:name>
+    <mod-append:name>Milo</mod-append:name>
+    <mod-append:name>Mirko</mod-append:name>
+    <mod-append:name>Nasir</mod-append:name>
+    <mod-append:name>Niko</mod-append:name>
+    <mod-append:name>Olek</mod-append:name>
+    <mod-append:name>Omar</mod-append:name>
+    <mod-append:name>Orin</mod-append:name>
+    <mod-append:name>Oskar</mod-append:name>
+    <mod-append:name>Osric</mod-append:name>
+    <mod-append:name>Pavel</mod-append:name>
+    <mod-append:name>Pedro</mod-append:name>
+    <mod-append:name>Piet</mod-append:name>
+    <mod-append:name>Quentin</mod-append:name>
+    <mod-append:name>Rafael</mod-append:name>
+    <mod-append:name>Rami</mod-append:name>
+    <mod-append:name>Ravi</mod-append:name>
+    <mod-append:name>Reza</mod-append:name>
+    <mod-append:name>Rhys</mod-append:name>
+    <mod-append:name>Rohan</mod-append:name>
+    <mod-append:name>Ronan</mod-append:name>
+    <mod-append:name>Rune</mod-append:name>
+    <mod-append:name>Ruslan</mod-append:name>
+    <mod-append:name>Sami</mod-append:name>
+    <mod-append:name>Santiago</mod-append:name>
+    <mod-append:name>Sergei</mod-append:name>
+    <mod-append:name>Silas</mod-append:name>
+    <mod-append:name>Soren</mod-append:name>
+    <mod-append:name>Stellan</mod-append:name>
+    <mod-append:name>Taavi</mod-append:name>
+    <mod-append:name>Tariq</mod-append:name>
+    <mod-append:name>Teodor</mod-append:name>
+    <mod-append:name>Thane</mod-append:name>
+    <mod-append:name>Theo</mod-append:name>
+    <mod-append:name>Tibor</mod-append:name>
+    <mod-append:name>Timur</mod-append:name>
+    <mod-append:name>Tobias</mod-append:name>
+    <mod-append:name>Torin</mod-append:name>
+    <mod-append:name>Tycho</mod-append:name>
+    <mod-append:name>Ulrich</mod-append:name>
+    <mod-append:name>Uriel</mod-append:name>
+    <mod-append:name>Valen</mod-append:name>
+    <mod-append:name>Vasco</mod-append:name>
+    <mod-append:name>Viktor</mod-append:name>
+    <mod-append:name>Wen Hao</mod-append:name>
+    <mod-append:name>Xander</mod-append:name>
+    <mod-append:name>Yannick</mod-append:name>
+    <mod-append:name>Yusuf</mod-append:name>
+    <mod-append:name>Zane</mod-append:name>
+    <mod-append:name>Zhang Lei</mod-append:name>
+    <mod-append:name>Zoran</mod-append:name>
+</mod:findLike>
+
+<mod:findLike type="nameList" limit="1">
+    <mod:selector race="human" sex="female"/>
+    <mod-append:name>Ada</mod-append:name>
+    <mod-append:name>Astrid</mod-append:name>
+    <mod-append:name>Bianca</mod-append:name>
+    <mod-append:name>Calla</mod-append:name>
+    <mod-append:name>Dara</mod-append:name>
+    <mod-append:name>Elif</mod-append:name>
+    <mod-append:name>Freya</mod-append:name>
+    <mod-append:name>Hana</mod-append:name>
+    <mod-append:name>Imani</mod-append:name>
+    <mod-append:name>Ingrid</mod-append:name>
+    <mod-append:name>Iris</mod-append:name>
+    <mod-append:name>Juno</mod-append:name>
+    <mod-append:name>Kaia</mod-append:name>
+    <mod-append:name>Leilani</mod-append:name>
+    <mod-append:name>Mei Ling</mod-append:name>
+    <mod-append:name>Mira</mod-append:name>
+    <mod-append:name>Nadia</mod-append:name>
+    <mod-append:name>Nia</mod-append:name>
+    <mod-append:name>Odette</mod-append:name>
+    <mod-append:name>Petra</mod-append:name>
+    <mod-append:name>Quinn</mod-append:name>
+    <mod-append:name>Rania</mod-append:name>
+    <mod-append:name>Saoirse</mod-append:name>
+    <mod-append:name>Sigrid</mod-append:name>
+    <mod-append:name>Tamsin</mod-append:name>
+    <mod-append:name>Uma</mod-append:name>
+    <mod-append:name>Vesna</mod-append:name>
+    <mod-append:name>Wren</mod-append:name>
+    <mod-append:name>Yara</mod-append:name>
+</mod:findLike>
