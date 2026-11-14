@@ -1,4 +1,4 @@
-# 🛸 XFTL
+# 🛸 Chonkestrel
 
 A reimplementation of FTL: Faster Than Light, which runs on the game's
 original `ftl.dat`. This fork adds support for bigger ships, longer games
