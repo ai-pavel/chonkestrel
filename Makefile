@@ -33,7 +33,7 @@ $(MOD_ORDER):
 # Every target that runs the game makes it first, if it's missing or a
 # script's changed since; `make art` makes it again regardless.
 ART = mods/chonkestrel/img/.generated
-ART_TOOLS = ship_variants hybrid_ships boss_ships weapon_sizes system_buttons drone_sizes chonkestrel_art
+ART_TOOLS = ship_variants hybrid_ships boss_ships weapon_sizes system_buttons drone_sizes chonkestrel_art race_ships hangar_art achievement_art
 $(ART): $(ART_TOOLS:%=tools/%.py)
 	$(MAKE) art
 

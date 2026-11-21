@@ -161,6 +161,12 @@ abstract class AbstractCrew(
     open val cellsWide: Int get() = 1
     open val hasDyingAnimation: Boolean get() = true
     open val suffocationMultiplier: Float get() = 1f
+
+    /**
+     * Whether they fight fires by stamping them out, hopping on the spot,
+     * rather than with an extinguisher, as Rockmen do (they don't burn).
+     */
+    open val stampsOutFires: Boolean get() = false
     open val fireDamageMult: Float get() = 1f
     open val playerControllable: Boolean get() = false
     open val movementSpeed: Float get() = BASE_MOVEMENT_SPEED
@@ -785,6 +791,10 @@ abstract class AbstractCrew(
             opacity *= progress
         }
 
+        // A Rockman stamping out a fire hops up and down (see stampsOutFires)
+        if (currentAction == Action.FIRE_FIGHTING && stampsOutFires)
+            spriteY -= (abs(sin(extinguishTime * PI.toFloat() * STAMP_HOPS)) * STAMP_HEIGHT).roundToInt()
+
         // Calculate the bounds of the image
         val height = cf.height * (stretch + 1)
         val x0 = screenX.f
@@ -895,7 +905,10 @@ abstract class AbstractCrew(
         // Clamp max health to avoid over-healing with the heal burst
         health = (health - damage.amount).coerceIn(0f, maxHealth)
 
-        // Dying is handled in the update loop
+        // Dying is handled in the update loop, but who or what killed them
+        // is only known here, for the achievements
+        if (health == 0f)
+            game.achievementTracker.crewDied(this, damage)
     }
 
     /**
@@ -964,7 +977,7 @@ abstract class AbstractCrew(
      */
     private fun drawExtinguisher(g: Graphics) {
         val target = extinguishTarget ?: return
-        if (currentAction != Action.FIRE_FIGHTING || !room.playerHasVision)
+        if (currentAction != Action.FIRE_FIGHTING || !room.playerHasVision || stampsOutFires)
             return
 
         // (from their hands, as a shot is)
@@ -1350,7 +1363,10 @@ abstract class AbstractCrew(
                     Direction.bestFit(roomPosition!!, firePos)
                 }
 
-                anims["${codename}_fire_${dirAsString(direction)}"].startLooping(game)
+                // A Rockman stamps it out, hopping on the spot, with no
+                // extinguisher (see stampsOutFires)
+                val anim = if (stampsOutFires) "walk" else "fire"
+                anims["${codename}_${anim}_${dirAsString(direction)}"].startLooping(game)
             }
         }
 
@@ -1890,6 +1906,10 @@ abstract class AbstractCrew(
         // how many times a second each goes from them to the fire, and how
         // far they spread out (in pixels)
         private const val EXTINGUISHER_PUFFS = 8
+
+        // A Rockman stamping out a fire: hops a second, and how high
+        private const val STAMP_HOPS = 2f
+        private const val STAMP_HEIGHT = 3f
         private const val EXTINGUISHER_SPEED = 2f
         private const val EXTINGUISHER_SPREAD = 6f
         private const val SHOT_LENGTH = 8f

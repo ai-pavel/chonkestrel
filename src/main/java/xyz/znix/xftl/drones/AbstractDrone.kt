@@ -85,6 +85,11 @@ abstract class AbstractDrone(val type: DroneBlueprint) {
      *
      * This should be called when a drone is destroyed by something,
      * for example a repair drone destroyed by boarders.
+     *
+     * Its slot's turned off, as a single drone's is with its drone gone,
+     * so a combined drone's other copies are too (see [Drones.droneLost]):
+     * turning it on again, once the cooldown's over, sends the lost one out
+     * again.
      */
     open fun destroy() {
         // Do this before calling removeInstance, otherwise we won't
@@ -93,6 +98,9 @@ abstract class AbstractDrone(val type: DroneBlueprint) {
         info?.cooldown = DRONE_DESTROYED_COOLDOWN
 
         removeInstance()
+
+        if (info != null)
+            ownerShip.droneSystems.firstOrNull { info in it.drones }?.droneLost(info)
     }
 
     /**

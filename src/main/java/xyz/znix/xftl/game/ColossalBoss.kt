@@ -33,9 +33,9 @@ import kotlin.math.max
  * - the Devourer eats asteroids, and the Stormbreaker charges its ion
  *   weapons from the storm, and sends its swarm over with a second teleporter;
  * - the Ossuary's slipway rebuilds its drones;
- * - the Mainframe's three phases (see doc/game/mainframe.md): the
- *   Firewall's super shield that comes back, the Splicing Bays' drones,
- *   and the Mind's Chorus pulses;
+ * - the Mainframe's three phases (see doc/game/mainframe.md): the Mind's
+ *   Chorus pulses, the Splicing Bays' drones, and the Firewall's super
+ *   shield that comes back;
  * - repairs while the player's away from its beacon.
  */
 class ColossalBoss(val kind: Kind, val ship: Ship) {
@@ -59,20 +59,28 @@ class ColossalBoss(val kind: Kind, val ship: Ship) {
 
         /**
          * CONCORD's core, at the end of the game (see doc/game/mainframe.md),
-         * in three phases, each a station that never dodges. Beating the
-         * last wins the game. The first, the Firewall: its Firewall core
-         * brings its super shield back.
+         * in three phases, each a station that never dodges. The last, the
+         * Firewall around its heart: its Firewall core brings its super
+         * shield back. Beating it wins the game.
          */
-        MAINFRAME(5, 1),
+        MAINFRAME(5, 3),
 
         /** The Mainframe's second phase: its bays build more drones as it fights. */
         MAINFRAME_BAYS(5, 2),
 
         /**
-         * The Mainframe's third: its weapons look like others, its mind
-         * control is quick, and it sends Chorus pulses.
+         * The Mainframe's first phase, the Mind, which comes out to meet the
+         * player: its weapons look like others, its mind control is quick,
+         * and it sends Chorus pulses.
          */
-        MAINFRAME_MIND(5, 3),
+        MAINFRAME_MIND(5, 1);
+
+        /**
+         * The most crew its first boarding party has (see [lineUpBoarders]):
+         * 4 for the first boss, and 2 more each tier after, so the earlier
+         * bosses don't send more boarders than the player has crew yet.
+         */
+        val firstBoarders: Int get() = 2 + 2 * tier
     }
 
     // How many crew it started with, for the Vigilance's link (a third of
@@ -156,13 +164,14 @@ class ColossalBoss(val kind: Kind, val ship: Ship) {
 
     /**
      * Put its first boarding party in its teleporter, ready for the fight:
-     * as many as fit, up to half its crew. Ordinary ships gather theirs
+     * as many as fit, up to half its crew, and no more than its tier allows
+     * ([Kind.firstBoarders]). Ordinary ships gather theirs
      * once the fight's started (see FriendlyCrewAI), but a boss's are
      * waiting, and go at once (see [update]).
      */
     fun lineUpBoarders() {
         val pad = ship.teleporter?.room ?: return
-        val wanted = minOf(pad.cellCount, ship.crew.size / 2)
+        val wanted = minOf(pad.cellCount, ship.crew.size / 2, kind.firstBoarders)
         for (crew in ship.crew.filterIsInstance<LivingCrew>().toList()) {
             if (ship.crew.count { it.room == pad } >= wanted)
                 break
@@ -181,9 +190,35 @@ class ColossalBoss(val kind: Kind, val ship: Ship) {
      * Called as the fight with it starts, once its crew are aboard.
      */
     fun fightStarted() {
-        if (startingCrew == 0)
+        if (startingCrew == 0) {
             startingCrew = ownCrew().size
+
+            // With all of CONCORD's relay codes, each of the Mainframe's
+            // layers starts with its hull already cut into
+            if (relayCodes >= MAX_RELAY_CODES)
+                ship.health = (ship.maxHealth * (1f - RELAY_HULL_CUT)).toInt()
+        }
     }
+
+    /**
+     * How many of CONCORD's relay codes the player's taken in the hybrid
+     * sectors (see InGameState.CONCORD_CODES), up to [MAX_RELAY_CODES], for
+     * the Mainframe: each one weakens one of its defences, in the order the
+     * player meets them (see doc/game/mainframe.md): the Mind's Chorus
+     * pulses less often, then the bays build more slowly, then the
+     * Firewall's super shield comes back more slowly, and with all four each
+     * layer starts with less hull.
+     */
+    val relayCodes: Int
+        get() = if (kind.mainframePhase == 0) 0
+        else ship.sys.getCounter(InGameState.CONCORD_CODES).coerceIn(0, MAX_RELAY_CODES)
+
+    private fun slowedBy(codes: Int): Float = if (relayCodes >= codes) RELAY_SLOWDOWN else 1f
+
+    // The Mainframe's timings, as its relay codes slow them
+    private val chorusInterval: Float get() = CHORUS_TIME * slowedBy(1)
+    private val bayBuildTime: Float get() = BAY_BUILD_TIME * slowedBy(2)
+    private val firewallInterval: Float get() = FIREWALL_TIME * slowedBy(3)
 
     /**
      * Start the fight the way an event says (its `<xftlBossOpening>`):
@@ -262,7 +297,7 @@ class ColossalBoss(val kind: Kind, val ship: Ship) {
                 continue
             }
             bayTimes[index] += dt
-            if (bayTimes[index] < BAY_BUILD_TIME)
+            if (bayTimes[index] < bayBuildTime)
                 continue
             bayTimes[index] = 0f
             val drone = game.blueprintManager.getOrNull(BAY_DRONES.random()) as? DroneBlueprint ?: continue
@@ -272,7 +307,7 @@ class ColossalBoss(val kind: Kind, val ship: Ship) {
     }
 
     /** How far the bay at [index] is through building its hybrid, from 0 to 1. */
-    fun bayProgress(index: Int): Float = bayTimes.getOrElse(index) { 0f } / BAY_BUILD_TIME
+    fun bayProgress(index: Int): Float = bayTimes.getOrElse(index) { 0f } / bayBuildTime
 
     /**
      * The Mind's Chorus pulses: every [CHORUS_TIME] seconds while its mind
@@ -288,7 +323,7 @@ class ColossalBoss(val kind: Kind, val ship: Ship) {
         val mind = ship.mindControlSystems.firstOrNull { !it.broken && !it.isHackActive } ?: return
 
         chorusTime += dt
-        if (chorusTime < CHORUS_TIME)
+        if (chorusTime < chorusInterval)
             return
         chorusTime = 0f
 
@@ -320,7 +355,7 @@ class ColossalBoss(val kind: Kind, val ship: Ship) {
             return
         }
         firewallTime += dt
-        if (firewallTime < FIREWALL_TIME)
+        if (firewallTime < firewallInterval)
             return
         firewallTime = 0f
         ship.superShield += FIREWALL_SHIELD
@@ -512,6 +547,16 @@ class ColossalBoss(val kind: Kind, val ship: Ship) {
         /** How often the Mainframe's Firewall core brings its super shield back, and by how much. */
         const val FIREWALL_TIME = 25f
         const val FIREWALL_SHIELD = 5
+
+        /**
+         * The most of CONCORD's relay codes that count against the
+         * Mainframe (see [relayCodes]), how much slower each makes the
+         * defence it's for, and how much hull all of them cut off each
+         * layer.
+         */
+        const val MAX_RELAY_CODES = 4
+        const val RELAY_SLOWDOWN = 1.6f
+        const val RELAY_HULL_CUT = 0.2f
 
         /** The share of its hull a boss repairs each jump the player's away. */
         const val AWAY_REPAIR = 0.1f

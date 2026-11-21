@@ -12,6 +12,7 @@ import xyz.znix.xftl.game.Difficulty
 import xyz.znix.xftl.game.WingmanTest
 import xyz.znix.xftl.math.ConstPoint
 import xyz.znix.xftl.math.RoomPoint
+import xyz.znix.xftl.sector.Beacon
 import xyz.znix.xftl.sector.Event
 import xyz.znix.xftl.systems.Cloaking
 import xyz.znix.xftl.systems.Drones
@@ -269,6 +270,33 @@ class AugmentEffectsTest {
         }
     }
 
+    @Test
+    fun testRadiationShielding() {
+        for ((augments, hurt) in listOf(listOf<String>() to true, listOf("XFTL_RADIATION_SHIELDING") to false)) {
+            val kit = kit(*augments.toTypedArray())
+            val crew = kit.addCrew(kit.player, kit.room("pilot"))
+            val beacon = kit.state.currentBeacon
+            beacon.nebulaOverride = Beacon.EnvironmentType.RADIATION
+            beacon.clearEnvironment()
+            kit.run(5f)
+            assertEquals("$augments", hurt, crew.health < crew.maxHealth)
+        }
+    }
+
+    @Test
+    fun testPhantomProjector() {
+        val kit = kit("XFTL_PHANTOM_PROJECTOR")
+        kit.fight()
+        val enemy = kit.state.enemy!!
+
+        // For the first 12 seconds of the fight, the enemy's shots miss more
+        enemy.hostileTime = 0f
+        assertEquals(AugmentBlueprint.PHANTOM_EVASION, kit.player.phantomEvasion(enemy))
+        enemy.hostileTime = 12f
+        assertEquals(0, kit.player.phantomEvasion(enemy))
+        assertEquals(0, kit.player.phantomEvasion(null))
+    }
+
     companion object {
         // The augments that work by chance always do (a value of 1)
         @Language("XML")
@@ -329,6 +357,7 @@ class AugmentEffectsTest {
             "FTL_BOOSTER" to 0.25f, "FTL_JAMMER" to 2f, "CREW_STIMS" to 0.25f, "SLUG_GEL" to 0.25f,
             "NANO_MEDBAY" to 0.25f, "CLOAK_FIRE" to 0f, "DRONE_RECOVERY" to 0f, "REPAIR_ARM" to 0.15f,
             "FTL_JUMPER" to 0f, "FLEET_DISTRACTION" to 1f,
+            "XFTL_RADIATION_SHIELDING" to 1f, "XFTL_PHANTOM_PROJECTOR" to 12f, "XFTL_DEEP_FIELD_SENSORS" to 1f,
         ).joinToString("\n") { (name, value) ->
             """<augBlueprint name="$name"><cost>1</cost><rarity>1</rarity><stackable>false</stackable><value>$value</value></augBlueprint>"""
         } + "\n</FTL>"

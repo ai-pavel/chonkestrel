@@ -156,6 +156,57 @@ public class InGameState extends MainGame.GameState {
     private final ArrayList<Event> delayedQuests = new ArrayList<>();
 
     /**
+     * The game-wide counters events add to (`<xftlCounter>`, see
+     * Event.counterChanges), by name, saved with the game: such as the
+     * relay codes taken in the hybrid sectors ({@link #CONCORD_CODES}).
+     */
+    private final HashMap<String, Integer> counters = new HashMap<>();
+
+    /**
+     * Whether the player's out-of-fuel distress beacon is on (see
+     * JumpWindow), saved with the game, so it stays on from one wait to the
+     * next until it's turned off.
+     */
+    private boolean fuelDistressOn;
+
+    public boolean getFuelDistressOn() {
+        return fuelDistressOn;
+    }
+
+    public void setFuelDistressOn(boolean on) {
+        fuelDistressOn = on;
+    }
+
+    /** What's been counted through this game, for its score (see GameRecord), saved with it. */
+    private GameStats stats = new GameStats();
+
+    public GameStats getStats() {
+        return stats;
+    }
+
+    /**
+     * This game's progress towards the player ship's achievements (see
+     * AchievementTracker), saved with it.
+     */
+    private final AchievementTracker achievementTracker = new AchievementTracker(this);
+
+    public AchievementTracker getAchievementTracker() {
+        return achievementTracker;
+    }
+
+    /** A game-wide counter's value (see {@link #counters}), 0 if it's never been added to. */
+    public int getCounter(String name) {
+        return counters.getOrDefault(name, 0);
+    }
+
+    /** Add [amount] to a game-wide counter (see {@link #counters}), returning its new value. */
+    public int addToCounter(String name, int amount) {
+        int value = getCounter(name) + amount;
+        counters.put(name, value);
+        return value;
+    }
+
+    /**
      * This is the list of all the player-owned crew, as used by the main UI
      * and the ship upgrade window.
      */
@@ -358,6 +409,10 @@ public class InGameState extends MainGame.GameState {
                     return;
                 }
                 Hotkey matching = forwardHotkeyBindings.get(button);
+                // The keypad's Enter is the main one's, unless it's bound itself
+                if (matching == null && key == Input.KEY_KEYPAD_ENTER) {
+                    matching = forwardHotkeyBindings.get(HotkeyButton.BY_KEY_ID.get(Input.KEY_ENTER));
+                }
                 if (matching == null) {
                     return;
                 }
@@ -524,6 +579,8 @@ public class InGameState extends MainGame.GameState {
         if (!isPaused()) {
             updateGameState(delta);
             checkGameOver();
+            if (!finished && !menuScene)
+                stats.setPlayedSeconds(stats.getPlayedSeconds() + delta);
         }
 
         Input in = container.getInput();
@@ -886,6 +943,9 @@ public class InGameState extends MainGame.GameState {
 
         updateOpponents(dt);
 
+        // (after the opponents, to see the fights start and end)
+        achievementTracker.update();
+
         updateMainframeBreak(dt);
 
         // Show any rewards kept for the end of the fight, once it's over
@@ -930,10 +990,17 @@ public class InGameState extends MainGame.GameState {
             if (!menuScene) {
                 loadSectorMusic(sectorType);
             }
+
+            achievementTracker.sectorEntered(currentBeacon.getSector());
         }
 
         this.currentBeacon = currentBeacon;
         autosaveRequested = true;
+
+        // Keep the progress towards the achievements in the profile now and
+        // then, rather than every time it changes
+        if (player != null)
+            achievementTracker.recordBest();
 
         // Keep track of which sectors we visit, to show on the sector map UI.
         GameMap.SectorInfo sectorInfo = currentBeacon.getSector().getInfo();
@@ -1017,6 +1084,8 @@ public class InGameState extends MainGame.GameState {
         // the rebel elite that's already been spawned.
         trySpawnBoss();
 
+        if (!currentBeacon.getVisited() && !menuScene)
+            stats.setBeaconsExplored(stats.getBeaconsExplored() + 1);
         currentBeacon.setVisited(true);
 
         // The hunter heads for where the player is now
@@ -1097,13 +1166,18 @@ public class InGameState extends MainGame.GameState {
             surrenderingOpponent = null;
             fleetSurrender = false;
             if (everyone) {
+                int surrendered = 0;
                 for (Opponent opponent : new ArrayList<>(opponents)) {
+                    if (opponent.getHostile())
+                        surrendered++;
                     setHostile(opponent, false);
                     sendBoardersHome(opponent.getShip());
                 }
+                achievementTracker.surrendersAccepted(surrendered);
                 currentBeacon.setShip(null);
                 return;
             }
+            achievementTracker.surrendersAccepted(1);
             if (surrendering != getMainOpponent()) {
                 setHostile(surrendering, false);
                 sendBoardersHome(surrendering.getShip());
@@ -1424,6 +1498,7 @@ public class InGameState extends MainGame.GameState {
     private void colossalBeaten(Ship ship) {
         if (ship.getColossal() == null)
             return;
+        achievementTracker.colossalBeaten(ship.getColossal().getKind());
         // One of the Mainframe's phases (see doc/game/mainframe.md)
         int phase = ship.getColossal().getKind().getMainframePhase();
         if (phase > 0) {
@@ -1438,8 +1513,9 @@ public class InGameState extends MainGame.GameState {
     }
 
     /**
-     * One of the Mainframe's phases, [phase], has been beaten (destroyed, or
-     * its crew killed): beating the last wins the game. Otherwise, the next
+     * One of the Mainframe's phases, [phase], has been destroyed (killing its
+     * crew isn't enough: CONCORD runs it itself, see updateOpponents):
+     * beating the last wins the game. Otherwise, the next
      * starts after a break of [MAINFRAME_BREAK] seconds (see
      * updateMainframeBreak), and the player's boarders on it come home.
      */
@@ -1716,6 +1792,11 @@ public class InGameState extends MainGame.GameState {
                 // Be sure to check it's still hostile: if its crew were
                 // already killed, it can't give a second lot of rewards
                 // when it later blows up.
+                if (opponent.getHostile()) {
+                    stats.setShipsDestroyed(stats.getShipsDestroyed() + 1);
+                    // (before the boarders come off it, see removeOpponent)
+                    achievementTracker.enemyBeaten(ship, true);
+                }
                 if (opponent.getHostile() && ship.getSpec() != null)
                     showShipRewards(ship, ship.getSpec().getDestroyed());
                 if (opponent.getHostile())
@@ -1746,16 +1827,24 @@ public class InGameState extends MainGame.GameState {
             }
 
             if (opponent.getHostile() && opponent.isCrewKilled(player)) {
+                achievementTracker.enemyCrewKilled(ship);
+
                 // As in vanilla, a boss's AI takes over once its crew are
-                // dead, and it fights on, automated
-                if (ship.getBoss() != null) {
+                // dead, and it fights on, automated (repairing itself),
+                // until it's destroyed: the flagship, and each of the
+                // Mainframe's phases, which CONCORD runs itself
+                boolean mainframe = ship.getColossal() != null && ship.getColossal().getKind().getMainframePhase() > 0;
+                if (ship.getBoss() != null || mainframe) {
                     ship.setAutomated(true);
-                    showEventDialogue(eventManager.get("BOSS_AUTOMATED").resolve(), Random.Default.nextInt());
+                    String automated = mainframe ? "XFTL_MAINFRAME_AUTOMATED" : "BOSS_AUTOMATED";
+                    showEventDialogue(eventManager.get(automated).resolve(), Random.Default.nextInt());
                     continue;
                 }
 
                 if (ship.getSpec() != null)
                     showShipRewards(ship, ship.getSpec().getDeadCrew());
+                stats.setShipsCrewKilled(stats.getShipsCrewKilled() + 1);
+                achievementTracker.enemyBeaten(ship, false);
                 colossalBeaten(ship);
                 zoltanShieldBoarded(ship);
 
@@ -1978,6 +2067,18 @@ public class InGameState extends MainGame.GameState {
             SaveUtil.INSTANCE.addAttrBool(root, "wingmenSpawned", true);
         }
 
+        // The game-wide counters events add to
+        stats.saveToXML(root);
+        achievementTracker.saveToXML(root);
+        if (fuelDistressOn)
+            SaveUtil.INSTANCE.addAttrBool(root, "fuelDistress", true);
+        for (Map.Entry<String, Integer> counter : counters.entrySet()) {
+            Element counterElem = new Element("counter");
+            SaveUtil.INSTANCE.addAttr(counterElem, "name", counter.getKey());
+            SaveUtil.INSTANCE.addAttrInt(counterElem, "value", counter.getValue());
+            root.addContent(counterElem);
+        }
+
         // Serialise the sector map (the one you access via exit beacons)
         Element mapXML = new Element("gameMap");
         gameMap.saveToXML(mapXML, refs);
@@ -2056,6 +2157,12 @@ public class InGameState extends MainGame.GameState {
         fleetRewards.loadFromXML(root, refs);
         boolean wingmenSpawned = root.getAttributeValue("wingmenSpawned") != null
                 && SaveUtil.INSTANCE.getAttrBool(root, "wingmenSpawned");
+        stats = GameStats.loadFromXML(root);
+        achievementTracker.loadFromXML(root);
+        fuelDistressOn = Boolean.parseBoolean(root.getAttributeValue("fuelDistress"));
+        for (Element counterElem : root.getChildren("counter")) {
+            counters.put(SaveUtil.INSTANCE.getAttr(counterElem, "name"), SaveUtil.INSTANCE.getAttrInt(counterElem, "value"));
+        }
 
         // Load the game map. The sector needs to reference it's SectorInfo
         // objects, so we need a separate reference loader we can switch
@@ -2635,6 +2742,24 @@ public class InGameState extends MainGame.GameState {
      * Mark the game as lost or won, so it isn't saved for continuing any
      * more, and delete its save.
      */
+    /**
+     * The record of this game, which has just ended with {@code outcome}
+     * (see GameRecord), added to the profile's best games, once: not for the
+     * screenshots, the videos, the automatic playtest or the tests.
+     */
+    public GameRecord recordGame(GameOverWindow.Outcome outcome) {
+        GameRecord record = GameRecord.of(this, outcome);
+        if (!gameRecorded && mainGame != null && !XftlDebug.INSTANCE.getEnabled()
+                && !XftlDebug.INSTANCE.getRecording() && !XftlDebug.INSTANCE.getAutoplay()) {
+            gameRecorded = true;
+            mainGame.getProfile().addGameRecord(record);
+        }
+        return record;
+    }
+
+    // Whether this game's record has gone in the profile (see recordGame)
+    private boolean gameRecorded;
+
     public void markFinished() {
         finished = true;
         ContinueSave.delete();
@@ -2724,6 +2849,8 @@ public class InGameState extends MainGame.GameState {
         player.setDronesCount(player.getDronesCount() + resources.getDroneParts());
         player.setMissilesCount(player.getMissilesCount() + resources.getMissiles());
         player.setScrap(player.getScrap() + resources.getScrap());
+        if (resources.getScrap() > 0)
+            stats.setScrapCollected(stats.getScrapCollected() + resources.getScrap());
 
         for (Blueprint item : resources.getItems()) {
             player.addBlueprint(item, true);
@@ -2751,6 +2878,7 @@ public class InGameState extends MainGame.GameState {
                 }
             }
 
+            stats.setCrewLost(stats.getCrewLost() + 1);
             if (info.getTurnHostile()) {
                 crew.setOwnerShip(null);
             } else {
@@ -2854,8 +2982,9 @@ public class InGameState extends MainGame.GameState {
         }
 
         // Where a boss hunts the player, it's that, and not the fleet, that
-        // comes after them (and it repairs itself, see HunterBoss)
-        if (!sector.getType().getHasFleet()) {
+        // comes after them (and it repairs itself, see HunterBoss), until
+        // it's beaten and the fleet takes up the chase
+        if (!sector.getHasFleet()) {
             for (BossManager boss : sector.getBosses())
                 boss.advanceFleet();
             return;
@@ -2908,6 +3037,13 @@ public class InGameState extends MainGame.GameState {
      * one fight to get one of their shields (see zoltanShieldBoarded).
      */
     public static final int ZOLTAN_SHIELD_BOARDINGS = 2;
+
+    /**
+     * The game-wide counter (see {@link #getCounter}) of CONCORD's relay
+     * codes the player's taken, one from each hybrid sector's relay, which
+     * weaken the Mainframe (see ColossalBoss.relayCodes).
+     */
+    public static final String CONCORD_CODES = "XFTL_CONCORD_CODES";
 
     /**
      * How many jumps' worth the Rebel fleet surges forward when the boss

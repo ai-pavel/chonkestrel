@@ -153,7 +153,9 @@ class FightPlan(val shapes: List<ShipShape>) {
 /**
  * The extra rewards for a bigger ship (see [FightPlan]), which is worth two
  * (or for a wide one, three) of the ship it's a version of: as much again
- * as its event gave for each, and sometimes a weapon or an augment.
+ * as its event gave for each, and sometimes a weapon or an augment. And for
+ * a hybrid, two ships welded into one: half as much scrap again, and now
+ * and then a twin or triple weapon.
  */
 object BigShipRewards {
     /**
@@ -162,18 +164,34 @@ object BigShipRewards {
      */
     const val ITEM_CHANCE = 0.15f
 
+    /** How much of its event's scrap a hybrid's wreck has again. */
+    const val HYBRID_SCRAP = 0.5f
+
+    /** The chance of a hybrid's wreck having a twin or triple weapon. */
+    const val HYBRID_COMBINED_CHANCE = 0.2f
+
     /**
      * The extra rewards for destroying (or killing the crew of) [ship],
-     * shown after its [event]'s, or null if it isn't a bigger ship.
+     * shown after its [event]'s, or null if it isn't a bigger ship or a
+     * hybrid.
      */
     @JvmStatic
     fun salvage(game: InGameState, ship: xyz.znix.xftl.Ship, event: xyz.znix.xftl.sector.Event, random: Random): DialogueWindow.SyntheticEvent? {
-        if (!ship.type.isVariant)
+        if (!ship.type.isVariant && !ship.isHybrid)
             return null
 
         // Just the resources and items, as the crew and the rest of what
         // the event does only happen once
-        val salvage = DialogueWindow.SyntheticEvent(game.translator["xftl_big_ship_salvage"])
+        val text = if (ship.type.isVariant) "xftl_big_ship_salvage" else "xftl_hybrid_salvage"
+        val salvage = DialogueWindow.SyntheticEvent(game.translator[text])
+        if (ship.isHybrid) {
+            salvage.resources.scrap += (event.resolveResources(game, random).scrap * HYBRID_SCRAP).toInt()
+            if (random.nextFloat() < HYBRID_COMBINED_CHANCE)
+                salvage.resources.items += game.lootPool.getCombinedWeapon(random)
+        }
+        if (!ship.type.isVariant)
+            return salvage
+
         val extra = ship.type.shape.strength - 1
         repeat(extra) {
             val again = event.resolveResources(game, random)

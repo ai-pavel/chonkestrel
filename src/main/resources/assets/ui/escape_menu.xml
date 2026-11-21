@@ -13,18 +13,28 @@
             <widget type="button" pTop="62" id="main_menu">
                 <widget type="label" text="escape_mainmenu"/>
             </widget>
-            <widget type="button" pTop="99" id="hangar">
-                <widget type="label" text="escape_hangar"/>
-            </widget>
-            <widget type="button" pTop="136" id="restart">
+            <widget type="button" pTop="99" id="restart">
                 <widget type="label" text="escape_reset"/>
             </widget>
-            <widget type="button" pTop="173" id="options">
+            <widget type="button" pTop="136" id="options">
                 <widget type="label" text="escape_options"/>
             </widget>
-            <!-- In the controls button's place (there's no controls window yet) -->
-            <widget type="button" pTop="210" id="quit">
+            <!-- Where vanilla has the controls (there's no controls window yet) -->
+            <widget type="button" pTop="173" id="statistics">
+                <widget type="label" text="xftl_escape_statistics"/>
+            </widget>
+            <widget type="button" pTop="210" id="achievements_button">
+                <widget type="label" text="xftl_escape_achievements_button"/>
+            </widget>
+            <widget type="button" pTop="247" id="quit">
                 <widget type="label" text="escape_save"/>
+            </widget>
+            <!--
+                The hangar's only there with XFTL_SHOW_HANGAR (for debugging),
+                so it's last, under the frame's seven places
+            -->
+            <widget type="button" pTop="284" id="hangar">
+                <widget type="label" text="escape_hangar"/>
             </widget>
         </widget>
 
@@ -44,15 +54,27 @@
                     text="advanced_on_button" font="HL2" scale="2" colour="text-dark"/>
         </widget>
 
-        <widget type="free" pTop="104" pLeft="200" pRight="0">
-            <widget type="image" class="paddingFit" img="img/optionsUI/info_achievements.png"/>
-            <widget type="label" pLeft="0" pRight="0" pTop="9"
-                    text="menu_status_achievements" font="JustinFont12Bold" scale="1" colour="glow-white"/>
+        <!--
+            The current ship's achievements: up to six (the mod's ships have
+            six each, see AchievementTracker; a vanilla ship has its three),
+            in two rows of three. The box is made taller than vanilla's for
+            the second row, by repeating a row of its image in the middle.
+            Its title is a button, which opens every ship's achievements.
+        -->
+        <widget type="free" pTop="104" pLeft="200" pRight="0" h="176" id="achievements">
+            <widget type="image" pLeft="-7" pRight="-7" pTop="-7" h="64" tile="false" img="img/optionsUI/info_achievements.png"/>
+            <widget type="image" pLeft="-7" pRight="-7" pTop="57" pBottom="57" iy="64" h="1" img="img/optionsUI/info_achievements.png"/>
+            <widget type="image" pLeft="-7" pRight="-7" pBottom="-7" iy="65" img="img/optionsUI/info_achievements.png"/>
+            <widget type="label" pLeft="0" pRight="0" pTop="9" id="ach_title"
+                    text="xftl_escape_achievements" font="JustinFont12Bold" scale="1" colour="glow-white"/>
 
             <!-- The hover-based colour outline is custom-drawn on top -->
-            <widget type="image" pLeft="15" pTop="38" id="ach1" img="img/achievements/kestral_1.png"/>
-            <widget type="image" pLeft="86" pTop="38" id="ach2" img="img/achievements/kestral_2.png"/>
-            <widget type="image" pLeft="157" pTop="38" id="ach3" img="img/achievements/kestral_3.png"/>
+            <widget type="image" pLeft="15" pTop="34" id="ach1" img="img/achievements/kestral_1.png"/>
+            <widget type="image" pLeft="86" pTop="34" id="ach2" img="img/achievements/kestral_2.png"/>
+            <widget type="image" pLeft="157" pTop="34" id="ach3" img="img/achievements/kestral_3.png"/>
+            <widget type="image" pLeft="15" pTop="104" id="ach4" img="img/achievements/kestral_1.png"/>
+            <widget type="image" pLeft="86" pTop="104" id="ach5" img="img/achievements/kestral_2.png"/>
+            <widget type="image" pLeft="157" pTop="104" id="ach6" img="img/achievements/kestral_3.png"/>
 
             <widget type="image" pLeft="238" pTop="38" id="quest" img="img/achievements/S_Q_off.png"/>
             <widget type="image" pLeft="238" pTop="72" id="victory" img="img/achievements/S_V_off.png"/>

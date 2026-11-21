@@ -157,11 +157,16 @@ class StoryTest {
         assertTrue(events.getShip("XFTL_CAPITAL_JOINED_SHIP").autoBlueprint.list().all { it.name.startsWith("XFTL_HYBRID_") })
 
         // At the end, in place of the Federation base and the flagship, is
-        // the Mainframe: a size 4 boss. Its first phase, the Firewall, is one
-        // of four, each the Rebel flagship with half of two races' bombers
+        // the Mainframe: a size 4 boss. Its first phase is the Mind
         assertEquals("XFTL_MAINFRAME", capital.type.finishEventName)
-        val core = reachable(events["XFTL_MAINFRAME"]).filterIsInstance<Event>().mapNotNull { it.loadShipName }.toSet()
-        assertEquals(setOf("XFTL_MAINFRAME_CORE"), core)
+        val first = reachable(events["XFTL_MAINFRAME"]).filterIsInstance<Event>().mapNotNull { it.loadShipName }.toSet()
+        assertEquals(setOf("XFTL_MAINFRAME_MIND"), first)
+        val mind = (events.getShip("XFTL_MAINFRAME_MIND").autoBlueprint.list().single() as LazyShipBlueprint).real
+        assertEquals(ColossalBoss.Kind.MAINFRAME_MIND, mind.bossKind)
+        assertEquals(1, ColossalBoss.Kind.MAINFRAME_MIND.mainframePhase)
+
+        // Its last, the Firewall, is one of four, each the Rebel flagship
+        // with half of two races' bombers
         val firewalls = events.getShip("XFTL_MAINFRAME_CORE").autoBlueprint.list().map { (it as LazyShipBlueprint).real }
         assertEquals(4, firewalls.size)
         for (firewall in firewalls) {
@@ -173,17 +178,23 @@ class StoryTest {
         // before is beaten (see InGameState.startMainframePhase)
         val phases = mapOf(
             2 to ("XFTL_MAINFRAME_BAYS" to ColossalBoss.Kind.MAINFRAME_BAYS),
-            3 to ("XFTL_MAINFRAME_MIND" to ColossalBoss.Kind.MAINFRAME_MIND),
+            3 to ("XFTL_MAINFRAME_CORE" to ColossalBoss.Kind.MAINFRAME),
         )
         for ((phase, expected) in phases) {
             val (shipName, kind) = expected
             val event = events[InGameState.MAINFRAME_PHASE_EVENT + phase]
             val ships = reachable(event).filterIsInstance<Event>().mapNotNull { it.loadShipName }.toSet()
             assertEquals(setOf(shipName), ships)
-            val blueprint = (events.getShip(shipName).autoBlueprint.list().single() as LazyShipBlueprint).real
-            assertEquals(kind, blueprint.bossKind)
+            val blueprints = events.getShip(shipName).autoBlueprint.list().map { (it as LazyShipBlueprint).real }
+            assertTrue(shipName, blueprints.all { it.bossKind == kind })
             assertEquals(phase, kind.mainframePhase)
         }
+
+        // No phase gives anything for killing its crew: CONCORD runs it
+        // itself then (XFTL_MAINFRAME_AUTOMATED), until it's destroyed
+        for (shipName in listOf("XFTL_MAINFRAME_MIND", "XFTL_MAINFRAME_BAYS", "XFTL_MAINFRAME_CORE"))
+            assertEquals(shipName, null, events.getShip(shipName).deadCrew)
+        assertTrue(events["XFTL_MAINFRAME_AUTOMATED"] is Event)
 
         // Every phase is size 4, as wide as the row of enemy windows, crewed
         // by every race at once (six of each), and swarming with drones:
@@ -205,7 +216,7 @@ class StoryTest {
             assertTrue(shipName, drones.any { it.startsWith("XFTL_X3_") && it.endsWith("BATTLE") })
             assertTrue(shipName, drones.any { "DEFENSE" in it } && drones.any { "COMBAT" in it })
         }
-        assertEquals(InGameState.MAINFRAME_PHASES, ColossalBoss.Kind.MAINFRAME_MIND.mainframePhase)
+        assertEquals(InGameState.MAINFRAME_PHASES, ColossalBoss.Kind.MAINFRAME.mainframePhase)
 
         // The Splicing Bays' last two drones systems are its bays, which
         // start empty (three drones to each of the others), and the drones

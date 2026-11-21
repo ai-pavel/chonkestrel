@@ -10,6 +10,7 @@ import xyz.znix.xftl.systems.Teleporter
 import xyz.znix.xftl.environment.AbstractEnvironment
 import xyz.znix.xftl.environment.MixedEnvironment
 import xyz.znix.xftl.f
+import xyz.znix.xftl.hangar.SelectShipState
 import xyz.znix.xftl.math.Point
 import xyz.znix.xftl.rendering.Colour
 import xyz.znix.xftl.rendering.Cursor
@@ -59,7 +60,8 @@ class MainMenuState(private val main: MainGame, content: InGameState.GameContent
             Item("mainmenu_continue", hasSave, this::continueClicked),
             Item("mainmenu_newgame", true) { newGameClicked(hasSave) },
             Item("mainmenu_options", true) { ui.showOptionsWindow() },
-            Item("xftl_mainmenu_statistics", false) {},
+            Item("xftl_mainmenu_statistics", true) { showStatistics() },
+            Item("xftl_mainmenu_achievements", true) { showAchievements() },
             Item("mainmenu_credits", false) {},
             Item("xftl_mainmenu_exit", true) { main.quitGame() },
         )
@@ -264,9 +266,25 @@ class MainMenuState(private val main: MainGame, content: InGameState.GameContent
      */
     fun showNewGameWindow() = newGameClicked(ContinueSave.exists())
 
+    /** Open the statistics window, as Statistics does (and for the screenshots). */
+    fun showStatistics() =
+        ui.showMenuWindow(StatisticsWindow(scene, main.profile.shownTopGames) { ui.closeMenuWindow() })
+
+    /** Open the achievements window, as Achievements does (and for the screenshots). */
+    fun showAchievements() = ui.showMenuWindow(AchievementsWindow(scene) { ui.closeMenuWindow() })
+
     /**
-     * Pick the difficulty and crew names, then start, after asking first if
-     * that would replace the saved game (no goes back to the choices).
+     * Go to the hangar, showing the ship [shipName] (for the screenshots).
+     */
+    fun showHangar(shipName: String) {
+        main.switchToShipSelect()
+        (main.currentState as SelectShipState).showShip(shipName)
+    }
+
+    /**
+     * Pick the difficulty and crew names, then go on to the hangar to pick
+     * the ship, after asking first if a new game would replace the saved
+     * one (no goes back to the choices).
      */
     private fun newGameClicked(hasSave: Boolean) {
         lateinit var setup: NewGameWindow

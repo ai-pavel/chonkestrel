@@ -175,6 +175,10 @@ interface Input {
         const val KEY_KEYPAD_DIV = GLFW.GLFW_KEY_KP_DIVIDE
         const val KEY_KEYPAD_DEC = GLFW.GLFW_KEY_KP_DECIMAL
         const val KEY_KEYPAD_ENTER = GLFW.GLFW_KEY_KP_ENTER
+
+        /** Whether [key] is either Enter key: the main one, or the keypad's. */
+        @JvmStatic
+        fun isEnter(key: Int): Boolean = key == KEY_ENTER || key == KEY_KEYPAD_ENTER
         const val KEY_KEYPAD_EQ = GLFW.GLFW_KEY_KP_EQUAL
     }
 }

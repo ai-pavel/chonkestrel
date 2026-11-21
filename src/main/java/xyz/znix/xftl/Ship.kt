@@ -526,8 +526,22 @@ class Ship(
     var clonebay: Clonebay? = null
         private set
 
-    var cloaking: Cloaking? = null
+    /**
+     * All the ship's cloaking systems, in the order they're listed in the
+     * blueprint. Ships have one at most, apart from the Chonkravais (see
+     * doc/game/race-ships.md), which can cloak with its second while its
+     * first is cooling down.
+     */
+    var cloakingSystems: List<Cloaking> = emptyList()
         private set
+
+    /**
+     * The cloaking system that's cloaking the ship, if one is; otherwise the
+     * one that's still fading out (the one whose cloak is strongest), or the
+     * first.
+     */
+    val cloaking: Cloaking?
+        get() = cloakingSystems.firstOrNull { it.active } ?: cloakingSystems.maxByOrNull { it.cloakFade }
 
     var teleporter: Teleporter? = null
 
@@ -806,6 +820,20 @@ class Ship(
                 // This will be used when loading the system from a save, spawning
                 // a new ship, or buying a system at a store.
                 room.systemSlots.add(SystemInstallConfiguration(node, sys, room))
+            }
+        }
+
+        // The player's ship can buy an Artillery Beam in place of its
+        // hacking or mind control (an XFTL extension): their rooms take one
+        // too, if they haven't one already (see BuyableArtillery)
+        if (isPlayerShip) {
+            for (room in rooms) {
+                val slots = room.systemSlots
+                if (slots.none { it.spec.systemName == "hacking" || it.spec.systemName == "mind" })
+                    continue
+                if (slots.any { it.spec.systemName == Artillery.INFO.name })
+                    continue
+                slots.add(SystemInstallConfiguration(BuyableArtillery(1000 + room.id), sys, room))
             }
         }
 
@@ -1723,6 +1751,8 @@ class Ship(
             // repairing the super shield.
             val ionDamage = if (resistsIon()) 0 else max(damage.ionDamage, 0)
             val damageValue = ionDamage * 2 + max(damage.hullDamage, 0)
+            if (isPlayerShip)
+                sys.achievementTracker.add(AchievementGoal.Kind.SHIELD_ABSORBED, min(damageValue, superShield))
             superShield -= damageValue
 
             if (damagePos != null && damageValue > 0) {
@@ -1739,6 +1769,9 @@ class Ship(
         // Only projectiles with hull damage pop shields!
         if (damage.hullDamage > 0) {
             target?.popShieldLayer()
+            // (the damage the layer stopped, for the achievements)
+            if (target != null && isPlayerShip)
+                sys.achievementTracker.add(AchievementGoal.Kind.SHIELD_ABSORBED, damage.hullDamage)
         }
 
         attackShieldsIon(damage, target)
@@ -1775,6 +1808,19 @@ class Ship(
     val isAtPeace: Boolean
         get() = this != sys.player && sys.isShipPresent(this) && !sys.isEnemyOf(sys.player, this)
 
+    /**
+     * Whether the last hit on the hull was a drone's shot (see
+     * [Damage.fromDrone]), for the achievement for finishing ships off with
+     * drones. It isn't saved.
+     */
+    var lastHullHitByDrone: Boolean = false
+
+    /**
+     * Likewise, whether it was an artillery system's beam (see
+     * [Damage.fromArtillery]), for the artillery achievements.
+     */
+    var lastHullHitByArtillery: Boolean = false
+
     fun damage(target: Room, damage: Damage, textPos: IPoint? = null) {
         if (isAtPeace)
             return
@@ -1806,6 +1852,14 @@ class Ship(
 
         if (sys.debugFlags.noDmg.set)
             return
+
+        // Whether a drone's shot hit the hull last, for the achievements
+        // (see AchievementTracker.enemyBeaten)
+        if (hullDamage > 0) {
+            lastHullHitByDrone = damage.fromDrone
+            lastHullHitByArtillery = damage.fromArtillery
+            sys.achievementTracker.hullHit(this, damage, hullDamage)
+        }
 
         health -= hullDamage
 
@@ -1855,7 +1909,8 @@ class Ship(
     fun weaponChargeFactor(weapon: AbstractWeaponInstance): Float {
         var factor = colossal?.chargeFactor(weapon, sys.currentBeacon) ?: 1f
         val player = sys.player
-        if (player != null && this != player && isAutoScout && sys.isActTwo) {
+        // (not a boss whose crew were killed, which CONCORD's running now)
+        if (player != null && this != player && isAutoScout && colossal == null && sys.isActTwo) {
             val codes = player.getAugmentValue(AugmentBlueprint.COMMAND_CODES)
             if (codes > 0f)
                 factor *= 1f - codes
@@ -2145,7 +2200,7 @@ class Ship(
         medbaySystems = systems.mapNotNull { it as? Medbay }.sortedBy { it.configuration.spec.systemIndex }
         medbay = medbaySystems.firstOrNull()
         clonebay = systems.mapNotNull { it as? Clonebay }.firstOrNull()
-        cloaking = systems.mapNotNull { it as? Cloaking }.firstOrNull()
+        cloakingSystems = systems.mapNotNull { it as? Cloaking }.sortedBy { it.configuration.spec.systemIndex }
         teleporterSystems = systems.mapNotNull { it as? Teleporter }.sortedBy { it.configuration.spec.systemIndex }
         teleporter = teleporterSystems.firstOrNull()
         hackingSystems = systems.mapNotNull { it as? Hacking }.sortedBy { it.configuration.spec.systemIndex }
@@ -2206,7 +2261,11 @@ class Ship(
      * would replace another system (like a clonebay replacing a medbay).
      */
     fun findFreeSystemSlot(system: SystemBlueprint): SystemInstallConfiguration? {
+        // An Artillery Beam bought in place of hacking or mind control (see
+        // BuyableArtillery) doesn't replace them, nor they it: it's one or
+        // the other
         val slots = systemSlots.filter { it.system == system && !it.isInstalled }
+            .filter { it.room.system == null || it.spec !is BuyableArtillery && it.room.system!!.configuration.spec !is BuyableArtillery }
         return slots.firstOrNull { it.room.system == null } ?: slots.firstOrNull()
     }
 
@@ -2621,18 +2680,19 @@ class Ship(
      * this is the opposite of [AbstractWeaponBlueprint.accuracyModifier], which
      * when positive reduces the effective evasion.
      *
-     * If [missDeadEnemies] is true, this will always return true if this ship
-     * is an enemy ship that's been crew-killed. This should be set so that you
-     * can't kill an enemy ship with your in-flight volley after they surrender,
-     * however environmental stuff like asteroids should set this to false.
+     * If [missDeadEnemies] is true, this will always return true if the
+     * fight between this ship and [shooter] is over (see
+     * [isOutOfTheFightWith]). This should be set so that you can't kill an
+     * enemy ship with your in-flight volley after they surrender, nor they
+     * you after making peace, however environmental stuff like asteroids
+     * should set this to false.
      */
-    fun pickMissed(deltaEvasion: Int = 0, missDeadEnemies: Boolean = true): Boolean {
-        // Weapons fired at enemy ships before they surrender always
-        // miss after a surrender.
-        if (!isPlayerShip && sys.getEnemyOf(this) == null && missDeadEnemies)
+    fun pickMissed(deltaEvasion: Int = 0, missDeadEnemies: Boolean = true, shooter: Ship? = null): Boolean {
+        // Weapons fired before a surrender (or peace) always miss after it
+        if (missDeadEnemies && isOutOfTheFightWith(shooter))
             return true
 
-        val missed = Random.rollChance(evasion + deltaEvasion)
+        val missed = Random.rollChance(evasion + deltaEvasion + phantomEvasion(shooter))
         if (missed) {
             piloting?.addSkillPoint(Skill.PILOTING)
             for (engines in engineSystems) {
@@ -2640,6 +2700,31 @@ class Ship(
             }
         }
         return missed
+    }
+
+    /**
+     * The evasion this ship's Phantom Projector adds against [shooter]'s
+     * shots: its ghosts draw an enemy's fire for the first seconds of the
+     * fight with it (the augment's value), and none after.
+     */
+    fun phantomEvasion(shooter: Ship?): Int {
+        val projector = getAugmentValueOrNull(AugmentBlueprint.PHANTOM_PROJECTOR) ?: return 0
+        if (shooter == null || shooter == this || shooter.hostileTime >= projector)
+            return 0
+        return AugmentBlueprint.PHANTOM_EVASION
+    }
+
+    /**
+     * Whether the shots at this ship from [shooter] (if it's known) should
+     * miss, as the fight's over: if this is an enemy ship that's been beaten
+     * (surrendered, or its crew killed), or this is the player's and
+     * [shooter] is an enemy that's stopped fighting (made peace, or
+     * surrendered).
+     */
+    fun isOutOfTheFightWith(shooter: Ship?): Boolean = when {
+        !isPlayerShip -> sys.getEnemyOf(this) == null
+        shooter == null || shooter == this -> false
+        else -> !sys.isEnemyOf(this, shooter)
     }
 
     fun playCentredAnimation(animation: AnimationSpec, centre: IPoint): FloatingAnimation {
@@ -3274,5 +3359,28 @@ class Ship(
 
             return timer < LIFETIME
         }
+    }
+}
+
+/**
+ * An Artillery Beam the player's ship can buy, in the room of its hacking or
+ * mind control system (see the end of the ship's setup): the Federation's,
+ * ARTILLERY_FED, which isn't installed to start with. Its [systemIndex] puts
+ * it after the artillery the ship's blueprint has, for the mounts (see
+ * Artillery.hardpoint).
+ */
+class BuyableArtillery(override val systemIndex: Int) : ISystemConfiguration {
+    override val systemName: String get() = Artillery.INFO.name
+    override val slotNumber: Int? get() = null
+    override val slotDirection: Direction? get() = null
+    override val startingPower: Int get() = 0
+    override val availableByDefault: Boolean get() = false
+    override val aiMaxPower: Int? get() = null
+    override val interiorImage: String? get() = null
+    override val weapon: String get() = WEAPON
+
+    companion object {
+        /** The artillery weapon it fires. */
+        const val WEAPON = "ARTILLERY_FED"
     }
 }

@@ -2,6 +2,7 @@ package xyz.znix.xftl.game
 
 import xyz.znix.xftl.Ship
 import xyz.znix.xftl.ai.ShipAI
+import xyz.znix.xftl.crew.LivingCrew
 import xyz.znix.xftl.sector.GameMap
 import kotlin.math.floor
 import kotlin.random.Random
@@ -57,9 +58,20 @@ class Opponent(val ship: Ship, player: Ship, slot: Int, game: InGameState) {
      * crew's owners are checked, so mind controlling the last of them
      * doesn't count. They're dead as soon as they're killed, not once
      * their dying animation's done, so the shots still on their way miss.
+     * But not while its clonebay may yet bring them back: while any are
+     * dying, or waiting to be cloned (if it's broken or unpowered, they die
+     * in turn, and then they're all dead; with Backup DNA they wait).
      */
     fun isCrewKilled(player: Ship): Boolean =
-        !ship.isAutoScout && !ship.hasLivingCrewOwnedBy(ship) && !player.hasLivingCrewOwnedBy(ship)
+        !ship.isAutoScout && !ship.hasLivingCrewOwnedBy(ship) && !player.hasLivingCrewOwnedBy(ship) &&
+                !awaitingClone(player)
+
+    private fun awaitingClone(player: Ship): Boolean {
+        val clonebay = ship.clonebay ?: return false
+        // (any of its crew still aboard either ship are dying, as none are alive)
+        return clonebay.queue.isNotEmpty() ||
+                listOf(ship, player).any { aboard -> aboard.crew.any { it is LivingCrew && it.ownerShip == ship } }
+    }
 
     companion object {
         /**

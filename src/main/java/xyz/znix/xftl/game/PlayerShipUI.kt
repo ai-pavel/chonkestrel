@@ -827,6 +827,9 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
             anim.draw(g)
         }
 
+        // The notice of an achievement just unlocked
+        game.achievementTracker.drawToast(g, width)
+
         updatingButtons = false
 
         // If the player's ship is full of crew, open the window to dismiss one.
@@ -2983,7 +2986,8 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
 
     fun showGameOverScreen(outcome: GameOverWindow.Outcome) {
         game.markFinished()
-        currentWindow = GameOverWindow(game, outcome)
+        game.achievementTracker.gameOver(outcome)
+        currentWindow = GameOverWindow(game, outcome, game.recordGame(outcome))
     }
 
     fun getCurrentCursor(): Cursor {

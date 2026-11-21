@@ -1,21 +1,21 @@
 # The tests
 
-What the automated tests (`src/test/java`) cover, as of 2026-10-25: 226
-tests in 60 classes, all passing. Run them with:
+What the automated tests (`src/test/java`) cover, as of 2026-10-25: 239
+tests in 62 classes, all passing. Run them with:
 
     make test
 
 (that is, `XFTL_DATAFILE=$PWD/ftl.dat ./gradlew test`) with JDK 17.
 `make test TESTS='*CrewTest'` runs only some of them. The totals are in `build/test-results/test/*.xml`.
 
-Most of them (186) use the test kit, `testkit/InGameTest`: a small fake
+Most of them (197) use the test kit, `testkit/InGameTest`: a small fake
 datafile (`src/test/resources/test_assets`) with a test ship, plus whatever
 blueprints, events and animations the test adds as XML. They're fast and
 don't need the game. The kit has stand-ins for every crew animation, so
 `addCrew` (in `testkit/TestCrew.kt`) puts real crew aboard, made and
 saved as the game does them, and the `noCrewAI` debug flag keeps every
-ship's crew AI from moving them, so a test can stage a fight. The other 40 load the real game data (`ftl.dat`,
-through `VanillaDatafile.createWithDefaultPath()`): the mod's tests (29),
+ship's crew AI from moving them, so a test can stage a fight. The other 42 load the real game data (`ftl.dat`,
+through `VanillaDatafile.createWithDefaultPath()`): the mod's tests (31),
 with the Chonkestrel mod applied, to check its own data, and
 `CombinedWeaponTest` and `BXMLTest`.
 
@@ -30,16 +30,16 @@ Of the 60 classes, 6 come from XFTL's original author (2023, 8 tests:
 |---|--:|--:|
 | [The fight and the enemy ships](#the-fight-and-the-enemy-ships) | 35 | 7 |
 | [Sectors and the map](#sectors-and-the-map) | 30 | 6 |
-| [The Chonkestrel mod's data](#the-chonkestrel-mods-data) | 29 | 9 |
+| [The Chonkestrel mod's data](#the-chonkestrel-mods-data) | 31 | 10 |
 | [Drones and augments](#drones-and-augments) | 26 | 4 |
 | [Debugging and tools](#debugging-and-tools) | 26 | 5 |
 | [The ship's systems](#the-ships-systems) | 19 | 8 |
 | [Crew](#crew) | 18 | 6 |
 | [Weapons](#weapons) | 18 | 7 |
 | [Environments](#environments) | 12 | 3 |
-| [Saving and loading data](#saving-and-loading-data) | 9 | 3 |
+| [Saving and loading data](#saving-and-loading-data) | 20 | 4 |
 | [Stores](#stores) | 4 | 2 |
-| **All** | **226** | **60** |
+| **All** | **239** | **62** |
 
 ### The fight and the enemy ships
 
@@ -64,7 +64,7 @@ scaling.
 
 | Class | Tests | What it checks |
 |---|--:|---|
-| `sector/HunterBossTest` | 6 | The hazardous sectors' hunting bosses (`xftlHunter`): one sets out from an ordinary exit with its environment, with no fleet behind the player; it jumps a beacon at a time towards the player (or every second jump), taking its environment with it, until it's caught up; once beaten it's gone; it's saved; the Blockade Line's three exits all have its boss |
+| `sector/HunterBossTest` | 9 | The hazardous sectors' hunting bosses (`xftlHunter`): one sets out from an ordinary exit with its environment, with no fleet behind the player; it jumps a beacon at a time towards the player (or every second jump), taking its environment with it, until it's caught up; once beaten it's gone, half its sector's hazardous beacons have a hazard fewer, and the Rebel fleet takes up the chase from a few jumps behind (a game saved after beating it before this catches up on its next jump); it's saved; the Blockade Line's three exits all have its boss |
 | `sector/HazardSectorTest` | 12 | The hazardous sectors: every beacon has hazards (two or three in catastrophic sectors, three or four in apocalyptic ones), few at once in the first sectors and never four in the first quarter, more later; a calm start beacon, and a start and an exit in every sector; quests and stores without them; normal nebula sectors left alone |
 | `sector/SectorActsTest` | 8 | The two acts: the midpoint, act 2 twice as big, its sectors and progress, the finish event, the event filters, no repeated sector in a row |
 | `sector/SectorCountTest` | 5 | All 16 sectors are on the map, its columns are linked, the difficulty is spread out, the rewards grow every sector, and vanilla's length is unchanged |
@@ -75,13 +75,14 @@ scaling.
 
 ### The Chonkestrel mod's data
 
-29 tests, on the real game data with the mod applied: the mod's ships,
+31 tests, on the real game data with the mod applied: the mod's ships,
 sectors, events and changes to vanilla's blueprints.
 
 | Class | Tests | What it checks |
 |---|--:|---|
 | `mods/KestrelModTest` | 8 | The Chonkestrel: its files, layout, starting loadout (Burst Lasers ahead of the Artemises) and size; the bigger ships and hybrids; more crew names; the campaign's sectors |
-| `mods/HybridSectorsTest` | 6 | One hybrid sector for each pair of races, only in act 2 and hostile, with each pair's hybrids to fight, their own events, and each race's pool |
+| `mods/HybridSectorsTest` | 7 | One hybrid sector for each pair of races, only in act 2 and hostile, with each pair's hybrids to fight, their own events, and each race's pool; each start event marks its CONCORD relay, and every way of taking it gives a code |
+| `mods/NebulaQuestsTest` | 1 | Each nebula sector's start event marks its quest, whose first beacon leads to the second, whose reward is an augment found nowhere else |
 | `mods/StoryTest` | 5 | The story's events load, with more further in; the omens and the chorus; the reveal; the new sectors |
 | `mods/CivilianSectorsTest` | 2 | The act 2 civilian sectors: at most one of each, their stores' weapon sizes, one quest each and no vanilla ones, marked for the debug map; the quests' rewards are few enough to fit on the screen, and a combined weapon reward always is one |
 | `mods/StartEventsTest` | 3 | Every sector has its own start event, which only describes it, and the hazardous sectors take more fuel |
@@ -90,6 +91,7 @@ sectors, events and changes to vanilla's blueprints.
 | `mods/FuelTest` | 1 | The fuel stations scale with the ship |
 | `mods/StoreSystemsTest` | 1 | Piloting, oxygen and doors aren't sold, and the engines cost 60 |
 | `mods/RaceAugmentsTest` | 1 | The race augments are sold everywhere, rarely, and mostly in their race's sectors (hybrid sectors too) |
+| `mods/ShipAchievementsTest` | 2 | The ship achievements: six for each of the twenty ships, in the hangar's order, the same three first, a race's A and B with the same goals as separate achievements (the Federation's and the Stealth ships' with three each of their own); each for a ship the mod has, with a known goal, its target in its description, and its icon; every goal kind used |
 
 ### Debugging and tools
 
@@ -152,25 +154,28 @@ at once.
 
 | Class | Tests | What it checks |
 |---|--:|---|
-| `augments/AugmentEffectsTest` | 16 | What each augment does: Titanium System Casing (the system takes no damage, the hull does), Rock Plating (the other way round), Reverse Ion Field (on the super shield too), Crystal Vengeance (a shard at the enemy), FTL Recharge Booster (25% faster), FTL Jammer (the enemy's escape twice as slow), Mantis Pheromones (the crew walk 25% faster), Slug Repair Gel (breaches seal themselves), Engi Med-bot Dispersal (only while the medbay's powered), Stealth Weapons, Drone Recovery Arm, Repair Arm (15% less scrap, two hull), Adv. FTL Navigation and Distraction Buoys; the chance ones with a value of 1, so they always work; and weapons stunning the crew (the Stun Bomb's, and a stun chance) |
+| `augments/AugmentEffectsTest` | 18 | What each augment does: Titanium System Casing (the system takes no damage, the hull does), Rock Plating (the other way round), Reverse Ion Field (on the super shield too), Crystal Vengeance (a shard at the enemy), FTL Recharge Booster (25% faster), FTL Jammer (the enemy's escape twice as slow), Mantis Pheromones (the crew walk 25% faster), Slug Repair Gel (breaches seal themselves), Engi Med-bot Dispersal (only while the medbay's powered), Stealth Weapons, Drone Recovery Arm, Repair Arm (15% less scrap, two hull), Adv. FTL Navigation and Distraction Buoys; the chance ones with a value of 1, so they always work; and weapons stunning the crew (the Stun Bomb's, and a stun chance); Radiation Shielding (radiation hurts no one aboard), Phantom Projector (more evasion against an enemy for the first 12 seconds of the fight with it) |
 | `drones/RepairDroneTest` | 2 | The system repair drone goes to fires and hull breaches in rooms without a damaged system, and fixes them |
 | `drones/IonIntruderTest` | 2 | The Ion Intruder boards, ionises the enemy's system with one strong discharge and not again until it's worn off, raising its wings once each; its twins and triples are Ion Intruders too |
 | `drones/ZoltanBoardingTest` | 2 | Boarding drones and Ion Intruders aren't launched while every enemy ship has a super shield up (no parts spent), and then go only to the ships without one, a triple's copies shared out between them |
 | `drones/DoorBashingTest` | 4 | Behind an enemy's locked doors, a boarding drone and an Ion Intruder stop at the door and shoot it until it breaks, then go on to the system; the later enemies always have locked doors (level 3 at the end), unless they've no room for them |
 | `drones/BoardingDroneSabotageTest` | 2 | A boarding drone (and each copy of a triple one) breaks a system by shooting at it, never punching |
-| `drones/CombinedDroneTest` | 12 | The twin and triple drones (see doc/game/drone-sizes.md): made from every vanilla drone but the hacking one, with their prices, power and icons; a launch sends a copy for each drone part (as many as there are parts for), turning off turns them all off, and a lost copy's sent again on its own; the copies are spread round the orbit; a bank of overchargers looks after a row each, charging in turn; the copies are saved; a combined reward is always a twin or triple, and the bosses' are the right sizes |
-| `drones/BulwarkTest` | 6 | An enemy's twin or triple anti-personnel drone is a bulwark: one drone, for the parts it's worth, in the corner of its ship's biggest empty room (not a system's), holding the cells it stands on (boarders sent in go elsewhere), with four or nine times the health and two or three times the damage, and staying put; with no square free for it, it goes as a single drone; the player's is a squad; it's saved |
+| `drones/CombinedDroneTest` | 12 | The twin and triple drones (see doc/game/drone-sizes.md): made from every vanilla drone but the hacking one, with their prices, power and icons; a launch sends a copy for each drone part (as many as there are parts for), turning off turns them all off, and a lost copy turns the slot off (as a single drone's loss does), and is sent again on its own once it's turned back on after the cooldown; the copies are spread round the orbit; a bank of overchargers looks after a row each, charging in turn; the copies are saved; a combined reward is always a twin or triple, and the bosses' are the right sizes |
+| `drones/BulwarkTest` | 7 | An enemy's twin or triple anti-personnel drone is a bulwark: one drone, for the parts it's worth, in the corner of its ship's biggest empty room (not a system's), holding the cells it stands on (boarders sent in go elsewhere), with four or nine times the health and two or three times the damage, and staying put; with no square free for it, it goes as a single drone; the player's is a squad; it's saved; fire hurts a bulwark, but not a single drone |
 | `drones/ShieldDroneTest` | 7 | The shield drone adds a super shield point every charge, one row per drone, not recharging the Zoltan rows, nothing unpowered; drones deploy out of combat, and a defence drone in an asteroid field |
 | `augments/ZoltanShieldTest` | 6 | Zoltan shields stack (up to a cap), losing one lowers the maximum, and selling them all removes the super shield; stores sell them more often later on; boarding two shielded ships in a fight gives one |
 | `game/OverCapacityTest` | 1 | Every augment the ship has no room for waits in the over capacity box until the jump, and is kept in a saved game |
 
 ### Saving and loading data
 
-9 tests: saved games, and reading the game's data.
+20 tests: saved games, the achievements' progress, and reading the game's data.
 
 | Class | Tests | What it checks |
 |---|--:|---|
-| `game/SaveLoadTest` | 6 | A whole game saved and loaded (without the UI): a fight with several ships, a beaten wingman or main enemy ship, no fight, saving again gives the same game, and optional attributes older saves don't have |
+| `game/SaveLoadTest` | 7 | A whole game saved and loaded (without the UI): a fight with several ships, a beaten wingman or main enemy ship, no fight, saving again gives the same game, and optional attributes older saves don't have, and the out-of-fuel distress beacon staying on |
+| `game/GameRecordTest` | 4 | A finished game's score (by its stats, the difficulty and a win), its record saved and loaded, the profile's top games (the best 20, by score) saved with it, and the stats saved with the game |
+| `game/AchievementTrackerTest` | 11 | The tracked achievements: goals parsed (a kind's default target, an unknown kind left untracked); a count or a best unlocks one once reached, at the game's difficulty; the win unlocks the win's achievements, and a loss nothing; event values at least (or at most) the target; the progress saved with the game (and none in an older save); the best progress kept in the profile and saved with it; the target in the description; the artillery's hull damage to the enemy counted (not other weapons', nor on the player); surrenders accepted, and a win with only humans and no hacking or mind control; shots dodged, cloaks one straight after another, and the sectors reached without shields |
+| `game/PeaceMissTest` | 1 | An enemy's shots still on their way miss the player once it's made peace (or surrendered), but not those without a known shooter, nor the player's own |
 | `bxml/BXMLTest` | 2 | Reading the binary XML of the game's data (all of it, and the Kestrel's) |
 | `BrokenBlueprintTest` | 1 | A blueprint that can't be read is skipped, rather than stopping the game |
 
@@ -181,7 +186,7 @@ at once.
 | Class | Tests | What it checks |
 |---|--:|---|
 | `crew/CrewCombatTest` | 6 | Fist fights end with one dead; boarders are shot across a room; stunned crew don't fight back, and stay stunned in a saved game; the crew list keeps the order they joined in; crew saved outside the rooms are put back on loading |
-| `crew/BoardersTest` | 5 | Boarders break down a locked door to get through; the doors shut, and can't be worked, with the doors system destroyed; boarders stop sabotaging a ship that's beaten; the teleporter only brings home its own crew (not the enemy's, nor anyone else's boarders); there's no boarding a beaten ship |
+| `crew/BoardersTest` | 6 | Boarders break down a locked door to get through; the doors shut, and can't be worked, with the doors system destroyed; they can't be worked either, but stay as they were, with it ionised to no power; boarders stop sabotaging a ship that's beaten; the teleporter only brings home its own crew (not the enemy's, nor anyone else's boarders); there's no boarding a beaten ship |
 | `crew/CrewNamePresetTest` | 3 | The crew name presets, the game's own names by default |
 | `crew/LockdownTest` | 10 | A Crystal's lockdown seals its room's doors (shut, can't be worked or broken down) until it wears off, and the doors are left as they were; crew sent in or out (from the far side of the ship too) shoot at the door in vain, and go through once it's lifted; it recharges, and a jump recharges it; it's saved (a ready Crystal's too); the Lockdown Bomb locks the room it hits down; the enemy's Crystals lock a fight down, and the player's wait to be told |
 | `crew/CrewLimitTest` | 2 | The crew limit, by default and raised |

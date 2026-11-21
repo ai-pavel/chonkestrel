@@ -15,6 +15,7 @@ import xyz.znix.xftl.game.MainGame
 import xyz.znix.xftl.game.MainMenuState
 import xyz.znix.xftl.game.ShipWindow
 import xyz.znix.xftl.game.StoreData
+import xyz.znix.xftl.hangar.SelectShipState
 import xyz.znix.xftl.sector.Beacon
 import xyz.znix.xftl.sector.GameMap
 import xyz.znix.xftl.sys.GameContainer
@@ -57,6 +58,9 @@ class ScreenshotDirector(
      * goes to first, set up by [menu] rather than [setup]. The next scenario
      * without one starts a new game with the default ship, as the
      * screenshots started with.
+     *
+     * Its file's numbered by its place in the list, or by [number], for one
+     * added after the site's numbers were settled (see doc/tools/screenshots.md).
      */
     class Scenario(
         val name: String,
@@ -66,6 +70,7 @@ class ScreenshotDirector(
         val menu: ((MainMenuState) -> Unit)? = null,
         val prepareAt: Float = PREPARE_TIME,
         val caption: ((InGameState) -> String)? = null,
+        val number: Int? = null,
         val setup: (InGameState) -> Unit = {}
     ) {
         var closeWindows: Boolean = false
@@ -88,7 +93,8 @@ class ScreenshotDirector(
         if (finished)
             return
         val state = main.currentState
-        if (state !is InGameState && state !is MainMenuState)
+        // (the hangar's taken too, as a menu scenario goes to it)
+        if (state !is InGameState && state !is MainMenuState && state !is SelectShipState)
             return
         val game = state as? InGameState
 
@@ -210,7 +216,9 @@ class ScreenshotDirector(
         if (framesSinceSetup < MIN_SETTLE_FRAMES || elapsed < scenario.settleSeconds)
             return
 
-        val file = File(outputDir, fileName(index, scenario.name))
+        // (the others are numbered in order, skipping those with a number)
+        val place = scenario.number?.minus(1) ?: scenarios.take(index).count { it.number == null }
+        val file = File(outputDir, fileName(place, scenario.name))
         try {
             capture(framebufferWidth, framebufferHeight, file)
             println("[screenshots] Saved $file")
@@ -275,6 +283,9 @@ class ScreenshotDirector(
         // The scrap the default ship gets for the store's screenshot, so it
         // can afford most of what's for sale
         private const val STORE_SCRAP = 300
+
+        // The ship the hangar's screenshot shows
+        private const val HANGAR_SHIP = "PLAYER_SHIP_XFTL_FED"
 
         /**
          * Start the screenshot generator, if XFTL_SCREENSHOTS is set. This is
@@ -738,6 +749,17 @@ class ScreenshotDirector(
             // The main menu's new game window, as New Game opens it: the
             // difficulty and the crew names, over the Chonkestrel
             Scenario("new-game", menu = MainMenuState::showNewGameWindow),
+
+            // The menus added since, numbered after the site's 18 (taken
+            // here, while debug mode's on, as the store's turns it off):
+            // the hangar New Game goes on to, with one of the races' big
+            // ships, the Federation's Chonksprey, on the landing pad; every
+            // big ship's six achievements (all unlocked, in debug mode); and
+            // the best games, made up (XFTL_RANDOMIZE, see
+            // SaveProfile.randomTopGames), with their crews, systems and weapons
+            Scenario("hangar-with-the-federations-big-ship", menu = { it.showHangar(HANGAR_SHIP) }, number = 19),
+            Scenario("achievements-of-all-twenty-big-ships", menu = MainMenuState::showAchievements, number = 20),
+            Scenario("statistics-of-the-best-games", menu = MainMenuState::showStatistics, number = 21),
 
             // Sixteen sectors, and the new ones
             Scenario("sector-map") { game ->

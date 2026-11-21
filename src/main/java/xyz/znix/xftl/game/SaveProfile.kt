@@ -4,6 +4,7 @@ import org.jdom2.Document
 import org.jdom2.Element
 import org.jdom2.JDOMException
 import org.jdom2.input.SAXBuilder
+import xyz.znix.xftl.XftlDebug
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
@@ -20,6 +21,13 @@ class SaveProfile private constructor() {
      * objects, so that profiles don't get broken if you add or remove a mod.
      */
     private val unlockedAchievements = HashMap<String, AchievementUnlockInfo>()
+
+    /**
+     * The most progress made in a single game towards each achievement
+     * XFTL tracks (see AchievementTracker), by ID, for the achievements
+     * window. Only those with some progress are kept.
+     */
+    private val achievementProgress = HashMap<String, Int>()
 
     /**
      * Stores the ships (indexed by their unlockShip id) which the player
@@ -65,8 +73,39 @@ class SaveProfile private constructor() {
     var dirty = false
         private set
 
+    /**
+     * The best finished games, by score, best first, at most
+     * [GameRecord.TOP_GAMES] of them, for the statistics screen.
+     */
+    var topGames: List<GameRecord> = emptyList()
+        private set
+
+    /** Add a finished game to [topGames], if it's among the best. */
+    fun addGameRecord(record: GameRecord) {
+        topGames = GameRecord.topGames(topGames, record)
+        dirty = true
+    }
+
+    /**
+     * Made-up games the statistics screen shows instead of [topGames], to
+     * see how it looks (see XftlDebug.randomScores), or null. They're never
+     * saved.
+     */
+    var randomTopGames: List<GameRecord>? = null
+        set(value) {
+            field = value?.sortedByDescending { it.score }?.take(GameRecord.TOP_GAMES)
+        }
+
+    /** The games the statistics screen shows: the made-up ones, if there are any, or the real ones. */
+    val shownTopGames: List<GameRecord> get() = randomTopGames ?: topGames
+
+    /**
+     * How [ach] was unlocked, or null if it's not. In debug mode
+     * (XFTL_DEBUG) every achievement shows as unlocked, on Normal if it's
+     * not really; that isn't saved in the profile.
+     */
     fun getAchievement(ach: Achievement): AchievementUnlockInfo? {
-        return unlockedAchievements[ach.id]
+        return unlockedAchievements[ach.id] ?: DEBUG_UNLOCK.takeIf { XftlDebug.enabled }
     }
 
     /**
@@ -88,6 +127,23 @@ class SaveProfile private constructor() {
 
         unlockedAchievements[ach.id] = AchievementUnlockInfo(difficulty)
         dirty = true
+    }
+
+    /** The most progress made in a single game towards [ach] (see AchievementTracker), or 0. */
+    fun getAchievementProgress(ach: Achievement): Int = achievementProgress[ach.id] ?: 0
+
+    /** Keep [value] as [ach]'s best progress in a game, if it's more than before. */
+    fun recordAchievementProgress(ach: Achievement, value: Int) {
+        if (value <= getAchievementProgress(ach))
+            return
+        achievementProgress[ach.id] = value
+        dirty = true
+    }
+
+    /** Forget [ach]'s best progress. This is intended for debugging. */
+    fun deleteAchievementProgress(ach: Achievement) {
+        if (achievementProgress.remove(ach.id) != null)
+            dirty = true
     }
 
     fun getShipUnlock(shipFamily: ShipFamily): AchievementUnlockInfo? {
@@ -147,6 +203,14 @@ class SaveProfile private constructor() {
             elem.setAttribute("diff", info.difficulty.name)
         }
 
+        for ((id, value) in achievementProgress) {
+            val elem = Element("achProgress")
+            root.addContent(elem)
+
+            elem.setAttribute("id", id)
+            elem.setAttribute("value", value.toString())
+        }
+
         for ((id, info) in unlockedShips) {
             val elem = Element("ship")
             root.addContent(elem)
@@ -177,6 +241,13 @@ class SaveProfile private constructor() {
             display.setAttribute("windowHeight", height.toString())
         }
 
+        if (topGames.isNotEmpty()) {
+            val games = Element("topGames")
+            root.addContent(games)
+            for (record in topGames)
+                games.addContent(record.saveToXML())
+        }
+
         return doc
     }
 
@@ -202,6 +273,13 @@ class SaveProfile private constructor() {
             unlockedAchievements[id] = AchievementUnlockInfo(
                 Difficulty.valueOf(difficultyName)
             )
+        }
+
+        // (an older profile has none)
+        for (elem in root.getChildren("achProgress")) {
+            val id = elem.getAttributeValue("id") ?: continue
+            val value = elem.getAttributeValue("value")?.toIntOrNull() ?: continue
+            achievementProgress[id] = value
         }
 
         for (elem in root.getChildren("ship")) {
@@ -231,6 +309,9 @@ class SaveProfile private constructor() {
         if (displayWidth != null && displayHeight != null) {
             displayWindowSize = displayWidth to displayHeight
         }
+
+        topGames = root.getChild("topGames")?.getChildren("game")?.mapNotNull { GameRecord.loadFromXML(it) }
+            ?.sortedByDescending { it.score }?.take(GameRecord.TOP_GAMES) ?: emptyList()
     }
 
     class AchievementUnlockInfo(val difficulty: Difficulty)
@@ -238,6 +319,9 @@ class SaveProfile private constructor() {
     companion object {
         @JvmField
         val PROFILE_NAME = "save-profile.xml"
+
+        // How every achievement shows in debug mode (see getAchievement)
+        private val DEBUG_UNLOCK = AchievementUnlockInfo(Difficulty.NORMAL)
 
         // Make it a bit more explicit what this is doing
         @JvmStatic
@@ -249,6 +333,10 @@ class SaveProfile private constructor() {
 
             return profile
         }
+
+        /** A profile from a document [save] wrote (for the tests). */
+        @JvmStatic
+        fun fromDocument(doc: Document): SaveProfile = SaveProfile().also { it.load(doc) }
 
         @JvmStatic
         fun load(path: Path): SaveProfile? {

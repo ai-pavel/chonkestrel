@@ -17,6 +17,7 @@ import xyz.znix.xftl.systems.Hacking
 import xyz.znix.xftl.systems.Medbay
 import xyz.znix.xftl.sys.GameContainer
 import kotlin.random.nextInt
+import xyz.znix.xftl.augments.AugmentBlueprint
 
 /**
  * A nebula, and the kinds of nebula based on it: ion storms from vanilla,
@@ -117,11 +118,14 @@ class NebulaEnvironment(game: InGameState, beacon: Beacon, override val type: Be
 
     /**
      * Hurt the crew of every ship at the beacon who aren't in a medbay or a
-     * clonebay, which are shielded against it, more in the second act.
+     * clonebay, which are shielded against it, more in the second act, nor
+     * aboard a ship with Radiation Shielding.
      */
     private fun irradiateCrew(dt: Float) {
         val damage = RADIATION_DAMAGE * intensity * dt
         for (ship in listOf(game.player) + game.allEnemyShips) {
+            if (ship.hasAugment(AugmentBlueprint.RADIATION_SHIELDING))
+                continue
             for (crew in ship.crew.toList()) {
                 if (crew !is LivingCrew || crew.room.system is Medbay || crew.room.system is Clonebay)
                     continue

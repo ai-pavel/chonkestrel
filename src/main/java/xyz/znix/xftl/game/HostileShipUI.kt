@@ -200,7 +200,9 @@ class HostileShipUI @JvmOverloads constructor(
         if (perCell <= MAX_SPLIT_HULL_CELL)
             game.shipUI.drawHullCellDividers(hull, hpX.f, hpY.f, hpWidth.f, 11, 10, perCell)
 
-        if (enemy.shieldSystems.isNotEmpty()) {
+        // (a ship with a super shield but no shields system, as the
+        // Mainframe's Mind, shows just its super shield's bars)
+        if (enemy.shieldSystems.isNotEmpty() || enemy.superShield != 0) {
             val shieldsY = hullY + 27
             renderSmallbar(textX, shieldsY, "status_shields", filter, textColour)
 
@@ -228,7 +230,6 @@ class HostileShipUI @JvmOverloads constructor(
             }
 
             if (enemy.superShield != 0) {
-                // TODO support ships with a super-shield but no shields system
                 // Each Zoltan shield gets a row of its own, one under the
                 // other below the bubbles, as in the player's stacked panel
                 // (each row a plain bar, filling up as it recharges).

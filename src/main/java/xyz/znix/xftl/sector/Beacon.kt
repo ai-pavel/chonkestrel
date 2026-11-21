@@ -88,6 +88,14 @@ class Beacon(
     var hunterEnvironment: List<EnvironmentType>? = null
 
     /**
+     * Whether this beacon has one hazard fewer, as its sector's hunting boss
+     * (which made the sector what it is) has been beaten (see
+     * HunterBoss.bossBeaten): its last added hazard goes, and a single one
+     * leaves an ordinary beacon. Call [clearEnvironment] after changing it.
+     */
+    var hazardsEased: Boolean = false
+
+    /**
      * The environments at this beacon: one, or two, three or four at once
      * (an extreme, catastrophic or apocalyptic hazard, see [isExtremeHazard]),
      * the first being the event's own.
@@ -113,6 +121,9 @@ class Beacon(
                         types += hazard
                 }
             }
+
+            if (hazardsEased && types.isNotEmpty())
+                types.removeAt(types.lastIndex)
 
             return when {
                 types.isEmpty() -> listOf(EnvironmentType.NORMAL)
@@ -361,6 +372,7 @@ class Beacon(
         nebulaOverride?.let { SaveUtil.addAttr(elem, "nebulaOverride", it.name) }
         if (sectorHazards.isNotEmpty())
             SaveUtil.addAttr(elem, "sectorHazards", sectorHazards.joinToString(",") { it.name })
+        SaveUtil.addTagBoolIfTrue(elem, "hazardsEased", hazardsEased)
 
         // This both marks the set environment, and whether the environment
         // object needs to be deserialised. A mixed environment's other ones
@@ -432,6 +444,7 @@ class Beacon(
             beacon.nebulaOverride = elem.getAttributeValue("nebulaOverride")?.let { EnvironmentType.valueOf(it) }
             beacon.sectorHazards = elem.getAttributeValue("sectorHazards")
                 ?.split(",")?.map { EnvironmentType.valueOf(it) } ?: emptyList()
+            beacon.hazardsEased = SaveUtil.getOptionalTagBool(elem, "hazardsEased") ?: false
             beacon.hasStore = SaveUtil.getOptionalTagBool(elem, "hasStore") ?: false
             beacon.hasQuest = SaveUtil.getOptionalTagBool(elem, "hasQuest") ?: false
             // (an older save's overtaken beacons are taken again as the fleet

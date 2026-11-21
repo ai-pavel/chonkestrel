@@ -66,7 +66,9 @@ runs. Most have a `Makefile` target too.
   weapons in every weapons system (a double and a triple one of each kind,
   see [weapon-sizes.md](../game/weapon-sizes.md)), the drones and cargo as
   in debug mode, and random augments. It never picks the Healing Burst or the Repair
-  Burst, which only target your own ship.
+  Burst, which only target your own ship. It also fills the statistics
+  screen's top 20 with made-up games (see `GameRecord.random`), which
+  aren't saved: the profile's real ones come back without it.
 - `XFTL_ZOLTAN=1`: every augment slot is filled with a Zoltan shield.
 - `XFTL_AUTOPLAY=1`: the game plays itself, faster than real time, to find
   crashes, and writes a report of the exceptions it hit, into

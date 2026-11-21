@@ -266,6 +266,10 @@ class MindControl(blueprint: SystemBlueprint) : MainSystem(blueprint) {
         controlledCrew = crew
         timeRemaining = duration
 
+        // An enemy taken over by the player, for the achievements
+        if (ship.isPlayerShip && room.ship != ship)
+            ship.sys.achievementTracker.add(AchievementGoal.Kind.MIND_CONTROLS)
+
         startSound.play()
     }
 

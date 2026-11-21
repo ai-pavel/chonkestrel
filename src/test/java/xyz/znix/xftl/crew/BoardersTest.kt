@@ -82,6 +82,23 @@ class BoardersTest {
     }
 
     @Test
+    fun testDoorsStayAsTheyAreWithTheDoorsSystemIonised() {
+        val door = player.doors.first()
+        door.open = true
+        val doors = player.doorsSystem!!
+        doors.dealDamage(0, doors.energyLevels + 1)
+        run(0.5f)
+        assertTrue(doors.isIonised)
+        assertEquals(0, door.level)
+
+        // The doors are drawn red, and can't be opened or closed, but stay
+        // as they were
+        assertFalse(door.isControllable)
+        door.toggle()
+        assertTrue(door.open)
+    }
+
+    @Test
     fun testBoardersStopSabotagingABeatenShip() {
         val enemy = fight()
         val room = enemy.rooms.first { it.system != null && it.system!!.energyLevels > 0 }

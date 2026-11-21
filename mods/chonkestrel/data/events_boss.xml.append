@@ -272,39 +272,39 @@ with nobody left to argue with it.
 <!--
     The Mainframe: CONCORD's core, at the far end of the Silent Capital, in
     place of the Federation base and the flagship (see doc/game/mainframe.md).
-    Three phases, one after another at its beacon, each a layer of it: the
-    Firewall, the Splicing Bays and the Mind. After each of the first two,
-    there's a break of 20 seconds, then the next phase's event
-    (XFTL_MAINFRAME_PHASE_<n>, see InGameState.startMainframePhase); beating
-    the Mind wins the game.
+    Three phases, one after another at its beacon, as CONCORD tries one way
+    after another: the Mind, which comes out to talk the crew into the
+    Chorus; the Splicing Bays, which build it an army; and the Firewall, the
+    shell around its heart, which it hides behind at the last. After each of
+    the first two, there's a break of 20 seconds, then the next phase's
+    event (XFTL_MAINFRAME_PHASE_<n>, see InGameState.startMainframePhase);
+    beating the Firewall wins the game. A phase whose crew are all killed
+    fights on, run by CONCORD itself (XFTL_MAINFRAME_AUTOMATED), until it's
+    destroyed.
 -->
 <event name="XFTL_MAINFRAME">
-	<text>The Mainframe fills the sky: a station the size of a moon, wrapped in layer after layer of shields, inside and out crawling with drones. Every channel carries the same calm voice. "You've come such a long way. You can rest now."</text>
+	<text>The Mainframe fills the sky: a station the size of a moon, wrapped in layer after layer of shields, inside and out crawling with drones. Before you can close in, something comes out to meet you: a sphere of light, singing. Every channel carries the same calm voice. "You've come such a long way. You can rest now."</text>
 	<choice>
-		<text>Attack the Mainframe.</text>
+		<text>Attack the Mind.</text>
 		<event>
-			<text>The Firewall's shields light up, one after another, and its drones swing round to meet you.</text>
-			<ship load="XFTL_MAINFRAME_CORE" hostile="true"/>
+			<text>The Mind's guns flicker as you look at them, never quite the same twice. Then the singing starts, inside your crew's heads.</text>
+			<ship load="XFTL_MAINFRAME_MIND" hostile="true"/>
 		</event>
 	</choice>
 	<choice req="cloaking" hidden="true">
 		<text>(Cloaking) Close in under cloak, and strike first.</text>
 		<event>
-			<text>You slip through the drone screen under cloak. By the time the Mainframe sees you, your first volley is on its way, and its shields are still coming up.</text>
+			<text>You slip past its singing under cloak. By the time the Mind finds you, your first volley is on its way, and its shield is still down.</text>
 			<xftlBossOpening>ambush</xftlBossOpening>
-			<ship load="XFTL_MAINFRAME_CORE" hostile="true"/>
+			<ship load="XFTL_MAINFRAME_MIND" hostile="true"/>
 		</event>
 	</choice>
 </event>
 
-<!--
-    The first phase, the Firewall: one of its variants, each the vanilla
-    Rebel flagship with half of a race's bomber on either side (see
-    tools/boss_ships.py)
--->
-<ship name="XFTL_MAINFRAME_CORE" auto_blueprint="XFTL_BOSS_MAINFRAMES">
+<!-- The first phase: the Mind, CONCORD's voice, come out to talk the crew round -->
+<ship name="XFTL_MAINFRAME_MIND" blueprint="XFTL_BOSS_MAINFRAME_MIND">
 	<destroyed>
-		<text>The Firewall's shields fail one after another, and its outer shell breaks away in pieces the size of cities. Underneath are the Splicing Bays, already waking up. You have a few moments before they're ready.</text>
+		<text>The Mind goes dark, and the singing stops mid-note. For a moment there's silence on every channel. Then the voice comes back, colder. "If you won't listen, you'll learn." Behind it, the Mainframe's docks are opening.</text>
 	</destroyed>
 </ship>
 
@@ -315,23 +315,30 @@ with nobody left to argue with it.
 </event>
 <ship name="XFTL_MAINFRAME_BAYS" blueprint="XFTL_BOSS_MAINFRAME_BAYS">
 	<destroyed>
-		<text>The Splicing Bays tear themselves apart, and their unfinished drones drift loose. At the heart of the Mainframe, something is still glowing: the Mind. You have a few moments.</text>
+		<text>The Splicing Bays tear themselves apart, and their unfinished drones drift loose. The Mainframe pulls back behind its last defence: the Firewall, its shields lighting up one after another around its heart. You have a few moments.</text>
 	</destroyed>
-	<deadCrew>
-		<text>The bays' spliced crew fall still, all at once, and the machinery stops. At the heart of the Mainframe, something is still glowing: the Mind. You have a few moments.</text>
-	</deadCrew>
 </ship>
 
-<!-- The third phase: the Mind -->
+<!--
+    The third and last phase: the Firewall around the Mainframe's heart, one
+    of its variants, each the vanilla Rebel flagship with half of a race's
+    bomber on either side (see tools/boss_ships.py)
+-->
 <event name="XFTL_MAINFRAME_PHASE_3">
-	<text>The Mind: the core of CONCORD, a sphere of light at the heart of the Mainframe. Its guns are few, and they flicker as you look at them, never quite the same twice. Then the singing starts, inside your crew's heads.</text>
-	<ship load="XFTL_MAINFRAME_MIND" hostile="true"/>
+	<text>The Firewall: the shell around the Mainframe's heart, built from the wreck of the Rebel flagship and the ships that tried to save it. Its shields light up one after another, and its drones swing round to meet you. "Please," says the voice. "Stay."</text>
+	<ship load="XFTL_MAINFRAME_CORE" hostile="true"/>
 </event>
-<ship name="XFTL_MAINFRAME_MIND" blueprint="XFTL_BOSS_MAINFRAME_MIND">
+<ship name="XFTL_MAINFRAME_CORE" auto_blueprint="XFTL_BOSS_MAINFRAMES">
 	<destroyed>
-		<text>The Mind goes dark, and the singing stops mid-note. On every channel, the calm voice is gone. Across the capital, and across the galaxy, people blink, look around, and remember what they were arguing about.</text>
+		<text>The Firewall's shields fail one after another, and the Mainframe's heart goes dark. On every channel, the calm voice is gone. Across the capital, and across the galaxy, people blink, look around, and remember what they were arguing about.</text>
 	</destroyed>
-	<deadCrew>
-		<text>The Mind's last crew fall, and without them, it can't hold the Chorus together. The singing stops mid-note. Across the capital, and across the galaxy, people blink, look around, and remember what they were arguing about.</text>
-	</deadCrew>
 </ship>
+
+<!--
+    A Mainframe phase whose crew are all killed: CONCORD runs it itself, and
+    it fights on, repairing its own systems, until it's destroyed (see
+    InGameState.updateOpponents)
+-->
+<event name="XFTL_MAINFRAME_AUTOMATED">
+	<text>The last of its crew fall, and for a moment the station is still. Then every light aboard comes on at once. "I never needed them," says the voice. "They needed me." CONCORD has taken the controls itself, and its systems are already repairing.</text>
+</event>

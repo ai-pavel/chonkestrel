@@ -93,15 +93,22 @@ class CombinedDroneTest {
         assertTrue(drones.setDronePower(0, true))
         val info = drones.drones[0]!!
 
-        // One's shot down: the other flies on, and the slot's still on
+        // One's shot down: the slot's turned off, as a single drone's is, the
+        // other with it, and its power's given back
         info.copies[1]!!.destroy()
         assertEquals(1, info.liveCopies.size)
         assertNull(info.copies[1])
-        assertTrue(info.instance!!.isPowered)
+        assertFalse(info.instance!!.isPowered)
+        kit.state.updateGameState(0.1f)
+        assertEquals(0, drones.powerSelected)
 
-        // Turned off and on again, once it can be, it sends the lost one
-        // only, for one part
-        drones.setDronePower(0, false)
+        // It can't be sent again until the cooldown's over...
+        drones.setDronePower(0, true)
+        assertEquals(1, info.liveCopies.size)
+        assertFalse(info.instance!!.isPowered)
+
+        // ...and then, turned on again, it sends the lost one only, for one
+        // part
         repeat(((AbstractDrone.DRONE_DESTROYED_COOLDOWN + 1f) / 0.1f).toInt()) { kit.state.updateGameState(0.1f) }
         assertTrue(drones.setDronePower(0, true))
         assertEquals(2, info.liveCopies.size)

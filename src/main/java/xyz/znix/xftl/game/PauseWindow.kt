@@ -8,15 +8,18 @@ import xyz.znix.xftl.math.IPoint
 import xyz.znix.xftl.math.Point
 import xyz.znix.xftl.rendering.Colour
 import xyz.znix.xftl.rendering.Graphics
+import xyz.znix.xftl.rendering.ITooltipProvider
 import xyz.znix.xftl.rendering.Image
+import xyz.znix.xftl.rendering.StandardTooltip
+import xyz.znix.xftl.sys.Input
 import xyz.znix.xftl.ui.ImageView
 import xyz.znix.xftl.ui.Label
 import xyz.znix.xftl.ui.Widget
 import xyz.znix.xftl.ui.WidgetContainer
 
 class PauseWindow(val game: InGameState, val close: () -> Unit) : Window() {
-    // There's no controls window yet, so its button isn't there (the display
-    // options are in the options window). The hangar button is only there with
+    // There's no controls window yet, so the statistics button is in its
+    // place (the display options are in the options window). The hangar button is only there with
     // XFTL_SHOW_HANGAR, and XFTL_SKIP_MENU also hides the main menu button,
     // as the game's played without it then.
     private val widgetTree: WidgetContainer = game.uiLoader.load(
@@ -26,8 +29,18 @@ class PauseWindow(val game: InGameState, val close: () -> Unit) : Window() {
     private val lockIcon: Image = game.getImg("img/customizeUI/box_lock_on.png")
     private val mousePos = Point(0, 0)
     private val shipFamily: ShipFamily? = game.content.shipFamilies.byShipId[game.player.type.name]
-    private val achievements: List<Achievement> =
+    private val tracker: AchievementTracker = game.achievementTracker
+
+    // The ship's achievements: the six XFTL tracks for the mod's ships (see
+    // AchievementTracker), or a vanilla ship's family's three
+    private val achievements: List<Achievement> = tracker.achievements.ifEmpty {
         shipFamily?.achievements?.map { game.content.achievements[it] } ?: emptyList()
+    }
+
+    // The achievements box's title, which opens every ship's achievements
+    private val achievementsTitle = widgetTree.byId["ach_title"] as Label
+    private val titleColour: Colour = achievementsTitle.colour
+    private val titleButton: TitleButton
 
     override val size: IPoint = widgetTree.root.size
 
@@ -41,7 +54,13 @@ class PauseWindow(val game: InGameState, val close: () -> Unit) : Window() {
             widgetTree.addButtonListener("hangar", this::hangarClicked)
         widgetTree.addButtonListener("restart", this::restartClicked)
         widgetTree.addButtonListener("options", this::optionsClicked)
+        widgetTree.addButtonListener("statistics", this::statisticsClicked)
+        widgetTree.addButtonListener("achievements_button", this::achievementsClicked)
         widgetTree.addButtonListener("quit", this::quitClicked)
+
+        val box = widgetTree.byId["achievements"]!!
+        titleButton = TitleButton(box.position, ConstPoint(box.size.x, TITLE_HEIGHT))
+        buttons += titleButton
 
         // Set the difficulty label
         val difficultyLabel = widgetTree.byId["difficulty"] as Label
@@ -56,7 +75,7 @@ class PauseWindow(val game: InGameState, val close: () -> Unit) : Window() {
         aeLabel.text = game.translator[aeKey]
 
         // Set the achievement icons
-        for (idx in 0 until 3) {
+        for (idx in 0 until ICONS) {
             val ach = achievements.getOrNull(idx)
             val img = widgetTree.byId["ach${idx + 1}"] as ImageView
             if (ach != null) {
@@ -75,18 +94,33 @@ class PauseWindow(val game: InGameState, val close: () -> Unit) : Window() {
             }
             questWidget.image = game.getImg(questImagePath)
         }
+
+        // The victory mark's lit once the ship's won (its victory achievement)
+        val victoryWidget = widgetTree.byId["victory"] as ImageView
+        if (victoryAchievement?.let { game.mainGame.profile.getAchievement(it) } != null)
+            victoryWidget.image = game.getImg("img/achievements/S_V_on.png")
+
+        // Keep this game's progress in the profile, so the best's up to date
+        tracker.recordBest()
     }
+
+    // The ship's achievement for winning the game, if it has one
+    private val victoryAchievement: Achievement?
+        get() = achievements.firstOrNull { it.goal?.kind == AchievementGoal.Kind.WIN }
 
     override fun draw(g: Graphics) {
         g.pushTransform()
         g.translate(position.x.f, position.y.f)
 
-        // Draw the base UI
+        // Draw the base UI, with the achievements' title lit up while it's hovered
+        achievementsTitle.colour = if (titleButton.hovered) Constants.UI_BUTTON_HOVER else titleColour
         widgetTree.draw(g)
 
-        decorateAchievement(g, widgetTree.byId["ach1"] as ImageView, 0)
-        decorateAchievement(g, widgetTree.byId["ach2"] as ImageView, 1)
-        decorateAchievement(g, widgetTree.byId["ach3"] as ImageView, 2)
+        for (idx in 0 until ICONS)
+            decorateAchievement(g, widgetTree.byId["ach${idx + 1}"] as ImageView, idx)
+
+        if (titleButton.hovered)
+            g.tooltip = textTooltip(game.translator["xftl_escape_achievements_tip"])
 
         val questBox = widgetTree.byId["quest"]!!
         if (mousePos.containedInBox(questBox.position, questBox.size) && questBox.isVisible) {
@@ -101,7 +135,7 @@ class PauseWindow(val game: InGameState, val close: () -> Unit) : Window() {
             g.colour = Constants.UI_BUTTON_HOVER
             drawOutline(g, victoryBox)
 
-            // TODO tooltip
+            victoryAchievement?.let { g.tooltip = textTooltip(achievementTooltip(it)) }
         }
 
         // TODO show the dots that indicate the player has won with a given layout
@@ -134,7 +168,51 @@ class PauseWindow(val game: InGameState, val close: () -> Unit) : Window() {
         }
         drawOutline(g, img)
 
-        // TODO tooltip when highlighted
+        if (hovering)
+            g.tooltip = textTooltip(achievementTooltip(achievement))
+    }
+
+    /**
+     * The tooltip for [ach]: its name and description, and, for one with a
+     * number to reach, this game's progress and the best in any game; then
+     * the difficulty it was unlocked on.
+     */
+    private fun achievementTooltip(ach: Achievement): String {
+        val t = game.translator
+        val lines = arrayListOf(t[ach.name], ach.description(t))
+        val goal = ach.goal
+        val progress = tracker.progress(ach)
+        if (goal != null && progress != null) {
+            val best = maxOf(progress, game.mainGame.profile.getAchievementProgress(ach))
+            lines += t["xftl_ach_this_game"].replace("\\1", "${progress.coerceAtMost(goal.target)}/${goal.target}")
+            lines += t["xftl_ach_best"].replace("\\1", "${best.coerceAtMost(goal.target)}/${goal.target}")
+        }
+        val unlock = game.mainGame.profile.getAchievement(ach)
+        lines += if (unlock != null) t["ach_" + unlock.difficulty.name.lowercase()] else t["xftl_ach_locked"]
+        return lines.joinToString("\n")
+    }
+
+    private fun textTooltip(text: String): ITooltipProvider = object : StandardTooltip(game) {
+        override val customMaxWidth: Int get() = TOOLTIP_WIDTH
+        override fun getText(): String = text
+    }
+
+    /** The achievements box's title: opens every ship's achievements (see AchievementsWindow). */
+    private inner class TitleButton(pos: IPoint, size: IPoint) : Button(game, pos, size) {
+        // (the title's label is drawn with the rest of the box)
+        override fun draw(g: Graphics) {}
+
+        override fun click(button: Int) {
+            if (button == Input.MOUSE_LEFT_BUTTON)
+                achievementsClicked()
+        }
+    }
+
+    // Every ship's achievements (the achievements button, or the box's
+    // title), as the main menu shows them, which come back here
+    private fun achievementsClicked() {
+        val ui = game.shipUI
+        ui.showMenuWindow(AchievementsWindow(game) { ui.showPauseWindow() })
     }
 
     private fun drawOutline(g: Graphics, widget: Widget) {
@@ -179,9 +257,25 @@ class PauseWindow(val game: InGameState, val close: () -> Unit) : Window() {
         game.shipUI.showOptionsWindow()
     }
 
+    // The statistics screen, as the main menu's, which comes back here
+    private fun statisticsClicked() {
+        val ui = game.shipUI
+        ui.showMenuWindow(StatisticsWindow(game, game.mainGame.profile.shownTopGames) { ui.showPauseWindow() })
+    }
+
     // TODO a controls window, and show its button again (see widgetTree)
 
     private fun quitClicked() {
         game.mainGame.quitGame()
+    }
+
+    companion object {
+        // The achievement icons' places in the box (ach1 to ach6)
+        private const val ICONS = 6
+
+        // How tall the achievements box's title bar is, as a button
+        private const val TITLE_HEIGHT = 24
+
+        private const val TOOLTIP_WIDTH = 330
     }
 }

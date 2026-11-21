@@ -37,10 +37,10 @@ and so on, see the six-bar systems in [stores.md](stores.md)).
 
 **Packed.** As many weapons as the Chonkestrel can carry (eight) or more,
 every one of them a twin or a triple (see [weapon-sizes.md](weapon-sizes.md)),
-more of them triples the stronger the boss (2, 4, 8 and 10 of them), in
+more of them triples the stronger the boss (2, 4, 8 and 12 of them), in
 three to five weapons systems, each with no more weapons than its eight
 power runs,
-two or three drones systems, and twenty to forty crew, so boarding them is
+two or three drones systems, and fourteen to forty crew, so boarding them is
 a battle of its own. Its rooms are big (3x3, 3x4, 4x4 and so on, as well
 as vanilla's own), so it has room for them all without dozens of small
 rooms.
@@ -52,7 +52,9 @@ the player's own Zoltan shield doesn't stop their boarders or their mind
 control.
 
 **Boarders ready.** Its first boarding party (as many as fit in its
-teleporter, up to half its crew) is already standing in its teleporter
+teleporter, up to half its crew, and at most 4, 6, 8 or 10 by its tier,
+`ColossalBoss.Kind.firstBoarders`, so the Devourer's doesn't outnumber an
+act 1 crew) is already standing in its teleporter
 when the fight starts, and goes as soon as the teleporter has power
 (`ColossalBoss.lineUpBoarders`); after that, its crew board as any ship's
 do. (Ordinary ships gather their boarders once the fight's started, and
@@ -98,7 +100,8 @@ waiting at the next one they come to, as they left it.
   shields down (`<xftlBossOpening>`: `ambush` and `noSuperShield`).
 
 **The others hunt the player** (`xftlHunter`, `HunterBoss`). In the Maw,
-the Gullet and the Belly, there's no Rebel fleet: the boss is what comes
+the Gullet and the Belly, there's no Rebel fleet (until the boss is
+beaten, see below): the boss is what comes
 after the player. The exit is an ordinary one, and the player can leave
 through it without fighting (the hazardous sectors are optional anyway),
 giving up the boss's rewards.
@@ -119,7 +122,14 @@ giving up the boss's rewards.
   jump itself, it repairs 10% of its hull and its systems. The Stormbreaker,
   always on the move, never does.
 - **Once beaten, it's gone,** and the rest of the sector is the player's
-  to explore at leisure.
+  to explore, but not at leisure. The sector calms down a little, as if
+  the boss had made it what it was: half its hazardous beacons, picked at
+  random, have one hazard fewer (`Beacon.hazardsEased`), so a
+  catastrophic one is extreme, an extreme one a single hazard, and a
+  single hazard (a nebula among them) an ordinary beacon. And with the
+  hunter gone, the Rebel fleet takes up the chase: it turns up three
+  jumps' worth behind the beacon where the boss was beaten
+  (`Sector.startFleetPursuit`), and advances as in any other sector.
 
 **The beacon suits it.** A boss's beacon has the boss's own environment,
 whatever the sector would roll for it (its event's `<environment>`, with
@@ -146,7 +156,8 @@ In the Blockade Line, the Rebel fleet advances 1.15 times as fast
 still slow it as they do now, and `modifyPursuit` still doubles or stops
 it. The sector's check that the player can reach the exit before the fleet
 (`Sector`'s placement of the exit) uses the faster speed, so the exit is
-never cut off from the start. The hunters' sectors have no fleet at all.
+never cut off from the start. The hunters' sectors have no fleet, until
+the hunter's beaten.
 
 ### Rewards
 
@@ -199,7 +210,7 @@ whose comms still hum, which the Lanius won't go near.
 | Shields | one system, 3 layers, and a Zoltan shield |
 | Weapons | 8 (2 triples): ion weapons, breach and ion bombs, salvaged lasers and missiles |
 | Drones | anti-ship and defence drones, salvaged from wrecks |
-| Crew | 20 Lanius |
+| Crew | 14 Lanius |
 | Systems | no oxygen system (the Lanius don't breathe), 4-bar hacking, a teleporter, mind control |
 | Art | the Lanius bomber, stretched wide and long |
 
@@ -310,7 +321,7 @@ the fight.
 |---|---|
 | Hull | 200 |
 | Shields | three systems, 3 layers each, and four Zoltan shields |
-| Weapons | 12 (10 triples): beams (the Halberd, fire, anti-bio and hull), heavy lasers, bombs |
+| Weapons | 12 (all triples): beams (the Halberd, fire, anti-bio and hull), heavy and burst lasers, Artemis missiles, bombs |
 | Drones | three systems, eight drones: combat (Mark II and beam), shield drones (they refill its super shield) and defence, two boarding drones, and inside, anti-personnel and repair drones |
 | Crew | 30, of every race, spliced |
 | Systems | 4-bar teleporter, 4-bar hacking, three drones systems (the first is the slipway) |
@@ -340,9 +351,9 @@ doesn't jump away between phases: each phase is another layer of it.
 
 | Phase | Hull | What it is |
 |---|---|---|
-| 1. The Firewall | 150 | The outer shell: three shields systems, a super shield, defence drones, hacking |
-| 2. The Splicing Bays | 150 | The yards inside: it launches hybrids, two at a time |
-| 3. The Mind | 200 | The core: mind control pulses, spliced boarders, mirages (and sanity, once there is any) |
+| 1. The Mind | 200 | CONCORD's voice, come out to meet the player: mind control pulses, spliced boarders, mirages (and sanity, once there is any) |
+| 2. The Splicing Bays | 150 | The yards: it launches drones, and spliced boarders |
+| 3. The Firewall | 150 | The shell around its heart: three shields systems, a super shield, defence drones, hacking |
 
 ## Tuning
 
@@ -385,8 +396,9 @@ should be the hardest fight of its sector, but not a wall:
 - **Hunting:** a sector's `xftlHunter` (`SectorType.hunterPeriod`) makes its
   boss a `HunterBoss` (a `BossManager`, as the flagship is, drawn with the
   same `BossMapIcon`), set up in `GameMap.generateSector`. Its sector has
-  no fleet (`SectorType.hasFleet`): `InGameState.advanceFleet` moves it
-  instead, and the arrival shows its event. Its ship stays at its beacon
+  no fleet (`SectorType.hasFleet`, and `Sector.hasFleet` until
+  `Sector.startFleetPursuit` brings it in once the boss is beaten):
+  `InGameState.advanceFleet` moves it instead, and the arrival shows its event. Its ship stays at its beacon
   (`Beacon.ship`), and moves with it; its environment is
   `Beacon.hunterEnvironment`. `InGameState.colossalBeaten` tells it when
   it's beaten.

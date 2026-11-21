@@ -93,6 +93,18 @@ against hybrids with double and triple weapons, copied from
 they show. The last three (16-18) are from `XFTL_SCREENSHOTS_SET=boss` (see
 below): the Devourer, the Stormbreaker, and the Devourer's rewards.
 
+Three more, taken after the first (while debug mode's still on, as the
+store's scene turns it off) but numbered after the site's 18, so the others
+keep their numbers, are taken in the menus:
+
+19. `hangar-with-the-federations-big-ship`: the hangar New Game goes on to,
+    with the Chonksprey (`PLAYER_SHIP_XFTL_FED`, see
+    [race-ships.md](../game/race-ships.md)) on the landing pad.
+20. `achievements-of-all-twenty-big-ships`: the achievements window, every
+    one unlocked, as debug mode shows them.
+21. `statistics-of-the-best-games`: the statistics window, filled with
+    made-up games (`XFTL_RANDOMIZE`).
+
 They're defined in `ScreenshotDirector.defaultScenarios` (in
 `devutil/ScreenshotDirector.kt`). Each sets the game up, waits for it to
 settle (a second and a half, or four for the fight), and takes the

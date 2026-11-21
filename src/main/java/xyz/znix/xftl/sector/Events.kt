@@ -112,6 +112,17 @@ class Event(
      */
     val givesQuest: Boolean by lazy { givesQuest(this, HashSet()) }
 
+    /**
+     * The game-wide counters this event adds to, an XFTL extension
+     * (`<xftlCounter name="..." add="1"/>`, `add` 1 by default): they're
+     * saved with the game, and other things read them, such as the
+     * Mainframe the relay codes from the hybrid sectors (see
+     * InGameState.getCounter).
+     */
+    val counterChanges: List<Pair<String, Int>> = elem.getChildren("xftlCounter").map {
+        it.getAttributeValue("name") to (it.getAttributeValue("add")?.toInt() ?: 1)
+    }
+
     val revealMap: Boolean = elem.getChild("reveal_map") != null
     val isLastStandRepair: Boolean = elem.getChild("repair") != null
 
@@ -545,7 +556,7 @@ class Event(
             "ship", "img", "environment", "damage",
             "upgrade", "modifyPursuit", "status",
             "quest", "reveal_map", "remove", "fleet",
-            "unlockShip", "repair", "xftlBossReward", "xftlBossOpening",
+            "unlockShip", "repair", "xftlBossReward", "xftlBossOpening", "xftlCounter",
 
             // Used by the code loading the event
             "text", "choice",

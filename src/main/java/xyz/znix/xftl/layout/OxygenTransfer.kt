@@ -1,6 +1,7 @@
 package xyz.znix.xftl.layout
 
 import xyz.znix.xftl.Ship
+import xyz.znix.xftl.crew.LivingCrew
 import xyz.znix.xftl.f
 import xyz.znix.xftl.game.LoopHandle
 import xyz.znix.xftl.game.RealSoundManager
@@ -15,6 +16,14 @@ import kotlin.math.pow
  */
 object OxygenTransfer {
     fun update(ship: Ship, dt: Float) {
+        // An enemy ship's own Lanius don't drain its air while it has crew
+        // of its own that breathe, as the Mainframe's and the hybrids'
+        // mixed crews do: they'd slowly suffocate their shipmates (a Crystal
+        // beside a Lanius used to). The player's do, as in vanilla, as do an
+        // all-Lanius crew's, and boarders anywhere.
+        val sparesItsCrew = !ship.isPlayerShip &&
+                ship.crew.any { it is LivingCrew && it.ownerShip == ship && it.health > 0f && it.suffocationMultiplier > 0f }
+
         // Drain oxygen from open doors and breaches
         for (room in ship.rooms) {
             var drainRate = 0f
@@ -29,6 +38,8 @@ object OxygenTransfer {
 
             // Apply anaerobic crew
             for (crew in room.crew) {
+                if (sparesItsCrew && crew is LivingCrew && crew.ownerShip == ship)
+                    continue
                 drainRate += crew.anaerobicOxygenDrainRate
             }
 

@@ -348,6 +348,8 @@ class BeamBlueprint(xml: Element) : AbstractWeaponBlueprint(xml) {
                             lastRoomId = room.id
 
                             val roomDamage = damage.copy()
+                            roomDamage.fromDrone = isOnDrone
+                            roomDamage.fromArtillery = isArtillery
 
                             // Don't do any crew damage, we do that per-cell
                             roomDamage.pureCrewDamage = 0

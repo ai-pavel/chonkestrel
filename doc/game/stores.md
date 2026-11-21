@@ -38,6 +38,13 @@ them, but the rarer it is.
   oxygen and the doors are never sold (their rarity is 0), as the
   Chonkestrel has them all from the start, and the engines cost 60 rather
   than vanilla's 1, as a big ship can have a second engines room.
+- **The Artillery Beam** (the Federation's, ARTILLERY_FED), never sold in
+  vanilla, can be bought for the player's ship's hacking or mind control
+  room (rarity 4, 150 scrap), in place of that system: the room takes one
+  or the other, and neither replaces the other once it's in
+  (`BuyableArtillery` and `Ship.findFreeSystemSlot`). A ship without a
+  mount for it (most have none, see `Artillery.hardpoint`) fires it from
+  the room, with no gun drawn.
 - **Rarer things likelier:** each weapon, drone, augment and crew race is
   picked as likely as its rarity (1 to 5), rather than the commoner ones
   being likelier, as everywhere else.

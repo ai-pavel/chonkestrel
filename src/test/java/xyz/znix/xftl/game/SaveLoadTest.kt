@@ -85,6 +85,16 @@ class SaveLoadTest {
     }
 
     @Test
+    fun testTheDistressBeaconStaysOn() {
+        // Out of fuel, the distress beacon stays on from one wait to the
+        // next, and through saving the game
+        val kit = InGameTest()
+        assertFalse(kit.state.fuelDistressOn)
+        kit.state.fuelDistressOn = true
+        assertTrue(reload(kit.state).fuelDistressOn)
+    }
+
+    @Test
     fun testBeatenWingmanStaysBeaten() {
         val kit = fight("PLAYER_SHIP_THREE_ENEMIES")
         kit.state.wingmen[0].hostile = false

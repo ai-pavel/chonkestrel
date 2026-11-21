@@ -148,6 +148,55 @@ class ColossalBossTest {
     }
 
     @Test
+    fun testRelayCodesWeakenTheMainframe() {
+        val kit = createKit()
+        val mainframe = ColossalBoss(ColossalBoss.Kind.MAINFRAME, kit.boss)
+        assertEquals(0, mainframe.relayCodes)
+
+        // The codes taken in the hybrid sectors count against the Mainframe
+        // (up to four), and no other boss
+        kit.state.addToCounter(InGameState.CONCORD_CODES, 6)
+        assertEquals(ColossalBoss.MAX_RELAY_CODES, mainframe.relayCodes)
+        assertEquals(0, ColossalBoss(ColossalBoss.Kind.VIGILANCE, kit.boss).relayCodes)
+
+        // With all four, each layer starts with less hull
+        kit.boss.health = kit.boss.maxHealth
+        ColossalBoss(ColossalBoss.Kind.MAINFRAME_BAYS, kit.boss).fightStarted()
+        assertEquals((kit.boss.maxHealth * (1f - ColossalBoss.RELAY_HULL_CUT)).toInt(), kit.boss.health)
+
+        // and they're saved with the game
+        val loaded = InGameState(null, kit.state.content, kit.state.saveGameState())
+        assertEquals(6, loaded.getCounter(InGameState.CONCORD_CODES))
+    }
+
+    @Test
+    fun testAMainframePhaseFightsOnWithItsCrewKilled() {
+        val kit = InGameTest(
+            extraBlueprints = listOf(WingmanTest.BLUEPRINT_XML, BLUEPRINT_XML),
+            extraEvents = listOf(WingmanTest.EVENT_XML, EVENT_XML),
+            playerShip = "PLAYER_SHIP_THREE_ENEMIES"
+        )
+        kit.state.loadEventShip(kit.state.eventManager["TEST_MAINFRAME_FIGHT"].resolve())
+        kit.state.updateGameState(0.01f)
+        val phase = kit.boss
+        val sector = kit.state.currentBeacon.sector
+        val before = sector.mainframePhase
+
+        // CONCORD takes over: it's automated, still fighting, and the phase
+        // isn't beaten
+        phase.crew.removeAll { it is LivingCrew }
+        repeat(10) { kit.state.updateGameState(0.1f) }
+        assertTrue(phase.automated)
+        assertTrue(kit.state.isEnemyOf(kit.player, phase))
+        assertEquals(before, sector.mainframePhase)
+
+        // Destroying it beats it
+        phase.health = 0
+        repeat(100) { kit.state.updateGameState(0.1f) }
+        assertEquals(before + 1, sector.mainframePhase)
+    }
+
+    @Test
     fun testTheOssuarysSlipwayRebuildsItsDrones() {
         val kit = createKit()
         val ossuary = ColossalBoss(ColossalBoss.Kind.OSSUARY, kit.boss)
@@ -186,11 +235,12 @@ class ColossalBossTest {
         val boss = kit.boss
         // Its first boarding party is waiting in its teleporter...
         val pad = boss.teleporter!!.room!!
-        assertEquals(minOf(pad.cellCount, boss.crew.size / 2), pad.crew.size)
+        val wanted = minOf(pad.cellCount, boss.crew.size / 2, ColossalBoss.Kind.STORMBREAKER.firstBoarders)
+        assertEquals(wanted, pad.crew.size)
 
         // ...and goes as soon as the fight starts
         repeat(4) { kit.state.updateGameState(0.25f) }
-        assertTrue("${kit.boarding()} boarding", kit.boarding() >= pad.cellCount.coerceAtMost(8))
+        assertTrue("${kit.boarding()} boarding", kit.boarding() >= wanted)
     }
 
     @Test
@@ -280,6 +330,18 @@ class ColossalBossTest {
         </systemList>
         <crewCount amount="16" max="16" class="human"/>
     </shipBlueprint>
+
+    <shipBlueprint name="TEST_MAINFRAME_SHIP" layout="test_ship" img="test_ship">
+        <shipSize>3</shipSize>
+        <xftlBoss>MAINFRAME_BAYS</xftlBoss>
+        <health amount="20"/>
+        <maxPower amount="20"/>
+        <systemList>
+            <oxygen power="1" max="1" room="0"/>
+            <pilot power="1" max="1" room="1"/>
+        </systemList>
+        <crewCount amount="4" max="4" class="human"/>
+    </shipBlueprint>
 </FTL>
 """
 
@@ -294,6 +356,14 @@ class ColossalBossTest {
     <event name="TEST_BOSS_FIGHT">
         <text>A boss.</text>
         <ship load="TEST_BOSS" hostile="true"/>
+    </event>
+    <ship name="TEST_MAINFRAME" blueprint="TEST_MAINFRAME_SHIP"/>
+    <event name="TEST_MAINFRAME_FIGHT">
+        <text>The Mainframe.</text>
+        <ship load="TEST_MAINFRAME" hostile="true"/>
+    </event>
+    <event name="XFTL_MAINFRAME_AUTOMATED">
+        <text>CONCORD takes over.</text>
     </event>
 </FTL>
 """

@@ -19,7 +19,8 @@ package xyz.znix.xftl
  * weapons, and fill the augment slots with the Weapon Pre-Igniter, a Zoltan
  * shield and different random augments.
  * It never picks the bombs that only target your own ship (see
- * Ship.RANDOMIZE_EXCLUDED).
+ * Ship.RANDOMIZE_EXCLUDED). It also fills the statistics screen with
+ * made-up games, which aren't saved (see [randomScores]).
  *
  * Separately, set the XFTL_ZOLTAN environment variable (or the xftl.zoltan
  * system property) to fill all the player's augment slots with Zoltan shields.
@@ -133,6 +134,14 @@ object XftlDebug {
     // This is only a var so tests can turn it on. The video recorder always
     // uses random weapons, drones and augments, to show off more of them.
     var randomize: Boolean = isSet(System.getenv("XFTL_RANDOMIZE")) || isSet(System.getProperty("xftl.randomize")) || video
+
+    /**
+     * With XFTL_RANDOMIZE (or xftl.randomize) set, the statistics screen
+     * shows made-up games (see GameRecord.random), to see how it looks. They
+     * aren't saved: the profile's real ones are kept, and come back without
+     * it (see SaveProfile.shownTopGames).
+     */
+    val randomScores: Boolean = isSet(System.getenv("XFTL_RANDOMIZE")) || isSet(System.getProperty("xftl.randomize"))
 
     // This is only a var so tests can turn it on.
     var zoltan: Boolean = isSet(System.getenv("XFTL_ZOLTAN")) || isSet(System.getProperty("xftl.zoltan"))

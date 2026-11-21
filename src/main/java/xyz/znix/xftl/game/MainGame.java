@@ -45,6 +45,7 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainGame implements Game {
@@ -150,6 +151,15 @@ public class MainGame implements Game {
     private void startFirstState() {
         GameContainer gc = gameContainer;
 
+        // XFTL_RANDOMIZE fills the statistics screen with made-up games,
+        // which aren't saved
+        if (XftlDebug.INSTANCE.getRandomScores()) {
+            List<GameRecord> games = new ArrayList<>();
+            for (int i = 0; i < GameRecord.TOP_GAMES; i++)
+                games.add(GameRecord.random(content.blueprintManager, content::nameManagerFor, kotlin.random.Random.Default));
+            profile.setRandomTopGames(games);
+        }
+
         if (XftlDebug.INSTANCE.getIconFile() != null) {
             // XFTL_ICON renders the default ship, as it looks in the
             // hangar, for the game's icon, then quits
@@ -209,12 +219,22 @@ public class MainGame implements Game {
     }
 
     public void switchToShipSelect() {
+        switchToShipSelect(Difficulty.NORMAL, null);
+    }
+
+    /**
+     * Go to the hangar to pick a ship, with {@code difficulty} picked to
+     * start with, and the game it starts using the crew names from
+     * {@code namePreset} (see CrewNameManager), as the main menu's new game
+     * window chose them.
+     */
+    public void switchToShipSelect(Difficulty difficulty, @Nullable String namePreset) {
         // This may have been called by DatafileSelectState
         if (vanillaDatafile == null) {
             loadDatafile();
         }
 
-        SelectShipState state = new SelectShipState(datafile, this);
+        SelectShipState state = new SelectShipState(datafile, this, difficulty, namePreset);
         setCurrentState(state);
     }
 
@@ -252,12 +272,12 @@ public class MainGame implements Game {
     }
 
     /**
-     * Start a new game from the main menu's new game window, with the ship
-     * the hangar would pick by default, on {@code difficulty}, with the crew names
-     * from {@code namePreset}.
+     * Go on from the main menu's new game window to the hangar, to pick the
+     * ship to start with, on {@code difficulty}, with the crew names from
+     * {@code namePreset}.
      */
     public void startNewGameFromMenu(Difficulty difficulty, String namePreset) {
-        startNewGame(content.blueprintManager.getDefaultPlayerShip(), difficulty, null, namePreset);
+        switchToShipSelect(difficulty, namePreset);
     }
 
     public void switchToDatafileSelect() {

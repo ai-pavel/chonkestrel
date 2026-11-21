@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The Chonkasio's layout, made by tools/race_ships.py from the vanilla
+    stealth.xml (copyright (c) 2012 by Subset Games). Don't edit it by hand.
+-->
+<FTL>
+<img x="-71" y="-116" w="595" h="578"/>
+<offsets>
+	<floor x="63" y="108"/>
+	<cloak x="-10" y="-10"/>
+</offsets>
+<weaponMounts>
+	<mount x="469" y="178" rotate="true" mirror="true" gib="2" slide="up"/>
+	<mount x="469" y="400" rotate="true" mirror="false" gib="4" slide="down"/>
+	<mount x="250" y="99" rotate="true" mirror="true" gib="1" slide="up"/>
+	<mount x="250" y="480" rotate="true" mirror="false" gib="3" slide="down"/>
+	<mount x="71" y="33" rotate="true" mirror="true" gib="1" slide="up"/>
+	<mount x="273" y="116" rotate="true" mirror="true" gib="1" slide="up"/>
+	<mount x="71" y="545" rotate="true" mirror="false" gib="3" slide="down"/>
+	<mount x="268" y="466" rotate="true" mirror="false" gib="3" slide="down"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>0</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>297</x>
+		<y>90</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>289</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>297</x>
+		<y>289</y>
+	</gib4>
+</explosion>
+</FTL>

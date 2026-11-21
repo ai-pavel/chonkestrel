@@ -116,6 +116,16 @@ class DialogueWindow private constructor(val game: InGameState, val playerShip: 
             extraText += "\n\n" + game.translator[messageId]
         }
 
+        // A game-wide counter it adds to, with a line saying where it's at,
+        // if there's a text for it (xftl_counter_<name>, with \1 for its
+        // new value)
+        for ((name, add) in event.event.counterChanges) {
+            val value = game.addToCounter(name, add)
+            game.translator.getOrNull("xftl_counter_$name")?.let {
+                extraText += "\n\n" + it.replace("\\1", value.toString())
+            }
+        }
+
         // When ships are first unlocked, they add on an extra line.
         // We also need to play the unlock sound now, so we might as well also
         // update the user's profile while we're here.

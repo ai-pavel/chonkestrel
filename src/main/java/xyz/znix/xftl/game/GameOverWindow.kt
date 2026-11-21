@@ -13,7 +13,7 @@ import xyz.znix.xftl.ui.WidgetContainer
  * This is the window that is displayed when the game ends, either
  * through success or failure.
  */
-class GameOverWindow(private val game: InGameState, val outcome: Outcome) : Window() {
+class GameOverWindow(private val game: InGameState, val outcome: Outcome, val record: GameRecord) : Window() {
     private val bodyFont = game.getFont("c&cnew", 2f)
     private val scoreFont = game.getFont("c&cnew", 3f)
 
@@ -88,7 +88,7 @@ class GameOverWindow(private val game: InGameState, val outcome: Outcome) : Wind
             textY += 34
         }
 
-        val scoreText = "SCORE: 123"
+        val scoreText = game.translator["gameover_score"].replace("\\1", record.score.toString())
         scoreFont.drawStringCentred(centreX.f, position.y + 208f, 0f, scoreText, Colour.white)
     }
 
@@ -102,7 +102,8 @@ class GameOverWindow(private val game: InGameState, val outcome: Outcome) : Wind
     }
 
     private fun statsClicked() {
-        TODO("Not yet implemented")
+        val ui = game.shipUI ?: return
+        ui.showMenuWindow(StatisticsWindow(game, game.mainGame.profile.shownTopGames, highlight = record) { ui.closeMenuWindow() })
     }
 
     private fun quitClicked() {

@@ -19,10 +19,13 @@ feed it, and each one the player destroys takes one of its defences away.
 CONCORD's fleet is chasing, so there isn't time for all four: the sector is
 a choice of which defences to take down, and how much time to spend on it.
 
-The fight is three phases, each a layer of the station: **the Firewall**
-(a wall of shields), **the Splicing Bays** (it builds hybrids to fight
-alongside it) and **the Mind** (its guns fall silent, and it goes for the
-crew). Destroying the third wins the game.
+The fight is three phases, as CONCORD tries one way after another to stop
+the player: **the Mind** (it comes out to meet them, and goes for the
+crew), **the Splicing Bays** (it builds drones to fight alongside it) and
+**the Firewall** (a wall of shields around its heart, which it hides
+behind at the last). Destroying the third wins the game. The phases get
+harder as they go: the Mind has no shields systems, the Bays two, and the
+Firewall three.
 
 ## The Silent Capital
 
@@ -101,6 +104,20 @@ sectors' are), mostly with a fight:
 
 ## The relays
 
+**What's in the game:** the relays are in the hybrid sectors rather than
+in the Mainframe's own, one in each (see [sectors.md](sectors.md)). Their
+codes add to `XFTL_CONCORD_CODES` (`InGameState.getCounter`), and each, up
+to four, weakens the Mainframe in turn (`ColossalBoss.relayCodes`):
+
+| Codes | Without the defence |
+|---|---|
+| 1 | The Mind's Chorus pulses 1.6 times as rarely (every 48 seconds, not 30) |
+| 2 | The Splicing Bays build 1.6 times as slowly (every 64 seconds, not 40) |
+| 3 | The Firewall's super shield comes back 1.6 times as slowly (every 40 seconds, not 25) |
+| 4 | Each layer starts with a fifth of its hull gone |
+
+The design below, four relays in the Mainframe's sector, is still to do.
+
 Four relays, at beacons spread around the map, away from the shortest way
 to the Mainframe: going for one costs about two jumps, so about two of them
 fit before the fleet gets there, three for a player who's quick or lucky.
@@ -111,10 +128,10 @@ down:
 
 | Relay | Feeds | Without it |
 |---|---|---|
-| The Firewall relay | The Firewall's third shields system | Phase 1 has two shields systems |
-| The defence grid | The Firewall's defence drones | Phase 1 has no defence drones |
+| The Firewall relay | The Firewall's third shields system | Phase 3 has two shields systems |
+| The defence grid | The Firewall's defence drones | Phase 3 has no defence drones |
 | The foundry | The Splicing Bays' second bay | Phase 2 launches one hybrid at a time |
-| The choir relay | The Mind's Chorus pulses | Phase 3's pulses come half as often |
+| The choir relay | The Mind's Chorus pulses | Phase 1's pulses come half as often |
 
 **A relay** is a station: a size 2 automated ship with no engines and no
 piloting (so it can't dodge, or run), a lot of hull for its size, and one
@@ -131,8 +148,10 @@ A station the size of a moon, at the capital. It's the one size 4 ship
 the whole row of enemy windows, three places. It never dodges (its engines
 and piloting are only for show), and never jumps away. Every layer has a
 spliced crew of every race at once (six each of the humans, Engi, Mantis,
-Rockmen, Zoltan, Slugs, Crystals and Lanius, 48 in all), and killing them beats the
-layer as surely as its hull.
+Rockmen, Zoltan, Slugs, Crystals and Lanius, 48 in all). Killing them all
+doesn't beat a layer: CONCORD takes the controls itself
+(`XFTL_MAINFRAME_AUTOMATED`), and the layer fights on, automated, repairing
+its own systems, until its hull is destroyed (`InGameState.updateOpponents`).
 
 **Drones everywhere.** Every layer is swarming with them, three to each of
 its drones systems (as they are, not combined further, as the other
@@ -155,13 +174,66 @@ keeps coming, so it's a breather, not a way round.
 
 | Phase | Hull | Weapons | What it does |
 |---|---|---|---|
-| 1. The Firewall | 152 | 4, mostly ion | A wall: three shields systems, a super shield that comes back, hacking, 12 drones |
+| 1. The Mind | 200 | 4, disguised | Goes for the crew: mind control, Chorus pulses, boarders |
 | 2. The Splicing Bays | 152 | 8 | Builds more drones as it fights, and sends spliced boarders |
-| 3. The Mind | 200 | 4, disguised | Goes for the crew: mind control, Chorus pulses, boarders |
+| 3. The Firewall | 152 | 4, mostly ion | A wall: three shields systems, a super shield that comes back, hacking, 12 drones |
 
-### Phase 1: the Firewall
+### Phase 1: the Mind
 
-The outer shell. It's a wall, and a puzzle: its weapons are weak, but
+CONCORD's voice, come out to meet the player. Its guns are mostly gone, and it turns on the crew instead.
+
+- **Mirages:** four weapons (a triple burst laser, a triple heavy laser,
+  a twin heavy beam and a twin heavy ion), each looking like a weapon of
+  another kind, as an enemy's do in a mirage nebula
+  (`Mirage.weaponDisguise`). With a Slug aboard, they're shown as what
+  they are.
+- **Mind control** at 6 bars, every 12 seconds, on the player's crew, and
+  the **Zoltan Shield Bypass**, so the player's super shield doesn't stop
+  it, or its pulses.
+- **Drones:** seven drones systems: six inside, as the Firewall's, and
+  defence and combat drones.
+- **Chorus pulses:** every 30 seconds (60 without the choir relay), a pulse
+  goes through the player's ship, while its mind control system works.
+  Everyone in one room (the most crowded) joins the Chorus for 8 seconds,
+  as if mind controlled (`MindControl.chorusPulse`). A Lanius never does,
+  nor a Slug, and a Crystal in the room sings back, so nobody in it does.
+  (A super shield would stop it, as it does mind control, but the Mind has
+  the Zoltan Shield Bypass.) (Once
+  there's sanity, each pulse also takes some: see
+  [story.md](story.md#sanity).)
+- **Boarders:** its crew, with a bigger teleporter than the bays'.
+- **No shields of its own** but its super shield of 10, which doesn't come
+  back: the Mind is soft, but the player's own crew are fighting them.
+
+The way through: keep the crew spread out, kill the mind control system
+early (it's the most valuable room to hit), and race it.
+
+### Phase 2: the Splicing Bays
+
+The yards. Its own weapons are many but ordinary; what makes it hard
+is what it builds.
+
+- **Two bays** (one without the foundry): its last two drones systems,
+  which start empty. While a bay works and has an empty slot (three each),
+  it builds a drone: a bar over the room fills for **40 seconds**, then a
+  drone (an anti-personnel drone or bulwark, a combat, defence or boarding
+  drone, at random) goes in the slot, and its AI launches it. Breaking a
+  bay stops its bar (and empties it). There's no room on the screen for
+  ships alongside a size 4 one, so it builds drones rather than hybrids.
+- **Six more drones systems,** full from the start: four inside (a triple
+  bulwark, three twin ones, five anti-personnel drones and three repair
+  drones), and defence and combat drones.
+- **Spliced boarders:** its crew, with a teleporter (its first party lined
+  up and sent at once, as the other bosses' are).
+- **Weapons:** eight, a mix of lasers, missiles and a beam, as the Vigilance's
+  are, twins and triples.
+
+The way through: the bays first (boarders are good at it), and the hull
+before they've filled up.
+
+### Phase 3: the Firewall
+
+The last wall, around the Mainframe's heart. It's a wall, and a puzzle: its weapons are weak, but
 getting through to the hull is hard.
 
 **Its hull** is what's left of the Rebellion, glued together by CONCORD:
@@ -194,59 +266,6 @@ the bulwarks.
 The way through: ion or beams to wear down the super shield, boarders (or
 a bomb) for the Firewall core, and enough weapons left to hit the hull.
 
-### Phase 2: the Splicing Bays
-
-The yards inside. Its own weapons are many but ordinary; what makes it hard
-is what it builds.
-
-- **Two bays** (one without the foundry): its last two drones systems,
-  which start empty. While a bay works and has an empty slot (three each),
-  it builds a drone: a bar over the room fills for **40 seconds**, then a
-  drone (an anti-personnel drone or bulwark, a combat, defence or boarding
-  drone, at random) goes in the slot, and its AI launches it. Breaking a
-  bay stops its bar (and empties it). There's no room on the screen for
-  ships alongside a size 4 one, so it builds drones rather than hybrids.
-- **Six more drones systems,** full from the start: four inside (a triple
-  bulwark, three twin ones, five anti-personnel drones and three repair
-  drones), and defence and combat drones.
-- **Spliced boarders:** its crew, with a teleporter (its first party lined
-  up and sent at once, as the other bosses' are).
-- **Weapons:** eight, a mix of lasers, missiles and a beam, as the Vigilance's
-  are, twins and triples.
-
-The way through: the bays first (boarders are good at it), and the hull
-before they've filled up.
-
-### Phase 3: the Mind
-
-The core. Its guns are mostly gone, and it turns on the crew instead.
-
-- **Mirages:** four weapons (a triple burst laser, a triple heavy laser,
-  a twin heavy beam and a twin heavy ion), each looking like a weapon of
-  another kind, as an enemy's do in a mirage nebula
-  (`Mirage.weaponDisguise`). With a Slug aboard, they're shown as what
-  they are.
-- **Mind control** at 6 bars, every 12 seconds, on the player's crew, and
-  the **Zoltan Shield Bypass**, so the player's super shield doesn't stop
-  it, or its pulses.
-- **Drones:** seven drones systems: six inside, as the Firewall's, and
-  defence and combat drones.
-- **Chorus pulses:** every 30 seconds (60 without the choir relay), a pulse
-  goes through the player's ship, while its mind control system works.
-  Everyone in one room (the most crowded) joins the Chorus for 8 seconds,
-  as if mind controlled (`MindControl.chorusPulse`). A Lanius never does,
-  nor a Slug, and a Crystal in the room sings back, so nobody in it does.
-  (A super shield would stop it, as it does mind control, but the Mind has
-  the Zoltan Shield Bypass.) (Once
-  there's sanity, each pulse also takes some: see
-  [story.md](story.md#sanity).)
-- **Boarders:** its crew, with a bigger teleporter than phase 2's.
-- **No shields of its own** but its super shield of 10, which doesn't come
-  back: the Mind is soft, but the player's own crew are fighting them.
-
-The way through: keep the crew spread out, kill the mind control system
-early (it's the most valuable room to hit), and race it.
-
 ### The Override
 
 A quest in the sector itself (so it doesn't need quests across sectors):
@@ -254,11 +273,11 @@ A quest in the sector itself (so it doesn't need quests across sectors):
 half before she was caught. Getting it is a fight with the lab's guard and
 an event with a choice:
 
-- Take the key: the Mainframe's **third phase starts with its mind control
-  and teleporter offline for 45 seconds**, and its hull is 150, not 200.
+- Take the key: the Mainframe's **Mind starts with its mind control and
+  teleporter offline for 45 seconds**, and its hull is 150, not 200.
 - With Revic herself aboard (later, from her quest, see
   [story.md](story.md#quests)): the backdoor is whole, and the player
-  **skips the third phase**, shutting the Mainframe down instead.
+  **skips the Mind**, shutting its voice down instead.
 
 ### Endings
 
@@ -344,6 +363,11 @@ Roughly in order, each playable on its own:
    straight away. The bays' drones (`ColossalBoss.updateBays`) with
    their build bars over the bays (`ColossalBoss.renderOverlay`), and the
    Chorus pulses (`updateChorus`). Beating the Mind wins the game.
+   Later turned round: the Mind first (from the sector's finish event,
+   `XFTL_MAINFRAME`), then the bays (`XFTL_MAINFRAME_PHASE_2`), then the
+   Firewall (`_PHASE_3`), so each phase is harder than the one before;
+   beating the Firewall wins the game. And a phase whose crew are killed
+   fights on, automated, rather than being beaten.
    Then every phase made size 4 (`ShipShape.TITAN`, about 1000px wide),
    crewed by every race, and full of drones (`tools/boss_ships.py`, its
    drones kept as they are by `ShipGenerator.buildBoss`), the bays building

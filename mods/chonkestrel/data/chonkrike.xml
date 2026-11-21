@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The Chonkrike's layout, made by tools/race_ships.py from the vanilla
+    anaerobic_cruiser_2.xml (copyright (c) 2012 by Subset Games). Don't edit it by hand.
+-->
+<FTL>
+<img x="-153" y="-66" w="600" h="620"/>
+<offsets>
+	<floor x="145" y="58"/>
+	<cloak x="18" y="17"/>
+</offsets>
+<weaponMounts>
+	<mount x="460" y="115" rotate="true" mirror="true" gib="2" slide="up"/>
+	<mount x="460" y="505" rotate="true" mirror="false" gib="4" slide="down"/>
+	<mount x="425" y="72" rotate="true" mirror="true" gib="2" slide="right"/>
+	<mount x="425" y="549" rotate="true" mirror="false" gib="4" slide="right"/>
+	<mount x="153" y="13" rotate="true" mirror="true" gib="1" slide="up"/>
+	<mount x="253" y="58" rotate="true" mirror="true" gib="1" slide="up"/>
+	<mount x="153" y="606" rotate="true" mirror="false" gib="3" slide="down"/>
+	<mount x="253" y="561" rotate="true" mirror="false" gib="3" slide="down"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>0</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>300</x>
+		<y>1</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>310</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>300</x>
+		<y>310</y>
+	</gib4>
+</explosion>
+</FTL>

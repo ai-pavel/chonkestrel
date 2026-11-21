@@ -1,0 +1,896 @@
+<!--
+    The achievements for each of the mod's player ships: six each, the same
+    three for every ship (beating the Vigilance, winning, and winning on
+    Hard), and three for its race, shared by its Type A and B but separate
+    achievements (except the Federation's and the Stealth ships', whose Type
+    A and B have three each of their own). The ships are in the hangar's
+    order (see hangar/ShipList), which the achievements window keeps. See
+    doc/game/achievements.md.
+
+    These are vanilla's achievements, with an XFTL extension, the goal XFTL
+    tracks through a game to unlock it (see AchievementTracker):
+    <xftlGoal kind="..." target="N"/>. The target's the number to reach (a
+    default for the kind if it's left out), and it goes in the description
+    in place of \1, so it's only in one place. The images are made by
+    tools/achievement_art.py, which reads this file.
+-->
+
+<!-- The Chonkestrel -->
+<achievement id="XFTL_ACH_CHONKESTREL_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Chonkestrel.</desc>
+    <img>achievements/xftl_chonkestrel_1.png</img>
+    <ship>PLAYER_SHIP_CHONKESTREL</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_CHONKESTREL_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Chonkestrel.</desc>
+    <img>achievements/xftl_chonkestrel_2.png</img>
+    <ship>PLAYER_SHIP_CHONKESTREL</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_CHONKESTREL_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Chonkestrel.</desc>
+    <img>achievements/xftl_chonkestrel_3.png</img>
+    <ship>PLAYER_SHIP_CHONKESTREL</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_CHONKESTREL_4">
+    <name>Outnumbered</name>
+    <desc>Win a fight against \1 ships at once, destroying them or killing their crew.</desc>
+    <img>achievements/xftl_chonkestrel_4.png</img>
+    <ship>PLAYER_SHIP_CHONKESTREL</ship>
+    <xftlGoal kind="fleetFight" target="3"/>
+</achievement>
+<achievement id="XFTL_ACH_CHONKESTREL_5">
+    <name>Steady Hands</name>
+    <desc>Beat a boss without the hull going below \1% in that fight.</desc>
+    <img>achievements/xftl_chonkestrel_5.png</img>
+    <ship>PLAYER_SHIP_CHONKESTREL</ship>
+    <xftlGoal kind="bossHull" target="50"/>
+</achievement>
+<achievement id="XFTL_ACH_CHONKESTREL_6">
+    <name>Full House</name>
+    <desc>Win the game with \1 crew alive.</desc>
+    <img>achievements/xftl_chonkestrel_6.png</img>
+    <ship>PLAYER_SHIP_CHONKESTREL</ship>
+    <xftlGoal kind="crewAtWin" target="16"/>
+</achievement>
+
+<!-- The Chonk-Tail -->
+<achievement id="XFTL_ACH_CHONKESTREL_2_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Chonk-Tail.</desc>
+    <img>achievements/xftl_chonk_tail_1.png</img>
+    <ship>PLAYER_SHIP_CHONKESTREL_2</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_CHONKESTREL_2_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Chonk-Tail.</desc>
+    <img>achievements/xftl_chonk_tail_2.png</img>
+    <ship>PLAYER_SHIP_CHONKESTREL_2</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_CHONKESTREL_2_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Chonk-Tail.</desc>
+    <img>achievements/xftl_chonk_tail_3.png</img>
+    <ship>PLAYER_SHIP_CHONKESTREL_2</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_CHONKESTREL_2_4">
+    <name>Outnumbered</name>
+    <desc>Win a fight against \1 ships at once, destroying them or killing their crew.</desc>
+    <img>achievements/xftl_chonk_tail_4.png</img>
+    <ship>PLAYER_SHIP_CHONKESTREL_2</ship>
+    <xftlGoal kind="fleetFight" target="3"/>
+</achievement>
+<achievement id="XFTL_ACH_CHONKESTREL_2_5">
+    <name>Steady Hands</name>
+    <desc>Beat a boss without the hull going below \1% in that fight.</desc>
+    <img>achievements/xftl_chonk_tail_5.png</img>
+    <ship>PLAYER_SHIP_CHONKESTREL_2</ship>
+    <xftlGoal kind="bossHull" target="50"/>
+</achievement>
+<achievement id="XFTL_ACH_CHONKESTREL_2_6">
+    <name>Full House</name>
+    <desc>Win the game with \1 crew alive.</desc>
+    <img>achievements/xftl_chonk_tail_6.png</img>
+    <ship>PLAYER_SHIP_CHONKESTREL_2</ship>
+    <xftlGoal kind="crewAtWin" target="16"/>
+</achievement>
+
+<!-- The Chonktorus -->
+<achievement id="XFTL_ACH_XFTL_ENGI_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Chonktorus.</desc>
+    <img>achievements/xftl_chonktorus_1.png</img>
+    <ship>PLAYER_SHIP_XFTL_ENGI</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ENGI_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Chonktorus.</desc>
+    <img>achievements/xftl_chonktorus_2.png</img>
+    <ship>PLAYER_SHIP_XFTL_ENGI</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ENGI_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Chonktorus.</desc>
+    <img>achievements/xftl_chonktorus_3.png</img>
+    <ship>PLAYER_SHIP_XFTL_ENGI</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ENGI_4">
+    <name>Swarm Doctrine</name>
+    <desc>Finish off \1 enemy ships with your drones' shots in a single game.</desc>
+    <img>achievements/xftl_chonktorus_4.png</img>
+    <ship>PLAYER_SHIP_XFTL_ENGI</ship>
+    <xftlGoal kind="droneKills" target="25"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ENGI_5">
+    <name>Hive Mind</name>
+    <desc>Have \1 drones out at once.</desc>
+    <img>achievements/xftl_chonktorus_5.png</img>
+    <ship>PLAYER_SHIP_XFTL_ENGI</ship>
+    <xftlGoal kind="dronesOut" target="9"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ENGI_6">
+    <name>Nobody Left Behind</name>
+    <desc>Win the game without losing a single crewmember.</desc>
+    <img>achievements/xftl_chonktorus_6.png</img>
+    <ship>PLAYER_SHIP_XFTL_ENGI</ship>
+    <xftlGoal kind="winNoLosses" target="0"/>
+</achievement>
+
+<!-- The Chonkvortex -->
+<achievement id="XFTL_ACH_XFTL_ENGI_2_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Chonkvortex.</desc>
+    <img>achievements/xftl_chonkvortex_1.png</img>
+    <ship>PLAYER_SHIP_XFTL_ENGI_2</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ENGI_2_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Chonkvortex.</desc>
+    <img>achievements/xftl_chonkvortex_2.png</img>
+    <ship>PLAYER_SHIP_XFTL_ENGI_2</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ENGI_2_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Chonkvortex.</desc>
+    <img>achievements/xftl_chonkvortex_3.png</img>
+    <ship>PLAYER_SHIP_XFTL_ENGI_2</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ENGI_2_4">
+    <name>Swarm Doctrine</name>
+    <desc>Finish off \1 enemy ships with your drones' shots in a single game.</desc>
+    <img>achievements/xftl_chonkvortex_4.png</img>
+    <ship>PLAYER_SHIP_XFTL_ENGI_2</ship>
+    <xftlGoal kind="droneKills" target="25"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ENGI_2_5">
+    <name>Hive Mind</name>
+    <desc>Have \1 drones out at once.</desc>
+    <img>achievements/xftl_chonkvortex_5.png</img>
+    <ship>PLAYER_SHIP_XFTL_ENGI_2</ship>
+    <xftlGoal kind="dronesOut" target="9"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ENGI_2_6">
+    <name>Nobody Left Behind</name>
+    <desc>Win the game without losing a single crewmember.</desc>
+    <img>achievements/xftl_chonkvortex_6.png</img>
+    <ship>PLAYER_SHIP_XFTL_ENGI_2</ship>
+    <xftlGoal kind="winNoLosses" target="0"/>
+</achievement>
+
+<!-- The Chonkudicator -->
+<achievement id="XFTL_ACH_XFTL_ZOLTAN_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Chonkudicator.</desc>
+    <img>achievements/xftl_chonkudicator_1.png</img>
+    <ship>PLAYER_SHIP_XFTL_ZOLTAN</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ZOLTAN_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Chonkudicator.</desc>
+    <img>achievements/xftl_chonkudicator_2.png</img>
+    <ship>PLAYER_SHIP_XFTL_ZOLTAN</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ZOLTAN_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Chonkudicator.</desc>
+    <img>achievements/xftl_chonkudicator_3.png</img>
+    <ship>PLAYER_SHIP_XFTL_ZOLTAN</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ZOLTAN_4">
+    <name>Unbreakable</name>
+    <desc>Have your shields stop \1 damage in a single game.</desc>
+    <img>achievements/xftl_chonkudicator_4.png</img>
+    <ship>PLAYER_SHIP_XFTL_ZOLTAN</ship>
+    <xftlGoal kind="shieldAbsorbed" target="1000"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ZOLTAN_5">
+    <name>Radiant Bulwark</name>
+    <desc>Start a fight with a super shield of \1 or more.</desc>
+    <img>achievements/xftl_chonkudicator_5.png</img>
+    <ship>PLAYER_SHIP_XFTL_ZOLTAN</ship>
+    <xftlGoal kind="superShield" target="15"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ZOLTAN_6">
+    <name>Untouchable</name>
+    <desc>Beat a boss without losing a single point of hull in that fight.</desc>
+    <img>achievements/xftl_chonkudicator_6.png</img>
+    <ship>PLAYER_SHIP_XFTL_ZOLTAN</ship>
+    <xftlGoal kind="bossUnharmed"/>
+</achievement>
+
+<!-- The Chonkoether -->
+<achievement id="XFTL_ACH_XFTL_ZOLTAN_2_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Chonkoether.</desc>
+    <img>achievements/xftl_chonkoether_1.png</img>
+    <ship>PLAYER_SHIP_XFTL_ZOLTAN_2</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ZOLTAN_2_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Chonkoether.</desc>
+    <img>achievements/xftl_chonkoether_2.png</img>
+    <ship>PLAYER_SHIP_XFTL_ZOLTAN_2</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ZOLTAN_2_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Chonkoether.</desc>
+    <img>achievements/xftl_chonkoether_3.png</img>
+    <ship>PLAYER_SHIP_XFTL_ZOLTAN_2</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ZOLTAN_2_4">
+    <name>Unbreakable</name>
+    <desc>Have your shields stop \1 damage in a single game.</desc>
+    <img>achievements/xftl_chonkoether_4.png</img>
+    <ship>PLAYER_SHIP_XFTL_ZOLTAN_2</ship>
+    <xftlGoal kind="shieldAbsorbed" target="1000"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ZOLTAN_2_5">
+    <name>Radiant Bulwark</name>
+    <desc>Start a fight with a super shield of \1 or more.</desc>
+    <img>achievements/xftl_chonkoether_5.png</img>
+    <ship>PLAYER_SHIP_XFTL_ZOLTAN_2</ship>
+    <xftlGoal kind="superShield" target="15"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ZOLTAN_2_6">
+    <name>Untouchable</name>
+    <desc>Beat a boss without losing a single point of hull in that fight.</desc>
+    <img>achievements/xftl_chonkoether_6.png</img>
+    <ship>PLAYER_SHIP_XFTL_ZOLTAN_2</ship>
+    <xftlGoal kind="bossUnharmed"/>
+</achievement>
+
+<!-- The Chonkila Monster -->
+<achievement id="XFTL_ACH_XFTL_MANTIS_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Chonkila Monster.</desc>
+    <img>achievements/xftl_chonkila_monster_1.png</img>
+    <ship>PLAYER_SHIP_XFTL_MANTIS</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_MANTIS_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Chonkila Monster.</desc>
+    <img>achievements/xftl_chonkila_monster_2.png</img>
+    <ship>PLAYER_SHIP_XFTL_MANTIS</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_MANTIS_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Chonkila Monster.</desc>
+    <img>achievements/xftl_chonkila_monster_3.png</img>
+    <ship>PLAYER_SHIP_XFTL_MANTIS</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_MANTIS_4">
+    <name>Bloodsport</name>
+    <desc>Have your boarders kill \1 enemy crew in a single game.</desc>
+    <img>achievements/xftl_chonkila_monster_4.png</img>
+    <ship>PLAYER_SHIP_XFTL_MANTIS</ship>
+    <xftlGoal kind="boarderKills" target="100"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_MANTIS_5">
+    <name>Empty Ships</name>
+    <desc>Kill the whole crew of \1 enemy ships in a single game.</desc>
+    <img>achievements/xftl_chonkila_monster_5.png</img>
+    <ship>PLAYER_SHIP_XFTL_MANTIS</ship>
+    <xftlGoal kind="crewKills" target="15"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_MANTIS_6">
+    <name>Regicide</name>
+    <desc>Kill the whole crew of a boss.</desc>
+    <img>achievements/xftl_chonkila_monster_6.png</img>
+    <ship>PLAYER_SHIP_XFTL_MANTIS</ship>
+    <xftlGoal kind="bossCrew"/>
+</achievement>
+
+<!-- The Chonkilisk -->
+<achievement id="XFTL_ACH_XFTL_MANTIS_2_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Chonkilisk.</desc>
+    <img>achievements/xftl_chonkilisk_1.png</img>
+    <ship>PLAYER_SHIP_XFTL_MANTIS_2</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_MANTIS_2_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Chonkilisk.</desc>
+    <img>achievements/xftl_chonkilisk_2.png</img>
+    <ship>PLAYER_SHIP_XFTL_MANTIS_2</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_MANTIS_2_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Chonkilisk.</desc>
+    <img>achievements/xftl_chonkilisk_3.png</img>
+    <ship>PLAYER_SHIP_XFTL_MANTIS_2</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_MANTIS_2_4">
+    <name>Bloodsport</name>
+    <desc>Have your boarders kill \1 enemy crew in a single game.</desc>
+    <img>achievements/xftl_chonkilisk_4.png</img>
+    <ship>PLAYER_SHIP_XFTL_MANTIS_2</ship>
+    <xftlGoal kind="boarderKills" target="100"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_MANTIS_2_5">
+    <name>Empty Ships</name>
+    <desc>Kill the whole crew of \1 enemy ships in a single game.</desc>
+    <img>achievements/xftl_chonkilisk_5.png</img>
+    <ship>PLAYER_SHIP_XFTL_MANTIS_2</ship>
+    <xftlGoal kind="crewKills" target="15"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_MANTIS_2_6">
+    <name>Regicide</name>
+    <desc>Kill the whole crew of a boss.</desc>
+    <img>achievements/xftl_chonkilisk_6.png</img>
+    <ship>PLAYER_SHIP_XFTL_MANTIS_2</ship>
+    <xftlGoal kind="bossCrew"/>
+</achievement>
+
+<!-- The Man of Chonk -->
+<achievement id="XFTL_ACH_XFTL_SLUG_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Man of Chonk.</desc>
+    <img>achievements/xftl_man_of_chonk_1.png</img>
+    <ship>PLAYER_SHIP_XFTL_SLUG</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_SLUG_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Man of Chonk.</desc>
+    <img>achievements/xftl_man_of_chonk_2.png</img>
+    <ship>PLAYER_SHIP_XFTL_SLUG</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_SLUG_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Man of Chonk.</desc>
+    <img>achievements/xftl_man_of_chonk_3.png</img>
+    <ship>PLAYER_SHIP_XFTL_SLUG</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_SLUG_4">
+    <name>Puppet Master</name>
+    <desc>Mind control \1 enemy crew in a single game.</desc>
+    <img>achievements/xftl_man_of_chonk_4.png</img>
+    <ship>PLAYER_SHIP_XFTL_SLUG</ship>
+    <xftlGoal kind="mindControls" target="20"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_SLUG_5">
+    <name>Ghost in the Machine</name>
+    <desc>Hack \1 times in a single game (each probe that lands, and each pulse).</desc>
+    <img>achievements/xftl_man_of_chonk_5.png</img>
+    <ship>PLAYER_SHIP_XFTL_SLUG</ship>
+    <xftlGoal kind="hacks" target="40"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_SLUG_6">
+    <name>Fog Dweller</name>
+    <desc>Pass through \1 nebula sectors in a single game.</desc>
+    <img>achievements/xftl_man_of_chonk_6.png</img>
+    <ship>PLAYER_SHIP_XFTL_SLUG</ship>
+    <xftlGoal kind="nebulaSectors" target="3"/>
+</achievement>
+
+<!-- The Chonkwalker -->
+<achievement id="XFTL_ACH_XFTL_SLUG_2_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Chonkwalker.</desc>
+    <img>achievements/xftl_chonkwalker_1.png</img>
+    <ship>PLAYER_SHIP_XFTL_SLUG_2</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_SLUG_2_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Chonkwalker.</desc>
+    <img>achievements/xftl_chonkwalker_2.png</img>
+    <ship>PLAYER_SHIP_XFTL_SLUG_2</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_SLUG_2_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Chonkwalker.</desc>
+    <img>achievements/xftl_chonkwalker_3.png</img>
+    <ship>PLAYER_SHIP_XFTL_SLUG_2</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_SLUG_2_4">
+    <name>Puppet Master</name>
+    <desc>Mind control \1 enemy crew in a single game.</desc>
+    <img>achievements/xftl_chonkwalker_4.png</img>
+    <ship>PLAYER_SHIP_XFTL_SLUG_2</ship>
+    <xftlGoal kind="mindControls" target="20"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_SLUG_2_5">
+    <name>Ghost in the Machine</name>
+    <desc>Hack \1 times in a single game (each probe that lands, and each pulse).</desc>
+    <img>achievements/xftl_chonkwalker_5.png</img>
+    <ship>PLAYER_SHIP_XFTL_SLUG_2</ship>
+    <xftlGoal kind="hacks" target="40"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_SLUG_2_6">
+    <name>Fog Dweller</name>
+    <desc>Pass through \1 nebula sectors in a single game.</desc>
+    <img>achievements/xftl_chonkwalker_6.png</img>
+    <ship>PLAYER_SHIP_XFTL_SLUG_2</ship>
+    <xftlGoal kind="nebulaSectors" target="3"/>
+</achievement>
+
+<!-- The Chonkwark -->
+<achievement id="XFTL_ACH_XFTL_ROCK_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Chonkwark.</desc>
+    <img>achievements/xftl_chonkwark_1.png</img>
+    <ship>PLAYER_SHIP_XFTL_ROCK</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ROCK_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Chonkwark.</desc>
+    <img>achievements/xftl_chonkwark_2.png</img>
+    <ship>PLAYER_SHIP_XFTL_ROCK</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ROCK_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Chonkwark.</desc>
+    <img>achievements/xftl_chonkwark_3.png</img>
+    <ship>PLAYER_SHIP_XFTL_ROCK</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ROCK_4">
+    <name>Rock Salvo</name>
+    <desc>Fire \1 missiles in a single game.</desc>
+    <img>achievements/xftl_chonkwark_4.png</img>
+    <ship>PLAYER_SHIP_XFTL_ROCK</ship>
+    <xftlGoal kind="missiles" target="400"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ROCK_5">
+    <name>Forge Fire</name>
+    <desc>Have \1 fires burning on one enemy ship at once.</desc>
+    <img>achievements/xftl_chonkwark_5.png</img>
+    <ship>PLAYER_SHIP_XFTL_ROCK</ship>
+    <xftlGoal kind="enemyFires" target="8"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ROCK_6">
+    <name>Full Broadside</name>
+    <desc>Win a fight with all \1 of your weapons firing in it.</desc>
+    <img>achievements/xftl_chonkwark_6.png</img>
+    <ship>PLAYER_SHIP_XFTL_ROCK</ship>
+    <xftlGoal kind="allWeapons" target="9"/>
+</achievement>
+
+<!-- The Chonkivan -->
+<achievement id="XFTL_ACH_XFTL_ROCK_2_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Chonkivan.</desc>
+    <img>achievements/xftl_chonkivan_1.png</img>
+    <ship>PLAYER_SHIP_XFTL_ROCK_2</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ROCK_2_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Chonkivan.</desc>
+    <img>achievements/xftl_chonkivan_2.png</img>
+    <ship>PLAYER_SHIP_XFTL_ROCK_2</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ROCK_2_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Chonkivan.</desc>
+    <img>achievements/xftl_chonkivan_3.png</img>
+    <ship>PLAYER_SHIP_XFTL_ROCK_2</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ROCK_2_4">
+    <name>Rock Salvo</name>
+    <desc>Fire \1 missiles in a single game.</desc>
+    <img>achievements/xftl_chonkivan_4.png</img>
+    <ship>PLAYER_SHIP_XFTL_ROCK_2</ship>
+    <xftlGoal kind="missiles" target="400"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ROCK_2_5">
+    <name>Forge Fire</name>
+    <desc>Have \1 fires burning on one enemy ship at once.</desc>
+    <img>achievements/xftl_chonkivan_5.png</img>
+    <ship>PLAYER_SHIP_XFTL_ROCK_2</ship>
+    <xftlGoal kind="enemyFires" target="8"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_ROCK_2_6">
+    <name>Full Broadside</name>
+    <desc>Win a fight with all \1 of your weapons firing in it.</desc>
+    <img>achievements/xftl_chonkivan_6.png</img>
+    <ship>PLAYER_SHIP_XFTL_ROCK_2</ship>
+    <xftlGoal kind="allWeapons" target="9"/>
+</achievement>
+
+<!-- The Chonksprey -->
+<achievement id="XFTL_ACH_XFTL_FED_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Chonksprey.</desc>
+    <img>achievements/xftl_chonksprey_1.png</img>
+    <ship>PLAYER_SHIP_XFTL_FED</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_FED_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Chonksprey.</desc>
+    <img>achievements/xftl_chonksprey_2.png</img>
+    <ship>PLAYER_SHIP_XFTL_FED</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_FED_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Chonksprey.</desc>
+    <img>achievements/xftl_chonksprey_3.png</img>
+    <ship>PLAYER_SHIP_XFTL_FED</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_FED_4">
+    <name>Orbital Bombardment</name>
+    <desc>Deal \1 hull damage with your artillery beams in a single game.</desc>
+    <img>achievements/xftl_chonksprey_4.png</img>
+    <ship>PLAYER_SHIP_XFTL_FED</ship>
+    <xftlGoal kind="artilleryDamage" target="300"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_FED_5">
+    <name>Sweeping Beams</name>
+    <desc>Finish off \1 enemy ships with your artillery beams in a single game.</desc>
+    <img>achievements/xftl_chonksprey_5.png</img>
+    <ship>PLAYER_SHIP_XFTL_FED</ship>
+    <xftlGoal kind="artilleryKills" target="10"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_FED_6">
+    <name>By the Book</name>
+    <desc>Win the game without ever having a hacking or mind control system.</desc>
+    <img>achievements/xftl_chonksprey_6.png</img>
+    <ship>PLAYER_SHIP_XFTL_FED</ship>
+    <xftlGoal kind="winNoMindTricks"/>
+</achievement>
+
+<!-- The Chonknisos -->
+<achievement id="XFTL_ACH_XFTL_FED_2_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Chonknisos.</desc>
+    <img>achievements/xftl_chonknisos_1.png</img>
+    <ship>PLAYER_SHIP_XFTL_FED_2</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_FED_2_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Chonknisos.</desc>
+    <img>achievements/xftl_chonknisos_2.png</img>
+    <ship>PLAYER_SHIP_XFTL_FED_2</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_FED_2_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Chonknisos.</desc>
+    <img>achievements/xftl_chonknisos_3.png</img>
+    <ship>PLAYER_SHIP_XFTL_FED_2</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_FED_2_4">
+    <name>Humanity First</name>
+    <desc>Win the game with only humans in your crew.</desc>
+    <img>achievements/xftl_chonknisos_4.png</img>
+    <ship>PLAYER_SHIP_XFTL_FED_2</ship>
+    <xftlGoal kind="winAllHuman"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_FED_2_5">
+    <name>Terms Accepted</name>
+    <desc>Accept the surrender of \1 enemy ships in a single game.</desc>
+    <img>achievements/xftl_chonknisos_5.png</img>
+    <ship>PLAYER_SHIP_XFTL_FED_2</ship>
+    <xftlGoal kind="surrenders" target="5"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_FED_2_6">
+    <name>Heavy Ordnance</name>
+    <desc>Destroy a boss with a hit from your artillery beams.</desc>
+    <img>achievements/xftl_chonknisos_6.png</img>
+    <ship>PLAYER_SHIP_XFTL_FED_2</ship>
+    <xftlGoal kind="bossArtillery"/>
+</achievement>
+
+<!-- The Chonkasio -->
+<achievement id="XFTL_ACH_XFTL_STEALTH_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Chonkasio.</desc>
+    <img>achievements/xftl_chonkasio_1.png</img>
+    <ship>PLAYER_SHIP_XFTL_STEALTH</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_STEALTH_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Chonkasio.</desc>
+    <img>achievements/xftl_chonkasio_2.png</img>
+    <ship>PLAYER_SHIP_XFTL_STEALTH</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_STEALTH_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Chonkasio.</desc>
+    <img>achievements/xftl_chonkasio_3.png</img>
+    <ship>PLAYER_SHIP_XFTL_STEALTH</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_STEALTH_4">
+    <name>Ghost Ship</name>
+    <desc>Have \1 enemy shots miss you in a single game.</desc>
+    <img>achievements/xftl_chonkasio_4.png</img>
+    <ship>PLAYER_SHIP_XFTL_STEALTH</ship>
+    <xftlGoal kind="dodges" target="150"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_STEALTH_5">
+    <name>Not a Scratch</name>
+    <desc>Win \1 fights without losing any hull in them, in a single game.</desc>
+    <img>achievements/xftl_chonkasio_5.png</img>
+    <ship>PLAYER_SHIP_XFTL_STEALTH</ship>
+    <xftlGoal kind="flawlessFights" target="10"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_STEALTH_6">
+    <name>Thin Skin</name>
+    <desc>Reach sector \1 without ever having a shields system.</desc>
+    <img>achievements/xftl_chonkasio_6.png</img>
+    <ship>PLAYER_SHIP_XFTL_STEALTH</ship>
+    <xftlGoal kind="noShieldsSector" target="8"/>
+</achievement>
+
+<!-- The DA-CHONK 24 -->
+<achievement id="XFTL_ACH_XFTL_STEALTH_2_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the DA-CHONK 24.</desc>
+    <img>achievements/xftl_da_chonk_24_1.png</img>
+    <ship>PLAYER_SHIP_XFTL_STEALTH_2</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_STEALTH_2_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the DA-CHONK 24.</desc>
+    <img>achievements/xftl_da_chonk_24_2.png</img>
+    <ship>PLAYER_SHIP_XFTL_STEALTH_2</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_STEALTH_2_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the DA-CHONK 24.</desc>
+    <img>achievements/xftl_da_chonk_24_3.png</img>
+    <ship>PLAYER_SHIP_XFTL_STEALTH_2</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_STEALTH_2_4">
+    <name>Phase Shift</name>
+    <desc>Fire \1 volleys while you're cloaked, in a single game.</desc>
+    <img>achievements/xftl_da_chonk_24_4.png</img>
+    <ship>PLAYER_SHIP_XFTL_STEALTH_2</ship>
+    <xftlGoal kind="cloakedVolleys" target="50"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_STEALTH_2_5">
+    <name>Double Blind</name>
+    <desc>Cloak again within 3 seconds of a cloak ending, \1 times in a single game.</desc>
+    <img>achievements/xftl_da_chonk_24_5.png</img>
+    <ship>PLAYER_SHIP_XFTL_STEALTH_2</ship>
+    <xftlGoal kind="cloakChains" target="10"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_STEALTH_2_6">
+    <name>Shadow Strike</name>
+    <desc>Destroy a boss while you're cloaked.</desc>
+    <img>achievements/xftl_da_chonk_24_6.png</img>
+    <ship>PLAYER_SHIP_XFTL_STEALTH_2</ship>
+    <xftlGoal kind="bossCloaked"/>
+</achievement>
+
+<!-- The Chonkruos -->
+<achievement id="XFTL_ACH_XFTL_LANIUS_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Chonkruos.</desc>
+    <img>achievements/xftl_chonkruos_1.png</img>
+    <ship>PLAYER_SHIP_XFTL_LANIUS</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_LANIUS_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Chonkruos.</desc>
+    <img>achievements/xftl_chonkruos_2.png</img>
+    <ship>PLAYER_SHIP_XFTL_LANIUS</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_LANIUS_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Chonkruos.</desc>
+    <img>achievements/xftl_chonkruos_3.png</img>
+    <ship>PLAYER_SHIP_XFTL_LANIUS</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_LANIUS_4">
+    <name>Vacuum Embrace</name>
+    <desc>Suffocate \1 enemy crew in a single game.</desc>
+    <img>achievements/xftl_chonkruos_4.png</img>
+    <ship>PLAYER_SHIP_XFTL_LANIUS</ship>
+    <xftlGoal kind="suffocated" target="50"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_LANIUS_5">
+    <name>Airless Ascent</name>
+    <desc>Win the game without ever having an oxygen system.</desc>
+    <img>achievements/xftl_chonkruos_5.png</img>
+    <ship>PLAYER_SHIP_XFTL_LANIUS</ship>
+    <xftlGoal kind="winNoOxygen"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_LANIUS_6">
+    <name>Hostile Takeover</name>
+    <desc>Beat \1 enemy ships while your boarders are aboard, in a single game.</desc>
+    <img>achievements/xftl_chonkruos_6.png</img>
+    <ship>PLAYER_SHIP_XFTL_LANIUS</ship>
+    <xftlGoal kind="boardedWins" target="10"/>
+</achievement>
+
+<!-- The Chonkrike -->
+<achievement id="XFTL_ACH_XFTL_LANIUS_2_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Chonkrike.</desc>
+    <img>achievements/xftl_chonkrike_1.png</img>
+    <ship>PLAYER_SHIP_XFTL_LANIUS_2</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_LANIUS_2_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Chonkrike.</desc>
+    <img>achievements/xftl_chonkrike_2.png</img>
+    <ship>PLAYER_SHIP_XFTL_LANIUS_2</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_LANIUS_2_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Chonkrike.</desc>
+    <img>achievements/xftl_chonkrike_3.png</img>
+    <ship>PLAYER_SHIP_XFTL_LANIUS_2</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_LANIUS_2_4">
+    <name>Vacuum Embrace</name>
+    <desc>Suffocate \1 enemy crew in a single game.</desc>
+    <img>achievements/xftl_chonkrike_4.png</img>
+    <ship>PLAYER_SHIP_XFTL_LANIUS_2</ship>
+    <xftlGoal kind="suffocated" target="50"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_LANIUS_2_5">
+    <name>Airless Ascent</name>
+    <desc>Win the game without ever having an oxygen system.</desc>
+    <img>achievements/xftl_chonkrike_5.png</img>
+    <ship>PLAYER_SHIP_XFTL_LANIUS_2</ship>
+    <xftlGoal kind="winNoOxygen"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_LANIUS_2_6">
+    <name>Hostile Takeover</name>
+    <desc>Beat \1 enemy ships while your boarders are aboard, in a single game.</desc>
+    <img>achievements/xftl_chonkrike_6.png</img>
+    <ship>PLAYER_SHIP_XFTL_LANIUS_2</ship>
+    <xftlGoal kind="boardedWins" target="10"/>
+</achievement>
+
+<!-- The Chonkravais -->
+<achievement id="XFTL_ACH_XFTL_CRYSTAL_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Chonkravais.</desc>
+    <img>achievements/xftl_chonkravais_1.png</img>
+    <ship>PLAYER_SHIP_XFTL_CRYSTAL</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_CRYSTAL_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Chonkravais.</desc>
+    <img>achievements/xftl_chonkravais_2.png</img>
+    <ship>PLAYER_SHIP_XFTL_CRYSTAL</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_CRYSTAL_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Chonkravais.</desc>
+    <img>achievements/xftl_chonkravais_3.png</img>
+    <ship>PLAYER_SHIP_XFTL_CRYSTAL</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_CRYSTAL_4">
+    <name>Phantom Prism</name>
+    <desc>Have \1 enemy shots miss while you're cloaked, in a single game.</desc>
+    <img>achievements/xftl_chonkravais_4.png</img>
+    <ship>PLAYER_SHIP_XFTL_CRYSTAL</ship>
+    <xftlGoal kind="cloakMisses" target="100"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_CRYSTAL_5">
+    <name>Lockdown Protocol</name>
+    <desc>Have your Crystal crew lock \1 rooms down in a single game.</desc>
+    <img>achievements/xftl_chonkravais_5.png</img>
+    <ship>PLAYER_SHIP_XFTL_CRYSTAL</ship>
+    <xftlGoal kind="lockdowns" target="25"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_CRYSTAL_6">
+    <name>Unseen Blade</name>
+    <desc>Destroy \1 enemy ships while you're cloaked, in a single game.</desc>
+    <img>achievements/xftl_chonkravais_6.png</img>
+    <ship>PLAYER_SHIP_XFTL_CRYSTAL</ship>
+    <xftlGoal kind="cloakedKills" target="10"/>
+</achievement>
+
+<!-- The Chonkelian -->
+<achievement id="XFTL_ACH_XFTL_CRYSTAL_2_1">
+    <name>Blockade Breaker</name>
+    <desc>Beat the RSV Vigilance at the Blockade Line with the Chonkelian.</desc>
+    <img>achievements/xftl_chonkelian_1.png</img>
+    <ship>PLAYER_SHIP_XFTL_CRYSTAL_2</ship>
+    <xftlGoal kind="blockade"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_CRYSTAL_2_2">
+    <name>Mainframe Down</name>
+    <desc>Destroy CONCORD's Mainframe and win the game with the Chonkelian.</desc>
+    <img>achievements/xftl_chonkelian_2.png</img>
+    <ship>PLAYER_SHIP_XFTL_CRYSTAL_2</ship>
+    <xftlGoal kind="win"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_CRYSTAL_2_3">
+    <name>Against All Odds</name>
+    <desc>Win the game on Hard with the Chonkelian.</desc>
+    <img>achievements/xftl_chonkelian_3.png</img>
+    <ship>PLAYER_SHIP_XFTL_CRYSTAL_2</ship>
+    <xftlGoal kind="winHard"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_CRYSTAL_2_4">
+    <name>Phantom Prism</name>
+    <desc>Have \1 enemy shots miss while you're cloaked, in a single game.</desc>
+    <img>achievements/xftl_chonkelian_4.png</img>
+    <ship>PLAYER_SHIP_XFTL_CRYSTAL_2</ship>
+    <xftlGoal kind="cloakMisses" target="100"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_CRYSTAL_2_5">
+    <name>Lockdown Protocol</name>
+    <desc>Have your Crystal crew lock \1 rooms down in a single game.</desc>
+    <img>achievements/xftl_chonkelian_5.png</img>
+    <ship>PLAYER_SHIP_XFTL_CRYSTAL_2</ship>
+    <xftlGoal kind="lockdowns" target="25"/>
+</achievement>
+<achievement id="XFTL_ACH_XFTL_CRYSTAL_2_6">
+    <name>Unseen Blade</name>
+    <desc>Destroy \1 enemy ships while you're cloaked, in a single game.</desc>
+    <img>achievements/xftl_chonkelian_6.png</img>
+    <ship>PLAYER_SHIP_XFTL_CRYSTAL_2</ship>
+    <xftlGoal kind="cloakedKills" target="10"/>
+</achievement>

@@ -150,7 +150,7 @@ class DebugConsole(var game: InGameState) {
             return
 
         when (key) {
-            Input.KEY_ENTER -> {
+            Input.KEY_ENTER, Input.KEY_KEYPAD_ENTER -> {
                 selectHistory()
                 runCommand()
             }

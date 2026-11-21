@@ -71,7 +71,7 @@ class BossesTest {
         // More triples the stronger the boss, and each weapons system (two
         // mounts each, the rest the last's, see Ship.assignWeaponHardpoints)
         // can power all of its weapons
-        val triples = listOf(2, 4, 8, 10)
+        val triples = listOf(2, 4, 8, 12)
         for ((index, entry) in BOSSES.entries.withIndex()) {
             val (sector, boss) = entry
             val blueprint = (events.getShip(boss.spec).autoBlueprint as LazyShipBlueprint).real

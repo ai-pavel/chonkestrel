@@ -12,7 +12,7 @@ class StartGameButton(val state: SelectShipState) {
     private val startFont = SILFontLoader(state.fontHL2).apply { scale = 4f }
     private val difficultyFont = SILFontLoader(state.fontHL2).apply { scale = 2f }
 
-    var selected: Difficulty = Difficulty.NORMAL
+    var selected: Difficulty = state.difficulty
     private var hovered: Difficulty? = null
     private var hoveringStart: Boolean = false
 
@@ -21,6 +21,18 @@ class StartGameButton(val state: SelectShipState) {
 
         val startText = state.translator["start_button"]
         val startTextWidth = startFont.getWidth(startText)
+
+        // The difficulty's picked in the main menu's new game window, before
+        // the hangar, so only the start button's shown, in a plain frame
+        if (!SHOW_DIFFICULTY) {
+            val startButtonWidth = 8 + startTextWidth + 8
+            val width = 8 + startButtonWidth + 8
+            val x = state.screenSize.x - (width + GLOW)
+            val y = GLOW
+            state.windowRenderer.render(x, y, width, image.height - 2 * GLOW)
+            drawStartButton(g, x + 8, y + 21, startButtonWidth, startText)
+            return
+        }
 
         val maxDiffWidth = Difficulty.entries
             .maxOf { difficultyFont.getWidth(state.translator[it.startButtonKey]) }
@@ -120,5 +132,8 @@ class StartGameButton(val state: SelectShipState) {
 
     companion object {
         private const val GLOW = 7
+
+        // Whether the difficulty buttons are shown (see draw)
+        private const val SHOW_DIFFICULTY = false
     }
 }

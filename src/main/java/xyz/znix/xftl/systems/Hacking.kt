@@ -284,7 +284,15 @@ class Hacking(blueprint: SystemBlueprint) : MainSystem(blueprint) {
         // Start the hacking pulse
         this@Hacking.timeRemaining = duration
 
+        countHack()
+
         startSound.play()
+    }
+
+    // A hack by the player (a probe landing, or a pulse), for the achievements
+    private fun countHack() {
+        if (ship.isPlayerShip)
+            ship.sys.achievementTracker.add(AchievementGoal.Kind.HACKS)
     }
 
     override fun hotkeyPressed(key: Hotkey) {
@@ -509,6 +517,9 @@ class Hacking(blueprint: SystemBlueprint) : MainSystem(blueprint) {
 
             // Play the landing sound
             hacking.landSound.play()
+
+            // A hack (the probe's on the enemy's system), for the achievements
+            hacking.countHack()
         }
 
         override fun hitOtherProjectile(currentSpace: Ship) {

@@ -342,7 +342,7 @@ class DebugCommands(console: DebugConsole) : ConsoleCommandProvider(console) {
 
             override fun keyPressed(key: Int, c: Char): Boolean {
                 // Handle all input to block typing, except for enter to let the user close this.
-                return key != Input.KEY_ENTER
+                return !Input.isEnter(key)
             }
         }
     }
@@ -1034,9 +1034,34 @@ class DebugCommands(console: DebugConsole) : ConsoleCommandProvider(console) {
     }
 
     @ConsoleCommand(name = "ach-del")
-    @CmdHelp("Remove an achievement")
+    @CmdHelp("Remove an achievement, and its best progress")
     private fun cmdAchSet(@ParName("achievement") ach: Achievement) {
         game.mainGame.profile.deleteAchievement(ach)
+        game.mainGame.profile.deleteAchievementProgress(ach)
+        // (so this game can unlock it again)
+        game.achievementTracker.forget(ach)
+    }
+
+    @ConsoleCommand(name = "ach-progress")
+    @CmdHelp("Set this game's progress towards an achievement's goal")
+    private fun cmdAchProgress(
+        @ParName("achievement") ach: Achievement,
+        @ParName("value") value: Int
+    ) {
+        val goal = ach.goal
+        if (goal == null) {
+            addLine("That achievement isn't tracked (it has no xftlGoal)")
+            return
+        }
+        if (!goal.kind.isCounted) {
+            addLine("Its goal (${goal.kind.xmlName}) is an event, with no progress to set")
+            return
+        }
+        // Unlocking it, if it's this ship's and the value reaches the goal
+        // (though in debug mode, it isn't kept in the profile: see ach-set)
+        game.achievementTracker.setValue(goal.kind, value)
+        game.mainGame.profile.recordAchievementProgress(ach, value)
+        addLine("${goal.kind.xmlName}: $value/${goal.target}")
     }
 
     @ConsoleCommand(name = "ship-unlock")

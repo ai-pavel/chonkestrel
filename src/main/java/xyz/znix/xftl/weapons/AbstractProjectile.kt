@@ -40,6 +40,14 @@ abstract class AbstractProjectile(
     // ship that fired us, and enter the target's space.
     var entryAngle: Float = (Math.random() * Math.PI * 2).toFloat()
 
+    /**
+     * The ship this projectile was fired from, set as it leaves that ship's
+     * space for [targetShip]'s, or null if it hasn't (a drone's shot, or a
+     * bomb, say).
+     */
+    var sourceShip: Ship? = null
+        private set
+
     private var hasReachedTarget: Boolean = false
     private var hasPassedShields: Boolean = false
 
@@ -88,6 +96,9 @@ abstract class AbstractProjectile(
         }
 
         val isDeparting = targetShip != null && targetShip != currentSpace
+
+        if (isDeparting && sourceShip == null)
+            sourceShip = currentSpace
 
         if (isDeparting && !departureSpeedSet) {
             departureSpeedSet = true
@@ -347,6 +358,7 @@ abstract class AbstractProjectile(
         SaveUtil.addTagBoolIfTrue(elem, "departureSpeedSet", departureSpeedSet)
 
         SaveUtil.addPoint(elem, "targetPos", targetPos)
+        sourceShip?.let { SaveUtil.addAttrRef(elem, "source", refs, it) }
 
         // Just in case this gets set on the last update before serialisation,
         // after our update function was run.
@@ -373,6 +385,9 @@ abstract class AbstractProjectile(
         departureSpeedSet = SaveUtil.getOptionalTagBool(elem, "departureSpeedSet") ?: false
 
         targetPos = SaveUtil.getPoint(elem, "targetPos")
+        // (older saves don't have it)
+        if (elem.getAttributeValue("source") != null)
+            SaveUtil.getAttrRef(elem, "source", refs, Ship::class.java) { sourceShip = it }
 
         // Just in case this gets set on the last update before serialisation,
         // after our update function was run.
@@ -449,8 +464,10 @@ abstract class AbstractWeaponProjectile(val type: AbstractWeaponBlueprint, val t
 
         // A shot that was going to hit, but whose target's been beaten
         // since it crossed the shields (its crew killed by an earlier shot,
-        // say), misses after all, as those fired after it do
-        if (missed == false && missDeadEnemies && !ship.isPlayerShip && ship.sys.getEnemyOf(ship) == null) {
+        // say), misses after all, as those fired after it do; and so does
+        // one at the player from a ship that's stopped fighting since (made
+        // peace, or surrendered)
+        if (missed == false && missDeadEnemies && ship.isOutOfTheFightWith(sourceShip)) {
             missed = null
         }
 
@@ -540,7 +557,7 @@ abstract class AbstractWeaponProjectile(val type: AbstractWeaponBlueprint, val t
     }
 
     protected open fun hitHull() {
-        ship.damage(target, computeDamage())
+        ship.damage(target, computeDamage().also { it.fromDrone = firedByDrone })
         ship.playDamageEffect(type, target.pixelCentre)
         type.hitShipSounds?.get()?.play()
     }
@@ -549,11 +566,15 @@ abstract class AbstractWeaponProjectile(val type: AbstractWeaponBlueprint, val t
         if (missed != null)
             return
 
-        missed = target.ship.pickMissed(-type.accuracyModifier, missDeadEnemies)
+        missed = target.ship.pickMissed(-type.accuracyModifier, missDeadEnemies, sourceShip)
 
         if (missed == true) {
             val missSound = type.missSounds?.get() ?: defaultMissSound
             missSound.play()
+
+            // An enemy shot dodged (under the player's cloak, or not), for the achievements
+            if (target.ship.isPlayerShip)
+                target.ship.sys.achievementTracker.playerDodged()
 
             target.ship.showDamageTextAt(position, "text_miss", Colour.white)
 

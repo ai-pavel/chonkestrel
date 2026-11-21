@@ -39,7 +39,11 @@ class EditableShip(
     var weaponSlots: Int = 4
     var droneSlots: Int = 2
 
-    fun draw(g: Graphics, state: SelectShipState, renderAll: Boolean) {
+    /**
+     * Draw the ship: its weapons and hull, and unless [hideRooms] (the
+     * hangar's hide rooms button), its floor, rooms and doors.
+     */
+    fun draw(g: Graphics, state: SelectShipState, renderAll: Boolean, hideRooms: Boolean = false) {
         val blueprint = state.blueprints.getShip(baseBlueprint)
 
         val hullImage = blueprint.hullImage.firstNotNullOf { state.getImgOrNull(it) }
@@ -51,6 +55,8 @@ class EditableShip(
         drawWeapons(g, state, blueprint)
 
         hullImage.draw(hullOffset.x, hullOffset.y)
+        if (hideRooms)
+            return
         floorImage?.draw(floorOffset.x + hullOffset.x, floorOffset.y + hullOffset.y)
 
         // Draw the rooms
@@ -171,12 +177,12 @@ class EditableShip(
             for (system in blueprint.systems) {
                 val room = ship.rooms[system.room.id]
                 val type = system.systemName
-                val computerPos = system.slotNumber?.let { idx ->
-                    ConstPoint(
-                        idx % room.w,
-                        idx / room.w
-                    )
-                }
+                // A slot outside the room's cells (like -2, a room with no
+                // obstructed cell) isn't a place in it: it's kept as it is
+                val slot = system.slotNumber
+                val inRoom = slot != null && slot in 0 until room.w * room.h
+                val computerPos = if (inRoom) ConstPoint(slot!! % room.w, slot / room.w) else null
+                val specialSlot = if (slot != null && !inRoom) slot else null
 
                 // If this room already has a system, don't replace it with a non-default system.
                 // This is specifically to handle the case of medbays/clonebays.
@@ -187,7 +193,8 @@ class EditableShip(
                 room.system = EditableSystem(
                     type, system.interiorImage,
                     computerPos, system.slotDirection,
-                    if (system.availableByDefault) system.startingPower else 0
+                    if (system.availableByDefault) system.startingPower else 0,
+                    specialSlot = specialSlot
                 )
 
                 // If this is an artillery system, set its weapon.
@@ -486,7 +493,14 @@ data class EditableSystem(
      */
     var startingPower: Int = 0,
 
-    var artilleryWeapon: String? = null // AbstractWeaponBlueprint name
+    var artilleryWeapon: String? = null, // AbstractWeaponBlueprint name
+
+    /**
+     * The system's slot, if it's one that isn't a place in the room (such
+     * as -2, for a room with no obstructed cell, see ISystemConfiguration),
+     * which is kept as it is, rather than as a [computerPoint].
+     */
+    var specialSlot: Int? = null
 ) {
     fun getBP(state: SelectShipState): SystemBlueprint = state.blueprints[type] as SystemBlueprint
 
@@ -500,6 +514,7 @@ data class EditableSystem(
             SaveUtil.addAttrInt(elem, "computerY", pos.y)
         }
         computerDirection?.let { dir -> SaveUtil.addAttr(elem, "computerDir", dir.toString()) }
+        specialSlot?.let { SaveUtil.addAttrInt(elem, "specialSlot", it) }
     }
 
     companion object {
@@ -515,7 +530,8 @@ data class EditableSystem(
             )
             val computerDirection = elem.getAttributeValue("computerDir")?.let { Direction.valueOf(it) }
 
-            return EditableSystem(type, interiorImage, computerPoint, computerDirection, startingPower, artilleryWeapon)
+            val specialSlot = elem.getAttributeValue("specialSlot")?.toInt()
+            return EditableSystem(type, interiorImage, computerPoint, computerDirection, startingPower, artilleryWeapon, specialSlot)
         }
     }
 }
@@ -539,7 +555,10 @@ class FinalisedEditableSystem(
     override val weapon: String? get() = editableSystem.artilleryWeapon
     override val interiorImage: String? get() = editableSystem.interiorImage
 
-    override val slotNumber: Int? = editableSystem.computerPoint?.let { room.pointToSlot(it) }
+    // (a place that's no longer in the room, as it's been made smaller in the
+    // editor, is left for the game to pick, as it would for no place)
+    override val slotNumber: Int? = editableSystem.computerPoint?.takeIf { room.containsRelative(it) }
+        ?.let { room.pointToSlot(it) } ?: editableSystem.specialSlot
     override val slotDirection: Direction? get() = editableSystem.computerDirection
 
     override val startingPower: Int get() = editableSystem.startingPower

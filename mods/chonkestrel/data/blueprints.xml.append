@@ -57,7 +57,7 @@
     - Room 15 runs the full height of the rear, with an airlock in every cell.
 -->
 <shipBlueprint name="PLAYER_SHIP_CHONKESTREL" layout="chonkestrel" img="chonkestrel">
-    <class>Chonkestrel Cruiser</class>
+    <class>Chonkestrel</class>
     <name>The Chonkestrel</name>
     <desc>A much bigger take on the Kestrel, with room for sixteen crew, eight weapons and two of nearly every system. It's twice the size of the ships it meets, so they come in pairs.</desc>
 
@@ -347,6 +347,18 @@
 </mod:findName>
 
 <!--
+    The Artillery Beam, never sold in vanilla (its rarity is 0), can be
+    bought for the player's ship's hacking or mind control room, in place of
+    that system (see BuyableArtillery in Ship.kt): it's the Federation's,
+    firing from the room if the ship hasn't a mount for it.
+-->
+<mod:findName type="systemBlueprint" name="artillery">
+    <mod:findLike type="rarity">
+        <mod:setValue>4</mod:setValue>
+    </mod:findLike>
+</mod:findName>
+
+<!--
     The cloaking system can be upgraded to six bars, rather than three, so
     a big ship has one bigger cloak rather than several to take in turns.
     Past three, each bar costs far more and adds less and less to the cloak
@@ -455,6 +467,40 @@
 	<title>Ossuary Schematics</title>
 	<desc>The salvage ark's reclamation schematics. A destroyed enemy ship's drones are salvaged as drone parts: one for each drone it had.</desc>
 	<cost>90</cost>
+	<bp>8</bp>
+	<rarity>0</rarity>
+	<stackable>false</stackable>
+	<value>1</value>
+</augBlueprint>
+
+<!--
+    The nebula sectors' quests' rewards (see doc/game/sectors.md), found
+    nowhere else (rarity 0): AugmentBlueprint.RADIATION_SHIELDING,
+    PHANTOM_PROJECTOR (its value is how many seconds of each fight it works
+    for) and DEEP_FIELD_SENSORS.
+-->
+<augBlueprint name="XFTL_RADIATION_SHIELDING">
+	<title>Radiation Shielding</title>
+	<desc>Lead-lined bulkheads from a research station at the heart of the Radiation Fields. Radiation nebulas don't hurt anyone aboard the ship.</desc>
+	<cost>70</cost>
+	<bp>8</bp>
+	<rarity>0</rarity>
+	<stackable>false</stackable>
+	<value>1</value>
+</augBlueprint>
+<augBlueprint name="XFTL_PHANTOM_PROJECTOR">
+	<title>Phantom Projector</title>
+	<desc>A derelict's sensor-ghost projector, from the Mirage Expanse. For the first 12 seconds of each fight, phantom copies of the ship draw the enemies' fire: they miss far more often.</desc>
+	<cost>90</cost>
+	<bp>8</bp>
+	<rarity>0</rarity>
+	<stackable>false</stackable>
+	<value>12</value>
+</augBlueprint>
+<augBlueprint name="XFTL_DEEP_FIELD_SENSORS">
+	<title>Deep-Field Sensors</title>
+	<desc>Sensors from a dreadnought lost in the Dark Reach, built to see through nebulas too thick for light. The sensors work in a nebula.</desc>
+	<cost>80</cost>
 	<bp>8</bp>
 	<rarity>0</rarity>
 	<stackable>false</stackable>

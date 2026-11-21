@@ -8,3 +8,10 @@
 <mod:findName type="text" name="map_base_loc">
 	<mod:setValue>CONCORD's Mainframe: the core of the Chorus. Destroy it, and the war is over.</mod:setValue>
 </mod:findName>
+
+<!--
+    The line under an event that takes one of CONCORD's relay codes (see
+    XFTL_HYBRIDSEC_RELAY and Event.counterChanges): \1 is how many the
+    player has now.
+-->
+<text name="xftl_counter_XFTL_CONCORD_CODES">CONCORD relay codes: \1. Each one, up to four, opens a gap in the Mainframe's defences.</text>

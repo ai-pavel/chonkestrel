@@ -77,6 +77,21 @@ open class AugmentBlueprint(elem: Element) : Blueprint(elem) {
 
         /** A destroyed enemy ship's drones are salvaged as drone parts. */
         const val OSSUARY_SCHEMATICS: String = "XFTL_OSSUARY_SCHEMATICS"
+
+        // The nebula sectors' quests' rewards (see doc/game/sectors.md)
+        /** Radiation nebulas don't hurt anyone aboard the ship. */
+        const val RADIATION_SHIELDING: String = "XFTL_RADIATION_SHIELDING"
+
+        /**
+         * For the first seconds of each fight (its value), the enemies' shots
+         * at the ship miss more often, as if it had [PHANTOM_EVASION] more
+         * evasion.
+         */
+        const val PHANTOM_PROJECTOR: String = "XFTL_PHANTOM_PROJECTOR"
+        const val PHANTOM_EVASION: Int = 30
+
+        /** The sensors work in a nebula. */
+        const val DEEP_FIELD_SENSORS: String = "XFTL_DEEP_FIELD_SENSORS"
     }
 }
 

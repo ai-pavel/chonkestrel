@@ -82,8 +82,8 @@ capital, where everyone joined the Chorus on the Silent Night, with its own
 events and CONCORD's ships, and beacons near its core that the map lies
 about. At its far end, in place of the Federation base and the flagship,
 is CONCORD's Mainframe: destroying it wins the game (see
-[mainframe.md](mainframe.md)), in three phases: the Firewall, the
-Splicing Bays and the Mind.
+[mainframe.md](mainframe.md)), in three phases: the Mind, the Splicing
+Bays and the Firewall.
 
 ## Variety
 

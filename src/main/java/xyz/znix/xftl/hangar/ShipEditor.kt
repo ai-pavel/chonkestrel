@@ -27,8 +27,11 @@ class ShipEditor(val state: SelectShipState, val ship: EditableShip) {
     val allSystems: List<SystemBlueprint> = state.blueprints.blueprints.values
         .filterIsInstance(SystemBlueprint::class.java)
 
+    // (only those the game can draw: a few, such as the Crystal Vengeance's
+    // shards, have no launcher image, and would crash the ship's drawing)
     val weaponBlueprints = state.blueprints.blueprints.values
         .filterIsInstance<AbstractWeaponBlueprint>()
+        .filter { it.launcher in state.animations.weaponAnimations }
         .sortedBy { bp -> bp.short?.let { state.translator[it] } ?: bp.name }
 
     val droneBlueprints = state.blueprints.blueprints.values

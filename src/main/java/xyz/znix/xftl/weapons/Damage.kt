@@ -88,6 +88,12 @@ class Damage() {
     // Locks the room down, as the Lockdown Bomb does (see Room.lockDown)
     var lockdown: Boolean = false
 
+    // Whether a drone's shot did it, for the achievements (see Ship.lastHullHitByDrone)
+    var fromDrone: Boolean = false
+
+    // Whether an artillery system's beam did it, for the achievements (see Ship.lastHullHitByArtillery)
+    var fromArtillery: Boolean = false
+
     /**
      * Apply the effect of a weapon that uses damage-chaining.
      */
@@ -153,6 +159,8 @@ class Damage() {
         result.noCrewDamage = noCrewDamage
 
         result.lockdown = lockdown
+        result.fromDrone = fromDrone
+        result.fromArtillery = fromArtillery
 
         return result
     }

@@ -4,6 +4,7 @@ import org.jdom2.Element
 import xyz.znix.xftl.*
 import xyz.znix.xftl.augments.AugmentBlueprint
 import xyz.znix.xftl.game.InGameState
+import xyz.znix.xftl.game.ShipBlueprint
 import xyz.znix.xftl.rendering.Colour
 import xyz.znix.xftl.rendering.Graphics
 import xyz.znix.xftl.rendering.Image
@@ -55,9 +56,15 @@ class Artillery(blueprint: SystemBlueprint) : MainSystem(blueprint) {
 
         // Hardpoints 4 and up (zero-indexed) are used for artillery.
         // If there's more than four regular weapons however, it starts
-        // after the last weapon hardpoint.
-        ship.hardpoints[max(4, ship.weaponSlots ?: 4) + index].spec
+        // after the last weapon hardpoint. An artillery the ship's bought
+        // (see BuyableArtillery) on a ship without a mount for it fires from
+        // its room, without its gun drawn.
+        ship.hardpoints.getOrNull(max(4, ship.weaponSlots ?: 4) + index)?.spec
+            ?: ShipBlueprint.ParsedHardpoint(configuration.room.pixelCentre, false, false, 0, null).also { mounted = false }
     }
+
+    // Whether its gun's on a mount of the ship's (see hardpoint), and drawn
+    private var mounted = true
 
     override fun initialise(ship: Ship) {
         super.initialise(ship)
@@ -106,7 +113,11 @@ class Artillery(blueprint: SystemBlueprint) : MainSystem(blueprint) {
     override fun drawBackground(g: Graphics) {
         super.drawBackground(g)
 
-        // Draw the weapon launcher animation
+        // Draw the weapon launcher animation (not for one fired from its
+        // room, see hardpoint)
+        hardpoint // (finding its mount)
+        if (!mounted)
+            return
         g.pushTransform()
 
         // As it's shown, which may be a disguise (see Mirage)

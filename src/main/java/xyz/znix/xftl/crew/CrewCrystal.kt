@@ -3,6 +3,7 @@ package xyz.znix.xftl.crew
 import org.jdom2.Element
 import xyz.znix.xftl.Animations
 import xyz.znix.xftl.augments.AugmentBlueprint
+import xyz.znix.xftl.game.AchievementGoal
 import xyz.znix.xftl.layout.Room
 import xyz.znix.xftl.savegame.ObjectRefs
 import xyz.znix.xftl.savegame.RefLoader
@@ -43,6 +44,9 @@ class CrewCrystal(blueprint: CrewBlueprint, animations: Animations, room: Room, 
 
         room.lockDown(LOCKDOWN_TIME)
         lockdownCooldown = LOCKDOWN_COOLDOWN
+        // One of the player's own, for the achievements
+        if (ownerShip?.isPlayerShip == true && mindControlledBy == null)
+            room.ship.sys.achievementTracker.add(AchievementGoal.Kind.LOCKDOWNS)
         room.ship.sys.sounds.getSampleOrWarn("lockdown${(1..2).random()}")?.play()
         return true
     }

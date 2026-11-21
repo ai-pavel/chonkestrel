@@ -291,12 +291,13 @@ Expanse and the Dark Reach, where most beacons are one kind of nebula
     nebula: the start beacon never has a hazard (see GameMap.calmStart).
 -->
 <textList name="XFTL_RADFIELDS_START">
-	<text>The Radiation Fields: a region where a supernova seeded every nebula with radioactive gas. Out here at the edge, the gas is still thin, but your crew's dosimeters are already clicking. The medbay is going to be busy.</text>
-	<text>A faint green light glows in the nebulas ahead. You're at the edge of the Radiation Fields, where few ships stay long, and fewer crews stay healthy.</text>
+	<text>The Radiation Fields: a region where a supernova seeded every nebula with radioactive gas. Out here at the edge, the gas is still thin, but your crew's dosimeters are already clicking. The medbay is going to be busy. Deeper in, an automated beacon is still calling for the crew of a research station.</text>
+	<text>A faint green light glows in the nebulas ahead. You're at the edge of the Radiation Fields, where few ships stay long, and fewer crews stay healthy. Deeper in, an automated beacon is still calling for the crew of a research station.</text>
 </textList>
 <event name="XFTL_RADFIELDS_START">
 	<text load="XFTL_RADFIELDS_START"/>
 	<environment type="nebula"/>
+	<quest event="XFTL_RADFIELDS_STATION" xftlAhead="true"/>
 </event>
 
 <event name="XFTL_RADFIELDS_COLONY">
@@ -384,12 +385,13 @@ Expanse and the Dark Reach, where most beacons are one kind of nebula
 
 <!-- The Mirage Expanse -->
 <textList name="XFTL_MIRAGE_EXPANSE_START">
-	<text>The Mirage Expanse: purple nebulas full of sensor ghosts, where ships see what isn't there. You're at its edge, where your sensors still work. Don't trust your map once you're in.</text>
-	<text>Your map fills with contacts the moment you arrive: ships, stations, hazards, all deeper in the purple haze ahead. Most of them aren't real. Welcome to the edge of the Mirage Expanse.</text>
+	<text>The Mirage Expanse: purple nebulas full of sensor ghosts, where ships see what isn't there. You're at its edge, where your sensors still work. Don't trust your map once you're in. Among the ghosts, one signal repeats on a schedule no mirage keeps: a derelict's beacon, somewhere ahead.</text>
+	<text>Your map fills with contacts the moment you arrive: ships, stations, hazards, all deeper in the purple haze ahead. Most of them aren't real. Welcome to the edge of the Mirage Expanse. Among the ghosts, one signal repeats on a schedule no mirage keeps: a derelict's beacon, somewhere ahead.</text>
 </textList>
 <event name="XFTL_MIRAGE_EXPANSE_START">
 	<text load="XFTL_MIRAGE_EXPANSE_START"/>
 	<environment type="nebula"/>
+	<quest event="XFTL_MIRAGE_GHOSTS" xftlAhead="true"/>
 </event>
 
 <event name="XFTL_MIRAGE_DISTRESS">
@@ -481,12 +483,13 @@ Expanse and the Dark Reach, where most beacons are one kind of nebula
 
 <!-- The Dark Reach -->
 <textList name="XFTL_DARK_REACH_START">
-	<text>The Dark Reach: a region of nebulas so thick that no light gets through. Here at its edge your drones still answer, but they won't for long once you're in. You'll have to fight the old-fashioned way.</text>
-	<text>Ahead, the nebulas grow so thick that the stars go out. You're at the edge of the Dark Reach, and your drone controllers are already losing the signal.</text>
+	<text>The Dark Reach: a region of nebulas so thick that no light gets through. Here at its edge your drones still answer, but they won't for long once you're in. You'll have to fight the old-fashioned way. Every chart of the Reach marks the wreck of a dreadnought somewhere in the dark ahead. Nobody's ever found it.</text>
+	<text>Ahead, the nebulas grow so thick that the stars go out. You're at the edge of the Dark Reach, and your drone controllers are already losing the signal. Every chart of the Reach marks the wreck of a dreadnought somewhere in the dark ahead. Nobody's ever found it.</text>
 </textList>
 <event name="XFTL_DARK_REACH_START">
 	<text load="XFTL_DARK_REACH_START"/>
 	<environment type="nebula"/>
+	<quest event="XFTL_DARK_HULK_TRAIL" xftlAhead="true"/>
 </event>
 
 <event name="XFTL_DARK_LIGHTHOUSE">
@@ -556,3 +559,177 @@ Expanse and the Dark Reach, where most beacons are one kind of nebula
 		<ship load="PIRATE" hostile="true"/>
 	</event>
 </eventList>
+
+<!--
+    Each nebula sector's quest (see doc/game/sectors.md): its start event
+    marks the first beacon, which leads on to the second, where the reward
+    is, an augment found nowhere else. Quests can go in this kind of
+    sector's nebulas (see Sector.addQuest).
+-->
+
+<!-- The Radiation Fields: the research station, and its lab at the core -->
+<event name="XFTL_RADFIELDS_STATION">
+	<text>The research station is empty, its crew long gone, its corridors glowing faintly green. Its last log says the team took their shielding prototype to a lab nearer the supernova's core, to test it, and never came back.</text>
+	<choice>
+		<text>Search the station for the lab's coordinates.</text>
+		<event>
+			<text>Your crew find the coordinates, and a few useful things besides, and come back with their dosimeters screaming. The lab is marked on your map.</text>
+			<autoReward level="LOW">stuff</autoReward>
+			<damage amount="1"/>
+			<quest event="XFTL_RADFIELDS_CORE" xftlAhead="true"/>
+		</event>
+	</choice>
+	<choice req="rock" hidden="true">
+		<text>(Rockman) Send your Rockman in. Radiation means nothing to them.</text>
+		<event>
+			<text>Your Rockman strolls through the station as if it were a garden, and comes back with the lab's coordinates and an armful of salvage. The lab is marked on your map.</text>
+			<autoReward level="MED">stuff</autoReward>
+			<quest event="XFTL_RADFIELDS_CORE" xftlAhead="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave the station to its ghosts.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_RADFIELDS_CORE">
+	<text>The lab clings to a rock at the edge of the supernova's core. A pirate ship is already docked, stripping it for parts, and its captain doesn't take kindly to company.</text>
+	<choice>
+		<text>Drive them off.</text>
+		<event>
+			<text>The pirates cast off and come about.</text>
+			<ship load="XFTL_RADFIELDS_SCAVENGER" hostile="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave the lab to them.</text>
+		<event/>
+	</choice>
+</event>
+
+<ship name="XFTL_RADFIELDS_SCAVENGER" auto_blueprint="SHIPS_PIRATE" xftlAlone="true">
+	<destroyed>
+		<text>With the pirates gone, your crew search the lab. The shielding prototype is still in its crate, and it fits your bulkheads. Radiation won't trouble your crew again.</text>
+		<augment name="XFTL_RADIATION_SHIELDING"/>
+		<autoReward level="HIGH">standard</autoReward>
+	</destroyed>
+	<deadCrew>
+		<text>The pirates are dead, and their ship and the lab are yours to search. The shielding prototype is still in its crate, and it fits your bulkheads. Radiation won't trouble your crew again.</text>
+		<augment name="XFTL_RADIATION_SHIELDING"/>
+		<autoReward level="HIGH">standard</autoReward>
+	</deadCrew>
+</ship>
+
+<!-- The Mirage Expanse: the true signal among the ghosts, and its derelict -->
+<event name="XFTL_MIRAGE_GHOSTS">
+	<text>Three identical contacts hang in the purple haze, each repeating the same derelict's beacon. Only one of them is real.</text>
+	<choice req="sensors" lvl="2" hidden="true">
+		<text>(Sensors) Cross-check the three signals' timing.</text>
+		<event>
+			<text>Two of the signals drift by a fraction of a second; the third keeps perfect time. That's the real one, and you mark it on your map.</text>
+			<quest event="XFTL_MIRAGE_DERELICT" xftlAhead="true"/>
+		</event>
+	</choice>
+	<choice req="slug" hidden="true">
+		<text>(Slug) Ask your Slug which one has anyone aboard.</text>
+		<event>
+			<text>"That one," your Slug says, pointing at none of them, then sighing, and pointing again. "Something's still thinking over there." You mark it on your map.</text>
+			<quest event="XFTL_MIRAGE_DERELICT" xftlAhead="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Pick one, and head for it.</text>
+		<event load="XFTL_MIRAGE_GHOSTS_GUESS"/>
+	</choice>
+	<choice>
+		<text>Ignore them. They're probably all ghosts.</text>
+		<event/>
+	</choice>
+</event>
+
+<eventList name="XFTL_MIRAGE_GHOSTS_GUESS">
+	<event>
+		<text>You picked right: the signal holds steady as you close in. You mark the derelict on your map.</text>
+		<quest event="XFTL_MIRAGE_DERELICT" xftlAhead="true"/>
+	</event>
+	<event>
+		<text>The contact flickers out, and in its place is a pirate ship, which has been using the ghosts as bait.</text>
+		<ship load="XFTL_MIRAGE_BAITER" hostile="true"/>
+	</event>
+</eventList>
+
+<ship name="XFTL_MIRAGE_BAITER" auto_blueprint="SHIPS_PIRATE" xftlAlone="true">
+	<destroyed>
+		<text>The pirate breaks apart. Its logs have the real derelict's position, which they never got round to looting. You mark it on your map.</text>
+		<autoReward level="MED">standard</autoReward>
+		<quest event="XFTL_MIRAGE_DERELICT" xftlAhead="true"/>
+	</destroyed>
+	<deadCrew>
+		<text>The pirates are dead. Their logs have the real derelict's position, which they never got round to looting. You mark it on your map.</text>
+		<autoReward level="MED">standard</autoReward>
+		<quest event="XFTL_MIRAGE_DERELICT" xftlAhead="true"/>
+	</deadCrew>
+</ship>
+
+<event name="XFTL_MIRAGE_DERELICT">
+	<text>The derelict is real: a Slug spy ship, its crew long gone, its hull covered in emitters. They're still running, filling the nebula around it with copies of itself. That's where the Expanse's ghosts come from, or some of them.</text>
+	<choice>
+		<text>Strip the projector, and anything else of use.</text>
+		<event>
+			<text>Your engineer gets the projector working on your own hull. In a fight, your ship won't be the only one the enemy sees, for a while at least. The spy ship's weapons locker has something worth taking too.</text>
+			<augment name="XFTL_PHANTOM_PROJECTOR"/>
+			<weapon name="RANDOM" xftlCombined="true"/>
+		</event>
+	</choice>
+</event>
+
+<!-- The Dark Reach: the dreadnought's trail, and its wreck -->
+<event name="XFTL_DARK_HULK_TRAIL">
+	<text>Your sensors brush against a trail of debris: hull plates, old and huge, drifting deeper into the dark. They're from a warship far bigger than any built now.</text>
+	<choice>
+		<text>Follow the trail.</text>
+		<event>
+			<text>You follow the debris until it thickens into a wreck's worth. The dreadnought must be close. You mark where the trail leads on your map.</text>
+			<autoReward level="LOW">scrap_only</autoReward>
+			<quest event="XFTL_DARK_HULK" xftlAhead="true"/>
+		</event>
+	</choice>
+	<choice req="anaerobic" hidden="true">
+		<text>(Lanius) Let your Lanius taste the plates.</text>
+		<event>
+			<text>Your Lanius licks a hull plate, thinks, and points into the dark without a word. They know that alloy, and where the rest of it is. They pocket a few plates for later.</text>
+			<autoReward level="MED">stuff</autoReward>
+			<quest event="XFTL_DARK_HULK" xftlAhead="true"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave the dead to the dark.</text>
+		<event/>
+	</choice>
+</event>
+
+<event name="XFTL_DARK_HULK">
+	<text>The dreadnought hangs in the dark, dead for a century, its hull scored by things that couldn't see it either. Its sensor mast is still intact: the one thing aboard built to see in here. One stasis pod still glows faintly in its medbay.</text>
+	<choice>
+		<text>Board it, and cut the sensors and the pod free.</text>
+		<event>
+			<text>Its automated defences wake as your crew cut their way in, and the turrets hole your hull before your crew shut them down. But you leave with its sensors on your own mast, and a sleeper from the pod who knows a great deal about old warships.</text>
+			<damage amount="4"/>
+			<augment name="XFTL_DEEP_FIELD_SENSORS"/>
+			<crewMember amount="1" all_skills="2"/>
+		</event>
+	</choice>
+	<choice req="anaerobic" hidden="true">
+		<text>(Lanius) Your Lanius can eat a way in through the hull, away from the turrets.</text>
+		<event>
+			<text>Your Lanius chew a tunnel straight to the sensor mast and the medbay, and the turrets never notice. You leave with its sensors on your own mast, and a sleeper from the pod who knows a great deal about old warships.</text>
+			<augment name="XFTL_DEEP_FIELD_SENSORS"/>
+			<crewMember amount="1" all_skills="2"/>
+		</event>
+	</choice>
+	<choice>
+		<text>Leave the dreadnought to the dark.</text>
+		<event/>
+	</choice>
+</event>

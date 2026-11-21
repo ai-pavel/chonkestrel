@@ -279,6 +279,8 @@ class Clonebay(blueprint: SystemBlueprint) : MainSystem(blueprint) {
 
         // Kill crew in the opposite order they are cloned in.
         queue.removeAt(queue.size - 1)
+        if (ship.isPlayerShip)
+            ship.sys.stats.crewLost++
     }
 
     override fun saveSystem(elem: Element, refs: ObjectRefs) {

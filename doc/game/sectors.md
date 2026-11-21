@@ -133,6 +133,17 @@ Crystal, Engi, then Zoltan.
   each, about one beacon in twenty-five. The events' joined ships are from
   `XFTL_HYBRID_SECTOR_SHIPS`, so they're mostly the pair's hybrids; the
   ships CONCORD hasn't joined are marked `xftlNoHybrid`.
+- **Its relay:** the start event marks one of CONCORD's relays, a quest
+  on the way to the exit (`XFTL_HYBRIDSEC_RELAY`, `xftlAhead`). Its guard
+  is one of the sector's hybrids, alone; beating it (or the blue options,
+  with hacking or an Engi) takes the relay's codes, which add to the
+  game-wide counter `XFTL_CONCORD_CODES` (`<xftlCounter>`, see
+  [mainframe.md](mainframe.md)): each one, up to four, weakens the
+  Mainframe.
+- **Its salvage:** a hybrid is two ships welded into one, so its wreck
+  has half as much scrap again as its event gives, and one time in five a
+  twin or triple weapon (`BigShipRewards`, for every hybrid, wherever it's
+  fought).
 - **Its music and stores:** both races' music, and the crew of both for
   hire.
 - **How often:** together, about as often as the sectors they replaced, as
@@ -151,18 +162,18 @@ there are any) and its music:
 | Rebel-Lanius Controlled Sector | Rebel-Lanius Hybrid Fighter (long, wide), Lanius-Rebel Hybrid Scout (long, wide) | Rebel-Lanius Hybrid Rigger (long, wide), Lanius-Rebel Hybrid Bomber (long, wide) | colonial, wasteland, lostship, hacking, shrike, deepspace |
 | Rebel-Crystal Controlled Sector | Rebel-Crystal Hybrid Fighter (long, wide), Crystal-Rebel Hybrid Scout (long, wide) | Rebel-Crystal Hybrid Rigger (long, wide), Crystal-Rebel Hybrid Bomber (long, wide) | colonial, wasteland, lostship, hacking, debris, deepspace |
 | Rebel-Engi Controlled Sector | Rebel-Engi Hybrid Fighter (long, wide), Engi-Rebel Hybrid Scout (long, wide) | Rebel-Engi Hybrid Rigger (long, wide), Engi-Rebel Hybrid Bomber (long, wide) | colonial, wasteland, lostship, hacking, engi, cosmos |
-| Rebel-Zoltan Controlled Sector | Rebel-Zoltan Hybrid Fighter (long, wide), Zoltan-Rebel Hybrid Fighter (long, wide) | Rebel-Zoltan Hybrid Rigger (wide), Zoltan-Rebel Hybrid Bomber (long, wide) | colonial, wasteland, lostship, hacking, zoltan, cosmos |
+| Rebel-Zoltan Controlled Sector | Rebel-Zoltan Hybrid Fighter (long, wide), Zoltan-Rebel Hybrid Fighter (long, wide) | Rebel-Zoltan Hybrid Rigger (long, wide), Zoltan-Rebel Hybrid Bomber (long, wide) | colonial, wasteland, lostship, hacking, zoltan, cosmos |
 | Mantis-Rock Controlled Sector | Mantis-Rock Hybrid Fighter (long, wide), Rock-Mantis Hybrid Scout (long, wide) | Mantis-Rock Hybrid Bomber (long, wide), Rock-Mantis Hybrid Fighter (long, wide) | mantis, debris, void, rock, wasteland |
 | Mantis-Slug Controlled Sector | Mantis-Slug Hybrid Fighter (long, wide), Slug-Mantis Hybrid Interceptor (long, wide) | Mantis-Slug Hybrid Bomber (long, wide), Slug-Mantis Hybrid Light-Cruiser (long, wide) | mantis, debris, void, slug, wasteland, deepspace |
 | Mantis-Lanius Controlled Sector | Mantis-Lanius Hybrid Fighter (long, wide), Lanius-Mantis Hybrid Scout (long, wide) | Mantis-Lanius Hybrid Bomber (long, wide), Lanius-Mantis Hybrid Bomber (long, wide) | mantis, debris, void, shrike, deepspace, wasteland |
-| Mantis-Crystal Controlled Sector | Mantis-Crystal Hybrid Fighter (long, wide), Crystal-Mantis Hybrid Scout (long, wide) | Mantis-Crystal Hybrid Bomber (long, wide), Crystal-Mantis Hybrid Bomber (wide) | mantis, debris, void, wasteland, deepspace |
+| Mantis-Crystal Controlled Sector | Mantis-Crystal Hybrid Fighter (long, wide), Crystal-Mantis Hybrid Scout (long, wide) | Mantis-Crystal Hybrid Bomber (long, wide), Crystal-Mantis Hybrid Bomber (long, wide) | mantis, debris, void, wasteland, deepspace |
 | Mantis-Engi Controlled Sector | Mantis-Engi Hybrid Fighter (long, wide), Engi-Mantis Hybrid Scout (long, wide) | Mantis-Engi Hybrid Bomber (long, wide), Engi-Mantis Hybrid Bomber (long, wide) | mantis, debris, void, engi, cosmos, hacking |
 | Mantis-Zoltan Controlled Sector | Mantis-Zoltan Hybrid Fighter (long, wide), Zoltan-Mantis Hybrid Fighter (long, wide) | Mantis-Zoltan Hybrid Bomber (long, wide), Zoltan-Mantis Hybrid Bomber (long, wide) | mantis, debris, void, zoltan, cosmos |
 | Rock-Slug Controlled Sector | Rock-Slug Hybrid Scout (long, wide), Slug-Rock Hybrid Interceptor (long, wide) | Rock-Slug Hybrid Fighter (long, wide), Slug-Rock Hybrid Light-Cruiser (long, wide) | rock, wasteland, slug, debris, deepspace |
 | Rock-Lanius Controlled Sector | Rock-Lanius Hybrid Scout (long, wide), Lanius-Rock Hybrid Scout (long, wide) | Rock-Lanius Hybrid Fighter (long, wide), Lanius-Rock Hybrid Bomber (long, wide) | rock, wasteland, shrike, deepspace |
 | Rock-Crystal Controlled Sector | Rock-Crystal Hybrid Scout (long, wide), Crystal-Rock Hybrid Scout (long, wide) | Rock-Crystal Hybrid Fighter (long, wide), Crystal-Rock Hybrid Bomber (long, wide) | rock, wasteland, debris, deepspace |
 | Rock-Engi Controlled Sector | Rock-Engi Hybrid Scout (long, wide), Engi-Rock Hybrid Scout (long, wide) | Rock-Engi Hybrid Fighter (long, wide), Engi-Rock Hybrid Bomber (long, wide) | rock, wasteland, engi, cosmos, hacking |
-| Rock-Zoltan Controlled Sector | Rock-Zoltan Hybrid Scout (long, wide), Zoltan-Rock Hybrid Fighter (wide) | Rock-Zoltan Hybrid Fighter (long, wide), Zoltan-Rock Hybrid Bomber (long, wide) | rock, wasteland, zoltan, cosmos |
+| Rock-Zoltan Controlled Sector | Rock-Zoltan Hybrid Scout (long, wide), Zoltan-Rock Hybrid Fighter (long, wide) | Rock-Zoltan Hybrid Fighter (long, wide), Zoltan-Rock Hybrid Bomber (long, wide) | rock, wasteland, zoltan, cosmos |
 | Slug-Lanius Controlled Sector | Slug-Lanius Hybrid Interceptor (long, wide), Lanius-Slug Hybrid Scout (long, wide) | Slug-Lanius Hybrid Light-Cruiser (long, wide), Lanius-Slug Hybrid Bomber (long, wide) | slug, debris, wasteland, deepspace, shrike |
 | Slug-Crystal Controlled Sector | Slug-Crystal Hybrid Interceptor (long, wide), Crystal-Slug Hybrid Scout (long, wide) | Slug-Crystal Hybrid Light-Cruiser (long, wide), Crystal-Slug Hybrid Bomber (long, wide) | slug, debris, wasteland, deepspace |
 | Slug-Engi Controlled Sector | Slug-Engi Hybrid Interceptor (long, wide), Engi-Slug Hybrid Scout (long, wide) | Slug-Engi Hybrid Light-Cruiser (long, wide), Engi-Slug Hybrid Bomber (long, wide) | slug, debris, wasteland, deepspace, engi, cosmos, hacking |
@@ -171,7 +182,7 @@ there are any) and its music:
 | Lanius-Engi Controlled Sector | Lanius-Engi Hybrid Scout (long, wide), Engi-Lanius Hybrid Scout (long, wide) | Lanius-Engi Hybrid Bomber (long, wide), Engi-Lanius Hybrid Bomber (long, wide) | shrike, deepspace, wasteland, engi, cosmos, hacking |
 | Lanius-Zoltan Controlled Sector | Lanius-Zoltan Hybrid Scout (long, wide), Zoltan-Lanius Hybrid Fighter (long, wide) | Lanius-Zoltan Hybrid Bomber (long, wide), Zoltan-Lanius Hybrid Bomber (long, wide) | shrike, deepspace, wasteland, zoltan, cosmos |
 | Crystal-Engi Controlled Sector | Crystal-Engi Hybrid Scout (long, wide), Engi-Crystal Hybrid Scout (long, wide) | Crystal-Engi Hybrid Bomber (long, wide), Engi-Crystal Hybrid Bomber (long, wide) | debris, wasteland, deepspace, engi, cosmos, hacking |
-| Crystal-Zoltan Controlled Sector | Crystal-Zoltan Hybrid Scout (long, wide), Zoltan-Crystal Hybrid Fighter (long, wide) | Crystal-Zoltan Hybrid Bomber (wide), Zoltan-Crystal Hybrid Bomber (long, wide) | debris, wasteland, deepspace, zoltan, cosmos |
+| Crystal-Zoltan Controlled Sector | Crystal-Zoltan Hybrid Scout (long, wide), Zoltan-Crystal Hybrid Fighter (long, wide) | Crystal-Zoltan Hybrid Bomber (long, wide), Zoltan-Crystal Hybrid Bomber (long, wide) | debris, wasteland, deepspace, zoltan, cosmos |
 | Engi-Zoltan Controlled Sector | Engi-Zoltan Hybrid Scout (long, wide), Zoltan-Engi Hybrid Fighter (long, wide) | Engi-Zoltan Hybrid Bomber (wide), Zoltan-Engi Hybrid Bomber (long, wide) | engi, cosmos, hacking, zoltan |
 <!-- END generated by tools/hybrid_sectors.py -->
 
@@ -242,7 +253,7 @@ blockade, so it's the first really dangerous sector.
   in a rare calm beacon (`xftlNoHazards`), which reveals the map or repairs
   the hull. Plus Rebel and pirate fights, a store (and sometimes a pirate
   one), and the big ship fights.
-- **The hunter:** no Rebel fleet here; the Devourer, a size 3 Lanius
+- **The hunter:** no Rebel fleet here (until the boss is beaten); the Devourer, a size 3 Lanius
   hive-ship, hunts the player instead, a beacon every two jumps, bringing
   its nebula and asteroid field with it (`xftlHunter`, see
   [bosses.md](bosses.md)). The exit is an ordinary one.
@@ -299,7 +310,7 @@ the blockade.
   behind a dead star (`xftlNoHazards`), which reveals the map, repairs the
   hull or slows the fleet down. Plus Rebel and pirate fights, a store half
   the time, and the big ship fights.
-- **The hunter:** no Rebel fleet here; the Stormbreaker, CONCORD's size 3
+- **The hunter:** no Rebel fleet here (until the boss is beaten); the Stormbreaker, CONCORD's size 3
   hunter flagship, hunts the player instead, a beacon every jump, bringing
   its ion storm with it (`xftlHunter`, see [bosses.md](bosses.md)). The
   exit is an ordinary one.
@@ -321,7 +332,7 @@ waits at its edge to see whether the player comes out.
   (`xftlNoHazards`) where the crew can repair the hull or chart the whole
   sector. Plus Rebel and pirate fights, a pirate store half the time, and
   the big ship fights.
-- **The hunter:** no Rebel fleet here; the Ossuary, CONCORD's size 3
+- **The hunter:** no Rebel fleet here (until the boss is beaten); the Ossuary, CONCORD's size 3
   salvage ark, hunts the player instead, a beacon every two jumps
   (`xftlHunter`, see [bosses.md](bosses.md)). The exit is an ordinary one.
 
@@ -346,6 +357,17 @@ the other new sectors, they can turn up in either act, from sector 5
 (`xftlSectors="5-"`). A random path through the map goes through about 1.3
 of them a game. Each has a start event about the sector, the three events of its
 kind of nebula, three events of its own, and vanilla nebula events.
+
+**Each has a quest,** marked by its start event (`xftlAhead`), two
+beacons long, which ends in an augment found nowhere else (rarity 0). In
+these sectors, quests can go in the sector's nebulas (`Sector.addQuest`),
+as nearly every beacon's in one:
+
+| Sector | The quest | Its reward |
+|---|---|---|
+| Radiation Fields | An empty research station (a blue option with a Rockman), then its lab at the supernova's core, which pirates are stripping | Radiation Shielding: radiation doesn't hurt anyone aboard |
+| Mirage Expanse | Three ghost signals, one real (blue options with level 2 sensors or a Slug; a guess may be a pirate's bait, whose logs have the real one), then a Slug spy ship's derelict | Phantom Projector: for the first 12 seconds of each fight, the enemies' shots miss more (30 more evasion), and a twin or triple weapon |
+| Dark Reach | A dreadnought's debris trail (a blue option with a Lanius), then the dreadnought, whose turrets hole the hull of a ship that boards it (not the Lanius' way in) | Deep-Field Sensors: the sensors work in nebulas, and a crew member with every skill at level 2 |
 
 - **The Radiation Fields** (radiation): a supernova seeded every nebula with
   radioactive gas, so the medbay will be busy. A mining colony out of

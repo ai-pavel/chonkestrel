@@ -68,7 +68,7 @@ FIRST_SYSTEMS = ("teleporter",)
 BIG_SYSTEMS = ("weapons", "shields", "teleporter", "drones", "medbay", "clonebay", "engines")
 
 # A boss's weapons are all twin and triple ones, more of them triples the
-# stronger it is (2, 4, 8 and 10 of them), in mount order: the mounts are
+# stronger it is (2, 4, 8 and 12 of them), in mount order: the mounts are
 # shared out between its weapons systems in order, two each and the rest to
 # the last (Ship.assignWeaponHardpoints), so each system's weapons are put
 # together to need at most its eight power.
@@ -94,7 +94,7 @@ BOSSES = {
         "weapons": ["XFTL_X2_ION_4", "XFTL_X3_ION_1", "XFTL_X2_ION_2", "XFTL_X2_LASER_BURST_2_A",
                     "XFTL_X3_BOMB_BREACH_1", "XFTL_X2_BOMB_ION", "XFTL_X2_LASER_HEAVY_1", "XFTL_X2_MISSILES_1"],
         "drones": ["COMBAT_1", "DEFENSE_1"],
-        "crew": [(20, "anaerobic")],
+        "crew": [(14, "anaerobic")],
         "augments": ["ENERGY_SHIELD"],
     },
     # Tier II: the Rebel blockade's command ship
@@ -148,9 +148,9 @@ BOSSES = {
             ("engines", 3, 8), ("engines", 3, 8), ("shields", 6, 8), ("shields", 6, 8), ("shields", 6, 8),
             ("weapons", 8, 8), ("weapons", 8, 8), ("weapons", 8, 8), ("weapons", 8, 8), ("weapons", 8, 8),
             ("drones", 8, 8), ("drones", 8, 8), ("drones", 6, 8), ("teleporter", 4, 6), ("hacking", 4, 6)],
-        "weapons": ["XFTL_X3_BEAM_2", "XFTL_X3_BEAM_1", "XFTL_X3_BEAM_FIRE", "XFTL_X3_ION_1", "XFTL_X3_BEAM_BIO",
-                    "XFTL_X3_LASER_HEAVY_1", "XFTL_X3_BEAM_HULL", "XFTL_X3_BOMB_BREACH_1", "XFTL_X3_LASER_HEAVY_1",
-                    "XFTL_X3_BOMB_ION", "XFTL_X2_MISSILES_1", "XFTL_X2_BOMB_1"],
+        "weapons": ["XFTL_X3_BEAM_2", "XFTL_X3_BEAM_1", "XFTL_X3_BEAM_FIRE", "XFTL_X3_LASER_BURST_3", "XFTL_X3_BEAM_BIO",
+                    "XFTL_X3_LASER_BURST_2_A", "XFTL_X3_BEAM_HULL", "XFTL_X3_BOMB_BREACH_1", "XFTL_X3_LASER_HEAVY_1",
+                    "XFTL_X3_BOMB_ION", "XFTL_X3_MISSILES_1", "XFTL_X3_LASER_HEAVY_1"],
         "drones": ["COMBAT_2", "COMBAT_BEAM", "DRONE_SHIELD", "BOARDER", "BOARDER", "BATTLE", "REPAIR", "DEFENSE_2"],
         "crew": [(6, "engi"), (6, "energy"), (5, "rock"), (5, "mantis"), (4, "slug"), (4, "human")],
         "augments": ["ZOLTAN_BYPASS"] + ["ENERGY_SHIELD"] * 4,
@@ -162,7 +162,7 @@ BOSSES = {
     # its drones systems, without being combined further
     # (ShipGenerator.buildBoss). It never dodges (ColossalBoss.isStation).
     #
-    # The second, the Splicing Bays: the yards inside. Its last two drones
+    # The second, the Splicing Bays: the yards. Its last two drones
     # systems are the bays, which start empty and build drones
     # (ColossalBoss.updateBays). Its crew board through its teleporter
     "XFTL_BOSS_MAINFRAME_BAYS": {
@@ -186,7 +186,8 @@ BOSSES = {
         "crew": [(6, race) for race in ALL_RACES],
         "augments": [],
     },
-    # The third, the Mind: the core, from a Slug ship, as the Slugs are
+    # The first, the Mind: CONCORD's voice, come out to meet the player,
+    # from a Slug ship, as the Slugs are
     # telepaths. No shields but a super shield that doesn't come back; its
     # weapons look like other weapons (Mirage.weaponDisguise), its mind
     # control is quick (ColossalBoss.mindControlCooldownFactor), and it
@@ -215,7 +216,7 @@ BOSSES = {
     },
 }
 
-# The Mainframe's first phase, the Firewall (see BOSSES): three shields
+# The Mainframe's last phase, the Firewall (see BOSSES): three shields
 # systems (the first, the Firewall core, brings its super shield back),
 # hacking, and ion weapons. Its hull is glued together rather than
 # stretched (see glue_firewall): the vanilla Rebel flagship in the middle,

@@ -62,6 +62,29 @@ class HybridSectorsTest {
     }
 
     @Test
+    fun testEachHasARelayWhoseCodesWeakenTheMainframe() {
+        // Each sector's start event marks its relay, on the way to the exit
+        for ((first, second) in pairs) {
+            val start = events["XFTL_HYBRIDSEC_START_${first}_$second"] as Event
+            assertEquals(start.debugId, "XFTL_HYBRIDSEC_RELAY", start.questName)
+            assertTrue(start.debugId, start.questAhead)
+        }
+
+        // Every way of taking the relay gives one code: beating its guard,
+        // or the blue options
+        val relay = events["XFTL_HYBRIDSEC_RELAY"] as Event
+        val guard = events.getShip("XFTL_HYBRIDSEC_RELAY_GUARD")
+        val codes = listOf("XFTL_CONCORD_CODES" to 1)
+        assertEquals(codes, (guard.destroyed as Event).counterChanges)
+        assertEquals(codes, (guard.deadCrew as Event).counterChanges)
+        val blue = relay.choices.filter { it.req != null }
+        assertEquals(2, blue.size)
+        for (choice in blue)
+            assertEquals(codes, (choice.event as Event).counterChanges)
+        assertNotNull(translator.getOrNull("xftl_counter_XFTL_CONCORD_CODES"))
+    }
+
+    @Test
     fun testEachPairHasHybridsToFight() {
         // A scout and a bomber of the pair's, one way round or the other, as
         // ShipGenerator.hybridFor picks them

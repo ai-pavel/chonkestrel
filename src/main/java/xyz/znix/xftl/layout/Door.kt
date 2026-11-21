@@ -249,10 +249,12 @@ data class Door(val position: ConstPoint, val left: Room?, val right: Room?, val
 
     /**
      * Whether the player can open and close this door: not while it's
-     * broken or hacked, nor while the ship's doors system is destroyed.
+     * broken or hacked, nor while the ship's doors system is destroyed or
+     * ionised down to no power (when the doors are drawn red, see [level]).
+     * They stay as they were while it's ionised.
      */
     val isControllable: Boolean
-        get() = !isBroken && !isHacked && !isSealed && ship.doorsSystem?.broken != true
+        get() = !isBroken && !isHacked && !isSealed && ship.doorsSystem.let { it == null || (!it.broken && it.effectivePower > 0) }
 
     fun updateMouseHover(x: Int, y: Int) {
         // Broken and hacked doors can't be controlled by the player.

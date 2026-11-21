@@ -11,7 +11,8 @@ import xyz.znix.xftl.testkit.addCrew
 
 /**
  * The player's boarders still aboard an enemy ship that's destroyed, or
- * that gets away, die with it, and the clonebay brings them back.
+ * that gets away, die with it, and the clonebay brings them back. And an
+ * enemy's crew aren't killed while its clonebay can bring them back.
  */
 class ClonebayBoardersTest {
     private fun createKit(playerShip: String = "PLAYER_SHIP_CLONEBAY_TEST"): InGameTest {
@@ -67,6 +68,35 @@ class ClonebayBoardersTest {
         assertFalse(boarder in kit.state.playerCrew)
     }
 
+    @Test
+    fun testAnEnemysCrewArentKilledWhileItsClonebayCanCloneThem() {
+        val kit = InGameTest(
+            extraBlueprints = listOf(BLUEPRINT_XML), extraEvents = listOf(EVENT_XML), playerShip = "PLAYER_SHIP_CLONEBAY_TEST"
+        )
+        kit.state.debugSpawnShip(kit.state.eventManager.getShip("TEST_CLONEBAY_CREW_ENEMY"), Difficulty.NORMAL, 0, 1)
+        kit.powerUpAll()
+        val opponent = kit.state.opponents.single()
+        val enemy = opponent.ship
+        val clonebay = enemy.clonebay!!
+
+        // Killing them all doesn't beat it: they're dying, then cloned
+        // (this used to say the crew were killed, and then they came back)
+        for (crew in enemy.crew.toList())
+            crew.health = 0f
+        repeat(10) {
+            kit.state.updateGameState(0.1f)
+            assertFalse(opponent.isCrewKilled(kit.player))
+        }
+
+        // With its clonebay broken, those waiting die, and then it's beaten
+        clonebay.damagedEnergyLevels = clonebay.energyLevels
+        var steps = 0
+        while (!opponent.isCrewKilled(kit.player) && steps++ < 600)
+            kit.state.updateGameState(0.1f)
+        assertTrue(clonebay.queue.isEmpty())
+        assertFalse(enemy.hasLivingCrewOwnedBy(enemy))
+    }
+
     companion object {
         @Language("XML")
         private const val BLUEPRINT_XML = """
@@ -104,6 +134,16 @@ class ClonebayBoardersTest {
             <pilot power="1" max="1" room="1"/>
         </systemList>
     </shipBlueprint>
+
+    <shipBlueprint name="TEST_CLONEBAY_CREW_ENEMY_SHIP" layout="test_ship" img="test_ship">
+        <health amount="30"/>
+        <maxPower amount="30"/>
+        <crewCount amount="2" max="2" class="human"/>
+        <systemList>
+            <pilot power="1" max="1" room="1"/>
+            <clonebay power="1" max="3" room="2"/>
+        </systemList>
+    </shipBlueprint>
 </FTL>
 """
 
@@ -111,6 +151,7 @@ class ClonebayBoardersTest {
         private const val EVENT_XML = """
 <FTL>
     <ship name="TEST_CLONEBAY_ENEMY" blueprint="TEST_CLONEBAY_ENEMY_SHIP"/>
+    <ship name="TEST_CLONEBAY_CREW_ENEMY" blueprint="TEST_CLONEBAY_CREW_ENEMY_SHIP"/>
 </FTL>
 """
     }

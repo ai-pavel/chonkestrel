@@ -40,9 +40,11 @@ As the weapons', compared with the single drone:
 
 So it saves slots and power, not drone parts.
 
-**Losing copies.** The slot counts as launched while any of its copies is
-still flying (or standing). Launching it again sends only the copies it's
-lost, for a drone part each. Turning it off, or the drones system losing
+**Losing copies.** When a copy's shot down (or otherwise destroyed), the
+slot turns off, the other copies with it, and gives its power back, as a
+single drone's does when it's lost (`Drones.droneLost`). Turning it on
+again, once the drone's cooldown is over, sends only the copies it's lost,
+for a drone part each, and the others go back to work. Turning it off, or the drones system losing
 the power for it, or being ionised or hacked, takes all of them at once, as
 with a single drone.
 

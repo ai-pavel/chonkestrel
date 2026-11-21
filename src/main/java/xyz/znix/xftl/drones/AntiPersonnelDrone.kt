@@ -130,6 +130,10 @@ class AntiPersonnelDrone(type: DroneBlueprint) : AbstractIndoorsDrone(type) {
         override val attackDamageMult: Float get() = scale.toFloat()
         override val cellsWide: Int get() = scale
 
+        // Drones don't burn, but a bulwark's big enough for a fire to get
+        // into its works: it takes fire damage as the crew do
+        override val fireDamageMult: Float get() = if (scale > 1) 1f else 0f
+
         // A bulwark's drawn as big as it is, over the cells it stands on,
         // from its own sheets (the anti-personnel drone's, scaled up by a
         // pixel-art scaler, see tools/drone_sizes.py), or failing that, the

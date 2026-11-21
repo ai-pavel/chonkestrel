@@ -66,6 +66,34 @@ class Sector {
     var fleetAdvanceModifier: Int = 0
 
     /**
+     * Whether the Rebel fleet's taken up the chase here, in a sector that
+     * started without it: once its hunting boss is beaten (see
+     * [startFleetPursuit]).
+     */
+    var fleetPursuing: Boolean = false
+
+    /**
+     * True if the Rebel fleet's behind the player in this sector: if its
+     * kind has one ([SectorType.hasFleet]), or it's taken up the chase
+     * ([fleetPursuing]).
+     */
+    val hasFleet: Boolean get() = type.hasFleet || fleetPursuing
+
+    /**
+     * Bring the Rebel fleet into a sector that had none, once its hunting
+     * boss is beaten at [from] (see HunterBoss.bossBeaten): it turns up
+     * [FLEET_CHASE_JUMPS] jumps' worth behind that beacon, and advances from
+     * there as in any other sector.
+     */
+    fun startFleetPursuit(from: Beacon) {
+        if (hasFleet)
+            return
+        fleetPursuing = true
+        val behind = from.pos.x - DANGER_ZONE_RADIUS - FLEET_CHASE_JUMPS * DANGER_ZONE_ADVANCE
+        dangerZoneCentre.x = maxOf(dangerZoneCentre.x, behind)
+    }
+
+    /**
      * If true, all beacons are displayed with their full information
      * visible (environmental hazards, ship presence, store/distress
      * labels, etc).
@@ -500,8 +528,10 @@ class Sector {
         var suitable = beacons.filter {
             // Quests never go in a nebula, as in vanilla, but other hazards
             // a beacon got from the sector don't count, as a quest beacon
-            // doesn't have them (see Beacon.environmentTypes).
-            if (it.visited || it.isOwnNebula || it == currentBeacon)
+            // doesn't have them (see Beacon.environmentTypes). In one of
+            // XFTL's nebula sectors, where nearly every beacon's in its kind
+            // of nebula, they can: its own quests are about the nebula.
+            if (it.visited || (it.isOwnNebula && type.nebula == null) || it == currentBeacon)
                 return@filter false
             if (it.isExit || it.hasQuest || it.hasStore || it.event.isDistressBeacon)
                 return@filter false
@@ -519,7 +549,7 @@ class Sector {
                 return@filter false
 
             // (with no fleet, where a hunter is, any beacon's in reach)
-            if (!ignoreDistance && type.hasFleet) {
+            if (!ignoreDistance && hasFleet) {
                 val distToFleet = it.pos.distTo(dangerZoneCentre) - DANGER_ZONE_RADIUS
                 val timeUntilFleet = distToFleet / (DANGER_ZONE_ADVANCE * type.fleetSpeed)
 
@@ -615,6 +645,8 @@ class Sector {
         SaveUtil.addAttrRef(elem, "sectorInfo", refs, info)
 
         SaveUtil.addAttrInt(elem, "fleetAdvanceModifier", fleetAdvanceModifier)
+        if (fleetPursuing)
+            SaveUtil.addAttrBool(elem, "fleetPursuing", true)
         SaveUtil.addAttrBool(elem, "mapRevealed", mapRevealed)
         SaveUtil.addAttrBool(elem, "mirageScouted", mirageScouted)
         if (mainframePhase != 1)
@@ -689,6 +721,7 @@ class Sector {
         info = SaveUtil.getAttrRefImmediate(elem, "sectorInfo", mapRefs, GameMap.SectorInfo::class.java)!!
 
         fleetAdvanceModifier = SaveUtil.getAttrInt(elem, "fleetAdvanceModifier")
+        fleetPursuing = elem.getAttributeValue("fleetPursuing")?.toBoolean() ?: false
         mapRevealed = SaveUtil.getAttrBool(elem, "mapRevealed")
         // Older saves don't have it
         mirageScouted = elem.getAttributeValue("mirageScouted")?.toBoolean() ?: false
@@ -798,6 +831,12 @@ class Sector {
 
         const val DANGER_ZONE_RADIUS = 767
         const val DANGER_ZONE_RADIUS_SQUARED = DANGER_ZONE_RADIUS * DANGER_ZONE_RADIUS
+
+        /**
+         * How many jumps behind the beacon where a hunting boss was beaten
+         * the Rebel fleet turns up (see [startFleetPursuit]).
+         */
+        const val FLEET_CHASE_JUMPS = 3
 
         /**
          * The amount the x position of the danger zone increases by

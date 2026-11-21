@@ -19,7 +19,11 @@ class ShipList(private val state: SelectShipState, private val close: (LazyShipB
 
     private val title = state.translator["shiplist_title"]
 
-    private val ships: List<LazyShipBlueprint>
+    /**
+     * The ships listed, in order: a vanilla family's A variant, and every
+     * variant of a mod's ships.
+     */
+    val ships: List<LazyShipBlueprint>
 
     private var offsetY: Int = 0
     private var maxY: Int = 0
@@ -32,11 +36,17 @@ class ShipList(private val state: SelectShipState, private val close: (LazyShipB
     init {
         // Ships in families only get the A variant, other (modded in) ships
         // all show up separately. Ships bigger than vanilla go first, in a
-        // row of their own, with a mod's default ship first of all.
+        // row of their own, with a mod's default ship first of all, and the
+        // big Lanius and then Crystal ships last (see LAST_RACES).
+        // (a mod's ship's B and C variants, X_2 and X_3, are listed too,
+        // each after its A, as their names sort)
         val nonFamilyShips = state.ships.filter { !state.shipFamilies.byShipId.containsKey(it.name) }
-        val aVariants = state.shipFamilies.families.map { family -> state.ships.first { it.name == family.ships[0] } }
+        // (a family whose ships the hangar doesn't show, as vanilla's aren't,
+        // is left out)
+        val aVariants = state.shipFamilies.families.mapNotNull { family -> state.ships.firstOrNull { it.name == family.ships[0] } }
         ships = (aVariants + nonFamilyShips).sortedWith(
             compareByDescending<LazyShipBlueprint> { it.shipSize > 1 }.thenByDescending { it.isDefaultShip }
+                .thenBy { LAST_RACES.indexOfFirst { race -> it.name.startsWith("PLAYER_SHIP_XFTL_$race") } }
         )
     }
 
@@ -169,5 +179,14 @@ class ShipList(private val state: SelectShipState, private val close: (LazyShipB
             return
         }
         offsetY = (offsetY - change / 5).coerceIn(0..maxScroll)
+    }
+
+    companion object {
+        /**
+         * The races whose big ships (PLAYER_SHIP_XFTL_<race>, and their B
+         * variants) are listed last, in this order; the rest keep the order
+         * their blueprints are in.
+         */
+        private val LAST_RACES = listOf("LANIUS", "CRYSTAL")
     }
 }

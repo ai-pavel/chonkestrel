@@ -9,6 +9,7 @@ import xyz.znix.xftl.BlueprintManager
 import xyz.znix.xftl.Datafile
 import xyz.znix.xftl.LazyShipBlueprint
 import xyz.znix.xftl.ShipShape
+import xyz.znix.xftl.systems.SystemBlueprint
 import xyz.znix.xftl.Translator
 import xyz.znix.xftl.VanillaDatafile
 import xyz.znix.xftl.modding.SlipstreamDirectoryMod
@@ -337,12 +338,98 @@ class KestrelModTest {
             colossal.keys
         )
         assertTrue(colossal.all { (name, size) -> size == if (name.startsWith("XFTL_BOSS_MAINFRAME")) 4 else 3 })
-        assertTrue(auto.filterKeys { it !in bigger && it !in colossal }.values.all { it == 1 })
+        // (and the race ships and the Chonk-Tail, see doc/game/race-ships.md,
+        // size two, as the Chonkestrel)
+        val raceShips = auto.filterKeys { it in RACE_SHIPS }
+        assertEquals(RACE_SHIPS.keys, raceShips.keys)
+        assertTrue(raceShips.values.all { it == 2 })
+        assertTrue(auto.filterKeys { it !in bigger && it !in colossal && it !in RACE_SHIPS }.values.all { it == 1 })
 
         // Everything else is still vanilla-sized
         val others = blueprints.filterKeys { !it.startsWith("BOSS_") && it != CHONKESTREL && it !in bigger }
         assertTrue(others.isNotEmpty())
         assertTrue(others.filterValues { it != 1 }.toString(), others.values.all { it == 1 })
+    }
+
+    @Test
+    fun testRaceShips() {
+        val modded = Datafile(df, listOf(SlipstreamDirectoryMod(MOD_DIR.toPath())))
+        val blueprints = BlueprintManager(modded, true)
+        val vanilla = BlueprintManager(Datafile(df, emptyList()), true)
+
+        // The Chonkestrel is still the default ship
+        assertEquals(CHONKESTREL, blueprints.defaultPlayerShip)
+
+        for ((name, emphasis) in RACE_SHIPS) {
+            val ship = blueprints.getShip(name)
+            assertEquals(name, 2, ship.shipSize)
+            assertTrue(name, ship.isPlayerShip)
+            assertEquals(name, 3, ship.opponentShips)
+
+            // Its race's systems, as many of each as it should have (counting
+            // the ones it can buy, too)
+            val counts = ship.systems.groupingBy { it.systemName }.eachCount()
+            for ((system, count) in emphasis)
+                assertEquals("$name $system", count, counts[system] ?: 0)
+            assertTrue("$name: ${ship.systems.size}", ship.maxSystems <= ship.systems.size)
+
+            // Its weapons systems share its weapon slots, which it has mounts for
+            assertTrue(name, ship.hardpoints.size >= ship.weaponSlots!!)
+            val weaponSystems = counts["weapons"] ?: 0
+            assertTrue(name, weaponSystems >= 2 && ship.initialWeapons.size <= ship.weaponSlots!!)
+
+            // Its artillery systems (the Federation's) each fire an
+            // Artillery Beam from a mount of their own, after the weapon
+            // slots' (see Artillery.hardpoint), which doesn't slide out
+            val artillery = ship.systems.filter { it.systemName == "artillery" }
+            assertTrue(name, artillery.all { it.weapon == "ARTILLERY_FED" })
+            assertEquals(name, ship.weaponSlots!! + artillery.size, ship.hardpoints.size)
+            assertTrue(name, ship.hardpoints.drop(ship.weaponSlots!!).all { it.slide == null })
+
+            // Its crew start in rooms it has (the Chonkvortex has only
+            // three, as its drones do the work)
+            assertTrue(name, ship.initialCrew.all { it.room != null && it.room in ship.rooms.indices })
+            assertTrue(name, ship.initialCrew.sumOf { it.amount } in 3..ship.maxCrew)
+
+            // It's in the hangar: a player ship that isn't vanilla's, with
+            // a miniature (the ship list skips ships without one)
+            assertTrue(name, vanilla.getOrNull(name) == null)
+            assertTrue(name, File(MOD_DIR, "img/customizeUI/miniship_${ship.img}.png").isFile)
+            assertTrue(name, File(MOD_DIR, "data/${ship.layout}.txt").isFile)
+        }
+
+        // Each Type B is named after its Type A, with _2 on the end, which
+        // is how the hangar pairs them up, and is made from a different ship
+        for (name in RACE_SHIPS.keys.filter { it.endsWith("_2") }) {
+            val typeA = name.removeSuffix("_2")
+            assertTrue(name, typeA == CHONKESTREL || typeA in RACE_SHIPS)
+            assertTrue(name, blueprints.getShip(name).layout != blueprints.getShip(typeA).layout)
+        }
+
+        // The Chonk-Tail is doubled like the Chonkestrel: human crew mostly,
+        // and two weapons systems of four Basic Lasers each, as the Red-Tail's
+        val chonkTail = blueprints.getShip("PLAYER_SHIP_CHONKESTREL_2")
+        assertTrue(chonkTail.initialCrew.filter { it.race == "human" }.sumOf { it.amount } >= 6)
+        assertEquals(List(8) { "LASER_BURST_1" }, chonkTail.initialWeapons)
+
+        // The Stealth cruisers start with no shields, as vanilla's do, but
+        // can buy them, and with both their cloaking systems
+        for (name in listOf("PLAYER_SHIP_XFTL_STEALTH", "PLAYER_SHIP_XFTL_STEALTH_2")) {
+            val systems = blueprints.getShip(name).systems
+            val shields = systems.filter { it.systemName == "shields" }
+            assertTrue(name, shields.isNotEmpty() && shields.none { it.availableByDefault })
+            assertTrue(name, systems.filter { it.systemName == "cloaking" }.all { it.availableByDefault })
+        }
+    }
+
+    @Test
+    fun testArtilleryIsSold() {
+        // The Artillery Beam, never sold in vanilla, can be bought in place
+        // of hacking or mind control (see BuyableArtillery)
+        val modded = BlueprintManager(Datafile(df, listOf(SlipstreamDirectoryMod(MOD_DIR.toPath()))), true)
+        val vanilla = BlueprintManager(Datafile(df, emptyList()), true)
+        assertEquals(0, (vanilla["artillery"] as SystemBlueprint).rarity)
+        assertTrue((modded["artillery"] as SystemBlueprint).rarity != 0)
     }
 
     @Test
@@ -552,6 +639,33 @@ class KestrelModTest {
 
         private val MOD_DIR = File("mods/chonkestrel")
         private const val CHONKESTREL = "PLAYER_SHIP_CHONKESTREL"
+
+        // The race ships (see tools/race_ships.py), and the Chonkestrel's
+        // Type B, with how many of their race's favourite systems each has
+        private val RACE_SHIPS = mapOf(
+            "PLAYER_SHIP_XFTL_ENGI" to mapOf("drones" to 3),
+            "PLAYER_SHIP_XFTL_ZOLTAN" to mapOf("shields" to 3),
+            "PLAYER_SHIP_XFTL_MANTIS" to mapOf("teleporter" to 2, "medbay" to 2),
+            "PLAYER_SHIP_XFTL_SLUG" to mapOf("sensors" to 2, "hacking" to 2, "mind" to 2),
+            "PLAYER_SHIP_XFTL_ROCK" to mapOf("weapons" to 3),
+            "PLAYER_SHIP_XFTL_LANIUS" to mapOf("oxygen" to 0, "battery" to 2, "hacking" to 2, "teleporter" to 1),
+            "PLAYER_SHIP_XFTL_CRYSTAL" to mapOf("cloaking" to 2),
+            // (and their Type B versions, from the vanilla Type B ships)
+            "PLAYER_SHIP_CHONKESTREL_2" to mapOf("weapons" to 2, "shields" to 2, "engines" to 2, "oxygen" to 2, "sensors" to 2),
+            "PLAYER_SHIP_XFTL_ENGI_2" to mapOf("drones" to 3),
+            "PLAYER_SHIP_XFTL_ZOLTAN_2" to mapOf("shields" to 3),
+            "PLAYER_SHIP_XFTL_MANTIS_2" to mapOf("teleporter" to 2, "medbay" to 2, "drones" to 2),
+            "PLAYER_SHIP_XFTL_SLUG_2" to mapOf("sensors" to 2, "hacking" to 2, "mind" to 2),
+            "PLAYER_SHIP_XFTL_ROCK_2" to mapOf("weapons" to 3),
+            "PLAYER_SHIP_XFTL_LANIUS_2" to mapOf("oxygen" to 0, "battery" to 2, "hacking" to 2, "teleporter" to 1),
+            "PLAYER_SHIP_XFTL_CRYSTAL_2" to mapOf("cloaking" to 2),
+            // (and the Federation's, with two Artillery Beams each)
+            "PLAYER_SHIP_XFTL_FED" to mapOf("artillery" to 2),
+            "PLAYER_SHIP_XFTL_FED_2" to mapOf("artillery" to 2),
+            // (and the Stealth cruisers', with two cloaking systems each)
+            "PLAYER_SHIP_XFTL_STEALTH" to mapOf("cloaking" to 2),
+            "PLAYER_SHIP_XFTL_STEALTH_2" to mapOf("cloaking" to 2),
+        )
 
         private val SHIP_REGEX = Regex("""<shipBlueprint\s+name="([^"]+)"(.*?)</shipBlueprint>""", RegexOption.DOT_MATCHES_ALL)
         private val SIZE_REGEX = Regex("""<shipSize>\s*(\d+)\s*</shipSize>""")

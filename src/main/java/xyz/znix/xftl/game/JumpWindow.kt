@@ -94,9 +94,15 @@ class JumpWindow(
     val background = game.getImg("img/map/zone_1.png")
 
     /**
-     * True if the player's out-of-fuel distress beacon is enabled.
+     * True if the player's out-of-fuel distress beacon is enabled. It's
+     * the game's (see InGameState.fuelDistressOn), so it stays on from one
+     * wait to the next, and through saving the game, until it's turned off.
      */
-    var fuelDistressOn = false
+    private var fuelDistressOn: Boolean
+        get() = game.fuelDistressOn
+        set(value) {
+            game.fuelDistressOn = value
+        }
 
     private var fuelDistressFlashTimer: Float = 0f
     private val fuelDistressFlashOn: Boolean get() = fuelDistressOn && fuelDistressFlashTimer < 0.5f
@@ -399,7 +405,7 @@ class JumpWindow(
         // The fleet advance goes over the beacons and the circling ship, but
         // under the beacons' labels, which are drawn after it
         // (there's none where a boss hunts the player instead, see HunterBoss)
-        if (!sector.isLastStand && sector.type.hasFleet) {
+        if (!sector.isLastStand && sector.hasFleet) {
             drawDangerZone(g)
         }
         for (label in pendingLabels)

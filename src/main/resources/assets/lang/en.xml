@@ -31,7 +31,47 @@
 
     <!-- The main menu, which also uses vanilla's mainmenu_* strings -->
     <text name="xftl_mainmenu_statistics">STATISTICS</text>
+    <text name="xftl_escape_statistics">STATISTICS</text>
+    <text name="xftl_escape_achievements_button">ACHIEVEMENTS</text>
+
+    <!-- The statistics window (StatisticsWindow): the best games, and one's details -->
+    <text name="xftl_stats_title">TOP SCORES</text>
+    <text name="xftl_stats_none">No finished games yet.</text>
+    <text name="xftl_stats_started">Started</text>
+    <text name="xftl_stats_duration">Played for</text>
+    <text name="xftl_stats_difficulty">Difficulty</text>
+    <text name="xftl_stats_names">Crew names</text>
+    <text name="xftl_stats_sector">Sector</text>
+    <text name="xftl_stats_beacons">Beacons explored</text>
+    <text name="xftl_stats_ships">Ships defeated</text>
+    <text name="xftl_stats_ships_split">(\1 crew killed)</text>
+    <text name="xftl_stats_scrap">Scrap collected</text>
+    <text name="xftl_stats_crew_lost">Crew lost</text>
+    <text name="xftl_stats_crew">Crew (hover over them for their skills)</text>
+    <text name="xftl_stats_systems">Systems</text>
+    <text name="xftl_stats_weapons">Weapons</text>
+    <text name="xftl_stats_drones">Drones</text>
+    <text name="xftl_stats_augments">Augments</text>
+    <text name="xftl_stats_won">Victory</text>
+    <text name="xftl_stats_destroyed">Ship destroyed</text>
+    <text name="xftl_stats_crew_dead">Crew killed</text>
+    <text name="xftl_stats_lost">Lost</text>
     <text name="xftl_mainmenu_exit">EXIT</text>
+    <text name="xftl_mainmenu_achievements">ACHIEVEMENTS</text>
+
+    <!--
+        The achievements (see AchievementTracker): the pause menu's box, every
+        ship's achievements (AchievementsWindow), and their tooltips, which
+        also use vanilla's ach_easy, ach_normal and ach_hard, and the notice
+        of one unlocked, vanilla's ach_unlocked
+    -->
+    <text name="xftl_escape_achievements">Achievements - see all ships</text>
+    <text name="xftl_escape_achievements_tip">See every ship's achievements.</text>
+    <text name="xftl_ach_title">ACHIEVEMENTS</text>
+    <text name="xftl_ach_none">No ship has achievements to track.</text>
+    <text name="xftl_ach_this_game">This game: \1</text>
+    <text name="xftl_ach_best">Best game: \1</text>
+    <text name="xftl_ach_locked">Locked</text>
     <!-- The main menu's new game window -->
     <text name="xftl_new_game_names">CREW NAMES</text>
     <text name="xftl_difficulty_fourth">INSANE</text>
@@ -122,6 +162,7 @@
 
     <!-- XFTL's own nebulas, see doc/game/nebulas.md -->
     <text name="xftl_big_ship_salvage">The rest of the bigger ship's wreckage has more to salvage.</text>
+    <text name="xftl_hybrid_salvage">The hybrid was two ships welded into one, and its wreckage has more to salvage.</text>
     <text name="xftl_sector_legend_hazard">Hazardous</text>
     <text name="xftl_sector_hazard">Unidentified Hazardous Sector</text>
     <text name="xftl_sensors_nebula">Blocked by the nebula: your sensors don't work here.</text>

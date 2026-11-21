@@ -132,6 +132,20 @@ class BulwarkTest {
     }
 
     @Test
+    fun fireHurtsABulwarkButNotASingleDrone() {
+        val kit = kit("TEST_BULWARK_ENEMY")
+        val bulwark = kit.launch(kit.state.enemy!!, 3).bulwark.pawn!!
+        assertEquals(1f, bulwark.fireDamageMult)
+        bulwark.room.spawnFireAt(0)
+        val health = bulwark.health
+        repeat(10) { kit.state.updateGameState(0.05f) }
+        assertTrue(bulwark.health < health)
+
+        val single = kit.launch(kit.player, 1).liveCopies.single() as AntiPersonnelDrone
+        assertEquals(0f, single.pawn!!.fireDamageMult)
+    }
+
+    @Test
     fun itsSaved() {
         val kit = kit("TEST_BULWARK_ENEMY")
         kit.launch(kit.state.enemy!!, 3)

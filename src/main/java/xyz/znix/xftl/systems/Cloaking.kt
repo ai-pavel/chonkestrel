@@ -84,8 +84,9 @@ class Cloaking(blueprint: SystemBlueprint) : MainSystem(blueprint) {
         if (powerSelected == 0)
             return
 
-        // Block cloaking while we're already cloaked
-        if (active)
+        // Block cloaking while we're already cloaked, by this or (on a ship
+        // with two, see Ship.cloakingSystems) the other cloaking system
+        if (active || ship.isCloakActive)
             return
 
         // Hacking blocks the cloak
@@ -94,6 +95,9 @@ class Cloaking(blueprint: SystemBlueprint) : MainSystem(blueprint) {
 
         this@Cloaking.timeRemaining = duration
         animationTimer = FADE_TIMER
+        // (one straight after another counts, for the achievements)
+        if (ship.isPlayerShip)
+            ship.sys.achievementTracker.cloakStarted()
 
         // The cloak sound only plays when the user unpauses
         shouldPlayCloakSound = true
@@ -137,6 +141,8 @@ class Cloaking(blueprint: SystemBlueprint) : MainSystem(blueprint) {
             // always at least 5 seconds.
             if (timeRemaining!! <= 0 || powerSelected == 0) {
                 timeRemaining = null
+                if (ship.isPlayerShip)
+                    ship.sys.achievementTracker.cloakEnded()
 
                 // Don't apply ion damage - this means we hold onto
                 // the power until the cooldown is finished (or

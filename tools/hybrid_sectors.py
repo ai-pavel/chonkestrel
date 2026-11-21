@@ -98,16 +98,25 @@ VANILLA = ("HOSTILE", "NEUTRAL")
 WEIGHT = 0.5
 
 
+# The start events' last words, about the sector's relay
+RELAY_HINT = ("Somewhere ahead, one of CONCORD's relays carries the hum across the sector. "
+              "Its codes could open a gap in the Mainframe's defences.")
+
+
 def start_event(index, first, second):
     """
     The sector's start event: the sector's name, what each race's space
     looks like under the hum, and the joined ships between them, with no
     choices or hazards (the start beacon's calm, see GameMap.calmStart).
+    It marks the sector's CONCORD relay (XFTL_HYBRIDSEC_RELAY, a quest on
+    the way to the exit), whose codes weaken the Mainframe.
     """
     (key_a, name_a, _), (key_b, name_b, _) = first, second
     ending = START_ENDINGS[index % len(START_ENDINGS)].format(a=name_a, b=name_b)
-    text = "You enter the %s-%s Controlled Sector. %s %s %s" % (name_a, name_b, START[key_a], START[key_b], ending)
-    return '<event name="XFTL_HYBRIDSEC_START_%s_%s">\n\t<text>%s</text>\n</event>' % (key_a, key_b, text)
+    text = "You enter the %s-%s Controlled Sector. %s %s %s %s" % (
+        name_a, name_b, START[key_a], START[key_b], ending, RELAY_HINT)
+    return ('<event name="XFTL_HYBRIDSEC_START_%s_%s">\n\t<text>%s</text>\n'
+            '\t<quest event="XFTL_HYBRIDSEC_RELAY" xftlAhead="true"/>\n</event>' % (key_a, key_b, text))
 
 
 def sector(dat_sectors, first, second):

@@ -950,7 +950,7 @@ class ShipWindow(val game: InGameState, val ship: Ship, initialTab: Tab, private
             return true
         }
 
-        if (key == Input.KEY_ENTER) {
+        if (Input.isEnter(key)) {
             renamingCrew = null
             return true
         }

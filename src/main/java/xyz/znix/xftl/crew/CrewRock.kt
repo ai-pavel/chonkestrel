@@ -10,4 +10,5 @@ class CrewRock(blueprint: CrewBlueprint, animations: Animations, room: Room, mod
     override val movementSpeed: Float get() = BASE_MOVEMENT_SPEED * 0.5f
     override val fireFightingSpeed: Float get() = 1.67f
     override val fireDamageMult: Float get() = 0f
+    override val stampsOutFires: Boolean get() = true
 }

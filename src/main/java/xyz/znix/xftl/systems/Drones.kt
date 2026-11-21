@@ -115,6 +115,19 @@ class Drones(blueprint: SystemBlueprint) : MainSystem(blueprint) {
         return powerManager.setItemPower(slot, power)
     }
 
+    /**
+     * One of [info]'s drones has been destroyed (see AbstractDrone.destroy):
+     * its slot's turned off, its other copies with it (as a single drone's
+     * is, with its one drone gone), giving its power back, whatever the
+     * ions. The player turns it on again, once its cooldown's over, to send
+     * out the lost one.
+     */
+    fun droneLost(info: DroneInfo) {
+        val slot = drones.indexOf(info)
+        if (slot != -1)
+            setDronePowerInternal(slot, false)
+    }
+
     private fun setDronePowerInternal(slot: Int, power: Boolean) {
         val info = drones[slot] ?: return
 

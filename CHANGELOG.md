@@ -1,5 +1,159 @@
 # Changelog
 
+## 2026-11-21: version 0.8-alpha
+
+### Features
+
+- **The Artillery Beam in the stores:** it can be bought for your ship's
+  hacking or mind control room, in place of that system, firing from the
+  room if the ship has no mount for it.
+- **Achievements for every ship:** each of the twenty big ships has six,
+  shown in the pause menu with their progress in this game (hover over
+  them) and kept in your profile: beat the RSV Vigilance, win, win on
+  Hard, and three for its race (the Type A and B each have their own),
+  such as winning a fight against three ships at once with the
+  Chonkestrel, having nine drones out with the Engi ships, killing a
+  hundred enemy crew with Mantis boarders, firing four hundred missiles
+  with the Rocks, or winning without an oxygen system with the Lanius.
+  The Federation's two have three different ones each: the Chonksprey's
+  for its Artillery Beams and for winning without hacking or mind
+  control, and the Chonknisos' for winning with an all-human crew,
+  accepting surrenders, and destroying a boss with its artillery. So do
+  the Stealth ships: the Chonkasio's for dodging shots, winning fights
+  without a scratch and going without shields, and the DA-CHONK 24's for
+  firing while cloaked, cloaking again as a cloak ends, and destroying a
+  boss while cloaked.
+  A notice shows each one as it's unlocked. The pause menu's achievements
+  title, and the new Achievements item in the main menu, open every ship's
+  achievements, with the best progress in any game and the difficulty
+  each was unlocked on.
+- **The nebula sectors each have a quest:** two beacons long, marked as
+  you arrive, ending in an augment found nowhere else. In the Radiation
+  Fields, a research station's shielding prototype: radiation doesn't
+  hurt anyone aboard. In the Mirage Expanse, the one real signal among the
+  ghosts leads to a Phantom Projector: for the first 12 seconds of each
+  fight, the enemies' shots miss far more. In the Dark Reach, a lost
+  dreadnought's Deep-Field Sensors, which work in nebulas.
+- **The hybrid sectors each have one of CONCORD's relays:** beat its guard
+  (or hack it, or send an Engi to talk to it) to take its codes. Each code,
+  up to four, weakens the Mainframe, in the order you meet its phases: its
+  Chorus pulses less often, then its bays build more slowly, then its
+  Firewall's super shield comes back more slowly, and with all four each
+  layer starts with a fifth of its hull gone.
+- **Statistics:** every game you finish gets a score (scrap collected,
+  beacons explored, ships defeated, sectors reached and crew lost, times
+  the difficulty, doubled for a win), shown at the end of the game. The
+  best 20 are kept, and the Statistics screen (from the main menu, the
+  pause menu, or the game over screen's Stats button, which used to crash) lists them, each
+  with when it started, how long it took and how it ended, and the ship at
+  the end: its crew (hover over them for their skills), systems, weapons,
+  drones and augments, drawn as the game draws them.
+- **Seven more ships to start with:** each race's Type A ship, made as
+  big as the Chonkestrel and laid out for what that race is good at. The
+  Engi's Chonktorus has three drones systems; the Zoltan's Chonkudicator
+  three shields systems and two Zoltan shields; the Mantis' Chonkila
+  Monster two teleporters with pads for four and two medbays; the Slugs'
+  Man of Chonk two each of sensors, hacking and mind control; the Rocks'
+  Chonkwark three weapons systems full of missiles and the most hull; the
+  Lanius' Chonkruos no oxygen at all, but two backup batteries and two
+  hacking systems; and the Crystals' Chonkravais two cloaking systems, to
+  cloak again while one cools down. They're in the hangar beside the
+  Chonkestrel, which is still the one picked to start with.
+- **Type B versions of the big ships:** each of those, and the Chonkestrel
+  too, has a Type B, made from the vanilla Type B ship with the same
+  race's strengths: the Chonk-Tail (the Red-Tail, with eight Basic
+  Lasers), the Chonkvortex (drones instead of crew), the Chonkoether
+  (ions behind three shields), the Chonkilisk (boarding drones as well as
+  two teleporters), the Chonkwalker (Healing Bursts, and two of every
+  mind system), the Chonkivan (fire bombs in three weapons systems), the
+  Chonkrike (flak, and still no oxygen) and the Chonkelian (Crystal
+  boarders, cloaked).
+- **The Federation's big ships:** the Chonksprey and the Chonknisos, the
+  Osprey and the Nisos made as big as the Chonkestrel, each with two
+  Artillery Beams, firing from two guns on the nose, and a Federation crew
+  of humans with a few others.
+- **The Stealth cruisers' big ships:** the Chonkasio and the DA-CHONK 24,
+  the Nesasio and the DA-SR 12 made as big as the Chonkestrel, each with
+  two cloaking systems, to cloak again while one cools down, and, as the
+  vanilla Stealth ships, no shields to start with.
+- **Hybrids are worth more:** two ships welded into one, a hybrid's wreck
+  has half as much scrap again, and one time in five a twin or triple
+  weapon.
+
+### Changes
+
+- **New Game goes on to the hangar:** after picking the difficulty and
+  crew names, you pick the ship to start with there, and escape goes back
+  to the menu. The hangar only shows the mod's own ships, not vanilla's,
+  and no longer has its own difficulty buttons, as it's been picked. The
+  arrows either side of List step through the ships, the Hide Rooms
+  button shows just the hull, and the A, B and C buttons work for the
+  mod's ships too (a ship's B is the same name with _2). It has vanilla's
+  hangar background, stretched to fit the screen, with the ship in the
+  middle of its landing pad, and the Edit Ship button only shows in debug
+  mode (XFTL_DEBUG).
+
+- **The Mainframe's phases are the other way round,** so each is harder
+  than the one before: the Mind comes out to meet you first, then the
+  Splicing Bays, and last the Firewall, the wall of shields around its
+  heart. Destroying the Firewall wins the game.
+
+- **The hazardous sectors change once their boss is beaten:** in the
+  Maw, the Gullet and the Belly, half the hazardous beacons, at random,
+  have one hazard fewer, as if the boss had made the sector what it was:
+  three hazards at once become two, two become one, and a single hazard
+  (a nebula too) becomes an ordinary beacon. And the Rebel fleet takes up
+  the chase, from three jumps behind where the boss was beaten. In a game
+  saved after beating one, this happens on the next jump.
+- **The Devourer is less of a wall for act 1:** its first boarding party
+  is 4 Lanius rather than 10, and it has 14 crew rather than 20. Every
+  boss's first boarding party now has a cap by its tier (4, 6, 8 and 10).
+- **The Ossuary hits harder,** as the last of the four: its ion weapon
+  and one of its heavy lasers are now burst lasers, and its twin Artemis
+  and twin bomb a triple Artemis and a heavy laser. All twelve of its
+  weapons are triples, for about a third more hull damage than the
+  Vigilance.
+
+### Fixes
+
+- **Rockmen stamp out fires,** hopping on the spot, rather than spraying
+  an extinguisher.
+- **An enemy's own Lanius don't suffocate their shipmates:** on a ship
+  with a mixed crew (the Mainframe's phases, the hybrids'), they no longer
+  drain the air, so a Crystal or a human beside them doesn't slowly die.
+  An all-Lanius crew still does, as in vanilla, as do the player's Lanius
+  and boarders.
+- **An enemy's super shield shows on its panel without a shields
+  system,** as the Mainframe's Mind has, rather than not at all.
+- **An enemy ship with a clonebay isn't beaten until its crew are gone for
+  good:** killing them all used to say "crew killed" at once, and then
+  they came back out of the clonebay. Now they're only killed once none
+  are dying or waiting to be cloned: break the clonebay (or cut its power)
+  and those waiting die one by one.
+- **The out-of-fuel distress beacon stays on** from one wait to the next
+  (and through saving the game) until you turn it off; it used to go off
+  every time the map was opened again.
+- **Killing a Mainframe phase's crew no longer quietly ends it:** CONCORD
+  takes the controls itself, with a message saying so, and the phase fights
+  on, automated and repairing itself, until it's destroyed. Before, your
+  boarders were taken home and the next phase came 20 seconds later, with
+  nothing on screen to say so.
+- **Fire hurts the enemies' bulwarks,** their big twin and triple
+  anti-personnel drones, as it does the crew (single drones still don't
+  burn).
+
+- **An enemy's shots miss once you've made peace:** its shots still on
+  their way (or bombs fired as the fight ended) miss, as the player's own
+  already did at a beaten enemy.
+- **A drone that's shot down turns its slot off,** a twin or triple one's
+  too (its other copies with it), giving its power back, rather than
+  leaving the slot on with the lost copy waiting for the player to turn it
+  off and on. Turning it on again after the cooldown sends the lost one
+  out.
+- **Ionised doors can't be opened or closed:** with the doors system
+  ionised down to no power, the doors are red, and stay as they were,
+  rather than still answering to the player.
+
 ## 2026-11-08: version 0.7.1-alpha
 
 Thanks to u/ActivityFew2621 on Reddit for reporting many of the bugs fixed

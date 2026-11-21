@@ -177,7 +177,8 @@ class FleetRewards(private val game: InGameState) {
                 event.boarderRace == null && event.statuses.isEmpty() &&
                 event.removedStuff.isEmpty() && event.questName == null &&
                 !event.revealMap && !event.isStore && !event.isDistressBeacon &&
-                !event.isLastStandRepair && event.fleetBackground == null
+                !event.isLastStandRepair && event.fleetBackground == null &&
+                event.counterChanges.isEmpty()
 
         fun isPlainResources(resources: ResourceSet): Boolean = resources.crew.isEmpty() &&
                 resources.lostCrew.isEmpty() && resources.intruders.isEmpty() &&

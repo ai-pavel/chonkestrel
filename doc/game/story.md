@@ -164,16 +164,18 @@ fleet is still chasing.
 The Mainframe is a station, much bigger than a ship, fought in three
 phases:
 
-1. **The Firewall.** Layers of shields, defence drones, and hacking. The
-   relays still standing make it stronger.
-2. **The Splicing Bays.** It launches hybrids to fight alongside it, two at a
-   time (as big ships fight several ships at once now, see `Wingman.kt`).
-3. **The Mind.** Its weapons fall silent, and it goes for the crew: Chorus
-   pulses that take sanity, crew turned against the player for a few seconds
-   (mind control), and weapons that aren't what they look like (mirages).
+1. **The Mind.** CONCORD comes out to talk the crew round: its guns are
+   few, and it goes for the crew: Chorus pulses that take sanity, crew
+   turned against the player for a few seconds (mind control), and weapons
+   that aren't what they look like (mirages).
+2. **The Splicing Bays.** When talking fails, it builds an army: drones to
+   fight alongside it, and spliced boarders.
+3. **The Firewall.** At the last, it hides behind its heart's shell: layers
+   of shields, defence drones, and hacking. The relays still standing make
+   it stronger.
 
-With both halves of Revic's backdoor, the player can skip the third phase
-(see [quests](#quests)).
+With both halves of Revic's backdoor, the player can skip the Mind (see
+[quests](#quests)).
 
 **Endings:** destroying the Mainframe wins the game, as now. The text before
 the victory screen depends on how: destroyed, shut down with the backdoor
@@ -229,7 +231,7 @@ interesting, but much more to show and balance; it can come later.
 - A crew member dying: 5.
 - Fighting hybrids: 3 a fight (seeing what was done to their crews).
 - Events: CONCORD's broadcasts, what the crew see in the hybrid sectors, BREW's help.
-- The Mainframe's Chorus pulses, in its third phase.
+- The Mainframe's Chorus pulses, in its first phase, the Mind.
 
 ### What gives it back
 

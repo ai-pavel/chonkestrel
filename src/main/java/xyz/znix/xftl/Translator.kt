@@ -68,6 +68,9 @@ class Translator {
         return translations[key] ?: "could not find: $key"
     }
 
+    /** The text for [key], or null if there isn't one (for optional texts). */
+    fun getOrNull(key: String): String? = translations[key]
+
     /**
      * Convenience helper for [GameText.get].
      */

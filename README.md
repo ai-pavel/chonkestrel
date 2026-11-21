@@ -61,7 +61,8 @@ with the mod in it, if there isn't one yet.
   [oxygen](doc/game/oxygen.md), [weapon sizes](doc/game/weapon-sizes.md),
   [stores](doc/game/stores.md), [nebulas](doc/game/nebulas.md),
   [extreme hazards](doc/game/extreme-hazards.md),
-  [ship shapes](doc/game/ship-shapes.md), [hybrid ships](doc/game/hybrid-ships.md)
+  [ship shapes](doc/game/ship-shapes.md), [hybrid ships](doc/game/hybrid-ships.md),
+  [race ships](doc/game/race-ships.md), [achievements](doc/game/achievements.md)
   and [crew names](doc/game/names.md).
 - The campaign: [the campaign](doc/game/lore.md), [the story](doc/game/story.md),
   [sectors](doc/game/sectors.md) and [event statistics](doc/game/events.md).

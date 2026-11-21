@@ -39,11 +39,14 @@ in `mods/chonkestrel/img/` (and their ships' layouts and blueprints in
 | `tools/system_buttons.py` | the systems' buttons for more than three power bars |
 | `tools/drone_sizes.py` | the twin and triple Bulwarks |
 | `tools/chonkestrel_art.py` | the Chonkestrel itself: its hull, cloak, floor, gibs, shield, rooms and miniature, from the Kestrel's |
+| `tools/race_ships.py` | the race ships, the other races', the Federation's and the Stealth cruisers' Type A and B ships made as big as the Chonkestrel, and the Chonkestrel's Type B: their layouts, blueprints and images |
+| `tools/hangar_art.py` | the hangar's background: vanilla's, 1280x720, stretched to 1920x1080 by widening its landing pad, so the big ships fit on it |
+| `tools/achievement_art.py` | the ship achievements' icons: each ship's miniature, with an emblem for the achievement (after `race_ships.py` and `chonkestrel_art.py`, which make the miniatures) |
 
 The order matters: it's the order of their blocks in the mod's
 `autoBlueprints.xml.append`, which they rewrite (in another order, the
 file comes out the same but shuffled, and shows up as changed in git).
-(Only the first three write it; the rest can go in any order.) It takes
+(Only the first three and the last write it; the rest can go in any order.) It takes
 about half a minute, and leaves `mods/chonkestrel/img/.generated`
 to say it's done.
 

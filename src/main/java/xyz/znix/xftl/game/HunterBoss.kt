@@ -26,7 +26,10 @@ import xyz.znix.xftl.sector.Sector
  * (its ship moves with it, from beacon to beacon). It brings its own
  * environment with it ([environment]), the one its beacon had at the exit,
  * and repairs on the jumps it doesn't move (see ColossalBoss.repairWhileAway).
- * Once beaten, it's gone from the map.
+ * Once beaten, it's gone from the map, half the hazardous beacons in its
+ * sector have one hazard fewer (see [Beacon.hazardsEased]), as if it had
+ * been what made the sector so dangerous, and the Rebel fleet takes up the
+ * chase (see [Sector.startFleetPursuit]).
  */
 class HunterBoss private constructor(val sector: Sector, val game: InGameState) : BossManager {
     override val serialisationType: String get() = SERIALISATION_TYPE
@@ -103,11 +106,17 @@ class HunterBoss private constructor(val sector: Sector, val game: InGameState) 
     /**
      * Called as the player jumps away from the beacon they're at (before
      * they arrive at the next): it jumps to [nextBeacon], if it's its turn,
-     * and otherwise repairs.
+     * and otherwise repairs. Once it's beaten, the fleet's there instead,
+     * and this isn't called; in a game saved after beating it but before
+     * that came in, the sector changes now, as it would have then (see
+     * [aftermath]).
      */
     override fun advanceFleet() {
-        if (defeated)
+        if (defeated) {
+            if (!sector.fleetPursuing)
+                aftermath()
             return
+        }
 
         val next = nextBeacon
         if (!jumping || next == null) {
@@ -169,6 +178,22 @@ class HunterBoss private constructor(val sector: Sector, val game: InGameState) 
         nextBeacon = null
         realBeacon.hunterEnvironment = null
         realBeacon.clearEnvironment()
+        aftermath()
+    }
+
+    /**
+     * What beating it does to its sector: half its hazardous beacons
+     * (rounding up), picked at random, calm down, and the Rebel fleet takes
+     * up the chase from where it was beaten.
+     */
+    private fun aftermath() {
+        val hazardous = sector.beacons.filter { it.environmentTypes != listOf(Beacon.EnvironmentType.NORMAL) }
+        for (beacon in hazardous.shuffled().take((hazardous.size + 1) / 2)) {
+            beacon.hazardsEased = true
+            beacon.clearEnvironment()
+        }
+
+        sector.startFleetPursuit(realBeacon)
     }
 
     override fun bossShipKilled(enemy: Ship) {

@@ -195,6 +195,10 @@ abstract class AbstractWeaponInstance(val type: AbstractWeaponBlueprint, val shi
         if (!ship.sys.debugFlags.infiniteMissiles.set && !replicated) {
             ship.missilesCount = max(0, ship.missilesCount - type.missilesUsed)
         }
+
+        // The missiles fired, and which weapons fired in a fight, for the achievements
+        if (ship.isPlayerShip)
+            ship.sys.achievementTracker.weaponFired(this)
     }
 
     open fun render(g: Graphics) {
@@ -361,7 +365,12 @@ abstract class AbstractWeaponInstance(val type: AbstractWeaponBlueprint, val shi
     open fun bindToWeaponsSystem(weapons: Weapons) {
     }
 
+    /** Whether an artillery system fires it (see [bindToArtillery]), for the achievements. */
+    var isArtillery: Boolean = false
+        private set
+
     open fun bindToArtillery(artillery: Artillery) {
+        isArtillery = true
     }
 
     open fun saveToXML(elem: Element, refs: ObjectRefs) {

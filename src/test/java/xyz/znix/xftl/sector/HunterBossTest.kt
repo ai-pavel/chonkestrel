@@ -97,6 +97,99 @@ class HunterBossTest {
     }
 
     @Test
+    fun onceBeatenHalfTheHazardousBeaconsHaveAHazardFewer() {
+        val kit = createKit("""xftlHunter="1"""")
+        val sector = kit.sector
+        // Four catastrophic beacons, and no added hazards elsewhere
+        val plain = sector.beacons.filter { !it.isExit && !it.hasStore && !it.hasQuest && it != kit.hunter.beacon }
+        for (beacon in sector.beacons) {
+            beacon.nebulaOverride = null
+            beacon.sectorHazards = emptyList()
+        }
+        val hazardous = plain.filter { it.event.environment == null }.take(4)
+        for (beacon in hazardous) {
+            beacon.nebulaOverride = Beacon.EnvironmentType.NEBULA
+            beacon.sectorHazards = listOf(Beacon.EnvironmentType.ASTEROID, Beacon.EnvironmentType.SUN)
+        }
+        assertEquals(4, hazardous.size)
+
+        kit.hunter.startEncounter()
+        kit.hunter.bossBeaten()
+
+        // What each beacon had before (with the boss gone)
+        fun own(beacon: Beacon): List<Beacon.EnvironmentType> {
+            val eased = beacon.hazardsEased
+            beacon.hazardsEased = false
+            return beacon.environmentTypes.also { beacon.hazardsEased = eased }
+        }
+        val normal = listOf(Beacon.EnvironmentType.NORMAL)
+        val candidates = sector.beacons.filter { own(it) != normal }
+        assertTrue(candidates.containsAll(hazardous))
+
+        // Half of them (rounding up) lose their last added hazard; the rest
+        // are as they were
+        val easedBeacons = sector.beacons.filter { it.hazardsEased }
+        assertEquals((candidates.size + 1) / 2, easedBeacons.size)
+        for (beacon in candidates) {
+            val expected = if (beacon.hazardsEased) own(beacon).dropLast(1).ifEmpty { normal } else own(beacon)
+            assertEquals(expected, beacon.environmentTypes)
+        }
+
+        // and that's saved
+        val loaded = InGameState(null, kit.state.content, kit.state.saveGameState())
+        val loadedSector = loaded.currentBeacon.sector
+        for (beacon in hazardous) {
+            val again = loadedSector.beacons.single { it.pos == beacon.pos }
+            assertEquals(beacon.environmentTypes, again.environmentTypes)
+        }
+    }
+
+    @Test
+    fun onceBeatenTheFleetTakesUpTheChase() {
+        val kit = createKit("""xftlHunter="1"""")
+        val sector = kit.sector
+        val at = kit.hunter.beacon!!
+        val start = sector.dangerZoneCentre.x
+        assertFalse(sector.hasFleet)
+
+        kit.hunter.startEncounter()
+        kit.hunter.bossBeaten()
+
+        // It turns up a few jumps behind where the boss was beaten, and
+        // advances from there
+        assertTrue(sector.hasFleet)
+        val behind = at.pos.x - Sector.DANGER_ZONE_RADIUS - Sector.FLEET_CHASE_JUMPS * Sector.DANGER_ZONE_ADVANCE
+        assertEquals(maxOf(behind, start), sector.dangerZoneCentre.x)
+        val fleet = sector.dangerZoneCentre.x
+        kit.state.advanceFleet()
+        assertTrue(sector.dangerZoneCentre.x > fleet)
+
+        // and that's saved
+        val loaded = InGameState(null, kit.state.content, kit.state.saveGameState())
+        assertTrue(loaded.currentBeacon.sector.hasFleet)
+    }
+
+    @Test
+    fun aGameSavedAfterBeatingItBeforeThisCatchesUpOnTheNextJump() {
+        val kit = createKit("""xftlHunter="1"""")
+        val sector = kit.sector
+        kit.hunter.startEncounter()
+        kit.hunter.bossBeaten()
+
+        // As an older game, saved with the boss beaten, but without the
+        // fleet or the calmer beacons
+        sector.fleetPursuing = false
+        for (beacon in sector.beacons)
+            beacon.hazardsEased = false
+        val loaded = InGameState(null, kit.state.content, kit.state.saveGameState())
+        val loadedSector = loaded.currentBeacon.sector
+        assertFalse(loadedSector.hasFleet)
+
+        loaded.advanceFleet()
+        assertTrue(loadedSector.hasFleet)
+    }
+
+    @Test
     fun itsSaved() {
         val kit = createKit("""xftlHunter="2"""")
         val hunter = kit.hunter

@@ -220,7 +220,14 @@ abstract class LivingCrew(blueprint: CrewBlueprint, anims: Animations, room: Roo
     override fun onFinishedDying() {
         super.onFinishedDying()
 
-        val clonebay = ownerShip?.clonebay ?: return
+        val owner = ownerShip
+        val clonebay = owner?.clonebay
+        if (clonebay == null) {
+            // Without a clonebay, the player's lost them for good
+            if (owner != null && owner.isPlayerShip)
+                owner.sys.stats.crewLost++
+            return
+        }
         clonebay.addDeadCrew(this)
     }
 

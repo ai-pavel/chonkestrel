@@ -67,7 +67,7 @@ class Doors(blueprint: SystemBlueprint) : SubSystem(blueprint) {
     ) :
         Button(ship.sys, powerPos + offset, ConstPoint(20, 20)) {
 
-        override val disabled: Boolean get() = broken || isHackActive
+        override val disabled: Boolean get() = broken || isHackActive || effectivePower == 0
 
         private val tooltip = HotkeyDelayedTooltip(game, if (open) "open_doors" else "close_doors")
 

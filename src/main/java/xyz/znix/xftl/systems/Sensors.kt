@@ -3,6 +3,7 @@ package xyz.znix.xftl.systems
 import org.jdom2.Element
 import xyz.znix.xftl.SystemInfo
 import xyz.znix.xftl.Translator
+import xyz.znix.xftl.augments.AugmentBlueprint
 import xyz.znix.xftl.savegame.ObjectRefs
 import xyz.znix.xftl.savegame.RefLoader
 
@@ -13,7 +14,9 @@ class Sensors(blueprint: SystemBlueprint) : SubSystem(blueprint) {
      * True if the sensors are in a nebula (of any kind), which stops them
      * working.
      */
-    val isInNebula: Boolean get() = ship.sys.currentBeacon.isNebula
+    // (Deep-Field Sensors see through it)
+    val isInNebula: Boolean
+        get() = ship.sys.currentBeacon.isNebula && !ship.hasAugment(AugmentBlueprint.DEEP_FIELD_SENSORS)
 
     private val blocked: Boolean get() = isInNebula || isHackActive
 

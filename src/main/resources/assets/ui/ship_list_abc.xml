@@ -10,7 +10,7 @@
         <widget type="hbox" pTop="32" pLeft="0" pRight="0">
             <widget type="free" xStretch="1"/>
 
-            <widget type="image-button" select2="img/customizeUI/button_arrow"/>
+            <widget type="image-button" select2="img/customizeUI/button_arrow" id="previous_ship"/>
 
             <widget type="free" w="7"/>
 
@@ -21,7 +21,7 @@
 
             <widget type="free" w="7"/>
 
-            <widget type="image-button" select2="img/customizeUI/button_arrow" mirror="true"/>
+            <widget type="image-button" select2="img/customizeUI/button_arrow" mirror="true" id="next_ship"/>
 
             <widget type="free" xStretch="1"/>
         </widget>
@@ -68,9 +68,11 @@
         <widget type="hbox" pTop="188" pLeft="0" pRight="0">
             <widget type="free" xStretch="1"/>
 
-            <widget type="button" pTop="0">
-                <widget type="label" colour="text-dark" font="HL2" scale="2" text="ship_hiderooms_button"
-                        pLeft="10" pRight="10" pTop="6" pBottom="6"/>
+            <!-- Laid out to fit "show rooms", the wider of its two labels
+                 (it's set to "hide rooms" as the hangar opens) -->
+            <widget type="button" pTop="0" id="hide_rooms">
+                <widget type="label" colour="text-dark" font="HL2" scale="2" text="ship_showrooms_button"
+                        pLeft="10" pRight="10" pTop="6" pBottom="6" id="hide_rooms_label"/>
             </widget>
 
             <widget type="free" xStretch="1"/>
