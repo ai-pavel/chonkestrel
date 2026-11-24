@@ -43,7 +43,8 @@ class SelectShipState @JvmOverloads constructor(
     val screenSize = Point(0, 0)
 
     val blueprints: BlueprintManager = BlueprintManager(datafile, true)
-    val translator: Translator = Translator(datafile, "en")
+    // In the language picked in the options (see MainGame.setLanguage)
+    val translator: Translator = Translator(datafile, main.language.code)
     val animations: Animations = Animations(datafile)
 
     val roomImageMeta: RoomImageMeta = RoomImageMeta.loadFromResource()
@@ -52,6 +53,11 @@ class SelectShipState @JvmOverloads constructor(
 
     val shipFamilies: ShipFamily.FamilyTable
     val ships: List<LazyShipBlueprint>
+
+    // Each big ship's vanilla ship (see ShipBlueprint.vanillaShip), and each
+    // vanilla ship's big version, for the Normal and Chonky buttons
+    private val vanillaOf: Map<String, String>
+    private val bigOf: Map<String, String>
 
     private val current: EditableShip get() = editor.ship
     private val currentBlueprint: ShipBlueprint get() = blueprints.getShip(current.baseBlueprint)
@@ -109,25 +115,42 @@ class SelectShipState @JvmOverloads constructor(
         }
         val familyNames = shipFamilies.families.map { it.ships[0] }
 
-        // Only the mods' own ships are shown, not vanilla's (see vanillaShips)
-        val vanillaShips = vanillaPlayerShips(datafile)
-
-        val playerShips = blueprints.blueprints.values
+        // Both the mods' ships and vanilla's
+        ships = blueprints.blueprints.values
             .asSequence()
             .filterIsInstance(LazyShipBlueprint::class.java)
             .filter { it.name.startsWith("PLAYER_SHIP_") && it.name !in HIDDEN_SHIPS }
             .sortedBy { it.name }
             .sortedBy { ship -> familyNames.indexOfFirst { ship.name.startsWith(it) } }
             .toList()
-        ships = playerShips.filter { it.name !in vanillaShips }.ifEmpty { playerShips }
+
+        // (a big ship whose vanilla ship isn't shown has none; if two name
+        // the same vanilla ship, it goes to the first)
+        val shown = ships.map { it.name }.toSet()
+        vanillaOf = ships.filter { it.shipSize > 1 }
+            .mapNotNull { ship -> ship.vanillaShip?.takeIf { it in shown }?.let { ship.name to it } }
+            .toMap()
+        bigOf = LinkedHashMap<String, String>().apply {
+            for ((big, vanilla) in vanillaOf)
+                putIfAbsent(vanilla, big)
+        }
 
         shipSelector = SpecDeserialiser(uiProvider).load("ship_list_abc").mainWidget
 
-        shipSelector.addButtonListener("random") { selectShip(ships.random().real) }
+        // A random ship as big as the current one (another big ship, of any
+        // layout, or another vanilla one), keeping to what the Normal and
+        // Chonky buttons picked
+        shipSelector.addButtonListener("random") {
+            val big = currentBlueprint.shipSize > 1
+            selectShip(ships.filter { (it.shipSize > 1) == big }.ifEmpty { ships }.random().real)
+        }
 
         shipSelector.addButtonListener("type_a") { selectShipVariant(0) }
         shipSelector.addButtonListener("type_b") { selectShipVariant(1) }
         shipSelector.addButtonListener("type_c") { selectShipVariant(2) }
+
+        shipSelector.addButtonListener("size_normal") { selectShipSize(false) }
+        shipSelector.addButtonListener("size_chonky") { selectShipSize(true) }
 
         shipSelector.addButtonListener("list") { shipListVisible = true }
 
@@ -141,7 +164,7 @@ class SelectShipState @JvmOverloads constructor(
             roomsLabel.text = translator[if (roomsHidden) "ship_showrooms_button" else "ship_hiderooms_button"]
         }
         // The arrows either side of the list button go through the ships in
-        // the list's order, round and round
+        // the list's order (the big ships, then vanilla's), round and round
         (shipSelector.byId["previous_ship"] as ImageButton).clickListener = { stepShip(-1) }
         (shipSelector.byId["next_ship"] as ImageButton).clickListener = { stepShip(1) }
 
@@ -397,6 +420,22 @@ class SelectShipState @JvmOverloads constructor(
         selectShip(next.real)
     }
 
+    /**
+     * The ship the Normal and Chonky buttons switch [name] to: a big ship's
+     * vanilla ship, or a vanilla ship's big version (see
+     * ShipBlueprint.vanillaShip), so it's the same race and layout letter.
+     * The big ships are only Type A and B, so a Type C goes to its family's
+     * big Type A (or if there's none, its B). Null for a ship with neither.
+     */
+    fun counterpartOf(name: String): String? {
+        vanillaOf[name]?.let { return it }
+        bigOf[name]?.let { return it }
+        val ship = ships.firstOrNull { it.name == name } ?: return null
+        if (ship.shipSize > 1)
+            return null
+        return variantsOf(name).firstNotNullOfOrNull { variant -> variant?.let { bigOf[it] } }
+    }
+
     /** Show the ship [name] (for the screenshots, see MainMenuState.showHangar). */
     fun showShip(name: String) = selectShip(ships.first { it.name == name }.real)
 
@@ -426,6 +465,16 @@ class SelectShipState @JvmOverloads constructor(
         updateTypeButton("type_a", 0)
         updateTypeButton("type_b", 1)
         updateTypeButton("type_c", 2)
+
+        // And the Normal and Chonky buttons, the same way: the current one
+        // selected, the other disabled if the ship has no counterpart
+        val big = blueprint.shipSize > 1
+        val counterpart = counterpartOf(blueprint.name)
+        for ((id, forBig) in listOf("size_normal" to false, "size_chonky" to true)) {
+            val button = shipSelector.byId[id] as UIKitButton
+            button.forceSelected = forBig == big
+            button.disabled = forBig == big || counterpart == null
+        }
     }
 
     /**
@@ -433,6 +482,19 @@ class SelectShipState @JvmOverloads constructor(
      */
     private fun selectShipVariant(index: Int) {
         val shipId = variantsOf(current.baseBlueprint)[index] ?: return
+
+        val blueprint = ships.firstOrNull { it.name == shipId } ?: return
+        selectShip(blueprint.real)
+    }
+
+    /**
+     * Switch the current ship to its vanilla ship, or its big version, if
+     * [big] (see [counterpartOf]).
+     */
+    private fun selectShipSize(big: Boolean) {
+        if ((currentBlueprint.shipSize > 1) == big)
+            return
+        val shipId = counterpartOf(current.baseBlueprint) ?: return
 
         val blueprint = ships.firstOrNull { it.name == shipId } ?: return
         selectShip(blueprint.real)
@@ -475,24 +537,5 @@ class SelectShipState @JvmOverloads constructor(
 
         // A ship's B or C variant's name ends with this (see variantsOf)
         val VARIANT_SUFFIX = Regex("_[23]$")
-
-        /**
-         * The player ships vanilla FTL has (by their blueprints' names, in any
-         * of its own data files, before the mods: the Type C ones are in
-         * dlcBlueprintsOverwrite.xml), which the hangar doesn't show: it's
-         * for the Chonkestrel mod's own ships. If a mod has no player ships
-         * of its own, they're all shown, so there's always one to pick.
-         */
-        fun vanillaPlayerShips(datafile: Datafile): Set<String> {
-            val names = HashSet<String>()
-            for (entry in datafile.vanilla.getAllFiles().filter { it.name.startsWith("data/") && it.name.endsWith(".xml") }) {
-                val text = datafile.vanilla.read(entry).toString(Charsets.UTF_8)
-                for (match in VANILLA_SHIP_NAME.findAll(text))
-                    names += match.groupValues[1]
-            }
-            return names
-        }
-
-        private val VANILLA_SHIP_NAME = Regex("""<shipBlueprint\s+name="(PLAYER_SHIP_[^"]+)"""")
     }
 }

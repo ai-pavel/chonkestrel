@@ -61,9 +61,34 @@ class StatisticsWindow(
             ConstPoint(PADDING, HEIGHT - PADDING - BIG_BUTTON_HEIGHT),
             ConstPoint(BIG_BUTTON_WIDTH, BIG_BUTTON_HEIGHT)
         )
+        // Reset, across from it at the other end of the list, if there's
+        // anything to reset
+        if (games.isNotEmpty()) {
+            buttons += ResetButton(
+                ConstPoint(PADDING + LIST_WIDTH - BIG_BUTTON_WIDTH, HEIGHT - PADDING - BIG_BUTTON_HEIGHT),
+                ConstPoint(BIG_BUTTON_WIDTH, BIG_BUTTON_HEIGHT)
+            )
+        }
     }
 
+    // Reset's confirmation, while it's open, drawn over this screen (see
+    // ResetButton), and given its clicks and escape
+    private var confirm: ConfirmWindow? = null
+
     override fun draw(g: Graphics) {
+        drawStatistics(g)
+
+        val confirm = confirm ?: return
+        g.colour = Colour(0f, 0f, 0f, 0.65f)
+        g.fillRect(position.x, position.y, size.x, size.y)
+        confirm.position = ConstPoint(
+            position.x + (size.x - confirm.size.x) / 2,
+            position.y + (size.y - confirm.size.y) / 2
+        )
+        confirm.draw(g)
+    }
+
+    private fun drawStatistics(g: Graphics) {
         game.windowRenderer.renderWithTitleTab(
             g, titleTab, titleFont, position.x, position.y, size.x, size.y,
             game.translator["xftl_stats_title"]
@@ -79,6 +104,16 @@ class StatisticsWindow(
             return
         }
         drawDetails(g, record)
+    }
+
+    override fun mouseClick(button: Int, x: Int, y: Int) {
+        confirm?.let { return it.mouseClick(button, x, y) }
+        super.mouseClick(button, x, y)
+    }
+
+    override fun mouseReleased(button: Int, x: Int, y: Int) {
+        confirm?.let { return it.mouseReleased(button, x, y) }
+        super.mouseReleased(button, x, y)
     }
 
     // The visible part of the details column, on the screen
@@ -97,13 +132,18 @@ class StatisticsWindow(
     private var mouseY = 0
     private val crewSpots = ArrayList<Pair<IntArray, GameRecord.CrewRecord>>()
 
+    // The weapons, drones and augments drawn, on the screen, for their
+    // descriptions' tooltip (see drawItemTooltip)
+    private val itemSpots = ArrayList<Pair<IntArray, Any>>()
+    private val infoPanel = InfoPanel(game)
+
     // Each record's crew, to draw them (see crewInfo)
     private val crewInfos = HashMap<GameRecord.CrewRecord, LivingCrewInfo?>()
 
     /**
      * The picked game's details, in the right-hand column: how it went, in
      * two columns, then its crew (drawn as the game draws them, with their
-     * skills in a tooltip), systems, weapons, drones and augments, as the
+     * skills in a tooltip; none for a game lost with the crew dead), systems, weapons, drones and augments, as the
      * game draws them too. It scrolls, if it's too long to fit.
      */
     private fun drawDetails(g: Graphics, record: GameRecord) {
@@ -115,6 +155,7 @@ class StatisticsWindow(
         val bottom = detailsBottom
         var y = top - scroll.toInt()
         crewSpots.clear()
+        itemSpots.clear()
 
         // Whether something from y0 to y1 is in view: it's drawn only if so,
         // as there's no clipping
@@ -128,7 +169,7 @@ class StatisticsWindow(
         fun heading(key: String) {
             y += SECTION_GAP
             text(headingFont, left, y, t[key], Constants.UI_BUTTON_HOVER)
-            y += TEXT_ROW
+            y += TEXT_ROW + HEADING_GAP
         }
 
         // How it went
@@ -141,8 +182,10 @@ class StatisticsWindow(
             "xftl_stats_names" to t["xftl_names_${record.namePreset}"],
             "xftl_stats_sector" to record.sector.toString(),
             "xftl_stats_beacons" to record.beacons.toString(),
-            "xftl_stats_ships" to "${record.shipsDestroyed + record.shipsCrewKilled} " +
-                    t["xftl_stats_ships_split"].replace("\\1", record.shipsCrewKilled.toString()),
+            "xftl_stats_ships" to (record.shipsDestroyed + record.shipsCrewKilled).toString(),
+            // (how many of them were beaten by killing their crews, on the
+            // line under it)
+            "xftl_stats_crews_killed" to record.shipsCrewKilled.toString(),
             "xftl_stats_scrap" to record.scrap.toString(),
             "xftl_stats_crew_lost" to record.crewLost.toString(),
         )
@@ -154,34 +197,44 @@ class StatisticsWindow(
         }
         y += statRows * TEXT_ROW
 
-        // The crew, a few to a row, each with their portrait
-        heading("xftl_stats_crew")
-        val crewColumns = (width / CREW_CELL_WIDTH).coerceAtLeast(1)
-        for ((index, member) in record.crew.withIndex()) {
-            val x = left + (index % crewColumns) * CREW_CELL_WIDTH
-            val cellTop = y + (index / crewColumns) * CREW_ROW
-            if (!inView(cellTop, cellTop + CREW_ROW))
-                continue
-            val info = crewInfo(member)
-            info?.drawPortrait(x, cellTop)
-            rowFont.drawString(x + PORTRAIT_WIDTH + 4f, cellTop + CREW_ROW / 2 + 6f,
-                fitted(rowFont, member.name, CREW_CELL_WIDTH - PORTRAIT_WIDTH - 8), Constants.SECTOR_CUTOUT_TEXT)
-            crewSpots += intArrayOf(x, cellTop, CREW_CELL_WIDTH, CREW_ROW) to member
+        // The crew, a few to a row, each with their portrait; not for a game
+        // lost with the crew dead, which would show only whoever was
+        // last left (dying)
+        if (record.outcome != GameOverWindow.Outcome.LOOSE_CREW) {
+            heading("xftl_stats_crew")
+            val crewColumns = (width / CREW_CELL_WIDTH).coerceAtLeast(1)
+            for ((index, member) in record.crew.withIndex()) {
+                val x = left + (index % crewColumns) * CREW_CELL_WIDTH
+                val cellTop = y + (index / crewColumns) * CREW_ROW
+                if (!inView(cellTop, cellTop + CREW_ROW))
+                    continue
+                val info = crewInfo(member)
+                info?.drawPortrait(x, cellTop)
+                rowFont.drawString(x + PORTRAIT_WIDTH + 4f, cellTop + CREW_ROW / 2 + 6f,
+                    fitted(rowFont, member.name, CREW_CELL_WIDTH - PORTRAIT_WIDTH - 8), Constants.SECTOR_CUTOUT_TEXT)
+                crewSpots += intArrayOf(x, cellTop, CREW_CELL_WIDTH, CREW_ROW) to member
+            }
+            y += (record.crew.size + crewColumns - 1) / crewColumns * CREW_ROW
         }
-        y += (record.crew.size + crewColumns - 1) / crewColumns * CREW_ROW
 
         // The systems, as the power bar shows them: each one's icon, under
-        // its level's bars
+        // its level's bars, in the power bar's order (see SYSTEM_ORDER), the
+        // subsystems starting a row of their own after the main systems
         heading("xftl_stats_systems")
+        // (each group's rows as tall as its most bars need)
         val systemColumns = (width / SYSTEM_CELL_WIDTH).coerceAtLeast(1)
-        val systemRow = SYSTEM_ICON + (record.systems.maxOfOrNull { it.level } ?: 0) * SYSTEM_BAR_STEP
-        for ((index, system) in record.systems.withIndex()) {
-            val x = left + (index % systemColumns) * SYSTEM_CELL_WIDTH
-            val cellTop = y + (index / systemColumns) * (systemRow + ITEM_GAP)
-            if (inView(cellTop, cellTop + systemRow))
-                drawSystem(g, system, x, cellTop + systemRow)
+        val (subsystems, mainSystems) = record.systems.sortedBy { systemOrder(it.name) }
+            .partition { it.name in SUBSYSTEMS }
+        for (group in listOf(mainSystems, subsystems)) {
+            val systemRow = SYSTEM_ICON + (group.maxOfOrNull { it.level } ?: 0) * SYSTEM_BAR_STEP
+            for ((index, system) in group.withIndex()) {
+                val x = left + (index % systemColumns) * SYSTEM_CELL_WIDTH
+                val cellTop = y + (index / systemColumns) * (systemRow + ITEM_GAP)
+                if (inView(cellTop, cellTop + systemRow))
+                    drawSystem(g, system, x, cellTop + systemRow)
+            }
+            y += (group.size + systemColumns - 1) / systemColumns * (systemRow + ITEM_GAP)
         }
-        y += (record.systems.size + systemColumns - 1) / systemColumns * (systemRow + ITEM_GAP)
 
         // The weapons, drones and augments, two to a row, as the game draws them
         for ((key, names) in listOf(
@@ -196,8 +249,10 @@ class StatisticsWindow(
                 val height = blueprints.maxOf { itemHeight(it) }
                 for ((column, name) in row.withIndex()) {
                     val x = left + column * half
-                    if (inView(y, y + height))
+                    if (inView(y, y + height)) {
                         drawItem(g, blueprints[column], name, x, y, height, half - ITEM_GAP)
+                        blueprints[column]?.let { itemSpots += intArrayOf(x, y, half - ITEM_GAP, height) to it }
+                    }
                 }
                 y += height + ITEM_GAP
             }
@@ -218,7 +273,37 @@ class StatisticsWindow(
             g.fillRect(barX, thumbTop, SCROLLBAR_WIDTH, thumb)
         }
 
-        drawSkillsTooltip(g)
+        // (not under Reset's confirmation)
+        if (confirm == null) {
+            drawSkillsTooltip(g)
+            drawItemTooltip()
+        }
+    }
+
+    // The hovered weapon's, drone's or augment's description, as the game
+    // shows it (the ship window's and the stores' info panel), by the mouse
+    private fun drawItemTooltip() {
+        val blueprint = itemSpots.firstOrNull { (rect, _) ->
+            mouseX in rect[0] until rect[0] + rect[2] && mouseY in rect[1] until rect[1] + rect[3]
+        }?.second ?: return
+
+        // (as tall as it usually is, without the tip the game has under it:
+        // a longer description may go a little further)
+        val height = when (blueprint) {
+            is AbstractWeaponBlueprint -> InfoPanel.INFO_HEIGHT_WEAPON
+            is DroneBlueprint -> InfoPanel.INFO_HEIGHT_DRONE
+            else -> InfoPanel.INFO_HEIGHT_AUGMENT
+        }
+        var x = mouseX + 16
+        if (x + INFO_PANEL_WIDTH > position.x + WIDTH)
+            x = mouseX - 16 - INFO_PANEL_WIDTH
+        val y = (mouseY + 16).coerceAtMost(position.y + HEIGHT - height).coerceAtLeast(position.y)
+        infoPanel.position = ConstPoint(x, y)
+        when (blueprint) {
+            is AbstractWeaponBlueprint -> infoPanel.drawWeapon(blueprint, withTip = false)
+            is DroneBlueprint -> infoPanel.drawDrone(blueprint, withTip = false)
+            is AugmentBlueprint -> infoPanel.drawAugment(blueprint)
+        }
     }
 
     // [text], cut short with an ellipsis if it's wider than [width]
@@ -331,8 +416,11 @@ class StatisticsWindow(
         game.windowRenderer.render(x, y, TOOLTIP_WIDTH, TOOLTIP_HEIGHT)
         headingFont.drawString(x + 14f, y + 26f, "${hovered.name} (${info.race.translateTitle(game)})", Colour.white)
 
-        for ((index, skill) in Skill.entries.withIndex()) {
-            val iconX = x + 12 + (index % 2) * (TOOLTIP_WIDTH / 2 - 6)
+        // (two to a row, the last row's one, the seventh, centred)
+        val skills = Skill.DISPLAY_ORDER
+        for ((index, skill) in skills.withIndex()) {
+            val column = if (index == skills.size - 1 && index % 2 == 0) 0.5f else (index % 2).f
+            val iconX = x + 12 + (column * (TOOLTIP_WIDTH / 2 - 6)).toInt()
             val iconY = y + 38 + index / 2 * 34
             val level = info.getSkillLevel(skill)
             val iconColour = when {
@@ -346,12 +434,15 @@ class StatisticsWindow(
     }
 
     override fun mouseScroll(change: Int) {
+        if (confirm != null)
+            return
         scroll = (scroll - change / 3f).coerceIn(0f, maxScroll.f)
     }
 
     override fun updateUI(x: Int, y: Int) {
         mouseX = x
         mouseY = y
+        confirm?.let { return it.updateUI(x, y) }
         super.updateUI(x, y)
     }
 
@@ -366,6 +457,7 @@ class StatisticsWindow(
     private fun duration(seconds: Int): String = "%d:%02d".format(seconds / 3600, seconds / 60 % 60)
 
     override fun escapePressed() {
+        confirm?.let { return it.escapePressed() }
         close()
     }
 
@@ -405,8 +497,35 @@ class StatisticsWindow(
     }
 
     /** Back, at the bottom: closes the window. */
-    private inner class BackButton(pos: IPoint, size: IPoint) : Button(game, pos, size) {
-        private val label = game.translator["xftl_button_back"]
+    private inner class BackButton(pos: IPoint, size: IPoint) : BigButton(pos, size, "xftl_button_back") {
+        override fun click(button: Int) {
+            if (button == Input.MOUSE_LEFT_BUTTON)
+                close()
+        }
+    }
+
+    /**
+     * Reset: forget every game in the statistics (the profile's best
+     * games; the achievements stay), once the player's said yes to the
+     * confirmation (over this screen, see [confirm]), then show the screen
+     * again, empty. No, or escape, goes back to the screen as it was.
+     */
+    private inner class ResetButton(pos: IPoint, size: IPoint) : BigButton(pos, size, "xftl_button_reset") {
+        override fun click(button: Int) {
+            if (button != Input.MOUSE_LEFT_BUTTON)
+                return
+            val ui = game.shipUI
+            val profile = game.mainGame.profile
+            confirm = ConfirmWindow(game, game.translator["xftl_stats_reset_confirm"], {
+                profile.clearGameRecords()
+                ui.showMenuWindow(StatisticsWindow(game, profile.shownTopGames, null, close))
+            }) { confirm = null }
+        }
+    }
+
+    // A big rounded button, as the new game window's, labelled [labelKey]
+    private abstract inner class BigButton(pos: IPoint, size: IPoint, labelKey: String) : Button(game, pos, size) {
+        private val label = game.translator[labelKey]
         private val textY: Int = centredBaseline(bigButtonFont, size.y)
 
         override fun draw(g: Graphics) {
@@ -414,11 +533,6 @@ class StatisticsWindow(
             Buttons.drawRounded(g, pos.x, pos.y, size.x, size.y, 4)
             val textX = (size.x - bigButtonFont.getWidth(label)) / 2f
             bigButtonFont.drawString(pos.x + textX, pos.y + textY.f, label, Constants.JUMP_DISABLED_TEXT)
-        }
-
-        override fun click(button: Int) {
-            if (button == Input.MOUSE_LEFT_BUTTON)
-                close()
         }
     }
 
@@ -429,6 +543,26 @@ class StatisticsWindow(
                 font.baselineToTop * font.scale).roundToInt()
 
     companion object {
+        /**
+         * The order the game's power bar has the systems in, by their
+         * codenames: the main systems', as Ship sorts them by
+         * MainSystem.SortingType, then the subsystems', by
+         * SubSystem.SortingType (on the right of the screen). A system the
+         * list hasn't (a mod's) goes last; the same systems keep the order
+         * they were recorded in.
+         */
+        private val SYSTEM_ORDER = listOf(
+            "shields", "engines", "medbay", "clonebay", "oxygen", "teleporter", "cloaking", "artillery",
+            "mind", "hacking", "weapons", "drones",
+            "pilot", "sensors", "doors", "battery",
+        )
+
+        // The subsystems' codenames, the end of SYSTEM_ORDER
+        private val SUBSYSTEMS = setOf("pilot", "sensors", "doors", "battery")
+
+        private fun systemOrder(codename: String): Int =
+            SYSTEM_ORDER.indexOf(codename).let { if (it < 0) SYSTEM_ORDER.size else it }
+
         private const val WIDTH = 1240
         private const val HEIGHT = 760
         private const val PADDING = 20
@@ -447,6 +581,9 @@ class StatisticsWindow(
         private const val TEXT_ROW = 20
         private const val TEXT_BASELINE = 15
         private const val SECTION_GAP = 12
+
+        // Below a section's heading, before what's in it
+        private const val HEADING_GAP = 8
         private const val CREW_CELL_WIDTH = 118
         private const val CREW_ROW = 34
         private const val PORTRAIT_WIDTH = 30
@@ -464,9 +601,13 @@ class StatisticsWindow(
         private const val SYSTEM_BAR_WIDTH = 14
         private const val SYSTEM_BAR_STEP = 6
 
-        // The crew's skills' tooltip
+        // The crew's skills' tooltip: its title, and a 34 pixel row for
+        // each two skills (four, for the seven)
         private const val TOOLTIP_WIDTH = 330
-        private const val TOOLTIP_HEIGHT = 150
+
+        // The info panel's width (see InfoPanel.drawDescriptionBox)
+        private const val INFO_PANEL_WIDTH = 333
+        private const val TOOLTIP_HEIGHT = 184
 
         private const val BIG_BUTTON_WIDTH = 140
         private const val BIG_BUTTON_HEIGHT = 40

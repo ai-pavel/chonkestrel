@@ -103,7 +103,9 @@ data class GameRecord(
     /**
      * A crewmember at the end of the game: their name, their race's
      * blueprint name and colour (as LivingCrewInfo has them, to draw them),
-     * and each skill's level, in [Skill]'s order.
+     * and each skill's level, in [Skill]'s order (records from before the
+     * Drones skill, the last, have just the six before it; their crew
+     * hadn't learnt it).
      */
     data class CrewRecord(val name: String, val race: String, val colour: Int, val skills: List<Int>)
 
@@ -159,17 +161,14 @@ data class GameRecord(
          * The score for a game: 1 for each scrap collected, 10 for each beacon
          * explored, 20 for each ship defeated and 50 for each sector reached,
          * less 10 for each crewmember lost, then times the difficulty's
-         * multiplier (half on easy, half again on hard), and doubled for a win.
+         * multiplier (half on easy, half again on hard, double on insane), and
+         * doubled for a win.
          */
         @JvmStatic
         fun score(stats: GameStats, sector: Int, win: Boolean, difficulty: Difficulty): Int {
             val base = stats.scrapCollected + 10 * stats.beaconsExplored + 20 * stats.shipsDefeated +
                     50 * sector - 10 * stats.crewLost
-            val multiplier = when (difficulty) {
-                Difficulty.EASY -> 0.5f
-                Difficulty.NORMAL -> 1f
-                Difficulty.HARD -> 1.5f
-            }
+            val multiplier = difficulty.scoreMultiplier
             return (base.coerceAtLeast(0) * multiplier * (if (win) 2 else 1)).toInt()
         }
 

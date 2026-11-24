@@ -10,64 +10,64 @@
 </eventList>
 
 <event name="XFTL_NEBULA_SIGNAL">
-	<text>A faint signal is repeating through the nebula's static. It's an old Federation code, from before the war.</text>
+	<text id="event_XFTL_NEBULA_SIGNAL_text"/>
 	<environment type="nebula"/>
 	<choice>
-		<text>Follow the signal.</text>
+		<text id="event_XFTL_NEBULA_SIGNAL_c1_choice"/>
 		<event load="XFTL_NEBULA_SIGNAL_OUTCOME"/>
 	</choice>
 	<choice>
-		<text>Ignore it.</text>
+		<text id="event_XFTL_NEBULA_SIGNAL_c2_choice"/>
 		<event/>
 	</choice>
 </event>
 <eventList name="XFTL_NEBULA_SIGNAL_OUTCOME">
 	<event>
-		<text>The signal leads to a hidden Federation supply cache.</text>
+		<text id="event_XFTL_NEBULA_SIGNAL_OUTCOME_1_text"/>
 		<autoReward level="MED">stuff</autoReward>
 	</event>
 	<event>
-		<text>The signal leads to the wreck of a Federation scout. Its last log entry says the crew could hear a hum on every channel, coming from the Rebel Core.</text>
+		<text id="event_XFTL_NEBULA_SIGNAL_OUTCOME_2_text"/>
 		<autoReward level="LOW">standard</autoReward>
 	</event>
 	<event>
-		<text>The signal was bait. A Rebel ship is waiting at its source.</text>
+		<text id="event_XFTL_NEBULA_SIGNAL_OUTCOME_3_text"/>
 		<ship load="REBEL" hostile="true"/>
 	</event>
 </eventList>
 
 <event name="XFTL_NEBULA_COLLISION">
-	<text>Your sensors are blind in the nebula, and you nearly collide with a freighter that's just as blind.</text>
+	<text id="event_XFTL_NEBULA_COLLISION_text"/>
 	<environment type="nebula"/>
 	<choice>
-		<text>Hard about!</text>
+		<text id="event_XFTL_NEBULA_COLLISION_c1_choice"/>
 		<event load="XFTL_NEBULA_COLLISION_OUTCOME"/>
 	</choice>
 	<choice req="pilot" lvl="2" hidden="true">
-		<text>(Advanced Piloting) Thread the gap between you.</text>
+		<text id="event_XFTL_NEBULA_COLLISION_c2_choice"/>
 		<event>
-			<text>You slip past the freighter with metres to spare. Its grateful captain sends over some supplies.</text>
+			<text id="event_XFTL_NEBULA_COLLISION_c2_text"/>
 			<autoReward level="LOW">standard</autoReward>
 		</event>
 	</choice>
 </event>
 <eventList name="XFTL_NEBULA_COLLISION_OUTCOME">
 	<event>
-		<text>You miss the freighter by a hair.</text>
+		<text id="event_XFTL_NEBULA_COLLISION_OUTCOME_1_text"/>
 	</event>
 	<event>
-		<text>You clip the freighter's hull. Both ships are damaged, but nobody is killed.</text>
+		<text id="event_XFTL_NEBULA_COLLISION_OUTCOME_2_text"/>
 		<damage amount="2"/>
 	</event>
 </eventList>
 
 <event name="XFTL_NEBULA_GAS_HARVEST">
-	<text>The nebula here is rich in gases that can be refined into fuel, if you're willing to spend the time.</text>
+	<text id="event_XFTL_NEBULA_GAS_HARVEST_text"/>
 	<environment type="nebula"/>
 	<choice>
-		<text>Harvest the gas.</text>
+		<text id="event_XFTL_NEBULA_GAS_HARVEST_c1_choice"/>
 		<event>
-			<text>You collect enough gas for some fuel, but the Rebel fleet gets closer while you work.</text>
+			<text id="event_XFTL_NEBULA_GAS_HARVEST_c1_text"/>
 			<item_modify>
 				<item type="fuel" min="2" max="4"/>
 			</item_modify>
@@ -75,18 +75,18 @@
 		</event>
 	</choice>
 	<choice>
-		<text>Move on.</text>
+		<text id="event_XFTL_NEBULA_GAS_HARVEST_c2_choice"/>
 		<event/>
 	</choice>
 </event>
 
 <event name="XFTL_NEBULA_HIDING_FLEET">
-	<text>A group of civilian ships is hiding in the nebula from the Rebel fleet. They're running out of supplies.</text>
+	<text id="event_XFTL_NEBULA_HIDING_FLEET_text"/>
 	<environment type="nebula"/>
 	<choice>
-		<text>Share your supplies.</text>
+		<text id="event_XFTL_NEBULA_HIDING_FLEET_c1_choice"/>
 		<event>
-			<text>The civilians thank you. One of their pilots wants to fight the Rebels, and joins you.</text>
+			<text id="event_XFTL_NEBULA_HIDING_FLEET_c1_text"/>
 			<item_modify>
 				<item type="fuel" min="-2" max="-2"/>
 				<item type="missiles" min="-1" max="-1"/>
@@ -95,7 +95,7 @@
 		</event>
 	</choice>
 	<choice>
-		<text>Leave them.</text>
+		<text id="event_XFTL_NEBULA_HIDING_FLEET_c2_choice"/>
 		<event/>
 	</choice>
 </event>
@@ -115,9 +115,9 @@ XFTL'S OWN NEBULAS (see doc/game/nebulas.md)
 </eventList>
 
 <textList name="XFTL_RADIATION_EMPTY">
-	<text>The nebula here glows a sickly green. Your radiation alarms go off the moment you arrive. Better not stay long, or keep your crew in the medbay or clonebay.</text>
-	<text>A radioactive nebula. The gas is harmless to your hull, but not to your crew.</text>
-	<text>Your sensors are blind, and your crew's dosimeters are climbing. There's nothing here worth staying for.</text>
+	<text id="text_XFTL_RADIATION_EMPTY_1"/>
+	<text id="text_XFTL_RADIATION_EMPTY_2"/>
+	<text id="text_XFTL_RADIATION_EMPTY_3"/>
 </textList>
 <event name="XFTL_RADIATION_EMPTY">
 	<text load="XFTL_RADIATION_EMPTY"/>
@@ -125,30 +125,30 @@ XFTL'S OWN NEBULAS (see doc/game/nebulas.md)
 </event>
 
 <event name="XFTL_RADIATION_AMBUSH">
-	<text>Pirates are hiding in the radioactive gas, where no patrol would follow. Their crew wear heavy radiation suits. Yours don't.</text>
+	<text id="event_XFTL_RADIATION_AMBUSH_text"/>
 	<environment type="radiation"/>
 	<ship load="PIRATE" hostile="true"/>
 </event>
 
 <event name="XFTL_RADIATION_ISOTOPES">
-	<text>The nebula is rich in rare isotopes. Collecting them would be worth a lot of scrap, but it means staying in the radiation.</text>
+	<text id="event_XFTL_RADIATION_ISOTOPES_text"/>
 	<environment type="radiation"/>
 	<choice>
-		<text>Collect the isotopes.</text>
+		<text id="event_XFTL_RADIATION_ISOTOPES_c1_choice"/>
 		<event>
-			<text>Your crew collect the isotopes, feeling a bit worse for it.</text>
+			<text id="event_XFTL_RADIATION_ISOTOPES_c1_text"/>
 			<autoReward level="MED">scrap_only</autoReward>
 		</event>
 	</choice>
 	<choice req="rock" hidden="true">
-		<text>(Rockman Crew) Send your Rockman out to collect them.</text>
+		<text id="event_XFTL_RADIATION_ISOTOPES_c2_choice"/>
 		<event>
-			<text>Your Rockman barely notices the radiation, and collects a full load.</text>
+			<text id="event_XFTL_RADIATION_ISOTOPES_c2_text"/>
 			<autoReward level="HIGH">scrap_only</autoReward>
 		</event>
 	</choice>
 	<choice>
-		<text>Leave.</text>
+		<text id="event_XFTL_RADIATION_ISOTOPES_c3_choice"/>
 		<event/>
 	</choice>
 </event>
@@ -161,9 +161,9 @@ XFTL'S OWN NEBULAS (see doc/game/nebulas.md)
 </eventList>
 
 <textList name="XFTL_DARK_EMPTY">
-	<text>This nebula is so thick that no light gets through. Your drones lose contact with the ship as soon as you arrive.</text>
-	<text>A dark nebula. Your sensors, your drones and even your crew's eyes are useless here.</text>
-	<text>Pitch black on every screen. Your drone controllers report no signal.</text>
+	<text id="text_XFTL_DARK_EMPTY_1"/>
+	<text id="text_XFTL_DARK_EMPTY_2"/>
+	<text id="text_XFTL_DARK_EMPTY_3"/>
 </textList>
 <event name="XFTL_DARK_EMPTY">
 	<text load="XFTL_DARK_EMPTY"/>
@@ -171,34 +171,34 @@ XFTL'S OWN NEBULAS (see doc/game/nebulas.md)
 </event>
 
 <event name="XFTL_DARK_AMBUSH">
-	<text>Something bumps into your hull in the dark. It's a Rebel ship, as blind as you are. Both of you open fire.</text>
+	<text id="event_XFTL_DARK_AMBUSH_text"/>
 	<environment type="dark"/>
 	<ship load="REBEL" hostile="true"/>
 </event>
 
 <event name="XFTL_DARK_DERELICT">
-	<text>Your hull scrapes against a derelict ship in the darkness. You can't send drones in, but your crew could go over.</text>
+	<text id="event_XFTL_DARK_DERELICT_text"/>
 	<environment type="dark"/>
 	<choice>
-		<text>Send a team over.</text>
+		<text id="event_XFTL_DARK_DERELICT_c1_choice"/>
 		<event load="XFTL_DARK_DERELICT_OUTCOME"/>
 	</choice>
 	<choice>
-		<text>Leave it.</text>
+		<text id="event_XFTL_DARK_DERELICT_c2_choice"/>
 		<event/>
 	</choice>
 </event>
 <eventList name="XFTL_DARK_DERELICT_OUTCOME">
 	<event>
-		<text>Your team find the derelict's stores untouched.</text>
+		<text id="event_XFTL_DARK_DERELICT_OUTCOME_1_text"/>
 		<autoReward level="MED">stuff</autoReward>
 	</event>
 	<event>
-		<text>There's a weapon still mounted on the derelict, and your team bring it back.</text>
+		<text id="event_XFTL_DARK_DERELICT_OUTCOME_2_text"/>
 		<weapon name="RANDOM"/>
 	</event>
 	<event>
-		<text>The derelict isn't empty. Its crew followed your team back through the airlock!</text>
+		<text id="event_XFTL_DARK_DERELICT_OUTCOME_3_text"/>
 		<boarders min="2" max="3" class="human"/>
 	</event>
 </eventList>
@@ -211,9 +211,9 @@ XFTL'S OWN NEBULAS (see doc/game/nebulas.md)
 </eventList>
 
 <textList name="XFTL_MIRAGE_EMPTY">
-	<text>The nebula shimmers with purple light. Your map shows ships at every beacon nearby, and you can't tell which are real.</text>
-	<text>A mirage nebula. Your sensors keep picking up ships that aren't there, and missing the ones that are.</text>
-	<text>Ghost signals flicker across your map. Somewhere among them may be real ones.</text>
+	<text id="text_XFTL_MIRAGE_EMPTY_1"/>
+	<text id="text_XFTL_MIRAGE_EMPTY_2"/>
+	<text id="text_XFTL_MIRAGE_EMPTY_3"/>
 </textList>
 <event name="XFTL_MIRAGE_EMPTY">
 	<text load="XFTL_MIRAGE_EMPTY"/>
@@ -221,58 +221,58 @@ XFTL'S OWN NEBULAS (see doc/game/nebulas.md)
 </event>
 
 <event name="XFTL_MIRAGE_FLEET">
-	<text>Your sensors show the entire Rebel fleet bearing down on you! Then the signal flickers, and it's gone. Then it's back.</text>
+	<text id="event_XFTL_MIRAGE_FLEET_text"/>
 	<environment type="mirage"/>
 	<choice>
-		<text>Burn fuel and run.</text>
+		<text id="event_XFTL_MIRAGE_FLEET_c1_choice"/>
 		<event>
-			<text>You flee at full speed. It was probably a mirage, but you'll never know.</text>
+			<text id="event_XFTL_MIRAGE_FLEET_c1_text"/>
 			<item_modify>
 				<item type="fuel" min="-1" max="-1"/>
 			</item_modify>
 		</event>
 	</choice>
 	<choice>
-		<text>Hold your nerve.</text>
+		<text id="event_XFTL_MIRAGE_FLEET_c2_choice"/>
 		<event load="XFTL_MIRAGE_FLEET_OUTCOME"/>
 	</choice>
 	<choice req="sensors" lvl="2" hidden="true">
-		<text>(Adv. Sensors) Filter out the false signals.</text>
+		<text id="event_XFTL_MIRAGE_FLEET_c3_choice"/>
 		<event>
-			<text>Your sensors cut through the mirage. There's no fleet, but there is a drifting cargo pod nearby.</text>
+			<text id="event_XFTL_MIRAGE_FLEET_c3_text"/>
 			<autoReward level="LOW">stuff</autoReward>
 		</event>
 	</choice>
 </event>
 <eventList name="XFTL_MIRAGE_FLEET_OUTCOME">
 	<event>
-		<text>The fleet fades away. It was a mirage after all.</text>
+		<text id="event_XFTL_MIRAGE_FLEET_OUTCOME_1_text"/>
 	</event>
 	<event>
-		<text>Most of the fleet fades away, but one ship doesn't. It's a real Rebel scout, and it's seen you.</text>
+		<text id="event_XFTL_MIRAGE_FLEET_OUTCOME_2_text"/>
 		<ship load="REBEL" hostile="true"/>
 	</event>
 </eventList>
 
 <event name="XFTL_MIRAGE_TRADER">
-	<text>A trading post shimmers in the purple haze, broadcasting its prices. It looks real enough.</text>
+	<text id="event_XFTL_MIRAGE_TRADER_text"/>
 	<environment type="mirage"/>
 	<choice>
-		<text>Approach the trading post.</text>
+		<text id="event_XFTL_MIRAGE_TRADER_c1_choice"/>
 		<event load="XFTL_MIRAGE_TRADER_OUTCOME"/>
 	</choice>
 	<choice>
-		<text>Don't trust it.</text>
+		<text id="event_XFTL_MIRAGE_TRADER_c2_choice"/>
 		<event/>
 	</choice>
 </event>
 <eventList name="XFTL_MIRAGE_TRADER_OUTCOME">
 	<event>
-		<text>The trading post is real, and glad of the custom.</text>
+		<text id="event_XFTL_MIRAGE_TRADER_OUTCOME_1_text"/>
 		<store/>
 	</event>
 	<event>
-		<text>The "trading post" was a projection, and the pirates behind it were waiting for you.</text>
+		<text id="event_XFTL_MIRAGE_TRADER_OUTCOME_2_text"/>
 		<ship load="PIRATE" hostile="true"/>
 	</event>
 </eventList>
@@ -291,8 +291,8 @@ Expanse and the Dark Reach, where most beacons are one kind of nebula
     nebula: the start beacon never has a hazard (see GameMap.calmStart).
 -->
 <textList name="XFTL_RADFIELDS_START">
-	<text>The Radiation Fields: a region where a supernova seeded every nebula with radioactive gas. Out here at the edge, the gas is still thin, but your crew's dosimeters are already clicking. The medbay is going to be busy. Deeper in, an automated beacon is still calling for the crew of a research station.</text>
-	<text>A faint green light glows in the nebulas ahead. You're at the edge of the Radiation Fields, where few ships stay long, and fewer crews stay healthy. Deeper in, an automated beacon is still calling for the crew of a research station.</text>
+	<text id="text_XFTL_RADFIELDS_START_1"/>
+	<text id="text_XFTL_RADFIELDS_START_2"/>
 </textList>
 <event name="XFTL_RADFIELDS_START">
 	<text load="XFTL_RADFIELDS_START"/>
@@ -301,12 +301,12 @@ Expanse and the Dark Reach, where most beacons are one kind of nebula
 </event>
 
 <event name="XFTL_RADFIELDS_COLONY">
-	<text>A mining colony on an irradiated moon is running out of anti-radiation drugs. Their miners are getting sick.</text>
+	<text id="event_XFTL_RADFIELDS_COLONY_text"/>
 	<environment type="radiation"/>
 	<choice>
-		<text>Share your medical supplies.</text>
+		<text id="event_XFTL_RADFIELDS_COLONY_c1_choice"/>
 		<event>
-			<text>The colony's doctors thank you, and the miners pay you in ore.</text>
+			<text id="event_XFTL_RADFIELDS_COLONY_c1_text"/>
 			<item_modify>
 				<item type="missiles" min="-1" max="-1"/>
 			</item_modify>
@@ -314,79 +314,79 @@ Expanse and the Dark Reach, where most beacons are one kind of nebula
 		</event>
 	</choice>
 	<choice req="medbay" lvl="2" hidden="true">
-		<text>(Upgraded Medbay) Treat the miners in your medbay.</text>
+		<text id="event_XFTL_RADFIELDS_COLONY_c2_choice"/>
 		<event>
-			<text>You treat the worst cases in your medbay. One of the miners, now healthy, asks to join your crew.</text>
+			<text id="event_XFTL_RADFIELDS_COLONY_c2_text"/>
 			<crewMember amount="1"/>
 			<autoReward level="LOW">scrap_only</autoReward>
 		</event>
 	</choice>
 	<choice>
-		<text>You can't help them.</text>
+		<text id="event_XFTL_RADFIELDS_COLONY_c3_choice"/>
 		<event/>
 	</choice>
 </event>
 
 <event name="XFTL_RADFIELDS_PIRATE_BASE">
-	<text>A pirate base is hidden in the radiation, where no patrol would follow. Its guard ship's crew are wearing heavy radiation suits.</text>
+	<text id="event_XFTL_RADFIELDS_PIRATE_BASE_text"/>
 	<environment type="radiation"/>
 	<choice>
-		<text>Attack the guard ship.</text>
+		<text id="event_XFTL_RADFIELDS_PIRATE_BASE_c1_choice"/>
 		<event>
-			<text>The pirates scramble to meet you.</text>
+			<text id="event_XFTL_RADFIELDS_PIRATE_BASE_c1_text"/>
 			<ship load="XFTL_RADFIELDS_PIRATE" hostile="true"/>
 		</event>
 	</choice>
 	<choice>
-		<text>Leave before they notice you.</text>
+		<text id="event_XFTL_RADFIELDS_PIRATE_BASE_c2_choice"/>
 		<event/>
 	</choice>
 </event>
 <ship name="XFTL_RADFIELDS_PIRATE" auto_blueprint="SHIPS_PIRATE">
 	<destroyed>
-		<text>With the guard ship gone, you raid the pirate base's stores.</text>
+		<text id="ship_XFTL_RADFIELDS_PIRATE_destroyed_text"/>
 		<autoReward level="HIGH">standard</autoReward>
 	</destroyed>
 	<deadCrew>
-		<text>The pirates' suits didn't save them. You raid the base's stores.</text>
+		<text id="ship_XFTL_RADFIELDS_PIRATE_deadCrew_text"/>
 		<autoReward level="HIGH">stuff</autoReward>
 	</deadCrew>
 </ship>
 
 <event name="XFTL_RADFIELDS_PILGRIMS">
-	<text>A group of Rockmen are bathing their ship in the radiation, chanting. "The light of the star that died here makes us stronger!"</text>
+	<text id="event_XFTL_RADFIELDS_PILGRIMS_text"/>
 	<environment type="radiation"/>
 	<choice>
-		<text>Ask if they need anything.</text>
+		<text id="event_XFTL_RADFIELDS_PILGRIMS_c1_choice"/>
 		<event load="XFTL_RADFIELDS_PILGRIMS_OUTCOME"/>
 	</choice>
 	<choice req="rock" hidden="true">
-		<text>(Rockman Crew) Let your Rockman join the ritual.</text>
+		<text id="event_XFTL_RADFIELDS_PILGRIMS_c2_choice"/>
 		<event>
-			<text>Your Rockman joins the chant, and comes back glowing faintly and very pleased. One of the pilgrims decides to come along too.</text>
+			<text id="event_XFTL_RADFIELDS_PILGRIMS_c2_text"/>
 			<crewMember amount="1" class="rock"/>
 		</event>
 	</choice>
 	<choice>
-		<text>Leave them to it.</text>
+		<text id="event_XFTL_RADFIELDS_PILGRIMS_c3_choice"/>
 		<event/>
 	</choice>
 </event>
 <eventList name="XFTL_RADFIELDS_PILGRIMS_OUTCOME">
 	<event>
-		<text>They don't need anything, but they give you some of their supplies as a blessing.</text>
+		<text id="event_XFTL_RADFIELDS_PILGRIMS_OUTCOME_1_text"/>
 		<autoReward level="LOW">standard</autoReward>
 	</event>
 	<event>
-		<text>They're offended that unbelievers interrupted the ritual, and attack!</text>
+		<text id="event_XFTL_RADFIELDS_PILGRIMS_OUTCOME_2_text"/>
 		<ship load="ROCK_SHIP" hostile="true"/>
 	</event>
 </eventList>
 
 <!-- The Mirage Expanse -->
 <textList name="XFTL_MIRAGE_EXPANSE_START">
-	<text>The Mirage Expanse: purple nebulas full of sensor ghosts, where ships see what isn't there. You're at its edge, where your sensors still work. Don't trust your map once you're in. Among the ghosts, one signal repeats on a schedule no mirage keeps: a derelict's beacon, somewhere ahead.</text>
-	<text>Your map fills with contacts the moment you arrive: ships, stations, hazards, all deeper in the purple haze ahead. Most of them aren't real. Welcome to the edge of the Mirage Expanse. Among the ghosts, one signal repeats on a schedule no mirage keeps: a derelict's beacon, somewhere ahead.</text>
+	<text id="text_XFTL_MIRAGE_EXPANSE_START_1"/>
+	<text id="text_XFTL_MIRAGE_EXPANSE_START_2"/>
 </textList>
 <event name="XFTL_MIRAGE_EXPANSE_START">
 	<text load="XFTL_MIRAGE_EXPANSE_START"/>
@@ -395,48 +395,48 @@ Expanse and the Dark Reach, where most beacons are one kind of nebula
 </event>
 
 <event name="XFTL_MIRAGE_DISTRESS">
-	<text>A distress signal is coming from a ship in the haze. Its captain begs for help. But your sensors can't tell if there's a ship there at all.</text>
+	<text id="event_XFTL_MIRAGE_DISTRESS_text"/>
 	<environment type="mirage"/>
 	<choice>
-		<text>Go to help.</text>
+		<text id="event_XFTL_MIRAGE_DISTRESS_c1_choice"/>
 		<event load="XFTL_MIRAGE_DISTRESS_OUTCOME"/>
 	</choice>
 	<choice req="sensors" lvl="2" hidden="true">
-		<text>(Adv. Sensors) Check if the ship is real first.</text>
+		<text id="event_XFTL_MIRAGE_DISTRESS_c2_choice"/>
 		<event>
-			<text>The ship is real, and so is its trouble. Its crew are grateful for your help.</text>
+			<text id="event_XFTL_MIRAGE_DISTRESS_c2_text"/>
 			<autoReward level="MED">standard</autoReward>
 		</event>
 	</choice>
 	<choice>
-		<text>Ignore it.</text>
+		<text id="event_XFTL_MIRAGE_DISTRESS_c3_choice"/>
 		<event/>
 	</choice>
 </event>
 <eventList name="XFTL_MIRAGE_DISTRESS_OUTCOME">
 	<event>
-		<text>The ship is real, and its crew are grateful for your help.</text>
+		<text id="event_XFTL_MIRAGE_DISTRESS_OUTCOME_1_text"/>
 		<autoReward level="MED">standard</autoReward>
 	</event>
 	<event>
-		<text>There's nothing there but haze. You've wasted fuel chasing a ghost.</text>
+		<text id="event_XFTL_MIRAGE_DISTRESS_OUTCOME_2_text"/>
 		<item_modify>
 			<item type="fuel" min="-1" max="-1"/>
 		</item_modify>
 	</event>
 	<event>
-		<text>The "distress signal" was bait. Pirates are waiting for you.</text>
+		<text id="event_XFTL_MIRAGE_DISTRESS_OUTCOME_3_text"/>
 		<ship load="PIRATE" hostile="true"/>
 	</event>
 </eventList>
 
 <event name="XFTL_MIRAGE_ILLUSIONISTS">
-	<text>A Slug ship hails you. "Want to see a trick? We can make your ship look like a whole fleet, for a small fee."</text>
+	<text id="event_XFTL_MIRAGE_ILLUSIONISTS_text"/>
 	<environment type="mirage"/>
 	<choice>
-		<text>Pay for the trick.</text>
+		<text id="event_XFTL_MIRAGE_ILLUSIONISTS_c1_choice"/>
 		<event>
-			<text>The Slugs project a phantom fleet behind you. The Rebels tracking you will think twice before following.</text>
+			<text id="event_XFTL_MIRAGE_ILLUSIONISTS_c1_text"/>
 			<item_modify>
 				<item type="scrap" min="-20" max="-20"/>
 			</item_modify>
@@ -444,47 +444,47 @@ Expanse and the Dark Reach, where most beacons are one kind of nebula
 		</event>
 	</choice>
 	<choice req="slug" hidden="true">
-		<text>(Slug Crew) Have your Slug talk them into a discount.</text>
+		<text id="event_XFTL_MIRAGE_ILLUSIONISTS_c2_choice"/>
 		<event>
-			<text>Your Slug and theirs come to an arrangement. The phantom fleet costs you nothing.</text>
+			<text id="event_XFTL_MIRAGE_ILLUSIONISTS_c2_text"/>
 			<modifyPursuit amount="-1"/>
 		</event>
 	</choice>
 	<choice>
-		<text>No thanks.</text>
+		<text id="event_XFTL_MIRAGE_ILLUSIONISTS_c3_choice"/>
 		<event/>
 	</choice>
 </event>
 
 <event name="XFTL_MIRAGE_REFLECTION">
-	<text>A ship appears on your sensors that looks exactly like yours, down to the scorch marks on its hull. It copies your every move.</text>
+	<text id="event_XFTL_MIRAGE_REFLECTION_text"/>
 	<environment type="mirage"/>
 	<choice>
-		<text>Fire on it.</text>
+		<text id="event_XFTL_MIRAGE_REFLECTION_c1_choice"/>
 		<event load="XFTL_MIRAGE_REFLECTION_OUTCOME"/>
 	</choice>
 	<choice>
-		<text>Wait for it to fade.</text>
+		<text id="event_XFTL_MIRAGE_REFLECTION_c2_choice"/>
 		<event>
-			<text>The reflection fades into the haze. Your crew are rattled, but unharmed.</text>
+			<text id="event_XFTL_MIRAGE_REFLECTION_c2_text"/>
 		</event>
 	</choice>
 </event>
 <eventList name="XFTL_MIRAGE_REFLECTION_OUTCOME">
 	<event>
-		<text>Your shots pass straight through it, and hit a cloud of debris behind it. Some of it is worth salvaging.</text>
+		<text id="event_XFTL_MIRAGE_REFLECTION_OUTCOME_1_text"/>
 		<autoReward level="LOW">stuff</autoReward>
 	</event>
 	<event>
-		<text>The "reflection" fires back. It's a Rebel ship with a mirage projector!</text>
+		<text id="event_XFTL_MIRAGE_REFLECTION_OUTCOME_2_text"/>
 		<ship load="REBEL" hostile="true"/>
 	</event>
 </eventList>
 
 <!-- The Dark Reach -->
 <textList name="XFTL_DARK_REACH_START">
-	<text>The Dark Reach: a region of nebulas so thick that no light gets through. Here at its edge your drones still answer, but they won't for long once you're in. You'll have to fight the old-fashioned way. Every chart of the Reach marks the wreck of a dreadnought somewhere in the dark ahead. Nobody's ever found it.</text>
-	<text>Ahead, the nebulas grow so thick that the stars go out. You're at the edge of the Dark Reach, and your drone controllers are already losing the signal. Every chart of the Reach marks the wreck of a dreadnought somewhere in the dark ahead. Nobody's ever found it.</text>
+	<text id="text_XFTL_DARK_REACH_START_1"/>
+	<text id="text_XFTL_DARK_REACH_START_2"/>
 </textList>
 <event name="XFTL_DARK_REACH_START">
 	<text load="XFTL_DARK_REACH_START"/>
@@ -493,19 +493,19 @@ Expanse and the Dark Reach, where most beacons are one kind of nebula
 </event>
 
 <event name="XFTL_DARK_LIGHTHOUSE">
-	<text>An old navigation lighthouse is still blinking in the dark, guiding ships through the Reach. Its keeper hails you. "Haven't seen a ship in months. Need directions?"</text>
+	<text id="event_XFTL_DARK_LIGHTHOUSE_text"/>
 	<environment type="dark"/>
 	<choice>
-		<text>Ask for directions.</text>
+		<text id="event_XFTL_DARK_LIGHTHOUSE_c1_choice"/>
 		<event>
-			<text>The keeper uploads their charts of the sector to your map.</text>
+			<text id="event_XFTL_DARK_LIGHTHOUSE_c1_text"/>
 			<reveal_map/>
 		</event>
 	</choice>
 	<choice>
-		<text>Ask for supplies.</text>
+		<text id="event_XFTL_DARK_LIGHTHOUSE_c2_choice"/>
 		<event>
-			<text>The keeper doesn't have much, but shares what they can.</text>
+			<text id="event_XFTL_DARK_LIGHTHOUSE_c2_text"/>
 			<item_modify>
 				<item type="fuel" min="1" max="3"/>
 			</item_modify>
@@ -514,48 +514,48 @@ Expanse and the Dark Reach, where most beacons are one kind of nebula
 </event>
 
 <event name="XFTL_DARK_LURKERS">
-	<text>Something is draining your hull. In the darkness, a Lanius ship has latched onto you, and is feeding on your armour.</text>
+	<text id="event_XFTL_DARK_LURKERS_text"/>
 	<environment type="dark"/>
 	<choice>
-		<text>Shake it off and fight.</text>
+		<text id="event_XFTL_DARK_LURKERS_c1_choice"/>
 		<event>
-			<text>You break free, and the Lanius ship turns to fight.</text>
+			<text id="event_XFTL_DARK_LURKERS_c1_text"/>
 			<ship load="LANIUS_SHIP" hostile="true"/>
 		</event>
 	</choice>
 	<choice req="anaerobic" hidden="true">
-		<text>(Lanius Crew) Have your Lanius talk to them.</text>
+		<text id="event_XFTL_DARK_LURKERS_c2_choice"/>
 		<event>
-			<text>Your Lanius convinces them that your ship isn't food. They let go, and leave a little scrap as an apology.</text>
+			<text id="event_XFTL_DARK_LURKERS_c2_text"/>
 			<autoReward level="LOW">scrap_only</autoReward>
 		</event>
 	</choice>
 </event>
 
 <event name="XFTL_DARK_BLIND_TRADER">
-	<text>A trader's voice comes over the radio. "Can't see a thing out here, but I can hear your engines. Want to trade? I'll take your word for what you're selling."</text>
+	<text id="event_XFTL_DARK_BLIND_TRADER_text"/>
 	<environment type="dark"/>
 	<choice>
-		<text>Trade honestly.</text>
+		<text id="event_XFTL_DARK_BLIND_TRADER_c1_choice"/>
 		<event>
-			<text>The trader is pleased with the fair deal.</text>
+			<text id="event_XFTL_DARK_BLIND_TRADER_c1_text"/>
 			<store/>
 		</event>
 	</choice>
 	<choice>
-		<text>Sell them scrap metal as "rare parts".</text>
+		<text id="event_XFTL_DARK_BLIND_TRADER_c2_choice"/>
 		<event load="XFTL_DARK_BLIND_TRADER_OUTCOME"/>
 	</choice>
 </event>
 <eventList name="XFTL_DARK_BLIND_TRADER_OUTCOME">
 	<event>
-		<text>The trader pays up without a word. You feel a little guilty.</text>
+		<text id="event_XFTL_DARK_BLIND_TRADER_OUTCOME_1_text"/>
 		<item_modify>
 			<item type="scrap" min="25" max="35"/>
 		</item_modify>
 	</event>
 	<event>
-		<text>"I can't see, but I can feel cheap metal!" The trader's escort opens fire.</text>
+		<text id="event_XFTL_DARK_BLIND_TRADER_OUTCOME_2_text"/>
 		<ship load="PIRATE" hostile="true"/>
 	</event>
 </eventList>
@@ -569,53 +569,53 @@ Expanse and the Dark Reach, where most beacons are one kind of nebula
 
 <!-- The Radiation Fields: the research station, and its lab at the core -->
 <event name="XFTL_RADFIELDS_STATION">
-	<text>The research station is empty, its crew long gone, its corridors glowing faintly green. Its last log says the team took their shielding prototype to a lab nearer the supernova's core, to test it, and never came back.</text>
+	<text id="event_XFTL_RADFIELDS_STATION_text"/>
 	<choice>
-		<text>Search the station for the lab's coordinates.</text>
+		<text id="event_XFTL_RADFIELDS_STATION_c1_choice"/>
 		<event>
-			<text>Your crew find the coordinates, and a few useful things besides, and come back with their dosimeters screaming. The lab is marked on your map.</text>
+			<text id="event_XFTL_RADFIELDS_STATION_c1_text"/>
 			<autoReward level="LOW">stuff</autoReward>
 			<damage amount="1"/>
 			<quest event="XFTL_RADFIELDS_CORE" xftlAhead="true"/>
 		</event>
 	</choice>
 	<choice req="rock" hidden="true">
-		<text>(Rockman) Send your Rockman in. Radiation means nothing to them.</text>
+		<text id="event_XFTL_RADFIELDS_STATION_c2_choice"/>
 		<event>
-			<text>Your Rockman strolls through the station as if it were a garden, and comes back with the lab's coordinates and an armful of salvage. The lab is marked on your map.</text>
+			<text id="event_XFTL_RADFIELDS_STATION_c2_text"/>
 			<autoReward level="MED">stuff</autoReward>
 			<quest event="XFTL_RADFIELDS_CORE" xftlAhead="true"/>
 		</event>
 	</choice>
 	<choice>
-		<text>Leave the station to its ghosts.</text>
+		<text id="event_XFTL_RADFIELDS_STATION_c3_choice"/>
 		<event/>
 	</choice>
 </event>
 
 <event name="XFTL_RADFIELDS_CORE">
-	<text>The lab clings to a rock at the edge of the supernova's core. A pirate ship is already docked, stripping it for parts, and its captain doesn't take kindly to company.</text>
+	<text id="event_XFTL_RADFIELDS_CORE_text"/>
 	<choice>
-		<text>Drive them off.</text>
+		<text id="event_XFTL_RADFIELDS_CORE_c1_choice"/>
 		<event>
-			<text>The pirates cast off and come about.</text>
+			<text id="event_XFTL_RADFIELDS_CORE_c1_text"/>
 			<ship load="XFTL_RADFIELDS_SCAVENGER" hostile="true"/>
 		</event>
 	</choice>
 	<choice>
-		<text>Leave the lab to them.</text>
+		<text id="event_XFTL_RADFIELDS_CORE_c2_choice"/>
 		<event/>
 	</choice>
 </event>
 
 <ship name="XFTL_RADFIELDS_SCAVENGER" auto_blueprint="SHIPS_PIRATE" xftlAlone="true">
 	<destroyed>
-		<text>With the pirates gone, your crew search the lab. The shielding prototype is still in its crate, and it fits your bulkheads. Radiation won't trouble your crew again.</text>
+		<text id="ship_XFTL_RADFIELDS_SCAVENGER_destroyed_text"/>
 		<augment name="XFTL_RADIATION_SHIELDING"/>
 		<autoReward level="HIGH">standard</autoReward>
 	</destroyed>
 	<deadCrew>
-		<text>The pirates are dead, and their ship and the lab are yours to search. The shielding prototype is still in its crate, and it fits your bulkheads. Radiation won't trouble your crew again.</text>
+		<text id="ship_XFTL_RADFIELDS_SCAVENGER_deadCrew_text"/>
 		<augment name="XFTL_RADIATION_SHIELDING"/>
 		<autoReward level="HIGH">standard</autoReward>
 	</deadCrew>
@@ -623,61 +623,61 @@ Expanse and the Dark Reach, where most beacons are one kind of nebula
 
 <!-- The Mirage Expanse: the true signal among the ghosts, and its derelict -->
 <event name="XFTL_MIRAGE_GHOSTS">
-	<text>Three identical contacts hang in the purple haze, each repeating the same derelict's beacon. Only one of them is real.</text>
+	<text id="event_XFTL_MIRAGE_GHOSTS_text"/>
 	<choice req="sensors" lvl="2" hidden="true">
-		<text>(Sensors) Cross-check the three signals' timing.</text>
+		<text id="event_XFTL_MIRAGE_GHOSTS_c1_choice"/>
 		<event>
-			<text>Two of the signals drift by a fraction of a second; the third keeps perfect time. That's the real one, and you mark it on your map.</text>
+			<text id="event_XFTL_MIRAGE_GHOSTS_c1_text"/>
 			<quest event="XFTL_MIRAGE_DERELICT" xftlAhead="true"/>
 		</event>
 	</choice>
 	<choice req="slug" hidden="true">
-		<text>(Slug) Ask your Slug which one has anyone aboard.</text>
+		<text id="event_XFTL_MIRAGE_GHOSTS_c2_choice"/>
 		<event>
-			<text>"That one," your Slug says, pointing at none of them, then sighing, and pointing again. "Something's still thinking over there." You mark it on your map.</text>
+			<text id="event_XFTL_MIRAGE_GHOSTS_c2_text"/>
 			<quest event="XFTL_MIRAGE_DERELICT" xftlAhead="true"/>
 		</event>
 	</choice>
 	<choice>
-		<text>Pick one, and head for it.</text>
+		<text id="event_XFTL_MIRAGE_GHOSTS_c3_choice"/>
 		<event load="XFTL_MIRAGE_GHOSTS_GUESS"/>
 	</choice>
 	<choice>
-		<text>Ignore them. They're probably all ghosts.</text>
+		<text id="event_XFTL_MIRAGE_GHOSTS_c4_choice"/>
 		<event/>
 	</choice>
 </event>
 
 <eventList name="XFTL_MIRAGE_GHOSTS_GUESS">
 	<event>
-		<text>You picked right: the signal holds steady as you close in. You mark the derelict on your map.</text>
+		<text id="event_XFTL_MIRAGE_GHOSTS_GUESS_1_text"/>
 		<quest event="XFTL_MIRAGE_DERELICT" xftlAhead="true"/>
 	</event>
 	<event>
-		<text>The contact flickers out, and in its place is a pirate ship, which has been using the ghosts as bait.</text>
+		<text id="event_XFTL_MIRAGE_GHOSTS_GUESS_2_text"/>
 		<ship load="XFTL_MIRAGE_BAITER" hostile="true"/>
 	</event>
 </eventList>
 
 <ship name="XFTL_MIRAGE_BAITER" auto_blueprint="SHIPS_PIRATE" xftlAlone="true">
 	<destroyed>
-		<text>The pirate breaks apart. Its logs have the real derelict's position, which they never got round to looting. You mark it on your map.</text>
+		<text id="ship_XFTL_MIRAGE_BAITER_destroyed_text"/>
 		<autoReward level="MED">standard</autoReward>
 		<quest event="XFTL_MIRAGE_DERELICT" xftlAhead="true"/>
 	</destroyed>
 	<deadCrew>
-		<text>The pirates are dead. Their logs have the real derelict's position, which they never got round to looting. You mark it on your map.</text>
+		<text id="ship_XFTL_MIRAGE_BAITER_deadCrew_text"/>
 		<autoReward level="MED">standard</autoReward>
 		<quest event="XFTL_MIRAGE_DERELICT" xftlAhead="true"/>
 	</deadCrew>
 </ship>
 
 <event name="XFTL_MIRAGE_DERELICT">
-	<text>The derelict is real: a Slug spy ship, its crew long gone, its hull covered in emitters. They're still running, filling the nebula around it with copies of itself. That's where the Expanse's ghosts come from, or some of them.</text>
+	<text id="event_XFTL_MIRAGE_DERELICT_text"/>
 	<choice>
-		<text>Strip the projector, and anything else of use.</text>
+		<text id="event_XFTL_MIRAGE_DERELICT_c1_choice"/>
 		<event>
-			<text>Your engineer gets the projector working on your own hull. In a fight, your ship won't be the only one the enemy sees, for a while at least. The spy ship's weapons locker has something worth taking too.</text>
+			<text id="event_XFTL_MIRAGE_DERELICT_c1_text"/>
 			<augment name="XFTL_PHANTOM_PROJECTOR"/>
 			<weapon name="RANDOM" xftlCombined="true"/>
 		</event>
@@ -686,50 +686,50 @@ Expanse and the Dark Reach, where most beacons are one kind of nebula
 
 <!-- The Dark Reach: the dreadnought's trail, and its wreck -->
 <event name="XFTL_DARK_HULK_TRAIL">
-	<text>Your sensors brush against a trail of debris: hull plates, old and huge, drifting deeper into the dark. They're from a warship far bigger than any built now.</text>
+	<text id="event_XFTL_DARK_HULK_TRAIL_text"/>
 	<choice>
-		<text>Follow the trail.</text>
+		<text id="event_XFTL_DARK_HULK_TRAIL_c1_choice"/>
 		<event>
-			<text>You follow the debris until it thickens into a wreck's worth. The dreadnought must be close. You mark where the trail leads on your map.</text>
+			<text id="event_XFTL_DARK_HULK_TRAIL_c1_text"/>
 			<autoReward level="LOW">scrap_only</autoReward>
 			<quest event="XFTL_DARK_HULK" xftlAhead="true"/>
 		</event>
 	</choice>
 	<choice req="anaerobic" hidden="true">
-		<text>(Lanius) Let your Lanius taste the plates.</text>
+		<text id="event_XFTL_DARK_HULK_TRAIL_c2_choice"/>
 		<event>
-			<text>Your Lanius licks a hull plate, thinks, and points into the dark without a word. They know that alloy, and where the rest of it is. They pocket a few plates for later.</text>
+			<text id="event_XFTL_DARK_HULK_TRAIL_c2_text"/>
 			<autoReward level="MED">stuff</autoReward>
 			<quest event="XFTL_DARK_HULK" xftlAhead="true"/>
 		</event>
 	</choice>
 	<choice>
-		<text>Leave the dead to the dark.</text>
+		<text id="event_XFTL_DARK_HULK_TRAIL_c3_choice"/>
 		<event/>
 	</choice>
 </event>
 
 <event name="XFTL_DARK_HULK">
-	<text>The dreadnought hangs in the dark, dead for a century, its hull scored by things that couldn't see it either. Its sensor mast is still intact: the one thing aboard built to see in here. One stasis pod still glows faintly in its medbay.</text>
+	<text id="event_XFTL_DARK_HULK_text"/>
 	<choice>
-		<text>Board it, and cut the sensors and the pod free.</text>
+		<text id="event_XFTL_DARK_HULK_c1_choice"/>
 		<event>
-			<text>Its automated defences wake as your crew cut their way in, and the turrets hole your hull before your crew shut them down. But you leave with its sensors on your own mast, and a sleeper from the pod who knows a great deal about old warships.</text>
+			<text id="event_XFTL_DARK_HULK_c1_text"/>
 			<damage amount="4"/>
 			<augment name="XFTL_DEEP_FIELD_SENSORS"/>
 			<crewMember amount="1" all_skills="2"/>
 		</event>
 	</choice>
 	<choice req="anaerobic" hidden="true">
-		<text>(Lanius) Your Lanius can eat a way in through the hull, away from the turrets.</text>
+		<text id="event_XFTL_DARK_HULK_c2_choice"/>
 		<event>
-			<text>Your Lanius chew a tunnel straight to the sensor mast and the medbay, and the turrets never notice. You leave with its sensors on your own mast, and a sleeper from the pod who knows a great deal about old warships.</text>
+			<text id="event_XFTL_DARK_HULK_c2_text"/>
 			<augment name="XFTL_DEEP_FIELD_SENSORS"/>
 			<crewMember amount="1" all_skills="2"/>
 		</event>
 	</choice>
 	<choice>
-		<text>Leave the dreadnought to the dark.</text>
+		<text id="event_XFTL_DARK_HULK_c3_choice"/>
 		<event/>
 	</choice>
 </event>

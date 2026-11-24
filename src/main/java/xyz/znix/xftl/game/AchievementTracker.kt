@@ -110,6 +110,27 @@ class AchievementTracker(private val game: InGameState) {
     /** Whether [ach] has been unlocked in this game. */
     fun isCompleted(ach: Achievement): Boolean = ach.id in completed
 
+    /**
+     * Whether [ach] can't be unlocked in this game any more, though it
+     * hasn't been: its goal asks for something this game's already broken
+     * (winning on Hard on an easier difficulty, winning without losing
+     * crew once they've been lost, or without a system the ship's had).
+     * The pause menu crosses it out (see PauseWindow).
+     */
+    fun isOutOfReach(ach: Achievement): Boolean {
+        val goal = ach.goal ?: return false
+        if (isCompleted(ach))
+            return false
+        return when (goal.kind) {
+            Kind.WIN_HARD -> !game.difficulty.atLeast(Difficulty.HARD)
+            Kind.WIN_NO_LOSSES -> game.stats.crewLost > goal.target
+            Kind.WIN_NO_OXYGEN -> hadOxygen
+            Kind.WIN_NO_MIND_TRICKS -> hadMindTricks
+            Kind.NO_SHIELDS_SECTOR -> hadShields && value(goal.kind) < goal.target
+            else -> false
+        }
+    }
+
     /** Add [amount] to the count for [kind] (a [Progress.COUNT] one). */
     fun add(kind: Kind, amount: Int = 1) {
         if (amount <= 0)
@@ -318,7 +339,8 @@ class AchievementTracker(private val game: InGameState) {
     fun gameOver(outcome: GameOverWindow.Outcome) {
         if (outcome == GameOverWindow.Outcome.WIN) {
             event(Kind.WIN)
-            if (game.difficulty == Difficulty.HARD)
+            // (a win on insane, harder still, counts too)
+            if (game.difficulty.atLeast(Difficulty.HARD))
                 event(Kind.WIN_HARD)
             event(Kind.CREW_AT_WIN, livingCrew())
             event(Kind.WIN_NO_LOSSES, game.stats.crewLost)
@@ -441,7 +463,8 @@ class AchievementTracker(private val game: InGameState) {
 
         val x = (screenWidth - TOAST_WIDTH) / 2
         val y = TOAST_TOP
-        game.windowRenderer.render(x, y, TOAST_WIDTH, TOAST_HEIGHT)
+        // (see-through, so it doesn't hide the fight behind it)
+        game.windowRenderer.render(x, y, TOAST_WIDTH, TOAST_HEIGHT, TOAST_ALPHA)
         val icon = game.getImg(ach.img)
         icon.draw(x + 16f, y + (TOAST_HEIGHT - ICON_SIZE) / 2f, ICON_SIZE.f, ICON_SIZE.f)
         val textX = x + 16f + ICON_SIZE + 14
@@ -500,5 +523,6 @@ class AchievementTracker(private val game: InGameState) {
         private const val TOAST_HEIGHT = 96
         private const val TOAST_TOP = 110
         private const val ICON_SIZE = 64
+        private const val TOAST_ALPHA = 0.7f
     }
 }

@@ -10,12 +10,12 @@ import xyz.znix.xftl.math.IPoint
 import xyz.znix.xftl.rendering.Graphics
 import xyz.znix.xftl.rendering.Image
 import xyz.znix.xftl.systems.Drones
+import xyz.znix.xftl.systems.Weapons
 import xyz.znix.xftl.ui.ImageView
 import xyz.znix.xftl.ui.Label
 import xyz.znix.xftl.ui.WidgetContainer
 import xyz.znix.xftl.weapons.AbstractWeaponBlueprint
 import xyz.znix.xftl.weapons.DroneBlueprint
-import kotlin.math.min
 
 /**
  * This contains the drag-and-drop equipment UI used in the equipment tab
@@ -73,11 +73,36 @@ class ShipEquipmentPanel(private val game: InGameState, val ship: Ship) {
         }
 
     /**
-     * The number of rows of weapons. Ships with more than four weapon slots
-     * get extra rows, which makes the panel taller.
+     * The weapon slots in each row. A ship with room for several weapons
+     * systems has a row for each, with the slots it'd have (see
+     * Ship.assignWeaponHardpoints: split evenly, any spare in the last), as
+     * the weapons boxes at the bottom of the screen have them; others, and
+     * those rows that'd be wider than four, are in rows of four. This is
+     * based on the systems the ship has room for, not those it has, so the
+     * panel doesn't change size when one is bought.
+     */
+    private val weaponRowSlots: List<IntRange>
+        get() {
+            val slots = ship.weaponSlots ?: 0
+            val systems = ship.systemSlots.count { it.system.info == Weapons.INFO }
+            if (systems > 1) {
+                val perSystem = slots / systems
+                val rows = (0 until systems).map { i ->
+                    i * perSystem until if (i == systems - 1) slots else (i + 1) * perSystem
+                }
+                if (rows.all { it.count() in 1..WEAPONS_PER_ROW })
+                    return rows
+            }
+            return (0 until slots step WEAPONS_PER_ROW).map { it until minOf(it + WEAPONS_PER_ROW, slots) }
+        }
+
+    /**
+     * The number of rows of weapons. Ships with more than four weapon slots,
+     * or several weapons systems, get extra rows, which makes the panel
+     * taller.
      */
     private val weaponRows: Int
-        get() = ((ship.weaponSlots ?: 0) + WEAPONS_PER_ROW - 1) / WEAPONS_PER_ROW
+        get() = weaponRowSlots.size
 
     /**
      * How much taller the weapons section is than in vanilla, to fit the
@@ -212,18 +237,21 @@ class ShipEquipmentPanel(private val game: InGameState, val ship: Ship) {
         // Draw the weapons
         // Note: I think all the playable ships have weaponSlots set?
         weaponButtons.clear()
+        val rowSlots = weaponRowSlots
         for (i in 0 until ship.weaponSlots!!) {
             val weapon = ship.hardpoints[i].weapon
 
             val images = ButtonImageSet.selected(game, "img/upgradeUI/Equipment/box_weapons", true)
             val padding = 8
-            // Ships with more than four weapon slots have them split
-            // into rows of four.
-            val perRow = min(ship.weaponSlots!!, WEAPONS_PER_ROW)
+            // Ships with more than four weapon slots, or several weapons
+            // systems, have them split into rows (see weaponRowSlots), each
+            // centred
+            val row = rowSlots.indexOfFirst { i in it }
+            val perRow = rowSlots[row].count()
             val baseX = (579 - (images.normal.width + padding) * perRow) / 2
             val buttonPos = ConstPoint(
-                baseX + (i % WEAPONS_PER_ROW) * (images.normal.width + padding),
-                70 + (i / WEAPONS_PER_ROW) * WEAPON_ROW_HEIGHT
+                baseX + (i - rowSlots[row].first) * (images.normal.width + padding),
+                70 + row * WEAPON_ROW_HEIGHT
             )
 
             // Use a separate variable so we can use the button in its callback.
@@ -557,19 +585,19 @@ class ShipEquipmentPanel(private val game: InGameState, val ship: Ship) {
                 if (button != target)
                     continue
 
-                // Grab the augment here, in case the ordering changes
-                val aug = ship.augments.getOrNull(i)
-
+                // By its place in the list (which has no gaps, so an empty
+                // slot's past its end), not by the augment, as the ship may
+                // have two the same, and while two are swapped one's in the
+                // list twice: the dropped one's put in place of the other,
+                // and the other in its place, or at the end
                 return SlotAccess(
-                    { aug },
+                    { ship.augments.getOrNull(i) },
                     {
                         require(it is AugmentBlueprint?)
-                        if (aug != null) {
-                            require(ship.augments.remove(aug)) { "Augment '${aug.name}' disappeared while dragging!" }
-                        }
-                        if (it != null) {
-                            val index = min(ship.augments.size, i)
-                            ship.augments.add(index, it)
+                        when {
+                            it == null -> if (i < ship.augments.size) ship.augments.removeAt(i)
+                            i < ship.augments.size -> ship.augments[i] = it
+                            else -> ship.augments.add(it)
                         }
                     }
                 )

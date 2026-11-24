@@ -1,4 +1,4 @@
-.PHONY: art run test debug rich randomize window icon release
+.PHONY: art run test debug rich randomize window icon release bulwarks
 
 # `ftl.dat`'s location: XFTL_DATAFILE if it's set, or else a copy (or a
 # link) in this directory, which git ignores
@@ -12,10 +12,16 @@ HEIGHT = 1020
 # to play a separate game without touching it
 SAVE_DIR = /tmp/chonkestrel
 
+# Show the frames a second in the bottom-left corner, which every target
+# that runs the game does; make run SHOW_FPS=0 (or XFTL_SHOW_FPS=0 make run)
+# hides them
+SHOW_FPS ?= $(or $(XFTL_SHOW_FPS),1)
+
 # Runner shortcut
 PARAM1 = XFTL_DATAFILE=$(DATAFILE)
 PARAM2 = XFTL_SAVE_DIR=$(if $(SAVE_DIR),$(abspath $(SAVE_DIR)))
-PARAMS = $(PARAM1) $(PARAM2)
+PARAM3 = XFTL_SHOW_FPS=$(SHOW_FPS)
+PARAMS = $(PARAM1) $(PARAM2) $(PARAM3)
 RUNNER = $(PARAMS) ./gradlew run
 
 # The mods the game run from the repo uses, in its saves directory (cache/
@@ -32,16 +38,26 @@ $(MOD_ORDER):
 # decides the order of their blocks in the mod's autoBlueprints.xml.append).
 # Every target that runs the game makes it first, if it's missing or a
 # script's changed since; `make art` makes it again regardless.
+# (wide_passages adds doors to the layouts of the four ship scripts, so it
+# comes after them.)
 ART = mods/chonkestrel/img/.generated
-ART_TOOLS = ship_variants hybrid_ships boss_ships weapon_sizes system_buttons drone_sizes chonkestrel_art race_ships hangar_art achievement_art
+ART_TOOLS = ship_variants hybrid_ships boss_ships weapon_sizes system_buttons drone_sizes door_sizes chonkestrel_art race_ships wide_passages hangar_art achievement_art skill_icons
 $(ART): $(ART_TOOLS:%=tools/%.py)
 	$(MAKE) art
 
+# They're run by tools/make_art.py, which shows a progress bar, the command
+# running and the last line it printed, and keeps their output in
+# cache/art.log. The Python they run with: the first of these that has
+# Pillow, NumPy and SciPy (Homebrew's newest python3 may not), unless
+# PYTHON is set
+PYTHON ?= $(shell for p in python3 python3.13 python3.12 python3.11; do $$p -c 'import PIL, numpy, scipy' 2>/dev/null && { echo $$p; break; }; done)
+
 art:
-	$(foreach tool,$(ART_TOOLS),python3 tools/$(tool).py $(DATAFILE) &&) true
+	@test -n "$(PYTHON)" || { echo "No python3 with Pillow, NumPy and SciPy: python3 -m pip install pillow numpy scipy (see BUILD.md)"; exit 1; }
+	$(PYTHON) tools/make_art.py $(DATAFILE) cache/art.log $(ART_TOOLS)
 	touch $(ART)
 
-randomize debug rich run window icon: $(MOD_ORDER) $(ART)
+randomize debug rich run window icon bulwarks: $(MOD_ORDER) $(ART)
 
 randomize:
 	XFTL_DEBUG=1 XFTL_RANDOMIZE=1 $(RUNNER)
@@ -56,6 +72,12 @@ rich:
 
 run:
 	$(RUNNER)
+
+# The bulwarks' demo: a new debug game against a boss full of bulwarks, with
+# boarders turning up for them to go after (see doc/game/drone-sizes.md),
+# saved apart from the usual game
+bulwarks:
+	XFTL_DEBUG=1 XFTL_BULWARK_DEMO=1 $(PARAM1) XFTL_SAVE_DIR=$(abspath cache/bulwarks) ./gradlew run
 
 # Run the tests (see doc/tools/tests.md), or only some of them:
 # make test TESTS='*CrewTest'. The totals are in build/test-results/test/.

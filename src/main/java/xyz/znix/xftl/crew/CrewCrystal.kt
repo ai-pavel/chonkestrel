@@ -63,14 +63,35 @@ class CrewCrystal(blueprint: CrewBlueprint, animations: Animations, room: Room, 
 
         // The AI's crystals (the enemies', and the player's while they're
         // mind controlled) lock in whoever they're fighting, the boarders
-        // in with the defenders and the defenders in with the boarders
-        if (!playerControllable && isFightingHere())
-            lockDown()
+        // in with the defenders and the defenders in with the boarders: not
+        // straight away, but once the rest of its side on the way into the
+        // room (a boarding party coming in with it) are in, so the lockdown
+        // doesn't shut them out, or after [AI_LOCKDOWN_MAX_WAIT] at the most
+        if (!playerControllable && isFightingHere()) {
+            lockdownWait += dt
+            val ready = lockdownWait >= AI_LOCKDOWN_DELAY &&
+                    (!isSideStillComing() || lockdownWait >= AI_LOCKDOWN_MAX_WAIT)
+            if (ready && lockDown())
+                lockdownWait = 0f
+        } else {
+            lockdownWait = 0f
+        }
     }
+
+    // How long the AI's been fighting in its room, waiting to lock it down
+    private var lockdownWait = 0f
 
     // Whether there's anyone in its room fighting its side
     private fun isFightingHere(): Boolean =
         !room.ship.isAtPeace && room.crew.any { it.mode != mode && it.currentAction != Action.DYING }
+
+    // Whether any of its side (on its ship, boarders or defenders as it is)
+    // are on their way into its room, and not there yet
+    private fun isSideStillComing(): Boolean = room.ship.rooms.any { other ->
+        other != room && other.crew.any {
+            it !== this && it.mode == mode && it.currentAction != Action.DYING && it.pathingTarget?.room == room
+        }
+    }
 
     override fun saveToXML(elem: Element, refs: ObjectRefs) {
         super.saveToXML(elem, refs)
@@ -89,5 +110,14 @@ class CrewCrystal(blueprint: CrewBlueprint, animations: Animations, room: Room, 
 
         /** How long a Crystal waits before it can lock a room down again. */
         const val LOCKDOWN_COOLDOWN = 50f
+
+        /**
+         * How long the AI's crystals wait, fighting in a room, before
+         * locking it down: a moment, so the rest of a boarding party that
+         * came in together are in too, and longer while any of its side are
+         * still on their way in, up to [AI_LOCKDOWN_MAX_WAIT].
+         */
+        const val AI_LOCKDOWN_DELAY = 0.5f
+        const val AI_LOCKDOWN_MAX_WAIT = 3f
     }
 }

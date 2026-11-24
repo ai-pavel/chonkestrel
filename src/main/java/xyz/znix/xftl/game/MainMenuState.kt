@@ -1,7 +1,9 @@
 package xyz.znix.xftl.game
 
 import xyz.znix.xftl.Constants
+import xyz.znix.xftl.LazyShipBlueprint
 import xyz.znix.xftl.Ship
+import xyz.znix.xftl.XftlDebug
 import xyz.znix.xftl.crew.AbstractCrew
 import xyz.znix.xftl.crew.CrewBlueprint
 import xyz.znix.xftl.crew.LivingCrewInfo
@@ -21,21 +23,25 @@ import xyz.znix.xftl.sys.GameContainer
 import xyz.znix.xftl.sys.Input
 
 /**
- * The main menu, which the game starts in, as in FTL: the game's name, the ship
- * the hangar picks by default (the Chonkestrel, with the mod) full of crew,
- * manning its stations or standing about, in front of a random extreme
- * hazard's backdrop (without its effects), and the menu in the bottom right
- * corner.
+ * The main menu, which the game starts in, as in FTL: the game's name, a
+ * ship, in front of a random extreme hazard's backdrop (without its
+ * effects), and the menu in the bottom right corner.
  *
- * The ship's a new game's (see [InGameState.forMainMenu]), which also
- * gives the menu the game's options, display and confirmation windows.
+ * The ship's the saved game's, just as it was saved, crew, systems and all
+ * (see [savedScene]); without one, it's one of the big ships at random (see
+ * [menuShip]), new, full of crew manning its stations or waiting in the
+ * teleporter (see [fillCrew]). Its scene (see [InGameState.forMainMenu])
+ * also gives the menu the game's options, display and confirmation
+ * windows.
  *
  * Escape does nothing here, only closing the windows. XFTL_SKIP_MENU skips
  * the menu (see [xyz.znix.xftl.XftlDebug.skipMenu]).
  */
 class MainMenuState(private val main: MainGame, content: InGameState.GameContent) : MainGame.GameState() {
-    private val scene: InGameState =
-        InGameState.forMainMenu(main, content, content.blueprintManager.defaultPlayerShip)
+    // The saved game's own scene, if there's one that loads, or a new
+    // game's (see menuScene)
+    private val savedScene: InGameState? = savedScene(main, content)
+    private val scene: InGameState = savedScene ?: InGameState.forMainMenu(main, content, menuShip(content))
     private val ship: Ship get() = scene.player
     private val ui: PlayerShipUI get() = scene.shipUI
 
@@ -52,14 +58,16 @@ class MainMenuState(private val main: MainGame, content: InGameState.GameContent
     private var lastTooltip: ITooltipProvider? = null
 
     init {
-        fillCrew()
+        // (the saved ship's shown just as it is)
+        if (savedScene == null)
+            fillCrew()
         backdrop = randomBackdrop()
 
         val hasSave = ContinueSave.exists()
         items = listOf(
             Item("mainmenu_continue", hasSave, this::continueClicked),
             Item("mainmenu_newgame", true) { newGameClicked(hasSave) },
-            Item("mainmenu_options", true) { ui.showOptionsWindow() },
+            Item("mainmenu_options", true) { showOptions() },
             Item("xftl_mainmenu_statistics", true) { showStatistics() },
             Item("xftl_mainmenu_achievements", true) { showAchievements() },
             Item("mainmenu_credits", false) {},
@@ -98,7 +106,7 @@ class MainMenuState(private val main: MainGame, content: InGameState.GameContent
             if (ship.crew.size >= ship.maxCrew)
                 break
             val room = system.room ?: continue
-            if (room == laniusRoom || system.info?.canBeManned != true)
+            if (room == laniusRoom || !system.info.canBeManned)
                 continue
             val station = system.configuration.computerPoint ?: continue
             if (room.isSlotFree(station, AbstractCrew.SlotType.CREW))
@@ -266,6 +274,9 @@ class MainMenuState(private val main: MainGame, content: InGameState.GameContent
      */
     fun showNewGameWindow() = newGameClicked(ContinueSave.exists())
 
+    /** Open the options window, as Options does (and once another language is picked in it). */
+    fun showOptions() = ui.showOptionsWindow()
+
     /** Open the statistics window, as Statistics does (and for the screenshots). */
     fun showStatistics() =
         ui.showMenuWindow(StatisticsWindow(scene, main.profile.shownTopGames) { ui.closeMenuWindow() })
@@ -319,6 +330,39 @@ class MainMenuState(private val main: MainGame, content: InGameState.GameContent
     }
 
     companion object {
+        /**
+         * The saved game, loaded for the menu to show its ship just as it
+         * is, crew, systems and all (see [InGameState.forMainMenu]), or null
+         * if there's none, it doesn't load, or the screenshots and videos
+         * are being made (which show the default ship).
+         */
+        private fun savedScene(main: MainGame, content: InGameState.GameContent): InGameState? {
+            if (XftlDebug.recording)
+                return null
+            val save = ContinueSave.load() ?: return null
+            return try {
+                InGameState.forMainMenu(main, content, save)
+            } catch (ex: Exception) {
+                println("[menu] Couldn't load the saved game's ship to show: $ex")
+                null
+            }
+        }
+
+        /**
+         * The ship the menu shows without a saved game (see [savedScene]):
+         * one of the bigger player ships at random (such as the Chonkestrel
+         * and the race ships). The backdrop's random either way. The
+         * screenshots and video always show the default ship.
+         */
+        private fun menuShip(content: InGameState.GameContent): String {
+            val manager = content.blueprintManager
+            if (XftlDebug.recording)
+                return manager.defaultPlayerShip
+            val big = manager.blueprints.values.filterIsInstance<LazyShipBlueprint>()
+                .filter { it.name.startsWith("PLAYER_SHIP_") && it.shipSize > 1 }
+            return big.randomOrNull()?.name ?: manager.defaultPlayerShip
+        }
+
         // The races the crew are picked from, and the Lanius, who has a room
         // to themselves (only with Advanced Edition's data, see fillCrew)
         private val CREW_RACES = listOf("human", "engi", "mantis", "rock", "energy", "slug", "crystal")

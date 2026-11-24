@@ -20,6 +20,10 @@ exactly as they were.
   python3 -m pip install pillow numpy scipy
   ```
 
+  The Makefile runs the art with the first of `python3`, `python3.13`,
+  `python3.12` and `python3.11` that has them (Homebrew's newest `python3`
+  may not), or `make PYTHON=/path/to/python3 ...`.
+
 ## 1. The art
 
 ```sh
@@ -28,7 +32,10 @@ make art
 
 It runs the scripts in `tools/` in turn, each making part of the mod's art
 in `mods/chonkestrel/img/` (and their ships' layouts and blueprints in
-`mods/chonkestrel/data/`) from the images in `ftl.dat`:
+`mods/chonkestrel/data/`) from the images in `ftl.dat`. `tools/make_art.py`
+runs them, with a progress bar, the command running and the last line it
+printed; their whole output goes in `cache/art.log`, and if one fails, the
+end of it is shown:
 
 | Script | Makes |
 |---|---|
@@ -36,16 +43,22 @@ in `mods/chonkestrel/img/` (and their ships' layouts and blueprints in
 | `tools/hybrid_ships.py` | the hybrid enemy ships |
 | `tools/boss_ships.py` | the size 3 bosses |
 | `tools/weapon_sizes.py` | the twin and triple weapons |
-| `tools/system_buttons.py` | the systems' buttons for more than three power bars |
+| `tools/system_buttons.py` | the systems' buttons for more than three power bars, and the artillery's for five and six |
 | `tools/drone_sizes.py` | the twin and triple Bulwarks |
+| `tools/door_sizes.py` | the wide doors' sprites: vanilla's door and its highlight, 2 and 3 cells long |
 | `tools/chonkestrel_art.py` | the Chonkestrel itself: its hull, cloak, floor, gibs, shield, rooms and miniature, from the Kestrel's |
-| `tools/race_ships.py` | the race ships, the other races', the Federation's and the Stealth cruisers' Type A and B ships made as big as the Chonkestrel, and the Chonkestrel's Type B: their layouts, blueprints and images |
-| `tools/hangar_art.py` | the hangar's background: vanilla's, 1280x720, stretched to 1920x1080 by widening its landing pad, so the big ships fit on it |
+| `tools/race_ships.py` | the race ships, the other races', the Federation's and the Stealth cruisers' Type A, B and C ships made as big as the Chonkestrel, and the Chonkestrel's Type B and C: their layouts, blueprints and images |
+| `tools/wide_passages.py` | the doors between the bigger enemies' big empty rooms: a door on every cell of the wall between two rooms a bulwark can stand in, made into wide doors (2 or 3 cells each), so it can walk between them (after the four scripts that make the layouts; `--scan` lists the big rooms' walls and their doors) |
+| `tools/hangar_art.py` | the hangar's background: vanilla's, 1280x720, stretched to 1920x1080 by widening its landing pad, so the big ships fit on it; and the big ships' pictures in its ship list, half as big again as their miniatures |
 | `tools/achievement_art.py` | the ship achievements' icons: each ship's miniature, with an emblem for the achievement (after `race_ships.py` and `chonkestrel_art.py`, which make the miniatures) |
+| `tools/skill_icons.py` | the Drones skill's icon, vanilla's drones icon as a white skill icon |
 
 The order matters: it's the order of their blocks in the mod's
 `autoBlueprints.xml.append`, which they rewrite (in another order, the
 file comes out the same but shuffled, and shows up as changed in git).
+Their blueprints' classes and names are keys, with the English in a
+block for each script in `text_blueprints.xml.append` (see
+[translations.md](doc/tools/translations.md)).
 (Only the first three and the last write it; the rest can go in any order.) It takes
 about half a minute, and leaves `mods/chonkestrel/img/.generated`
 to say it's done.

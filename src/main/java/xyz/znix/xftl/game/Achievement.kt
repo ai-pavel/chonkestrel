@@ -106,7 +106,7 @@ data class AchievementGoal(val kind: Kind, val target: Int) {
         BOSS_HULL("bossHull", Progress.EVENT, 50),
 
         /** Win the game with this many crew alive. */
-        CREW_AT_WIN("crewAtWin", Progress.EVENT, 16),
+        CREW_AT_WIN("crewAtWin", Progress.EVENT, 18),
 
         /** Finish off this many enemy ships with drones (their last hull hit a drone's). */
         DRONE_KILLS("droneKills", Progress.COUNT, 25),

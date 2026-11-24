@@ -11,13 +11,31 @@ class WeaponPanel(val editor: ShipEditor) : UIObject {
 
     /**
      * The number of slots shown. This is normally four, but ships can have
-     * more, in which case they're shown in extra rows of four.
+     * more, in which case they're shown in extra rows (see [perRow]).
      */
     private val visibleSlots: Int get() = editor.ship.weaponSlots.coerceIn(4, MAX_SLOTS)
 
-    private val rows: Int get() = (visibleSlots + SLOTS_PER_ROW - 1) / SLOTS_PER_ROW
+    /**
+     * How many slots go in each row: with several weapons systems, a row
+     * for each, with its share of the slots (as the ship window's
+     * equipment has them: 4+4 on the Chonkestrel, 3+3+3 on the Rock ships),
+     * as long as that's no more than four; or else rows of four. All of
+     * them are shown, as there's room for them in the hangar.
+     */
+    private val perRow: Int
+        get() {
+            val systems = editor.ship.rooms.count { it.system?.type == "weapons" }
+            if (systems > 1) {
+                val share = (visibleSlots + systems - 1) / systems
+                if (share in 1..SLOTS_PER_ROW)
+                    return share
+            }
+            return SLOTS_PER_ROW
+        }
 
-    val width = 20 + SLOTS_PER_ROW * 115
+    private val rows: Int get() = (visibleSlots + perRow - 1) / perRow
+
+    val width: Int get() = 20 + perRow * 115
     val height: Int get() = 135 + (rows - 1) * ROW_HEIGHT
 
     var baseX: Int = 0 // Set by ShipEditor
@@ -47,8 +65,8 @@ class WeaponPanel(val editor: ShipEditor) : UIObject {
     private inner class WeaponSlot(val slot: Int) : UIObject {
         override val selectPriority: Int get() = 0
 
-        val x: Int get() = baseX + 10 + (slot % SLOTS_PER_ROW) * 115
-        val y: Int get() = baseY + 40 + (slot / SLOTS_PER_ROW) * ROW_HEIGHT
+        val x: Int get() = baseX + 10 + (slot % perRow) * 115
+        val y: Int get() = baseY + 40 + (slot / perRow) * ROW_HEIGHT
         val isDisabled get() = editor.ship.weaponSlots <= slot
         val isHidden get() = slot >= visibleSlots
 
@@ -153,7 +171,8 @@ class WeaponPanel(val editor: ShipEditor) : UIObject {
     }
 
     companion object {
-        const val MAX_SLOTS = 8
+        // (three rows of four)
+        const val MAX_SLOTS = 12
         private const val SLOTS_PER_ROW = 4
 
         // The weapon box images are 76px tall

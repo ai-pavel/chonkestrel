@@ -32,7 +32,8 @@ object LootDropGenerator {
 
     fun generateRewards(game: InGameState, rand: Random, tier: RewardTier, type: RewardType, baseSector: Float): ResourceSet {
         // As in FTL, the rewards are those of a sector later on easy, and a
-        // sector earlier on hard.
+        // sector earlier on hard (and two earlier on insane: in the first
+        // sector, a fifth of normal's base scrap).
         val sector = baseSector + game.difficulty.rewardSectorOffset
 
         val resources = ResourceSet()

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FTL>
+    <!--
+    XFTL's own strings in Russian (Русский): the translations of
+    assets/lang/en.xml, which the game shows on top of vanilla's
+    data/text-ru.xml. Any string missing here is shown in English.
+
+    Write each one as en.xml has it, with the same name:
+        <text name="xftl_button_back">...</text>
+    Leave out the xftl_select_datafile_* and xftl_screen_small_* strings:
+    they're shown before the game has FTL's fonts, in one with only English
+    letters, so they stay in English.
+
+    - Keep the placeholders \1, \2 and \3: the game puts a number or a
+      name in their place. They can move within the sentence.
+    - \n is a line break. Keep the ones in short texts (such as the
+      confirmation boxes), which are laid out by hand.
+    - Escape & as &amp;, < as &lt; and > as &gt;.
+    - Only use characters FTL's fonts have: the Latin letters with accents
+      and the Cyrillic alphabet are fine, but not typographic quotes,
+      apostrophes and dashes (use " ' and -), nor the ellipsis (use ...).
+    - The buttons and titles have a fixed size: keep them about as long as
+      the English. The ones in capitals are in capitals in the game too.
+    - Use the words vanilla FTL's own Russian uses (data/text-ru.xml in
+      ftl.dat), for the systems, races, resources and so on.
+
+    Check it with: python3 tools/check_translations.py ru
+    (see doc/tools/translations.md, which also has a list of the missing ones
+    to start from).
+    -->
+
+    <!-- The hangar -->
+    <text name="xftl_edit_ship">ИЗМЕНИТЬ</text>
+    <text name="xftl_clear_edit_ship">СБРОСИТЬ ИЗМЕНЕНИЯ</text>
+    <text name="xftl_hangar_type">ТИП</text>
+    <text name="xftl_hangar_normal">ОБЫЧНЫЙ</text>
+    <text name="xftl_hangar_chonky">ЧОНК</text>
+
+    <!-- Options -->
+    <text name="xftl_options_display">Настройки экрана</text>
+    <text name="xftl_button_back">НАЗАД</text>
+    <text name="xftl_button_reset">СБРОС</text>
+    <text name="xftl_stats_reset_confirm">Вы уверены?\nВся статистика\nбудет удалена.</text>
+    <text name="xftl_display_title">НАСТРОЙКИ ЭКРАНА</text>
+    <text name="xftl_display_desc">Интерфейсу нужно не меньше 1920x1080.</text>
+    <text name="xftl_options_language">Сменить язык</text>
+    <text name="xftl_language_title">ЯЗЫК</text>
+    <text name="xftl_language_desc">Язык текста игры:</text>
+    <text name="xftl_language_later">В начатой игре новый язык появится, когда вы вернетесь в главное меню или начнете новую игру.</text>
+
+    <!-- Statistics -->
+    <text name="xftl_mainmenu_statistics">СТАТИСТИКА</text>
+    <text name="xftl_escape_statistics">СТАТИСТИКА</text>
+    <text name="xftl_escape_achievements_button">ДОСТИЖЕНИЯ</text>
+    <text name="xftl_stats_title">ЛУЧШИЕ ИГРЫ</text>
+    <text name="xftl_stats_none">Законченных игр пока нет.</text>
+    <text name="xftl_stats_started">Начало</text>
+    <text name="xftl_stats_duration">Длительность</text>
+    <text name="xftl_stats_difficulty">Сложность</text>
+    <text name="xftl_stats_names">Имена экипажа</text>
+    <text name="xftl_stats_sector">Сектор</text>
+    <text name="xftl_stats_beacons">Посещено маяков</text>
+    <text name="xftl_stats_ships">Уничтожено кораблей</text>
+    <text name="xftl_stats_crews_killed">Убито экипажа</text>
+    <text name="xftl_stats_scrap">Собрано лома</text>
+    <text name="xftl_stats_crew_lost">Потеряно членов экипажа</text>
+    <text name="xftl_stats_crew">Экипаж (наведите курсор, чтобы увидеть навыки)</text>
+    <text name="xftl_stats_systems">Системы</text>
+    <text name="xftl_stats_weapons">Оружие</text>
+    <text name="xftl_stats_drones">Дроны</text>
+    <text name="xftl_stats_augments">Модули</text>
+    <text name="xftl_stats_won">Победа</text>
+    <text name="xftl_stats_destroyed">Корабль уничтожен</text>
+    <text name="xftl_stats_crew_dead">Экипаж погиб</text>
+    <text name="xftl_stats_lost">Поражение</text>
+    <text name="xftl_mainmenu_exit">ВЫХОД</text>
+
+    <!-- Achievements -->
+    <text name="xftl_mainmenu_achievements">ДОСТИЖЕНИЯ</text>
+    <text name="xftl_escape_achievements">Достижения всех кораблей</text>
+    <text name="xftl_escape_achievements_tip">Посмотреть достижения всех кораблей.</text>
+    <text name="xftl_ach_title">ДОСТИЖЕНИЯ</text>
+    <text name="xftl_ach_none">Ни у одного корабля нет отслеживаемых достижений.</text>
+    <text name="xftl_ach_this_game">Эта игра: \1</text>
+    <text name="xftl_ach_best">Лучшая игра: \1</text>
+    <text name="xftl_ach_locked">Закрыто</text>
+    <text name="xftl_ach_out_of_reach">В этой игре уже не открыть</text>
+    <text name="xftl_ach_insane">Уровень сложности «БЕЗУМИЕ»</text>
+
+    <!-- New game -->
+    <text name="xftl_new_game_names">ИМЕНА ЭКИПАЖА</text>
+    <text name="xftl_insane_button">БЕЗУМИЕ</text>
+    <text name="xftl_names_default">Стандартные</text>
+    <text name="xftl_names_random">Случайные</text>
+    <text name="xftl_names_all">ВСЕ</text>
+    <text name="xftl_names_american">Американские</text>
+    <text name="xftl_names_english">Английские</text>
+    <text name="xftl_names_irish">Ирландские</text>
+    <text name="xftl_names_scottish">Шотландские</text>
+    <text name="xftl_names_french">Французские</text>
+    <text name="xftl_names_spanish">Испанские</text>
+    <text name="xftl_names_italian">Итальянские</text>
+    <text name="xftl_names_german">Немецкие</text>
+    <text name="xftl_names_russian">Русские</text>
+    <text name="xftl_names_arabic">Арабские</text>
+    <text name="xftl_names_turkish">Турецкие</text>
+    <text name="xftl_names_indian">Индийские</text>
+    <text name="xftl_names_chinese">Китайские</text>
+    <text name="xftl_names_japanese">Японские</text>
+    <text name="xftl_names_korean">Корейские</text>
+    <text name="xftl_names_starwars">Star Wars</text>
+    <text name="xftl_names_startrek">Star Trek</text>
+    <text name="xftl_names_masseffect">Mass Effect</text>
+    <text name="xftl_confirm_overwrite_save">Вы уверены?\nСохраненная игра\nбудет перезаписана.</text>
+
+    <!-- Fleets, rewards, weapons -->
+    <text name="xftl_fleet_rewards">Разделавшись с вражескими кораблями, вы собираете то, что от них осталось:\n</text>
+    <text name="xftl_reward_scrap">лом: \1</text>
+    <text name="xftl_reward_fuel">топливо: \1</text>
+    <text name="xftl_reward_missiles">ракеты: \1</text>
+    <text name="xftl_reward_drones">дрон-комплекты: \1</text>
+    <text name="xftl_reward_nothing">ничего</text>
+    <text name="xftl_max_piercing">Макс. пробивание: \1</text>
+    <text name="xftl_weapon_combined">\1 в одном: стреляет одновременно по кораблям противника (до \1)</text>
+    <text name="xftl_weapon_combined_beam">\1 в одном: один длинный луч сквозь корабли противника (до \1)</text>
+    <text name="xftl_weapon_title_x2">\1 (спаренная)</text>
+    <text name="xftl_weapon_title_x3">\1 (строенная)</text>
+    <text name="xftl_weapon_short_x2">\1 (x2)</text>
+    <text name="xftl_weapon_short_x3">\1 (x3)</text>
+    <text name="xftl_level_manned">Пост занят</text>
+    <text name="xftl_artillery_5">Перезарядка 17 сек., 2 корабля</text>
+    <text name="xftl_artillery_6">Перезарядка 14 сек., 3 корабля</text>
+    <text name="xftl_crew_killed">ЭКИПАЖ УБИТ</text>
+    <text name="xftl_mind_duration">Действует \1 сек.</text>
+    <text name="xftl_fleet_surrender">Их капитан говорит за всю группу: если вы согласитесь, остальные корабли тоже прекратят огонь.</text>
+    <text name="xftl_fleet_reward_single">Разделавшись с вражеским кораблем, вы собираете то, что от него осталось.</text>
+
+    <!-- Hotkeys -->
+    <text name="xftl_hotkeys_crew_group">ЭКИПАЖ</text>
+    <text name="xftl_hotkeys_system_power_group">ПИТАНИЕ СИСТЕМ</text>
+    <text name="xftl_hotkeys_weapons_group">ОРУЖИЕ И ДРОНЫ</text>
+    <text name="xftl_hotkeys_system_actions_group">ДЕЙСТВИЯ СИСТЕМ</text>
+    <text name="xftl_hotkeys_ui_group">УПРАВЛЕНИЕ ИГРОЙ</text>
+    <text name="xftl_hotkeys_dev_group">ЧИТЫ И МОДЫ</text>
+    <text name="xftl_hotkeys_default_tooltip">По умолчанию: \1</text>
+    <text name="xftl_hotkeys_default_tooltip_none">По умолчанию: нет</text>
+    <text name="xftl_hotkeys_conflicts_tooltip">Конфликтует с:</text>
+    <text name="xftl_hotkeys_crew9">Член экипажа 9</text>
+    <text name="xftl_hotkeys_crew10">Член экипажа 10</text>
+    <text name="xftl_hotkeys_crew11">Член экипажа 11</text>
+    <text name="xftl_hotkeys_crew12">Член экипажа 12</text>
+    <text name="xftl_hotkeys_crew13">Член экипажа 13</text>
+    <text name="xftl_hotkeys_crew14">Член экипажа 14</text>
+    <text name="xftl_hotkeys_crew15">Член экипажа 15</text>
+    <text name="xftl_hotkeys_crew16">Член экипажа 16</text>
+    <text name="xftl_hotkeys_weapon5">Оружие в ячейке 5</text>
+    <text name="xftl_hotkeys_weapon6">Оружие в ячейке 6</text>
+    <text name="xftl_hotkeys_weapon7">Оружие в ячейке 7</text>
+    <text name="xftl_hotkeys_weapon8">Оружие в ячейке 8</text>
+    <text name="xftl_hotkeys_console">Консоль отладки</text>
+    <text name="xftl_hotkeys_frame_step">Снять паузу на 10 мс</text>
+    <text name="xftl_hotkeys_fast_forward">Ускорение</text>
+
+    <!-- Salvage, sectors, skills, hazards -->
+    <text name="xftl_big_ship_salvage">В остальных обломках большого корабля есть чем поживиться.</text>
+    <text name="xftl_hybrid_salvage">Гибрид был сварен из двух кораблей, и в его обломках есть чем поживиться.</text>
+    <text name="xftl_sector_legend_hazard">Опасный</text>
+    <text name="xftl_sector_hazard">Неизвестный опасный сектор</text>
+    <text name="xftl_artillery_skill">Зарядка орудий на \1% быстрее</text>
+    <text name="xftl_drones_skill">Зарядка дронов на \1% быстрее</text>
+    <text name="xftl_drones_skill_infobox">\1, если на посту в отсеке дронов или взлома.</text>
+    <text name="xftl_drones_skill_tooltip">Дроны:\n\1\nСбитые дроны возвращаются, а импульс взлома перезаряжается настолько же быстрее.</text>
+    <text name="xftl_hacking_skill">Перезарядка взлома на \1% быстрее</text>
+    <text name="xftl_life_skill">Жизнеобеспечение на \1% быстрее</text>
+    <text name="xftl_life_skill_infobox">\1, если на посту контроля разума или кислорода.</text>
+    <text name="xftl_life_skill_tooltip">Жизнеобеспечение:\n\1\nКонтроль разума перезаряжается, а кислород наполняется настолько же быстрее.</text>
+    <text name="xftl_mind_skill">Перезарядка контроля разума на \1% быстрее</text>
+    <text name="xftl_oxygen_skill">Кислород наполняется на \1% быстрее</text>
+    <text name="xftl_sensors_nebula">Туманность блокирует сенсоры: здесь они не работают.</text>
+    <text name="xftl_map_extreme_loc">КРАЙНЯЯ ОПАСНОСТЬ: две угрозы сразу.</text>
+    <text name="xftl_map_catastrophic_loc">КАТАСТРОФИЧЕСКАЯ ОПАСНОСТЬ: три угрозы сразу.</text>
+    <text name="xftl_map_apocalyptic_loc">АПОКАЛИПТИЧЕСКАЯ ОПАСНОСТЬ: туманность, астероиды, солнце и пульсар одновременно.</text>
+    <text name="xftl_map_radiation_loc">Радиационная туманность. Радиация медленно вредит всем членам экипажа вне медотсека и отсека репликации и блокирует сенсоры.</text>
+    <text name="xftl_map_mirage_loc">Туманность-мираж. Призраки на сенсорах делают карту ненадежной: корабли и угрозы могут оказаться не тем, чем кажутся.</text>
+    <text name="xftl_map_dark_loc">Темная туманность. Сквозь нее не проходит ничего: сенсоры и дроны здесь не работают.</text>
+    <text name="xftl_map_mirage_confused">Туманность-мираж сбивает сенсоры с толку. Эти данные могут быть неточны.</text>
+    <text name="xftl_map_chorus_loc">Во власти Хора. Сигнал КОНКОРДа здесь так силен, что сенсоры показывают то, что он хочет: корабли и угрозы могут оказаться не тем, чем кажутся.</text>
+    <text name="xftl_warning_radiation">РАДИАЦИОННАЯ ТУМАННОСТЬ</text>
+    <text name="xftl_warning_mirage">МИРАЖ\nОБЗОР НЕНАДЕЖЕН</text>
+    <text name="xftl_warning_dark">ТЬМА\nДРОНЫ ОТКЛЮЧЕНЫ</text>
+    <text name="xftl_map_boss_loc">Выход из сектора охраняет его босс: покинуть сектор можно, только одолев его.</text>
+    <text name="xftl_zoltan_shield_boarded">Ваши абордажники захватили два корабля с золтанскими щитами. Инженеры снимают лучший из двух генераторов и подключают его к вашему кораблю.</text>
+    <text name="xftl_exit_hold_broken">С гибелью командного корабля блокада разваливается, и флот повстанцев позади вас рвется вперед, чтобы закрыть брешь. Его корабли уже у других выходов с линии. Остался один путь: вперед, прочь из сектора.</text>
+
+</FTL>

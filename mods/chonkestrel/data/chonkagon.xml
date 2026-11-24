@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The Chonkagon's layout, made by tools/race_ships.py from the vanilla
+    circle_cruiser_3.xml (copyright (c) 2012 by Subset Games). Don't edit it by hand.
+-->
+<FTL>
+<img x="-71" y="-40" w="440" h="465"/>
+<offsets>
+	<floor x="63" y="32"/>
+	<cloak x="-10" y="-10"/>
+</offsets>
+<weaponMounts>
+	<mount x="360" y="80" rotate="true" mirror="true" gib="2" slide="right"/>
+	<mount x="360" y="120" rotate="true" mirror="false" gib="2" slide="right"/>
+	<mount x="230" y="29" rotate="true" mirror="true" gib="2" slide="up"/>
+	<mount x="300" y="434" rotate="true" mirror="false" gib="4" slide="down"/>
+	<mount x="71" y="28" rotate="true" mirror="true" gib="1" slide="up"/>
+	<mount x="143" y="39" rotate="true" mirror="true" gib="1" slide="up"/>
+	<mount x="71" y="426" rotate="true" mirror="false" gib="3" slide="down"/>
+	<mount x="183" y="435" rotate="true" mirror="false" gib="3" slide="down"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>16</x>
+		<y>0</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>220</x>
+		<y>0</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>232</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>220</x>
+		<y>232</y>
+	</gib4>
+</explosion>
+</FTL>

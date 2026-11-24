@@ -193,7 +193,9 @@ abstract class AbstractSystem(val blueprint: SystemBlueprint) {
             if (ship.sys.debugFlags.noIon.set)
                 ionTimer = 0f
 
-            ionTimer -= dt
+            // (a cooldown, with no ion damage limiting the power, runs
+            // as fast as the system's manning makes it)
+            ionTimer -= if (ionPowerLimit == null) dt * cooldownSpeed else dt
             if (ionTimer <= 0) {
                 ionPowerLimit = null
                 ionTimer = 0f
@@ -275,6 +277,13 @@ abstract class AbstractSystem(val blueprint: SystemBlueprint) {
      * timer without limiting the power), but not real ion damage: once the
      * player's out of danger, and when the ship jumps.
      */
+    /**
+     * How much faster than real time a cooldown on the ion timer (the
+     * mind control's or the hacking's: see [endCooldown]) runs, for a
+     * manned system (an XFTL extension, see [xyz.znix.xftl.systems.Manning]).
+     */
+    protected open val cooldownSpeed: Float get() = 1f
+
     protected fun endCooldown() {
         if (ionPowerLimit == null && ionTimer > 0f)
             ionTimer = 0f
@@ -602,7 +611,10 @@ abstract class AbstractSystem(val blueprint: SystemBlueprint) {
                 && hackedBy?.isPoweredUp != true
                 && undamagedEnergy > 0
                 && info.canBeManned
-                && !isIonised
+                // (ionised, but not on a cooldown, which only holds its
+                // power: the mind control and hacking can be manned while
+                // they recharge, an XFTL extension)
+                && !(isIonised && ionPowerLimit != null)
                 && scriptedPowerLimit == null
     }
 
@@ -691,7 +703,9 @@ abstract class AbstractSystem(val blueprint: SystemBlueprint) {
     open fun loadFromXML(elem: Element, refs: RefLoader) {
         require(elem.getAttributeValue("name") == blueprint.name)
 
-        energyLevels = elem.getAttributeValue("level")!!.toInt()
+        // (at least a bar: an Artillery Beam bought in 0.8-alpha was saved
+        // at none, see BuyableArtillery)
+        energyLevels = elem.getAttributeValue("level")!!.toInt().coerceAtLeast(1)
 
         damagedEnergyLevels = SaveUtil.getAttrInt(elem, "damage")
         scriptedPowerLimit = SaveUtil.getOptionalTagInt(elem, "scriptedLimit")
@@ -844,11 +858,14 @@ class SystemInstallConfiguration(
                 // Flatmap each of them to the valid positions in that column
                 (0 until room.height).asSequence().map { y -> ConstPoint(x, y) }
             }.flatMap {
-                // Expand each position into two valid edges
-                // Note that in a 1x2/2x1 room this doesn't cover all edges - close enough though
-                val horizontal = if (it.x == 0) Direction.LEFT else Direction.RIGHT
-                val vertical = if (it.y == 0) Direction.UP else Direction.DOWN
-                sequenceOf(Pair(it, horizontal), Pair(it, vertical))
+                // Expand each position into the room's edges it's on (all
+                // four for a 1x1 room)
+                listOfNotNull(
+                    Direction.LEFT.takeIf { _ -> it.x == 0 },
+                    Direction.RIGHT.takeIf { _ -> it.x == room.width - 1 },
+                    Direction.UP.takeIf { _ -> it.y == 0 },
+                    Direction.DOWN.takeIf { _ -> it.y == room.height - 1 },
+                ).asSequence().map { dir -> Pair(it, dir) }
             }.filter { pos ->
                 // Filter out anything that intersects with a door
                 room.doors.none { it.roomPos(room) posEq pos.first && it.dirFor(room) == pos.second }
@@ -857,9 +874,13 @@ class SystemInstallConfiguration(
                 if (room.doors.none { it.roomPos(room) posEq pos.first }) 0 else 1
             }
 
-            val place = validPlaces.first()
-            compPoint = place.first
-            compDir = place.second
+            // A small room with doors on every edge this looks at (a 1x1
+            // hacking room, say, which an Artillery Beam can now be bought
+            // for, and which can now be manned) gets no console: the system
+            // can't be manned there, rather than failing to load the ship
+            val place = validPlaces.firstOrNull()
+            compPoint = place?.first
+            compDir = place?.second
         }
 
         // The medbay/clonebay uses the computer to represent a cell that is obstructed.

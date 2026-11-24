@@ -239,6 +239,28 @@ are taken out, and the new rooms get a door to each room next to them; the
 script checks every room can still be reached. The gibs are the new hull
 cut into quarters.
 
+**Wide passages.** Then `tools/wide_passages.py` (run by `make art` after
+the scripts that make the layouts) opens up the walls between big empty
+rooms, on the long and wide ships, the hybrids and the bosses, so the
+bulwarks can walk between them (see [drone-sizes.md](drone-sizes.md)): a
+wall between two rooms a bulwark can stand in (each at least 2x2, with
+no system the ship starts with in it, in any blueprint with that layout)
+that's at least two cells long gets a door on every cell, a passage as
+wide as the wall, made into wide doors (one door 2 or 3 cells long,
+several for a longer wall, marked by an XFTL_WIDE_DOOR line in the
+layout, see [drone-sizes.md](drone-sizes.md)). A room with only an optional system counts: an enemy
+only sometimes gets it, and the room's otherwise empty, and when it does
+the bulwark keeps out of it, and the doors are only a way through. The
+doors already there stay, and nothing else in the layout changes. The walls
+between other rooms keep their single doors, as vanilla's. The player's
+chonky ships (see [race-ships.md](race-ships.md), and the Chonkestrel)
+get wide doors too, though they have no bulwarks, and whatever their
+rooms' systems: every wall between two rooms at least 2x2, but the cells
+a system's console faces (where the game puts it), in runs of at least
+two. `python3 tools/wide_passages.py ftl.dat --scan`
+lists every wall between two big rooms, with its doors and its longest
+run of them.
+
 Ships whose hulls don't stretch cleanly don't get that version. The rest of each faction's ships can be
 added to the table the same way.
 

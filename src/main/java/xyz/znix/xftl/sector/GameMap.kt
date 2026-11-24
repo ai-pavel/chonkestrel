@@ -645,16 +645,11 @@ class GameMap private constructor(df: Datafile, private val eventManager: EventM
     /**
      * The sector in [columnNumber], numbered from 1 as in a sixteen-sector
      * game (see [nominalSectorNumber]), as the difficulty plays it, for how
-     * hard the first sectors are: a sector earlier on easy, and a sector
-     * later on hard.
+     * hard the first sectors are: a sector earlier on easy, a sector later
+     * on hard, and two sectors later on insane ([Difficulty.mapSectorOffset]).
      */
     fun effectiveSectorNumber(columnNumber: Int, difficulty: Difficulty): Int {
-        val offset = when (difficulty) {
-            Difficulty.EASY -> -1
-            Difficulty.NORMAL -> 0
-            Difficulty.HARD -> 1
-        }
-        return nominalSectorNumber(columnNumber) + offset
+        return nominalSectorNumber(columnNumber) + difficulty.mapSectorOffset
     }
 
     /**

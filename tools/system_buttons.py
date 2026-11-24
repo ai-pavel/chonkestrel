@@ -19,6 +19,14 @@ outline and the charging stripes (which are four pixels apart) have rows
 below the top removed or repeated; the button with the power icon has plain
 rows removed or repeated as much above the icon as below it, so the icon
 stays in the middle. The images go in the mod's img/systemUI.
+
+It also makes the Artillery Beam's charge bar frames for five and six bars
+(button_artillery_<level>.png, see Artillery.COOLDOWN_FACTORS), which the
+mod's artillery goes up to: vanilla's are a frame as tall as the charge
+takes (a pixel a second, 50 for one bar down to 20 for four), so these are
+its four-bar one with rows of the plain middle of the frame taken out, as
+many as the charge is shorter, and as many clear rows added at the top, so
+the image is the same size and sits in the same place.
 """
 import sys
 from pathlib import Path
@@ -45,6 +53,12 @@ ICON_KINDS = {"on", "off", "select2"}
 ABOVE_ICON = 25
 BELOW_ICON = 50
 OUT = MOD / "img" / "systemUI"
+
+# The artillery frames: how many pixels shorter each is than the four-bar
+# one (its charge of 20 seconds at four bars, 17 at five and 14 at six), and
+# the plain rows in the middle of the four-bar one's frame they come out of
+ARTILLERY_SHORTER = {5: 3, 6: 6}
+ARTILLERY_PLAIN = (44, 54)
 
 
 def extra_rows(level):
@@ -87,7 +101,14 @@ def main():
         for level in LEVELS:
             image = resized(vanilla, extra_rows(level), kind)
             Image.fromarray(image).save(OUT / ("button_cloaking%d_%s.png" % (level, kind)))
-    print("Made %d button images" % (len(KINDS) * len(LEVELS)))
+
+    four = np.asarray(dat.image("img/systemUI/button_artillery_4.png").convert("RGBA"))
+    start, _ = ARTILLERY_PLAIN
+    for level, shorter in ARTILLERY_SHORTER.items():
+        clear = np.zeros((shorter, *four.shape[1:]), dtype=four.dtype)
+        image = np.concatenate([clear, four[:start], four[start + shorter:]], axis=0)
+        Image.fromarray(image).save(OUT / ("button_artillery_%d.png" % level))
+    print("Made %d button images" % (len(KINDS) * len(LEVELS) + len(ARTILLERY_SHORTER)))
 
 
 if __name__ == "__main__":

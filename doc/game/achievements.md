@@ -40,13 +40,13 @@ Every ship's first three:
 |--:|---|---|
 | 1 | Blockade Breaker | Beat the RSV Vigilance, the Blockade Line's boss (`blockade`) |
 | 2 | Mainframe Down | Win the game: destroy the Mainframe's last phase (`win`) |
-| 3 | Against All Odds | Win the game on Hard (`winHard`) |
+| 3 | Against All Odds | Win the game on Hard, or on Insane (`winHard`) |
 
 And three for its race, each within a single game:
 
 | Ships | 4 | 5 | 6 |
 |---|---|---|---|
-| Human: Chonkestrel, Chonk-Tail | **Outnumbered**: win a fight against 3 ships at once (`fleetFight`) | **Steady Hands**: beat a boss without the hull going below 50% (`bossHull`) | **Full House**: win with 16 crew alive (`crewAtWin`) |
+| Human: Chonkestrel, Chonk-Tail | **Outnumbered**: win a fight against 3 ships at once (`fleetFight`) | **Steady Hands**: beat a boss without the hull going below 50% (`bossHull`) | **Full House**: win with 18 crew alive (`crewAtWin`) |
 | Engi: Chonktorus, Chonkvortex | **Swarm Doctrine**: finish off 25 enemy ships with drones (`droneKills`) | **Hive Mind**: 9 drones out at once (`dronesOut`) | **Nobody Left Behind**: win with no crew lost (`winNoLosses`, at most 0) |
 | Zoltan: Chonkudicator, Chonkoether | **Unbreakable**: shields stop 1000 damage (`shieldAbsorbed`) | **Radiant Bulwark**: start a fight with a super shield of 15 (`superShield`) | **Untouchable**: beat a boss without losing any hull (`bossUnharmed`) |
 | Mantis: Chonkila Monster, Chonkilisk | **Bloodsport**: boarders kill 100 enemy crew (`boarderKills`) | **Empty Ships**: kill the crew of 15 ships (`crewKills`) | **Regicide**: kill a boss's whole crew (`bossCrew`) |
@@ -153,7 +153,12 @@ Where each is counted:
 
 `tools/achievement_art.py` makes them from the definitions (see
 [art](../tools/art.md)): each is vanilla's grey 64x64 square with the
-ship's hangar miniature, a dark ship given a pale edge, and a badge in the
-top right corner with the goal's emblem, pixel art drawn at twice its
-size. The win's has gold rays behind it, and the win on Hard red ones, as
-vanilla's third achievements do.
+ship's hangar miniature, a dark ship given a pale edge, marked as vanilla
+marks its ships' three, with vanilla's star (cut from kestral_2.png): the
+Blockade's has the ship alone, the win's the star over it, and the win on
+Hard's the star with red rays behind it, as vanilla's first, second and
+third; the race's own three have one, two and three gold stars, the
+last (the hardest) on red rays too. The
+achievements window shows them at 48x48, and each ship at half its
+miniature's size, from copies the script makes at those sizes (scaled down
+smoothly, and made from the hull), as the game's own scaling skips pixels.

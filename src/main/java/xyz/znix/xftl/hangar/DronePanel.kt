@@ -198,7 +198,9 @@ class DronePanel(val editor: ShipEditor) : UIObject {
     }
 
     companion object {
-        private const val MAX_ROWS = 2
+        // (the Engi ships have three drones systems; there's room for them
+        // all in the hangar, with no enemy windows to keep clear of)
+        private const val MAX_ROWS = 3
         private const val MAX_COLUMNS = 4
 
         // The drone box images are 76px tall, the same as the weapon ones

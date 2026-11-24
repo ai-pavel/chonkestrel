@@ -2,6 +2,7 @@ package xyz.znix.xftl.mods
 
 import net.vhati.modmanager.core.ModUtilities
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -9,6 +10,7 @@ import xyz.znix.xftl.BlueprintManager
 import xyz.znix.xftl.Datafile
 import xyz.znix.xftl.LazyShipBlueprint
 import xyz.znix.xftl.ShipShape
+import xyz.znix.xftl.systems.Artillery
 import xyz.znix.xftl.systems.SystemBlueprint
 import xyz.znix.xftl.Translator
 import xyz.znix.xftl.VanillaDatafile
@@ -380,9 +382,10 @@ class KestrelModTest {
 
             // Its artillery systems (the Federation's) each fire an
             // Artillery Beam from a mount of their own, after the weapon
-            // slots' (see Artillery.hardpoint), which doesn't slide out
+            // slots' (see Artillery.hardpoint), which doesn't slide out (the
+            // Type C's own room has vanilla's Type C beam, ARTILLERY_FED_C)
             val artillery = ship.systems.filter { it.systemName == "artillery" }
-            assertTrue(name, artillery.all { it.weapon == "ARTILLERY_FED" })
+            assertTrue(name, artillery.all { it.weapon == "ARTILLERY_FED" || it.weapon == "ARTILLERY_FED_C" })
             assertEquals(name, ship.weaponSlots!! + artillery.size, ship.hardpoints.size)
             assertTrue(name, ship.hardpoints.drop(ship.weaponSlots!!).all { it.slide == null })
 
@@ -398,13 +401,39 @@ class KestrelModTest {
             assertTrue(name, File(MOD_DIR, "data/${ship.layout}.txt").isFile)
         }
 
-        // Each Type B is named after its Type A, with _2 on the end, which
-        // is how the hangar pairs them up, and is made from a different ship
-        for (name in RACE_SHIPS.keys.filter { it.endsWith("_2") }) {
-            val typeA = name.removeSuffix("_2")
+        // Each big ship names the vanilla player ship it was made from (the
+        // hangar's Normal and Chonky buttons switch between them), a
+        // different one each, with the same layout letter
+        val bigShips = listOf(CHONKESTREL) + RACE_SHIPS.keys
+        for (name in bigShips) {
+            val vanillaShip = blueprints.getShip(name).vanillaShip
+            assertNotNull(name, vanillaShip)
+            val original = vanilla.getOrNull(vanillaShip!!) as? LazyShipBlueprint
+            assertNotNull("$name: $vanillaShip", original)
+            assertTrue(name, original!!.name.startsWith("PLAYER_SHIP_") && original.shipSize == 1)
+            assertEquals(name, name.endsWith("_2"), vanillaShip.endsWith("_2"))
+            assertEquals(name, name.endsWith("_3"), vanillaShip.endsWith("_3"))
+            assertEquals(name, (blueprints[name] as LazyShipBlueprint).vanillaShip, vanillaShip)
+        }
+        assertEquals("PLAYER_SHIP_HARD", blueprints.getShip(CHONKESTREL).vanillaShip)
+        assertEquals(bigShips.size, bigShips.map { blueprints.getShip(it).vanillaShip }.toSet().size)
+
+        // Each Type B and C is named after its Type A, with _2 or _3 on the
+        // end, which is how the hangar pairs them up, and is made from a
+        // different ship
+        for (name in RACE_SHIPS.keys.filter { it.endsWith("_2") || it.endsWith("_3") }) {
+            val typeA = name.removeSuffix("_2").removeSuffix("_3")
             assertTrue(name, typeA == CHONKESTREL || typeA in RACE_SHIPS)
             assertTrue(name, blueprints.getShip(name).layout != blueprints.getShip(typeA).layout)
         }
+
+        // The races with a vanilla Type C have a big one, made from it; the
+        // Lanius and the Crystals have none
+        assertEquals(
+            setOf("CHONKESTREL", "ENGI", "ZOLTAN", "FED", "SLUG", "MANTIS", "ROCK", "STEALTH"),
+            RACE_SHIPS.keys.filter { it.endsWith("_3") }
+                .map { it.removePrefix("PLAYER_SHIP_").removePrefix("XFTL_").removeSuffix("_3") }.toSet()
+        )
 
         // The Chonk-Tail is doubled like the Chonkestrel: human crew mostly,
         // and two weapons systems of four Basic Lasers each, as the Red-Tail's
@@ -414,7 +443,7 @@ class KestrelModTest {
 
         // The Stealth cruisers start with no shields, as vanilla's do, but
         // can buy them, and with both their cloaking systems
-        for (name in listOf("PLAYER_SHIP_XFTL_STEALTH", "PLAYER_SHIP_XFTL_STEALTH_2")) {
+        for (name in listOf("PLAYER_SHIP_XFTL_STEALTH", "PLAYER_SHIP_XFTL_STEALTH_2", "PLAYER_SHIP_XFTL_STEALTH_3")) {
             val systems = blueprints.getShip(name).systems
             val shields = systems.filter { it.systemName == "shields" }
             assertTrue(name, shields.isNotEmpty() && shields.none { it.availableByDefault })
@@ -430,6 +459,11 @@ class KestrelModTest {
         val vanilla = BlueprintManager(Datafile(df, emptyList()), true)
         assertEquals(0, (vanilla["artillery"] as SystemBlueprint).rarity)
         assertTrue((modded["artillery"] as SystemBlueprint).rarity != 0)
+
+        // It goes to six bars, with a charge frame and a price for each
+        val artillery = modded["artillery"] as SystemBlueprint
+        assertEquals(Artillery.COOLDOWN_FACTORS.size, artillery.maxPower)
+        assertEquals(artillery.maxPower - 1, artillery.upgradeCost.size)
     }
 
     @Test
@@ -665,6 +699,16 @@ class KestrelModTest {
             // (and the Stealth cruisers', with two cloaking systems each)
             "PLAYER_SHIP_XFTL_STEALTH" to mapOf("cloaking" to 2),
             "PLAYER_SHIP_XFTL_STEALTH_2" to mapOf("cloaking" to 2),
+            // (and the Type C versions, from the vanilla Type C ships, for
+            // the races that have one)
+            "PLAYER_SHIP_CHONKESTREL_3" to mapOf("weapons" to 2, "shields" to 2, "engines" to 2, "oxygen" to 2, "sensors" to 2),
+            "PLAYER_SHIP_XFTL_ENGI_3" to mapOf("drones" to 3),
+            "PLAYER_SHIP_XFTL_ZOLTAN_3" to mapOf("shields" to 3, "battery" to 2),
+            "PLAYER_SHIP_XFTL_FED_3" to mapOf("artillery" to 2),
+            "PLAYER_SHIP_XFTL_SLUG_3" to mapOf("sensors" to 2, "hacking" to 2, "mind" to 2),
+            "PLAYER_SHIP_XFTL_MANTIS_3" to mapOf("teleporter" to 2, "medbay" to 2),
+            "PLAYER_SHIP_XFTL_ROCK_3" to mapOf("weapons" to 3),
+            "PLAYER_SHIP_XFTL_STEALTH_3" to mapOf("cloaking" to 2),
         )
 
         private val SHIP_REGEX = Regex("""<shipBlueprint\s+name="([^"]+)"(.*?)</shipBlueprint>""", RegexOption.DOT_MATCHES_ALL)

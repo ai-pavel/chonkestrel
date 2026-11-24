@@ -154,6 +154,8 @@ public class InGameState extends MainGame.GameState {
      * and were delayed to the next one.
      */
     private final ArrayList<Event> delayedQuests = new ArrayList<>();
+    // The hidden ones (see Event.questHidden)
+    private final ArrayList<Event> delayedHiddenQuests = new ArrayList<>();
 
     /**
      * The game-wide counters events add to (`<xftlCounter>`, see
@@ -255,6 +257,20 @@ public class InGameState extends MainGame.GameState {
         return new InGameState(mainGame, content, playerShipName, Difficulty.NORMAL, null, null, true);
     }
 
+    /**
+     * The main menu's scene from the saved game (see MainMenuState): the
+     * game loaded as it was saved, its ship just as it is, with its crew,
+     * systems and all, but no music, and it's never saved.
+     */
+    public static InGameState forMainMenu(MainGame mainGame, GameContent content, Document saveGame) {
+        InGameState state = new InGameState(mainGame, content, saveGame, true);
+        // (not the event or store it was saved in, which would take the
+        // menu's clicks)
+        if (state.shipUI != null)
+            state.shipUI.debugCloseWindow();
+        return state;
+    }
+
     private InGameState(MainGame mainGame, GameContent content, String playerShipName, Difficulty difficulty,
                         EditableShip customised, @Nullable String namePreset, boolean menuScene) {
         this(mainGame, content);
@@ -293,7 +309,12 @@ public class InGameState extends MainGame.GameState {
      * Load a previously-saved game.
      */
     public InGameState(MainGame mainGame, GameContent content, Document saveGame) {
+        this(mainGame, content, saveGame, false);
+    }
+
+    private InGameState(MainGame mainGame, GameContent content, Document saveGame, boolean menuScene) {
         this(mainGame, content);
+        this.menuScene = menuScene;
 
         Element root = saveGame.getRootElement();
         if (!root.getName().equals("xftlSaveGame")) {
@@ -334,7 +355,8 @@ public class InGameState extends MainGame.GameState {
         // To do this, just check if it's already playing something. Since
         // the sound manager is part of the game content, it's not cleared
         // across a reload.
-        if (getSounds() instanceof RealSoundManager real && real.getCurrentMusic() == null) {
+        // (the main menu is silent)
+        if (!menuScene && getSounds() instanceof RealSoundManager real && real.getCurrentMusic() == null) {
             loadSectorMusic(currentBeacon.getSector().getType());
         }
 
@@ -478,6 +500,11 @@ public class InGameState extends MainGame.GameState {
                 player.addCrewMember(info, true, false, room);
             }
         }
+
+        // In debug mode, a ship without a debug loadout of its own gets a
+        // full crew (see Ship.fillDebugCrew)
+        if (XftlDebug.INSTANCE.getEnabled() && !XftlDebug.INSTANCE.getPlainPlayerShip() && !blueprint.getHasOwnDebugLoadout())
+            player.fillDebugCrew();
 
         // Save the default crew positions, so the player can immediately
         // load them again without first having to save them.
@@ -985,6 +1012,10 @@ public class InGameState extends MainGame.GameState {
                 currentBeacon.getSector().addQuest(currentBeacon, quest, true);
             }
             delayedQuests.clear();
+            for (Event quest : delayedHiddenQuests) {
+                currentBeacon.getSector().addQuest(currentBeacon, quest, true, false, true);
+            }
+            delayedHiddenQuests.clear();
 
             // Switch to the new sector's music (the main menu is silent)
             if (!menuScene) {
@@ -992,6 +1023,13 @@ public class InGameState extends MainGame.GameState {
             }
 
             achievementTracker.sectorEntered(currentBeacon.getSector());
+        }
+
+        // The hazards of the beacon we're leaving start over if we come back,
+        // rather than carrying on with their flare, pulse and asteroid timers
+        // from where we left them.
+        if (this.currentBeacon != null && this.currentBeacon != currentBeacon) {
+            this.currentBeacon.clearEnvironment();
         }
 
         this.currentBeacon = currentBeacon;
@@ -1060,7 +1098,7 @@ public class InGameState extends MainGame.GameState {
 
             if (currentBeacon.isExit()) {
                 eventName = "FLEET_EASY_BEACON";
-                if (difficulty != Difficulty.EASY) {
+                if (difficulty.atLeast(Difficulty.NORMAL)) {
                     // This is correct - use _DLC for non-easy difficulties!
                     eventName += "_DLC";
                 }
@@ -1270,11 +1308,35 @@ public class InGameState extends MainGame.GameState {
     }
 
     /**
+     * Replace the player's ship with a new one of blueprint {@code shipName},
+     * as a new game starts it (its own crew, systems and weapons), with its
+     * own UI, for the trailer (see Trailer), which fights each fight in a
+     * different ship. The ships it was facing go first, as they target the
+     * old ship (bosses too), and with the old ship go its crew, boarders,
+     * drones and projectiles, as nothing else holds them.
+     */
+    public void debugReplacePlayerShip(String shipName) {
+        setEnemy(null, false);
+        currentBeacon.setShip(null);
+        clickEvent = null;
+        hoveredRoom = null;
+
+        startingShipBlueprint = blueprintManager.getShip(shipName);
+        createNewPlayerShip(shipName, null);
+
+        // As a new game sets it up (not in automated tests, which have no UI)
+        if (shipUI != null)
+            shipUI = new PlayerShipUI(player, this);
+        updatePlayerCrew();
+    }
+
+    /**
      * Make [enemy] the ship the player's facing, alone (any wingmen belong
      * to the old enemy ship), [hostile] or not, or with null, no ship.
      */
     private void setEnemy(@Nullable Ship enemy, boolean hostile) {
         opponents.clear();
+        storySurrendersOffered.clear();
         zoltanShieldsBoarded = 0;
         if (enemy != null) {
             Opponent main = new Opponent(enemy, Objects.requireNonNull(player), 0, this);
@@ -1382,6 +1444,8 @@ public class InGameState extends MainGame.GameState {
     @Nullable
     private Opponent surrenderingOpponent;
     private boolean fleetSurrender;
+    // The surrenders that move a story on offered in this fight (see surrenderOffered)
+    private final Set<IEvent> storySurrendersOffered = new HashSet<>();
 
     /**
      * The chance that the main enemy ship's surrender, with wingmen still
@@ -1413,6 +1477,15 @@ public class InGameState extends MainGame.GameState {
         if (opponent == null || ship.getSpec() == null || ship.getSpec().getSurrender() == null)
             return;
 
+        // A surrender that moves a story on (a quest's, say, as the Engi
+        // ship's ENGI_UNLOCK_2REAL_SURRENDER, which starts ENGI_UNLOCK_3) is
+        // only offered once a fight, not by each copy of the ship: it used
+        // to be offered by each of them, starting the next stage two or
+        // three times
+        IEvent surrender = ship.getSpec().getSurrender();
+        if (Event.advancesStory(surrender) && !storySurrendersOffered.add(surrender))
+            return;
+
         boolean hasWingmen = false;
         for (Opponent o : opponents) {
             if (o != opponent && o.getHostile())
@@ -1433,6 +1506,11 @@ public class InGameState extends MainGame.GameState {
     void eventDialogueClosed() {
         surrenderingOpponent = null;
         fleetSurrender = false;
+    }
+
+    /** Whether a surrender's being offered now (see surrenderOffered), for the tests. */
+    boolean isSurrenderOffered() {
+        return surrenderingOpponent != null;
     }
 
     // How many drones a ship had, for the Ossuary Schematics
@@ -1961,8 +2039,17 @@ public class InGameState extends MainGame.GameState {
      */
     @NotNull
     public QuestAddResult addQuest(Event questEvent, boolean ahead) {
+        return addQuest(questEvent, ahead, false);
+    }
+
+    /**
+     * Add a quest, as [addQuest] does: if [hidden] (see Event.questHidden),
+     * with no mark on the map.
+     */
+    @NotNull
+    public QuestAddResult addQuest(Event questEvent, boolean ahead, boolean hidden) {
         Sector sector = currentBeacon.getSector();
-        boolean wasAdded = sector.addQuest(currentBeacon, questEvent, false, ahead);
+        boolean wasAdded = sector.addQuest(currentBeacon, questEvent, false, ahead, hidden);
 
         if (wasAdded) {
             return QuestAddResult.CURRENT_SECTOR;
@@ -1972,7 +2059,7 @@ public class InGameState extends MainGame.GameState {
             // as we shouldn't put quests into the last stand.
             return QuestAddResult.TOO_LATE;
         } else {
-            delayedQuests.add(questEvent);
+            (hidden ? delayedHiddenQuests : delayedQuests).add(questEvent);
             return QuestAddResult.NEXT_SECTOR;
         }
     }
@@ -2975,9 +3062,14 @@ public class InGameState extends MainGame.GameState {
     public void advanceFleet() {
         Sector sector = currentBeacon.getSector();
 
+        // Whether the fleet takes an extra step this jump (on insane, see
+        // Difficulty.fleetExtraStepEvery), then count this jump
+        boolean extraStep = sector.isFleetExtraStep(difficulty);
+        sector.setFleetJumps(sector.getFleetJumps() + 1);
+
         // The last stand works differently, capturing two beacons per jump.
         if (sector.isLastStand()) {
-            advanceFleetLastStand();
+            advanceFleetLastStand(extraStep);
             return;
         }
 
@@ -3000,7 +3092,8 @@ public class InGameState extends MainGame.GameState {
 
         Point dangerZone = sector.getDangerZoneCentre();
 
-        int advance = sector.getFleetAdvanceFor(currentBeacon, player.getType().getShipSize());
+        // (with the extra step, if it's due)
+        int advance = sector.getFleetAdvanceFor(currentBeacon, player.getType().getShipSize(), extraStep);
 
         dangerZone.setX(dangerZone.getX() + advance);
 
@@ -3051,11 +3144,16 @@ public class InGameState extends MainGame.GameState {
      */
     public static final int EXIT_HOLD_FLEET_LEAP = 4;
 
-    private void advanceFleetLastStand() {
+    private void advanceFleetLastStand(boolean extraStep) {
         Sector sector = currentBeacon.getSector();
 
         // The fleet takes two beacons a jump, wherever they are: not the
-        // player's, the base, or where the flagship is (or is going)
+        // player's, the base, or where the flagship is (or is going). On
+        // insane, it takes one more on the first jump, as it starts a jump
+        // closer, and one more on each extra step (see Difficulty).
+        int taken = LAST_STAND_BEACONS_TAKEN + (extraStep ? 1 : 0);
+        if (sector.getFleetJumps() == 1)
+            taken += difficulty.getFleetHeadStartJumps();
         Set<Beacon> spared = new HashSet<>();
         spared.add(currentBeacon);
         for (BossManager boss : sector.getBosses()) {
@@ -3068,7 +3166,7 @@ public class InGameState extends MainGame.GameState {
                 free.add(beacon);
         }
         Collections.shuffle(free);
-        for (Beacon beacon : free.subList(0, Math.min(LAST_STAND_BEACONS_TAKEN, free.size())))
+        for (Beacon beacon : free.subList(0, Math.min(taken, free.size())))
             beacon.setOvertaken(true);
 
         // Make the flagship jump
@@ -3320,7 +3418,13 @@ public class InGameState extends MainGame.GameState {
         // This is only here to avoid wasting heaps of resources in cont-save-load mode.
         private WindowRenderer windowRenderer;
 
-        public GameContent(Datafile datafile, boolean enableAdvancedEdition) {
+        /**
+         * Load the game's content, with its text in {@code language} (a
+         * {@link xyz.znix.xftl.Language}'s code, such as "en"). The events'
+         * text is looked up as they're loaded, so another language needs
+         * the content loaded again (see MainGame.switchToMainMenu).
+         */
+        public GameContent(Datafile datafile, boolean enableAdvancedEdition, String language) {
             this.datafile = datafile;
             this.enableAdvancedEdition = enableAdvancedEdition;
 
@@ -3328,7 +3432,7 @@ public class InGameState extends MainGame.GameState {
             animations = new Animations(datafile);
             sounds = new RealSoundManager(datafile, resourceContext);
             generator = new ShipGenerator(datafile, blueprintManager);
-            translator = new Translator(datafile, "en");
+            translator = new Translator(datafile, language);
             eventManager = new EventManager(datafile, translator, blueprintManager);
             nameManager = new CrewNameManager(datafile, "en");
             achievements = new Achievement.AchievementTable(datafile);

@@ -17,17 +17,22 @@ class WindowRenderer(
 ) {
     private val baseImage = BulkImageRenderer()
 
-    fun render(x: Int, y: Int, width: Int, height: Int) {
+    /**
+     * Draw a window. With an [alpha] below 1, it's see-through, as the
+     * achievement notice is (see AchievementTracker.drawToast).
+     */
+    @JvmOverloads
+    fun render(x: Int, y: Int, width: Int, height: Int, alpha: Float = 1f) {
         // Tile in the background area. We have to mask it, since the tiles
         // will clip the corners of the image.
         Utils.drawStenciled(Utils.StencilMode.MASKING, {
             drawOutlineOrMask(maskImage, x, y, width, height)
         }, {
-            drawTiled(x, y, width, height, 0, 0)
+            drawTiled(x, y, width, height, 0, 0, alpha)
         })
 
         // Draw the outline image
-        drawOutlineOrMask(outlineImage, x, y, width, height)
+        drawOutlineOrMask(outlineImage, x, y, width, height, alpha)
 
         // For testing, this will draw an outline around the specified area.
         // g.colour = Colour(1f, 0f, 0f, 0.2f)
@@ -91,7 +96,7 @@ class WindowRenderer(
     }
 
     // This draws more than the specified width/height, so it must be masked.
-    private fun drawTiled(x: Int, y: Int, width: Int, height: Int, bgOffsetX: Int, bgOffsetY: Int) {
+    private fun drawTiled(x: Int, y: Int, width: Int, height: Int, bgOffsetX: Int, bgOffsetY: Int, alpha: Float = 1f) {
         // These should always be <= 0 to avoid gaps
         val wrappedOffsetX = bgOffsetX.mod(TILE_X) - TILE_X
         val wrappedOffsetY = bgOffsetY.mod(TILE_Y) - TILE_Y
@@ -110,7 +115,7 @@ class WindowRenderer(
                     28f, 29f,
                     28f + TILE_X, 29f + TILE_Y,
 
-                    Colour.white
+                    Colour(1f, 1f, 1f, alpha)
                 )
 
                 tileY += TILE_Y
@@ -121,7 +126,7 @@ class WindowRenderer(
     }
 
     // Note the coordinates for this include the glow!
-    private fun drawOutlineOrMask(image: Image, baseX: Int, baseY: Int, baseWidth: Int, baseHeight: Int) {
+    private fun drawOutlineOrMask(image: Image, baseX: Int, baseY: Int, baseWidth: Int, baseHeight: Int, alpha: Float = 1f) {
         // Subtract out the size of the glow, to avoid having to do that later on.
         val x = baseX - GLOW
         val y = baseY - GLOW
@@ -148,28 +153,32 @@ class WindowRenderer(
         image.draw(
             x.f, y.f,
             leftLineX, topLineY,
-            0f, 0f, CORNER_SIZE.f, CORNER_SIZE.f
+            0f, 0f, CORNER_SIZE.f, CORNER_SIZE.f,
+            alpha, Colour.white
         )
 
         // Top-right
         image.draw(
             rightLineX, y.f,
             rightX, topLineY,
-            srcRightLine, 0f, srcRight, CORNER_SIZE.f
+            srcRightLine, 0f, srcRight, CORNER_SIZE.f,
+            alpha, Colour.white
         )
 
         // Bottom-left
         image.draw(
             x.f, bottomLineY,
             leftLineX, bottomY,
-            0f, srcBottomLine, CORNER_SIZE.f, srcBottom
+            0f, srcBottomLine, CORNER_SIZE.f, srcBottom,
+            alpha, Colour.white
         )
 
         // Bottom-right
         image.draw(
             rightLineX, bottomLineY,
             rightX, bottomY,
-            srcRightLine, srcBottomLine, srcRight, srcBottom
+            srcRightLine, srcBottomLine, srcRight, srcBottom,
+            alpha, Colour.white
         )
 
         // Draw the lines connecting the corners
@@ -178,35 +187,40 @@ class WindowRenderer(
         image.draw(
             x.f, topLineY,
             leftLineX, bottomLineY,
-            0f, CORNER_SIZE.f, CORNER_SIZE.f, srcBottomLine
+            0f, CORNER_SIZE.f, CORNER_SIZE.f, srcBottomLine,
+            alpha, Colour.white
         )
 
         // Right side
         image.draw(
             rightLineX, topLineY,
             rightX, bottomLineY,
-            srcRightLine, CORNER_SIZE.f, srcRight, srcBottomLine
+            srcRightLine, CORNER_SIZE.f, srcRight, srcBottomLine,
+            alpha, Colour.white
         )
 
         // Top side
         image.draw(
             leftLineX, y.f,
             rightLineX, topLineY,
-            CORNER_SIZE.f, 0f, srcRightLine, CORNER_SIZE.f
+            CORNER_SIZE.f, 0f, srcRightLine, CORNER_SIZE.f,
+            alpha, Colour.white
         )
 
         // Bottom side
         image.draw(
             leftLineX, bottomLineY,
             rightLineX, bottomY,
-            CORNER_SIZE.f, srcBottomLine, srcRightLine, srcBottom
+            CORNER_SIZE.f, srcBottomLine, srcRightLine, srcBottom,
+            alpha, Colour.white
         )
 
         // In case we're drawing the mask, fill in the centre too.
         image.draw(
             leftLineX, topLineY,
             rightLineX, bottomLineY,
-            CORNER_SIZE.f, CORNER_SIZE.f, srcRightLine, srcBottomLine
+            CORNER_SIZE.f, CORNER_SIZE.f, srcRightLine, srcBottomLine,
+            alpha, Colour.white
         )
     }
 

@@ -28,6 +28,8 @@ class LaniusAirTest {
 
     // The air left in [room] after a second of OxygenTransfer, from full
     private fun airAfterASecond(ship: Ship, room: Room): Float {
+        // Who's in which room, as the ship's update finds it
+        ship.rooms.forEach { it.updateCrewInRoom() }
         ship.rooms.forEach { it.oxygen = 1f }
         repeat(20) { OxygenTransfer.update(ship, 0.05f) }
         return room.oxygen
@@ -55,8 +57,9 @@ class LaniusAirTest {
         val kit = createKit()
         val room = kit.player.rooms[0]
         kit.addCrew(kit.player, room)
-        kit.addCrew(kit.player, room, race = "anaerobic")
-        assertTrue(airAfterASecond(kit.player, room) < 1f)
+        // (in the nearest room with space, if that one's full)
+        val lanius = kit.addCrew(kit.player, room, race = "anaerobic")
+        assertTrue(airAfterASecond(kit.player, lanius.room) < 1f)
     }
 
     @Test

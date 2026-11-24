@@ -1,6 +1,8 @@
 package xyz.znix.xftl.systems
 
 import org.jdom2.Element
+import xyz.znix.xftl.crew.Skill
+import xyz.znix.xftl.rendering.Graphics
 import xyz.znix.xftl.SystemInfo
 import xyz.znix.xftl.Translator
 import xyz.znix.xftl.game.UIUtils
@@ -22,8 +24,31 @@ class Oxygen(blueprint: SystemBlueprint) : MainSystem(blueprint) {
             if (powerSelected == 0)
                 return 0f
 
-            return refillMultiplier(powerSelected) * ROOM_DRAIN_RATE
+            // (faster with someone at its console, an XFTL extension, see Manning)
+            return refillMultiplier(powerSelected) * ROOM_DRAIN_RATE * Manning.speed(this, Skill.LIFE_SUPPORT)
         }
+
+    // How long it's been manned refilling the air since its last Life
+    // Support skill point (see Manning.OXYGEN_SECONDS_PER_ACTION)
+    private var refillingTime = 0f
+
+    override fun update(dt: Float) {
+        super.update(dt)
+
+        val refilling = powerSelected > 0 && !isHackActive && manningCrew != null &&
+                ship.rooms.any { it.oxygen < 1f }
+        if (!refilling)
+            return
+        refillingTime += dt
+        if (refillingTime >= Manning.OXYGEN_SECONDS_PER_ACTION) {
+            refillingTime -= Manning.OXYGEN_SECONDS_PER_ACTION
+            addSkillPoint(Skill.LIFE_SUPPORT)
+        }
+    }
+
+    override fun drawManningIcon(g: Graphics, x: Int, y: Int) {
+        drawManningSkillIcon(x, y, getSkillLevel(Skill.LIFE_SUPPORT))
+    }
 
     // Nothing to serialise
     override fun saveSystem(elem: Element, refs: ObjectRefs) = Unit
@@ -71,7 +96,8 @@ class Oxygen(blueprint: SystemBlueprint) : MainSystem(blueprint) {
 }
 
 private object OxygenInfo : SystemInfo("oxygen") {
-    override val canBeManned: Boolean get() = false
+    // (an XFTL extension, see Manning)
+    override val canBeManned: Boolean get() = true
 
     override fun create(blueprint: SystemBlueprint) = Oxygen(blueprint)
 

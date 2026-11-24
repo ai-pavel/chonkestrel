@@ -83,7 +83,7 @@ class ShieldDrone(type: DroneBlueprint) : AbstractExternalDrone(type, false) {
 
         // Stay charged while the super-shield is full, and add a point as
         // soon as it's hit.
-        cooldown = max(0f, cooldown - dt)
+        cooldown = max(0f, cooldown - dt * manningSpeed)
 
         // It stops dead on its way round for the last of its charging, as
         // in vanilla, and flies on as soon as it's charged the shields

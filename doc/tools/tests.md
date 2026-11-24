@@ -71,7 +71,7 @@ scaling.
 | `sector/SectorSizeTest` | 2 | Sectors are bigger for big ships, with vanilla's columns scaled |
 | `sector/EventScaleTest` | 2 | Events marked `xftlScale="size"` scale with the ship, and others don't |
 | `sector/EventsTest` | 1 | An event can add a crew member with a given name |
-| `sector/QuestPlacementTest` | 2 | A quest marked `xftlAhead` goes a few jumps on towards the exit, as near it as it can be, and never behind the player; with nowhere ahead, it waits for the next sector |
+| `sector/QuestPlacementTest` | 3 | A quest marked `xftlAhead` goes a few jumps on towards the exit, as near it as it can be, and never behind the player; with nowhere ahead, it waits for the next sector. One marked `xftlHidden` isn't marked on the map, and is saved |
 
 ### The Chonkestrel mod's data
 
@@ -89,6 +89,7 @@ sectors, events and changes to vanilla's blueprints.
 | `mods/CloakingUpgradeTest` | 2 | Cloaking goes to six bars, each past three adding less |
 | `mods/SystemLevelsTest` | 2 | Hacking, mind control, the medbay, clonebay, oxygen and teleporter go to six bars, and the battery to four, each bar past vanilla's adding less |
 | `mods/FuelTest` | 1 | The fuel stations scale with the ship |
+| `mods/ModTextTest` | 4 | The mod's data has no text written into it (see `tools/extract_mod_text.py`), every key it refers to has English, its own keys aren't vanilla's, and every language loads with every text |
 | `mods/StoreSystemsTest` | 1 | Piloting, oxygen and doors aren't sold, and the engines cost 60 |
 | `mods/RaceAugmentsTest` | 1 | The race augments are sold everywhere, rarely, and mostly in their race's sectors (hybrid sectors too) |
 | `mods/ShipAchievementsTest` | 2 | The ship achievements: six for each of the twenty ships, in the hangar's order, the same three first, a race's A and B with the same goals as separate achievements (the Federation's and the Stealth ships' with three each of their own); each for a ship the mod has, with a known goal, its target in its description, and its icon; every goal kind used |

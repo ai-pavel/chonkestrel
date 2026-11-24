@@ -18,6 +18,11 @@
             <widget type="button" pTop="45" pLeft="15" id="keybinds">
                 <widget type="label" text="configure_controls"/>
             </widget>
+
+            <!-- The language the game's in (see LanguageWindow) -->
+            <widget type="button" pTop="80" pLeft="15" id="language">
+                <widget type="label" text="xftl_options_language"/>
+            </widget>
         </widget>
 
         <widget type="window" w="400" h="150" pLeft="0" pTop="300" pBottom="0">

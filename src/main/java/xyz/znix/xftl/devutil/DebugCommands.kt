@@ -258,7 +258,7 @@ class DebugCommands(console: DebugConsole) : ConsoleCommandProvider(console) {
                 val boxHeight = 30
                 val boxWidth = gc.width - x * 2
 
-                val skillWidth = (boxWidth - nameIconWidth) / 6
+                val skillWidth = (boxWidth - nameIconWidth) / Skill.entries.size
 
                 // Draw the info text
                 g.colour = Colour(55, 55, 55, 180)

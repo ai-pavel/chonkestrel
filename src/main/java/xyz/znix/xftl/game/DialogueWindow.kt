@@ -105,15 +105,18 @@ class DialogueWindow private constructor(val game: InGameState, val playerShip: 
         // If this event triggers a quest, we have to evaluate it now to find out
         // what text to display (whether it was added to the current or next
         // sector, or there's no time as the next sector is the last stand).
+        // A hidden one (see Event.questHidden) says nothing.
         val questName = event.event.questName
         if (questName != null) {
             val quest = game.eventManager[questName].resolve()
-            val messageId = when (game.addQuest(quest, event.event.questAhead)) {
+            val result = game.addQuest(quest, event.event.questAhead, event.event.questHidden)
+            val messageId = when (result) {
                 InGameState.QuestAddResult.CURRENT_SECTOR -> "added_quest"
                 InGameState.QuestAddResult.NEXT_SECTOR -> "added_quest_sector"
                 InGameState.QuestAddResult.TOO_LATE -> "no_time"
             }
-            extraText += "\n\n" + game.translator[messageId]
+            if (!event.event.questHidden)
+                extraText += "\n\n" + game.translator[messageId]
         }
 
         // A game-wide counter it adds to, with a line saying where it's at,
@@ -706,6 +709,12 @@ class DialogueWindow private constructor(val game: InGameState, val playerShip: 
         if (playerShip.fuelCount < -res.fuel)
             return false
 
+        // A hull repair that costs something (as a repair station's) has
+        // nothing to buy with the hull already whole
+        val repairOnly = res.damage.isNotEmpty() && res.damage.all { it.amount < 0 && it.system == null }
+        if (res.scrap < 0 && repairOnly && playerShip.health >= playerShip.maxHealth)
+            return false
+
         return hasRequiredEquipment(event)
     }
 
@@ -1096,13 +1105,14 @@ class DialogueWindow private constructor(val game: InGameState, val playerShip: 
             }
 
             amount == -1 -> {
+                // (a delay's good news, so it's green, as an upgrade is)
                 val message = game.translator["fleet_delayed_1"]
-                return Pair(message, Constants.SYS_ENERGY_BROKEN)
+                return Pair(message, Constants.SYS_ENERGY_ACTIVE)
             }
 
             else -> {
                 val message = game.translator["fleet_delayed"].replaceArg(-amount)
-                return Pair(message, Constants.SYS_ENERGY_BROKEN)
+                return Pair(message, Constants.SYS_ENERGY_ACTIVE)
             }
         }
     }

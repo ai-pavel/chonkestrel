@@ -329,6 +329,25 @@ class WingmanTest {
     }
 
     @Test
+    fun testAQuestsSurrenderIsOnlyOfferedOnce() {
+        // Each copy of a ship offers its own surrender, as usual...
+        val plain = createKit("PLAYER_SHIP_TWO_ENEMIES", "TEST_SURRENDERING_ENEMY")
+        plain.state.surrenderOffered(plain.state.enemy!!, false)
+        plain.state.eventDialogueClosed()
+        plain.state.surrenderOffered(plain.state.wingmen.single().ship, false)
+        assertTrue(plain.state.isSurrenderOffered)
+
+        // ...but one that starts a quest is offered once a fight, not by
+        // each copy (each used to start the quest again)
+        val quest = createKit("PLAYER_SHIP_TWO_ENEMIES", "TEST_QUEST_SURRENDERING_ENEMY")
+        quest.state.surrenderOffered(quest.state.enemy!!, false)
+        assertTrue(quest.state.isSurrenderOffered)
+        quest.state.eventDialogueClosed()
+        quest.state.surrenderOffered(quest.state.wingmen.single().ship, false)
+        assertFalse(quest.state.isSurrenderOffered)
+    }
+
+    @Test
     fun testTheLeaderCanSurrenderForThemAll() {
         // Speaking only for itself...
         val alone = createKit("PLAYER_SHIP_TWO_ENEMIES", "TEST_SURRENDERING_ENEMY")
@@ -480,6 +499,12 @@ class WingmanTest {
         <escape chance="0" min="6" max="6" timer="1">
             <text>They're escaping.</text>
         </escape>
+    </ship>
+    <ship name="TEST_QUEST_SURRENDERING_ENEMY" auto_blueprint="TEST_ENEMY_SHIP">
+        <surrender chance="0" min="4" max="4">
+            <text>They surrender, and tell you where to go next.</text>
+            <choice><text>Accept.</text><event><quest event="TEST_FIGHT"/><ship hostile="false"/></event></choice>
+        </surrender>
     </ship>
     <event name="TEST_ACCEPT_SURRENDER">
         <text>Accepted.</text>

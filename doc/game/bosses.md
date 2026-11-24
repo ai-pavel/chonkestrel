@@ -66,7 +66,9 @@ but with that many it's a long boarding fight.
 **Art.** The bosses are made from vanilla's art, as the long, wide and hybrid
 ships are: a vanilla hull stretched both ways (by `tools/ship_variants.py`,
 taught a size 3 shape), or spliced from two (`tools/hybrid_ships.py`), with
-their rooms laid out to match.
+their rooms laid out to match, and the walls between their big empty rooms
+opened up into passages for the bulwarks (`tools/wide_passages.py`, see
+[ship-shapes.md](ship-shapes.md)).
 
 ### Where they are
 

@@ -66,6 +66,23 @@ class Sector {
     var fleetAdvanceModifier: Int = 0
 
     /**
+     * How many times the Rebel fleet's advanced in this sector (each jump,
+     * and each wait out of fuel), even before it's taken up the chase: for
+     * its extra steps on insane (see [isFleetExtraStep]).
+     */
+    var fleetJumps: Int = 0
+
+    /**
+     * Whether the Rebel fleet takes an extra step on its next advance: every
+     * [Difficulty.fleetExtraStepEvery]th jump in the sector (the 4th, 8th
+     * and so on, on insane).
+     */
+    fun isFleetExtraStep(difficulty: Difficulty): Boolean {
+        val every = difficulty.fleetExtraStepEvery
+        return every > 0 && (fleetJumps + 1) % every == 0
+    }
+
+    /**
      * Whether the Rebel fleet's taken up the chase here, in a sector that
      * started without it: once its hunting boss is beaten (see
      * [startFleetPursuit]).
@@ -82,14 +99,17 @@ class Sector {
     /**
      * Bring the Rebel fleet into a sector that had none, once its hunting
      * boss is beaten at [from] (see HunterBoss.bossBeaten): it turns up
-     * [FLEET_CHASE_JUMPS] jumps' worth behind that beacon, and advances from
-     * there as in any other sector.
+     * [FLEET_CHASE_JUMPS] jumps' worth behind that beacon (less the
+     * [Difficulty.fleetHeadStartJumps]), and advances from there as in any
+     * other sector.
      */
-    fun startFleetPursuit(from: Beacon) {
+    @JvmOverloads
+    fun startFleetPursuit(from: Beacon, difficulty: Difficulty = Difficulty.NORMAL) {
         if (hasFleet)
             return
         fleetPursuing = true
-        val behind = from.pos.x - DANGER_ZONE_RADIUS - FLEET_CHASE_JUMPS * DANGER_ZONE_ADVANCE
+        val jumps = FLEET_CHASE_JUMPS - difficulty.fleetHeadStartJumps
+        val behind = from.pos.x - DANGER_ZONE_RADIUS - jumps * DANGER_ZONE_ADVANCE
         dangerZoneCentre.x = maxOf(dangerZoneCentre.x, behind)
     }
 
@@ -212,7 +232,7 @@ class Sector {
         // size of the map.
         val exitRange = when {
             !isLastStand -> LAST_TWO_COLUMNS
-            difficulty == Difficulty.HARD -> scaleVanillaColumns(3..4)
+            difficulty.atLeast(Difficulty.HARD) -> scaleVanillaColumns(3..4)
             else -> scaleVanillaColumns(2..3)
         }
 
@@ -353,7 +373,10 @@ class Sector {
         startBeacon = tmpStartBeacon ?: error("Failed to place a starting beacon!")
         finishBeacon = tmpFinishBeacon ?: error("Failed to place a finish beacon!")
 
-        dangerZoneCentre = Point(-959, rand.nextInt(DANGER_ZONE_MIN_Y, DANGER_ZONE_MAX_Y))
+        // On insane, the fleet starts a jump's worth closer (see
+        // Difficulty.fleetHeadStartJumps), so it takes each beacon a jump sooner
+        val headStart = (difficulty.fleetHeadStartJumps * DANGER_ZONE_ADVANCE * type.fleetSpeed).toInt()
+        dangerZoneCentre = Point(-959 + headStart, rand.nextInt(DANGER_ZONE_MIN_Y, DANGER_ZONE_MAX_Y))
 
         // The flagship is set up by GameMap.generateSector
     }
@@ -379,9 +402,17 @@ class Sector {
 
     /**
      * How far the rebel fleet advances when the player jumps from a beacon,
-     * with a ship of the given size.
+     * with a ship of the given size: twice as far with an [extraStep] (see
+     * [isFleetExtraStep]).
      */
-    fun getFleetAdvanceFor(beacon: Beacon, playerShipSize: Int): Int {
+    @JvmOverloads
+    fun getFleetAdvanceFor(beacon: Beacon, playerShipSize: Int, extraStep: Boolean = false): Int {
+        val advance = getFleetStepFor(beacon, playerShipSize)
+        return if (extraStep) advance * 2 else advance
+    }
+
+    // How far the rebel fleet advances in one step, from [beacon]
+    private fun getFleetStepFor(beacon: Beacon, playerShipSize: Int): Int {
         val base = baseFleetAdvance(
             beacon.isNebula,
             info.sectorClass == GameMap.SectorClass.NEBULA,
@@ -512,10 +543,15 @@ class Sector {
      * If [ahead] is set (see Event.questAhead), the beacon has to be on the
      * way to the exit, nearer it than the [currentBeacon] is, and at least
      * [AHEAD_QUEST_MIN_JUMPS] jumps away; of those, one nearest the exit.
+     *
+     * If [hidden] is set (see Event.questHidden), the beacon isn't marked
+     * as a quest's (see Beacon.hasHiddenQuest), and keeps its hazards, so
+     * the map gives nothing away.
      */
     @JvmOverloads
     fun addQuest(
-        currentBeacon: Beacon, questEvent: Event, ignoreDistance: Boolean = false, ahead: Boolean = false
+        currentBeacon: Beacon, questEvent: Event, ignoreDistance: Boolean = false, ahead: Boolean = false,
+        hidden: Boolean = false
     ): Boolean {
         // See the original XFTL's doc/sector-map for how this works.
 
@@ -533,7 +569,7 @@ class Sector {
             // of nebula, they can: its own quests are about the nebula.
             if (it.visited || (it.isOwnNebula && type.nebula == null) || it == currentBeacon)
                 return@filter false
-            if (it.isExit || it.hasQuest || it.hasStore || it.event.isDistressBeacon)
+            if (it.isExit || it.hasQuest || it.hasHiddenQuest || it.hasStore || it.event.isDistressBeacon)
                 return@filter false
             // Nor over a beacon whose own event gives a quest
             if (it.event.givesQuest)
@@ -571,9 +607,13 @@ class Sector {
         }
 
         val beacon = suitable.random()
-        beacon.hasQuest = true
         beacon.event = questEvent
-        beacon.clearEnvironment()
+        if (hidden) {
+            beacon.hasHiddenQuest = true
+        } else {
+            beacon.hasQuest = true
+            beacon.clearEnvironment()
+        }
 
         return true
     }
@@ -645,6 +685,8 @@ class Sector {
         SaveUtil.addAttrRef(elem, "sectorInfo", refs, info)
 
         SaveUtil.addAttrInt(elem, "fleetAdvanceModifier", fleetAdvanceModifier)
+        if (fleetJumps != 0)
+            SaveUtil.addAttrInt(elem, "fleetJumps", fleetJumps)
         if (fleetPursuing)
             SaveUtil.addAttrBool(elem, "fleetPursuing", true)
         SaveUtil.addAttrBool(elem, "mapRevealed", mapRevealed)
@@ -721,6 +763,8 @@ class Sector {
         info = SaveUtil.getAttrRefImmediate(elem, "sectorInfo", mapRefs, GameMap.SectorInfo::class.java)!!
 
         fleetAdvanceModifier = SaveUtil.getAttrInt(elem, "fleetAdvanceModifier")
+        // (an older save has none)
+        fleetJumps = SaveUtil.getOptionalAttrInt(elem, "fleetJumps") ?: 0
         fleetPursuing = elem.getAttributeValue("fleetPursuing")?.toBoolean() ?: false
         mapRevealed = SaveUtil.getAttrBool(elem, "mapRevealed")
         // Older saves don't have it

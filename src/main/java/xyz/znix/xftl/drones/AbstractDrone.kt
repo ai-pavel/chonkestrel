@@ -4,6 +4,7 @@ import xyz.znix.xftl.systems.Drones
 import org.jdom2.Element
 import xyz.znix.xftl.AnimationSpec
 import xyz.znix.xftl.Ship
+import xyz.znix.xftl.crew.Skill
 import xyz.znix.xftl.game.FTLSound
 import xyz.znix.xftl.rollChance
 import xyz.znix.xftl.savegame.ObjectRefs
@@ -64,6 +65,17 @@ abstract class AbstractDrone(val type: DroneBlueprint) {
         get() = droneInfo?.liveCopies?.filter { it !== this } ?: emptyList()
 
     open val isStunned: Boolean get() = droneSystem.isHackActive
+
+    /**
+     * How much faster it charges, while its drones system's manned (see
+     * [Drones.manningSpeed]).
+     */
+    protected val manningSpeed: Float get() = ownerShip.dronesSystemFor(this)?.manningSpeed ?: 1f
+
+    /** It's fired: a point of Drones skill for whoever's manning its drones system. */
+    protected fun trainManningCrew() {
+        ownerShip.dronesSystemFor(this)?.addSkillPoint(Skill.DRONES)
+    }
 
     private var stunTotalTimer: Float = 0f
     private var stunDestroyTimer: Float = 0f

@@ -26,6 +26,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
+import mod_text
 import ship_variants as variants
 from ship_variants import (BLUEPRINTS_FILE, DEFAULT_SYSTEMS, MOD, ROOM, Dat, Layout, class_names, gibs,
                            hull_image, layout_xml, layout_xml_parts, vanilla_blueprints)
@@ -1177,9 +1178,12 @@ def preview(parts, hybrids, out, prefix="XFTL_HYBRID_"):
 
 
 def write(entries):
+    # (their classes and names as keys, with the English in text_blueprints.xml.append)
+    entries = mod_text.keyed_blueprints(entries, "tools/hybrid_ships.py")
     text = BLUEPRINTS_FILE.read_text()
     if BEGIN_MARK in text:
-        text = text[:text.index(BEGIN_MARK)] + text[text.index(END_MARK) + len(END_MARK):]
+        # (the blank lines either side of it kept to one gap, so they don't pile up)
+        text = text[:text.index(BEGIN_MARK)].rstrip() + "\n\n" + text[text.index(END_MARK) + len(END_MARK):].lstrip()
     block = "\n".join([
         BEGIN_MARK,
         "<!--",

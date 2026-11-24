@@ -16,7 +16,8 @@ Chonkestrel mod enabled, and `ffmpeg` (`brew install ffmpeg`).
 - `XFTL_VIDEO=<directory>` (or `-Dxftl.video=<directory>`): the directory to
   record into. The video's named after the time it was recorded, such as
   `dist/trailer/trailer-20261024-173718.mp4`. It skips the main menu to
-  start with the default ship (the Chonkestrel), as a new game has it.
+  start with the default ship (the Chonkestrel), and gives it a new ship
+  for each fight.
 - `XFTL_VIDEO_SIZE=<width>x<height>` (or `-Dxftl.video-size`): the window
   size.
 
@@ -44,49 +45,61 @@ one battle, it's the first six seconds of sixteen fights, each in a new
 sector. The hazards build up from each of XFTL's own nebulas on its own,
 through every pair of hazards (extreme), every three (catastrophic), to all
 four at once (apocalyptic, each with a different nebula), with every kind of
-nebula along the way (see [extreme-hazards.md](../game/extreme-hazards.md)):
+nebula along the way (see [extreme-hazards.md](../game/extreme-hazards.md)),
+and a different big ship in each fight: every race's Type A, in the
+hangar's order, then the Type Bs, as far as they go (see
+[race-ships.md](../game/race-ships.md)):
 
-| # | Hazards | Against | The Chonkestrel |
-|---|---------|---------|-----------------|
-| 1 | Radiation nebula | Engi scout, Rebel fighter | Its first upgrades, three more crew, a drones system with a twin combat drone, its first doubles |
-| 2 | Mirage nebula | Mantis fighter, Zoltan fighter | Hacking |
-| 3 | Dark nebula | Long Slug ship, Rockman scout | Doubles in half its slots, cloaking |
-| 4 | Asteroids + sun | Wide Engi bomber, Crystal scout | Doubles in every slot, a twin combat and a twin defence drone |
-| 5 | Nebula + asteroids | Long Mantis bomber, long Rebel cruiser | Mind control, a teleporter with the Reconstructive Teleport, a Zoltan shield, cloaking 2 |
-| 6 | Asteroids + pulsar | Wide Rockman assault ship, Lanius scout | A second drones system: a triple combat drone, a twin defence drone, a triple boarding drone and a twin overcharger |
-| 7 | Ion storm + sun | Long Slug cruiser, Federation scout, auto-ship | The first triples, cloaking 3 |
-| 8 | Sun + pulsar | Wide Zoltan bomber, long Rockman fighter | Two Zoltan shields |
-| 9 | Mirage nebula + pulsar | A wide hybrid, a long Mantis scout | A second hacking system, cloaking 4 |
-| 10 | Asteroids + sun + pulsar | Two long hybrids | Every system maxed out (but the cloaking) |
-| 11 | Radiation nebula + asteroids + sun | A wide hybrid and another | Triples in half its slots, cloaking 5 |
-| 12 | Dark nebula + asteroids + pulsar | A wide and a long hybrid, with doubles | Three Zoltan shields |
-| 13 | Nebula + sun + pulsar | Two long hybrids and another, with doubles | Triples in most slots, cloaking 6 (the most), triple drones of every kind (Combat II and Beam, Defence II, Ion Intruder, overcharger) and a twin anti-combat drone |
-| 14 | Ion storm + all three | Three long hybrids, with doubles | Triples in every slot |
-| 15 | Dark nebula + all three | A wide and a long hybrid, with triples | |
-| 16 | Radiation nebula + all three | Three long hybrids, with triples | |
+| # | Hazards | Against | The player's ship | Upgrades it brings (the ships after have them too) |
+|---|---------|---------|-------------------|----------------------------------------------------|
+| 1 | Radiation nebula | Engi scout, Rebel fighter | Chonkestrel (`PLAYER_SHIP_CHONKESTREL`) | Its first upgrades, three more crew, a drones system with a twin combat drone, its first doubles |
+| 2 | Mirage nebula | Mantis fighter, Zoltan fighter | Engi A (`PLAYER_SHIP_XFTL_ENGI`) | Hacking |
+| 3 | Dark nebula | Long Slug ship, Rockman scout | Zoltan A (`PLAYER_SHIP_XFTL_ZOLTAN`) | Doubles in half its slots, cloaking |
+| 4 | Asteroids + sun | Wide Engi bomber, Crystal scout | Mantis A (`PLAYER_SHIP_XFTL_MANTIS`) | Doubles in every slot, a twin combat and a twin defence drone |
+| 5 | Nebula + asteroids | Long Mantis bomber, long Rebel cruiser | Slug A (`PLAYER_SHIP_XFTL_SLUG`) | Mind control, a teleporter with the Reconstructive Teleport, a Zoltan shield, cloaking 2 |
+| 6 | Asteroids + pulsar | Wide Rockman assault ship, Lanius scout | Rockman A (`PLAYER_SHIP_XFTL_ROCK`) | A second drones system: a triple combat drone, a twin defence drone, a triple boarding drone and a twin overcharger |
+| 7 | Ion storm + sun | Long Slug cruiser, Federation scout, auto-ship | Federation A (`PLAYER_SHIP_XFTL_FED`) | The first triples, cloaking 3 |
+| 8 | Sun + pulsar | Wide Zoltan bomber, long Rockman fighter | Stealth A (`PLAYER_SHIP_XFTL_STEALTH`) | Two Zoltan shields |
+| 9 | Mirage nebula + pulsar | A wide hybrid, a long Mantis scout | Lanius A (`PLAYER_SHIP_XFTL_LANIUS`) | A second hacking system, cloaking 4 |
+| 10 | Asteroids + sun + pulsar | Two long hybrids | Crystal A (`PLAYER_SHIP_XFTL_CRYSTAL`) | Every system maxed out (but the cloaking) |
+| 11 | Radiation nebula + asteroids + sun | A wide hybrid and another | Chonk-Tail (`PLAYER_SHIP_CHONKESTREL_2`) | Triples in half its slots, cloaking 5 |
+| 12 | Dark nebula + asteroids + pulsar | A wide and a long hybrid, with doubles | Engi B (`PLAYER_SHIP_XFTL_ENGI_2`) | Three Zoltan shields |
+| 13 | Nebula + sun + pulsar | Two long hybrids and another, with doubles | Zoltan B (`PLAYER_SHIP_XFTL_ZOLTAN_2`) | Triples in most slots, cloaking 6 (the most), triple drones of every kind (Combat II and Beam, Defence II, Ion Intruder, overcharger) and a twin anti-combat drone |
+| 14 | Ion storm + all three | Three long hybrids, with doubles | Mantis B (`PLAYER_SHIP_XFTL_MANTIS_2`) | Triples in every slot |
+| 15 | Dark nebula + all three | A wide and a long hybrid, with triples | Slug B (`PLAYER_SHIP_XFTL_SLUG_2`) | |
+| 16 | Radiation nebula + all three | Three long hybrids, with triples | Rockman B (`PLAYER_SHIP_XFTL_ROCK_2`) | |
 
 The drones are twins and triples (see
 [drone-sizes.md](../game/drone-sizes.md)), launched as each fight starts,
 so their copies spread out over the enemy ships and round the orbit; the
 long and wide hybrids' bulwarks stand guard in their holds, seen with
-their rooms. Its Chonkestrel starts as a new game has it (not with debug mode's
-loadout), and gets the rest before each fight. Its cloaking grows a level
-every other fight, from the third to the thirteenth, to its sixth and last,
-but it never cloaks. The hybrids are random, and
-printed in the log with everyone's weapons. The ships in each fight fit on
-the screen as in the game (see `FightPlan`): a wide one only comes with one
-other ship. The enemy ships' rooms and crew are shown even in a nebula, they
-all have the Zoltan Shield Bypass, and those with teleporters board the
-Chonkestrel a second and a half into the fight. Their cloaks take two and a
-half seconds to get ready, so boarders can get aboard first.
+their rooms. Each fight's ship is new, as a new game starts it (not with
+debug mode's loadout): its own crew, systems, weapons and augments, and
+every fight's upgrades so far on top of them, as the ships before it had
+them by then, so the first ship is a modest one and the last is fully armed
+with triples. The upgrades are listed for the Chonkestrel: four weapons to
+a weapons system and three drones to a drones system, taken round again for
+a ship with more slots (the Rockman ships' third weapons system); a system
+there's no place for (or that's on the ship already) is left out, as are
+the crew past the ship's most, and on the Lanius A, which has no
+oxygen, anyone but Lanius. The old ship goes, with its crew, boarders,
+drones and projectiles (see `InGameState.debugReplacePlayerShip`). The
+cloaking grows a level every other fight, from the third to the
+thirteenth, to its sixth and last, but it never cloaks. The hybrids are
+random, and printed in the log with everyone's weapons, as is each fight's
+ship and its own crew. The ships in each fight fit on the screen as in the
+game (see `FightPlan`): a wide one only comes with one other ship. The
+enemy ships' rooms and crew are shown even in a nebula, they all have the
+Zoltan Shield Bypass, and those with teleporters board the player's ship a
+second and a half into the fight. Their cloaks take two and a half seconds
+to get ready, so boarders can get aboard first.
 
-The Chonkestrel's crew are put at their stations as each fight starts: one
-at each system that can be manned (the Lanius at the engines, as they'd
-suffocate everyone in the medbay), from the fifth fight a boarding party of
-up to four in the teleporter (the Mantis, Rockmen and Crystals first), who
+The crew are put at their stations as each fight starts: one at each
+system that can be manned (the Lanius at the engines, as they'd suffocate
+everyone in the medbay), a boarding party of up to four in the teleporter,
+if the ship has one by then (the Mantis, Rockmen and Crystals first), who
 board an enemy a second in, and the rest in the medbay, to meet the
-enemies' boarders. With the Reconstructive Teleport, the boarding party is
-brought home, healed, before the next fight. As each fight starts, everyone's weapons are
+enemies' boarders. As each fight starts, everyone's weapons are
 most of the way charged, so they fire in the few seconds it's shown. Where
 the reactor's short (in an ion storm), the weapons take the power from the
 mind control, hacking, teleporter and cloaking systems first, then the

@@ -38,7 +38,10 @@
             </widget>
         </widget>
 
-        <widget type="free" pTop="30" pLeft="200">
+        <!-- The boxes right of the buttons are moved further right if the
+             buttons are wider (a translation's longer words, see
+             PauseWindow.makeRoomForTheButtons) -->
+        <widget type="free" pTop="30" pLeft="200" id="info_difficulty">
             <widget type="image" class="paddingFit" img="img/optionsUI/info_difficulty.png"/>
             <widget type="label" pLeft="0" pRight="0" pTop="9"
                     text="menu_status_difficulty" font="JustinFont12Bold" scale="1" colour="glow-white"/>
@@ -46,7 +49,7 @@
                     text="normal_button" font="HL2" scale="2" colour="text-dark"/>
         </widget>
 
-        <widget type="free" pTop="30" pLeft="348">
+        <widget type="free" pTop="30" pLeft="348" id="info_dlc">
             <widget type="image" class="paddingFit" img="img/optionsUI/info_dlc.png"/>
             <widget type="label" pLeft="0" pRight="0" pTop="9"
                     text="menu_status_ae_content" font="JustinFont12Bold" scale="1" colour="glow-white"/>

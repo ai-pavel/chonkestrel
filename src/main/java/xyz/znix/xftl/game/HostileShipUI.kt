@@ -108,15 +108,12 @@ class HostileShipUI @JvmOverloads constructor(
             // windows to its left over (see ShipShape)
             extraWidth = (shape.slots - 1) * slotWidth
             boxX = gc.width - (box.width - rightGlow) - rightMargin + leftGlow - (slotsBefore + shape.slots - 1) * slotWidth
-            boxY = if (threeWindows) THREE_WINDOWS_Y else 54
+            boxY = windowY(threeWindows)
             // A long ship's window (or a boss's) stops above the player's
             // weapons boxes, which are at the bottom of the screen, so it's
             // shorter in a window less than 1080 high (such as one with a
             // title bar)
-            extraHeight = if (shape.isTall) {
-                val bottom = gc.height - LONG_WINDOW_BOTTOM_MARGIN
-                (bottom - (boxY - topGlow + box.height)).coerceIn(0, LONG_WINDOW_EXTRA_HEIGHT)
-            } else 0
+            extraHeight = if (shape.isTall) tallExtraHeight(gc.height, boxY - topGlow, box.height) else 0
         }
 
         // The position of the image
@@ -508,6 +505,11 @@ class HostileShipUI @JvmOverloads constructor(
         private const val THREE_WINDOWS_SPACING = 6
         private const val THREE_WINDOWS_Y = 78
 
+        // The normal window's image (box_hostiles2.png): its height, and the
+        // glow above the box in it
+        private const val NORMAL_BOX_HEIGHT = 555
+        private const val NORMAL_TOP_GLOW = 9
+
         // How much taller a long ship's window is (any more, and it would
         // cover the top row of the player's weapons boxes, on a ship with
         // two), and where the windows are stretched (see ShipShape): a plain
@@ -517,9 +519,36 @@ class HostileShipUI @JvmOverloads constructor(
         // How far above the bottom of the screen a long ship's window has to
         // stop, to clear the player's weapons boxes (the most it's made
         // taller by fits a 1080-high window exactly)
-        private const val LONG_WINDOW_BOTTOM_MARGIN = 1080 - (THREE_WINDOWS_Y - 9 + 555 + LONG_WINDOW_EXTRA_HEIGHT)
+        private const val LONG_WINDOW_BOTTOM_MARGIN =
+            1080 - (THREE_WINDOWS_Y - NORMAL_TOP_GLOW + NORMAL_BOX_HEIGHT + LONG_WINDOW_EXTRA_HEIGHT)
+
         private const val STRETCH_SPLIT_X = 220
         private const val STRETCH_SPLIT_Y = 300
         private const val STRETCH_CHUNK = 40
+
+        // The normal windows' y (not including the glow)
+        private fun windowY(threeWindows: Boolean): Int = if (threeWindows) THREE_WINDOWS_Y else 54
+
+        /**
+         * How much taller a long ship's window is, on a screen [screenHeight]
+         * high, for a window image [imageHeight] high whose top is at [imageY].
+         */
+        private fun tallExtraHeight(screenHeight: Int, imageY: Int, imageHeight: Int): Int {
+            val bottom = screenHeight - LONG_WINDOW_BOTTOM_MARGIN
+            return (bottom - (imageY + imageHeight)).coerceIn(0, LONG_WINDOW_EXTRA_HEIGHT)
+        }
+
+        /**
+         * The lowest any enemy window reaches (the bottom of its image, glow
+         * and all) on a screen [screenHeight] high, for the [player]'s ship:
+         * a long ship's (a colossal's or a titan's are as tall), in any of
+         * the places in the row. The player's interface below it is never
+         * covered by them (see PlayerShipUI's drones boxes). A boss's window
+         * (box_hostiles_boss.png, 598 high from y=7) ends higher, at 605.
+         */
+        fun lowestWindowBottom(player: ShipBlueprint, screenHeight: Int): Int {
+            val imageY = windowY(Opponent.maxEnemyShipCount(player) >= 3) - NORMAL_TOP_GLOW
+            return imageY + NORMAL_BOX_HEIGHT + tallExtraHeight(screenHeight, imageY, NORMAL_BOX_HEIGHT)
+        }
     }
 }

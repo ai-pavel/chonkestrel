@@ -279,3 +279,14 @@ DOOR
 7
 17
 1
+DOOR
+2
+9
+16
+6
+1
+XFTL_WIDE_DOOR
+2
+8
+1
+2

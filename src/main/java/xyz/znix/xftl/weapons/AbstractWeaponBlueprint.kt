@@ -101,7 +101,7 @@ abstract class AbstractWeaponBlueprint(xml: Element) : Blueprint(xml) {
             boost = null
         } else {
             val typeName = boostElem.getChildTextTrim("type")
-            val type = BoostType.valueOf(typeName.toUpperCase(Locale.UK))
+            val type = BoostType.valueOf(typeName.uppercase(Locale.UK))
             val amount = boostElem.getChildTextTrim("amount").toFloat()
             val count = boostElem.getChildTextTrim("count").toInt()
             boost = ChainBoost(type, amount, count)

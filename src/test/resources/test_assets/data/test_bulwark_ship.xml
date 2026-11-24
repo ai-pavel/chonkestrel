@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<FTL>
+    <img x="0" y="0"/>
+    <explosion/>
+
+    <weaponMounts>
+        <mount x="0" y="0" rotate="false" mirror="false" gib="0" slide="up"/>
+        <mount x="0" y="0" rotate="false" mirror="false" gib="0" slide="down"/>
+    </weaponMounts>
+</FTL>

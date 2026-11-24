@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ui>
     <widget type="free">
-        <widget type="image" img="img/customizeUI/box_shipselect.png"
-                pLeft="-6" pRight="-7" pTop="-7" pBottom="-7"/>
+        <!-- The frame, with a type section added above the layout one, for
+             the Normal and Chonky buttons: the image down to the middle of
+             its layout panel (here the type panel), a 16-pixel strip of that
+             panel's middle twice (as its pattern repeats every 16 or so),
+             the panel's bottom, then the image again from the gap above its
+             layout panel (its heading's) to the end -->
+        <widget type="image" img="img/customizeUI/box_shipselect.png" h="170"
+                pLeft="-6" pRight="-7" pTop="-7"/>
+        <widget type="image" img="img/customizeUI/box_shipselect.png" iy="154" h="16"
+                pLeft="-6" pRight="-7" pTop="163"/>
+        <widget type="image" img="img/customizeUI/box_shipselect.png" iy="154" h="16"
+                pLeft="-6" pRight="-7" pTop="179"/>
+        <widget type="image" img="img/customizeUI/box_shipselect.png" iy="170" h="15"
+                pLeft="-6" pRight="-7" pTop="195"/>
+        <widget type="image" img="img/customizeUI/box_shipselect.png" iy="110" h="132"
+                pLeft="-6" pRight="-7" pTop="210" pBottom="-7"/>
 
         <widget type="label" colour="text-dark" font="HL2" scale="2" text="hangar_frame_ship"
                 pLeft="13" pTop="6"/>
@@ -37,10 +51,38 @@
             <widget type="free" xStretch="1"/>
         </widget>
 
-        <widget type="label" colour="text-dark" font="HL2" scale="2" text="hangar_frame_layout"
+        <!-- The vanilla ship, or its big version (see
+             SelectShipState.counterpartOf), one above the other, as wide
+             as the random ship button -->
+        <widget type="label" colour="text-dark" font="HL2" scale="2" text="xftl_hangar_type"
                 pLeft="13" pTop="108"/>
 
-        <widget type="hbox" pTop="135" pLeft="0" pRight="0">
+        <widget type="hbox" pTop="138" pLeft="0" pRight="0">
+            <widget type="free" xStretch="1"/>
+
+            <widget type="button" w="152" id="size_normal">
+                <widget type="label" colour="text-dark" font="HL2" scale="2" text="xftl_hangar_normal"
+                        pLeft="4" pRight="4" pTop="6" pBottom="6"/>
+            </widget>
+
+            <widget type="free" xStretch="1"/>
+        </widget>
+
+        <widget type="hbox" pTop="171" pLeft="0" pRight="0">
+            <widget type="free" xStretch="1"/>
+
+            <widget type="button" w="152" id="size_chonky">
+                <widget type="label" colour="text-dark" font="HL2" scale="2" text="xftl_hangar_chonky"
+                        pLeft="4" pRight="4" pTop="6" pBottom="6"/>
+            </widget>
+
+            <widget type="free" xStretch="1"/>
+        </widget>
+
+        <widget type="label" colour="text-dark" font="HL2" scale="2" text="hangar_frame_layout"
+                pLeft="13" pTop="215"/>
+
+        <widget type="hbox" pTop="242" pLeft="0" pRight="0">
             <widget type="free" xStretch="1"/>
 
             <widget type="button" w="36" h="34" id="type_a">
@@ -65,14 +107,15 @@
             <widget type="free" xStretch="1"/>
         </widget>
 
-        <widget type="hbox" pTop="188" pLeft="0" pRight="0">
+        <widget type="hbox" pTop="295" pLeft="0" pRight="0">
             <widget type="free" xStretch="1"/>
 
             <!-- Laid out to fit "show rooms", the wider of its two labels
-                 (it's set to "hide rooms" as the hangar opens) -->
-            <widget type="button" pTop="0" id="hide_rooms">
+                 (it's set to "hide rooms" as the hangar opens), as wide as
+                 the random ship button, as the type buttons are -->
+            <widget type="button" w="152" pTop="0" id="hide_rooms">
                 <widget type="label" colour="text-dark" font="HL2" scale="2" text="ship_showrooms_button"
-                        pLeft="10" pRight="10" pTop="6" pBottom="6" id="hide_rooms_label"/>
+                        pLeft="4" pRight="4" pTop="6" pBottom="6" id="hide_rooms_label"/>
             </widget>
 
             <widget type="free" xStretch="1"/>

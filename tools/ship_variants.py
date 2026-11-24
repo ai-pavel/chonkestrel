@@ -34,6 +34,8 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
+import mod_text
+
 ROOM = 35
 MOD = Path(__file__).resolve().parent.parent / "mods" / "chonkestrel"
 BLUEPRINTS_FILE = MOD / "data" / "autoBlueprints.xml.append"
@@ -1395,9 +1397,12 @@ def make_version(dat, blueprints, classes, layout_name, shape, config, write=Tru
 
 
 def write_blueprints(entries):
+    # (their classes and names as keys, with the English in text_blueprints.xml.append)
+    entries = mod_text.keyed_blueprints(entries, "tools/ship_variants.py")
     text = BLUEPRINTS_FILE.read_text() if BLUEPRINTS_FILE.exists() else ""
     if BEGIN_MARK in text:
-        text = text[:text.index(BEGIN_MARK)] + text[text.index(END_MARK) + len(END_MARK):]
+        # (the blank lines either side of it kept to one gap, so they don't pile up)
+        text = text[:text.index(BEGIN_MARK)].rstrip() + "\n\n" + text[text.index(END_MARK) + len(END_MARK):].lstrip()
     block = "\n".join([
         BEGIN_MARK,
         "<!--",

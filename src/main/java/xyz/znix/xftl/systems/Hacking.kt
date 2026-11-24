@@ -1,6 +1,7 @@
 package xyz.znix.xftl.systems
 
 import org.jdom2.Element
+import xyz.znix.xftl.crew.Skill
 import xyz.znix.xftl.*
 import xyz.znix.xftl.Constants.ROOM_SIZE
 import xyz.znix.xftl.augments.AugmentBlueprint
@@ -106,6 +107,14 @@ class Hacking(blueprint: SystemBlueprint) : MainSystem(blueprint) {
             // Null when a new game starts
             ship.sys.shipUI?.updateButtons()
         }
+    }
+
+    // Manned (an XFTL extension, see Manning): its pulse recharges faster by the
+    // Drones skill, as its probe's a drone
+    override val cooldownSpeed: Float get() = Manning.speed(this, Skill.DRONES)
+
+    override fun drawManningIcon(g: Graphics, x: Int, y: Int) {
+        drawManningSkillIcon(x, y, getSkillLevel(Skill.DRONES))
     }
 
     override fun makeExtraButtons(powerPos: IPoint): List<Button> {
@@ -283,6 +292,7 @@ class Hacking(blueprint: SystemBlueprint) : MainSystem(blueprint) {
 
         // Start the hacking pulse
         this@Hacking.timeRemaining = duration
+        repeat(Manning.HACKING_PULSE_ACTIONS) { addSkillPoint(Skill.DRONES) }
 
         countHack()
 
@@ -746,7 +756,8 @@ class Hacking(blueprint: SystemBlueprint) : MainSystem(blueprint) {
 }
 
 private object HackingInfo : SystemInfo("hacking") {
-    override val canBeManned: Boolean get() = false
+    // (an XFTL extension, see Manning)
+    override val canBeManned: Boolean get() = true
 
     override fun create(blueprint: SystemBlueprint) = Hacking(blueprint)
 

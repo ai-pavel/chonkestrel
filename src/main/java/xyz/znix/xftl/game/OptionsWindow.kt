@@ -30,6 +30,9 @@ class OptionsWindow(val game: InGameState, val close: () -> Unit) : Window() {
         widgetTree.addButtonListener("display") {
             game.shipUI.showDisplayWindow()
         }
+        widgetTree.addButtonListener("language") {
+            game.shipUI.showLanguageWindow()
+        }
         widgetTree.addButtonListener("back", this::escapePressed)
     }
 

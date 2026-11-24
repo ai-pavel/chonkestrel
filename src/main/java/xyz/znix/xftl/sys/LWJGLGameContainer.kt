@@ -105,12 +105,14 @@ class LWJGLGameContainer(private val game: Game) : GameContainer {
     var onUpdateError: ((Exception) -> Unit)? = null
 
     /**
-     * Keep running at full speed while the window isn't focused, for the
+     * Keep running at full speed while the window isn't focused, as the
+     * game does unless XFTL_FULL_FPS_UNFOCUSED=0 (and always for the
      * screenshot generator, which shouldn't slow down if the player switches
-     * windows. Otherwise the game still updates and renders while the window
-     * isn't focused (so it can still be seen), but slower, to save CPU.
+     * windows). Otherwise the game still updates and renders while the
+     * window isn't focused (so it can still be seen), but slower, to save
+     * CPU.
      */
-    var renderWhenUnfocused: Boolean = false
+    var renderWhenUnfocused: Boolean = XftlDebug.fullFpsUnfocused
 
     override var onFilesDropped: ((List<Path>) -> Unit)? = null
 

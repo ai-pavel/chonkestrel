@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The Chonkatidae's layout, made by tools/race_ships.py from the vanilla
+    fed_cruiser_3.xml (copyright (c) 2012 by Subset Games). Don't edit it by hand.
+-->
+<FTL>
+<img x="-125" y="-60" w="710" h="541"/>
+<offsets>
+	<floor x="117" y="52"/>
+	<cloak x="-10" y="-10"/>
+</offsets>
+<weaponMounts>
+	<mount x="268" y="32" rotate="true" mirror="true" gib="1" slide="up"/>
+	<mount x="268" y="508" rotate="true" mirror="false" gib="3" slide="down"/>
+	<mount x="614" y="120" rotate="true" mirror="true" gib="2" slide="up"/>
+	<mount x="614" y="422" rotate="true" mirror="false" gib="4" slide="down"/>
+	<mount x="125" y="37" rotate="true" mirror="true" gib="1" slide="up"/>
+	<mount x="196" y="37" rotate="true" mirror="true" gib="1" slide="up"/>
+	<mount x="125" y="504" rotate="true" mirror="false" gib="3" slide="down"/>
+	<mount x="196" y="504" rotate="true" mirror="false" gib="3" slide="down"/>
+	<mount x="649" y="305" rotate="false" mirror="false" gib="4" slide="no"/>
+	<mount x="678" y="375" rotate="false" mirror="false" gib="4" slide="no"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>0</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>355</x>
+		<y>76</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>270</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>355</x>
+		<y>270</y>
+	</gib4>
+</explosion>
+</FTL>

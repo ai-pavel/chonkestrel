@@ -12,77 +12,77 @@
 </eventList>
 
 <textList name="XFTL_CIV_FERRY">
-	<text>A passenger ferry is stuck at the beacon with a failed jump drive. The passengers are crowding the windows to look at your ship.</text>
-	<text>A colony ferry hails you. Its jump drive is dead, and it's been drifting here for two days.</text>
+	<text id="text_XFTL_CIV_FERRY_1"/>
+	<text id="text_XFTL_CIV_FERRY_2"/>
 </textList>
 <event name="XFTL_CIV_FERRY">
 	<text load="XFTL_CIV_FERRY"/>
 	<choice>
-		<text>Send your crew over to fix the drive.</text>
+		<text id="event_XFTL_CIV_FERRY_c1_choice"/>
 		<event load="XFTL_CIV_FERRY_FIX"/>
 	</choice>
 	<choice req="engi" hidden="true">
-		<text>(Engi Crew) Have your Engi rebuild the drive.</text>
+		<text id="event_XFTL_CIV_FERRY_c2_choice"/>
 		<event>
-			<text>Your Engi has the drive running better than new within the hour. The captain insists on paying you.</text>
+			<text id="event_XFTL_CIV_FERRY_c2_text"/>
 			<autoReward level="MED">standard</autoReward>
 		</event>
 	</choice>
 	<choice>
-		<text>Leave them.</text>
+		<text id="event_XFTL_CIV_FERRY_c3_choice"/>
 		<event/>
 	</choice>
 </event>
 <eventList name="XFTL_CIV_FERRY_FIX">
 	<event>
-		<text>It takes a while, but the drive spools up. The captain hands over what scrap the passengers could collect.</text>
+		<text id="event_XFTL_CIV_FERRY_FIX_1_text"/>
 		<autoReward level="LOW">scrap_only</autoReward>
 	</event>
 	<event>
-		<text>The drive is beyond repair, but one of the passengers, a former Federation engineer, asks to come with you instead.</text>
+		<text id="event_XFTL_CIV_FERRY_FIX_2_text"/>
 		<crewMember amount="1" class="human"/>
 	</event>
 	<event>
-		<text>The drive explodes as your crew work on it. Nobody's killed, but your ship is damaged by the blast.</text>
+		<text id="event_XFTL_CIV_FERRY_FIX_3_text"/>
 		<damage amount="2"/>
 	</event>
 </eventList>
 
 <event name="XFTL_CIV_RACE">
-	<text>A group of civilian pilots are holding an illegal race through the beacon's debris field. "Fancy a go? Entry is ten scrap, winner takes the pot."</text>
+	<text id="event_XFTL_CIV_RACE_text"/>
 	<choice>
-		<text>Enter the race.</text>
+		<text id="event_XFTL_CIV_RACE_c1_choice"/>
 		<event load="XFTL_CIV_RACE_OUTCOME"/>
 	</choice>
 	<choice req="engines" lvl="4" hidden="true">
-		<text>(Advanced Engines) Enter the race, and leave them in your wake.</text>
+		<text id="event_XFTL_CIV_RACE_c2_choice"/>
 		<event>
-			<text>The other pilots never stood a chance. You collect the pot.</text>
+			<text id="event_XFTL_CIV_RACE_c2_text"/>
 			<item_modify>
 				<item type="scrap" min="25" max="35"/>
 			</item_modify>
 		</event>
 	</choice>
 	<choice>
-		<text>Decline.</text>
+		<text id="event_XFTL_CIV_RACE_c3_choice"/>
 		<event/>
 	</choice>
 </event>
 <eventList name="XFTL_CIV_RACE_OUTCOME">
 	<event>
-		<text>You win by a hair, and collect the pot.</text>
+		<text id="event_XFTL_CIV_RACE_OUTCOME_1_text"/>
 		<item_modify>
 			<item type="scrap" min="15" max="25"/>
 		</item_modify>
 	</event>
 	<event>
-		<text>You come in last, and lose your entry fee.</text>
+		<text id="event_XFTL_CIV_RACE_OUTCOME_2_text"/>
 		<item_modify>
 			<item type="scrap" min="-10" max="-10"/>
 		</item_modify>
 	</event>
 	<event>
-		<text>You clip a piece of debris on the final turn and lose the race, along with a chunk of your hull.</text>
+		<text id="event_XFTL_CIV_RACE_OUTCOME_3_text"/>
 		<item_modify>
 			<item type="scrap" min="-10" max="-10"/>
 		</item_modify>
@@ -91,40 +91,37 @@
 </eventList>
 
 <event name="XFTL_CIV_MEDICAL">
-	<text>A medical frigate is treating the wounded from a Rebel raid. Its doctors are exhausted, and short on hands.</text>
+	<text id="event_XFTL_CIV_MEDICAL_text"/>
 	<choice>
-		<text>Lend them some of your crew for a while.</text>
+		<text id="event_XFTL_CIV_MEDICAL_c1_choice"/>
 		<event>
-			<text>Your crew help out until the worst cases are stable. The doctors give you some of their supplies in thanks.</text>
+			<text id="event_XFTL_CIV_MEDICAL_c1_text"/>
 			<autoReward level="LOW">stuff</autoReward>
 		</event>
 	</choice>
 	<choice req="medbay" lvl="2" hidden="true">
-		<text>(Upgraded Medbay) Take some of the wounded into your medbay.</text>
+		<text id="event_XFTL_CIV_MEDICAL_c2_choice"/>
 		<event>
-			<text>Your medbay saves several lives. One of the patients, a pilot, asks to join your crew once they're back on their feet.</text>
+			<text id="event_XFTL_CIV_MEDICAL_c2_text"/>
 			<crewMember amount="1" class="human" pilot="1"/>
 		</event>
 	</choice>
 	<choice>
-		<text>You can't afford the time.</text>
+		<text id="event_XFTL_CIV_MEDICAL_c3_choice"/>
 		<event/>
 	</choice>
 </event>
 
 <event name="XFTL_CIV_ARCHIVIST">
-	<text>An old archivist is broadcasting from a station full of records from before the war. "I've heard whispers of something called Project Chonkestrel. Bring me anything you know, and I'll trade you for it."</text>
+	<text id="event_XFTL_CIV_ARCHIVIST_text"/>
 	<choice>
-		<text>Share what's in your data.</text>
-		<event>
-			<text>The archivist is delighted, and gives you a star chart of the sector in return.</text>
-			<reveal_map/>
-		</event>
+		<text id="event_XFTL_CIV_ARCHIVIST_c1_choice"/>
+		<event load="XFTL_CIV_ARCHIVIST_SHARE"/>
 	</choice>
 	<choice>
-		<text>Buy one of the archivist's old Federation weapons.</text>
+		<text id="event_XFTL_CIV_ARCHIVIST_c2_choice"/>
 		<event>
-			<text>The archivist sells you an antique, which still works.</text>
+			<text id="event_XFTL_CIV_ARCHIVIST_c2_text"/>
 			<item_modify>
 				<item type="scrap" min="-30" max="-30"/>
 			</item_modify>
@@ -132,29 +129,83 @@
 		</event>
 	</choice>
 	<choice>
-		<text>Leave.</text>
+		<text id="event_XFTL_CIV_ARCHIVIST_c3_choice"/>
 		<event/>
 	</choice>
 </event>
 
-<event name="XFTL_CIV_DESERTER">
-	<text>A Rebel deserter has been hiding on a civilian station. Station security has found them, and the Rebels are offering a reward.</text>
+<!--
+    Sharing the ship's data with the archivist: the star chart either way,
+    but half the time the archivist sells the data on, and an ambush is
+    waiting at one of the sector's beacons (or the next sector's), unmarked
+    (a hidden quest, xftlHidden): XFTL_CIV_ARCHIVIST_AMBUSH. The only hint's
+    in the text.
+-->
+<eventList name="XFTL_CIV_ARCHIVIST_SHARE">
+	<event>
+		<text id="event_XFTL_CIV_ARCHIVIST_c1_text"/>
+		<reveal_map/>
+	</event>
+	<event>
+		<text id="event_XFTL_CIV_ARCHIVIST_c1_sold_text"/>
+		<reveal_map/>
+		<quest event="XFTL_CIV_ARCHIVIST_AMBUSH" xftlHidden="true"/>
+	</event>
+</eventList>
+
+<!--
+    The ambush: bounty hunters who bought the ship's data, and know its weak
+    spots, so they hit first (a system hit and a breach, more for a bigger
+    ship). A cloak, a hacking system or an Engi gets the ship away unseen.
+-->
+<event name="XFTL_CIV_ARCHIVIST_AMBUSH">
+	<text id="event_XFTL_CIV_ARCHIVIST_AMBUSH_text"/>
 	<choice>
-		<text>Smuggle the deserter off the station.</text>
+		<text id="event_XFTL_CIV_ARCHIVIST_AMBUSH_c1_choice"/>
+		<event>
+			<text id="event_XFTL_CIV_ARCHIVIST_AMBUSH_c1_text"/>
+			<ship load="PIRATE" hostile="true"/>
+			<damage amount="2" system="random" effect="breach" xftlScale="size"/>
+		</event>
+	</choice>
+	<choice req="cloaking" hidden="true">
+		<text id="event_XFTL_CIV_ARCHIVIST_AMBUSH_c2_choice"/>
+		<event>
+			<text id="event_XFTL_CIV_ARCHIVIST_AMBUSH_c2_text"/>
+		</event>
+	</choice>
+	<choice req="hacking" hidden="true">
+		<text id="event_XFTL_CIV_ARCHIVIST_AMBUSH_c3_choice"/>
+		<event>
+			<text id="event_XFTL_CIV_ARCHIVIST_AMBUSH_c3_text"/>
+		</event>
+	</choice>
+	<choice req="engi" hidden="true">
+		<text id="event_XFTL_CIV_ARCHIVIST_AMBUSH_c4_choice"/>
+		<event>
+			<text id="event_XFTL_CIV_ARCHIVIST_AMBUSH_c4_text"/>
+		</event>
+	</choice>
+</event>
+
+<event name="XFTL_CIV_DESERTER">
+	<text id="event_XFTL_CIV_DESERTER_text"/>
+	<choice>
+		<text id="event_XFTL_CIV_DESERTER_c1_choice"/>
 		<event load="XFTL_CIV_DESERTER_OUTCOME"/>
 	</choice>
 	<choice>
-		<text>Stay out of it.</text>
+		<text id="event_XFTL_CIV_DESERTER_c2_choice"/>
 		<event/>
 	</choice>
 </event>
 <eventList name="XFTL_CIV_DESERTER_OUTCOME">
 	<event>
-		<text>You get the deserter aboard without anyone noticing. They're grateful, and they can fight.</text>
+		<text id="event_XFTL_CIV_DESERTER_OUTCOME_1_text"/>
 		<crewMember amount="1" class="human" combat="1"/>
 	</event>
 	<event>
-		<text>Station security notices, and calls the Rebels. A Rebel ship arrives as you leave.</text>
+		<text id="event_XFTL_CIV_DESERTER_OUTCOME_2_text"/>
 		<ship load="REBEL" hostile="true"/>
 	</event>
 </eventList>

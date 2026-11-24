@@ -202,7 +202,8 @@ Whatever the sector, four at once never happen in the first quarter. And the fir
 sectors have fewer at once, whatever the sector's weights
 (`GameMap.maxHazards`): one at most in the first sector, two in the
 second, three from the third and four from the fifth. On easy, that's a
-sector later, and on hard a sector sooner. Events' boarders are kept to two
+sector later, on hard a sector sooner, and on insane two sectors sooner
+(see [difficulty.md](difficulty.md)). Events' boarders are kept to two
 at most in the first two sectors, likewise (`Event.EARLY_BOARDERS`).
 
 ### Fuel

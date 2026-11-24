@@ -41,7 +41,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageFilter
 
 from ship_variants import MOD, Dat, insert
 
@@ -85,6 +85,25 @@ GIBS = {1: (-5, 114), 2: (25, 23), 3: (35, -7), 4: (38, 193), 5: (174, 44), 6: (
 # miniature's (as vanilla's)
 SHIELD_SIZE = (700, 580)
 MINIATURE_SIZE = (191, 121)
+# How dark a hull's pixel is to be drawn as a black line in its miniature:
+# darker than this, or than this share of the hull's median brightness
+MINIATURE_LINE_LEVEL = 60
+MINIATURE_LINE_SHARE = 0.4
+# The miniature's outline, and the glow round it, as vanilla's (see
+# miniship_kestral.png): its colour, how far it reaches and how strong it is
+# against the hull
+MINIATURE_OUTLINE = (27, 26, 25)
+MINIATURE_GLOW = (255, 170, 186)
+MINIATURE_GLOW_MARGIN = 14
+MINIATURE_GLOW_ALPHA = 75
+# How much the miniature's sharpened after it's scaled down (see
+# ImageFilter.UnsharpMask): its radius, and how strongly
+MINIATURE_SHARPEN_RADIUS = 1
+MINIATURE_SHARPEN_PERCENT = 70
+# A hull darker than this median brightness has its miniature lightened
+# towards it, by at most MINIATURE_MAX_LIFT times
+MINIATURE_BRIGHTNESS = 90
+MINIATURE_MAX_LIFT = 2.0
 
 # The bigger rooms' interiors: the vanilla image, the new one's size, and
 # how it's put together (each copy of the vanilla image, flipped or not, at
@@ -204,32 +223,71 @@ def shield(dat):
     return dat.image("img/ship/kestral_shields1.png").convert("RGBA").resize(SHIELD_SIZE, Image.BICUBIC)
 
 
-def miniature(new_hull):
+def miniature(new_hull, canvas_size=MINIATURE_SIZE):
     """
-    The hull, scaled to fit the miniature, with crisp outlines as vanilla's
-    have: the hull's edge, and its black lines where they cover enough of a
-    pixel.
+    The hull, scaled to fit the miniature, as crisp as vanilla's (which were
+    drawn by hand, from hulls half the size of ours): scaled down with a
+    sharp filter (Lanczos) and sharpened a little, with its glow kept round
+    it, as vanilla's have, and crisp outlines: the hull's edge, and its black
+    lines where they cover enough of a pixel. A black line is darker than 60, or than 0.4 of the hull's usual
+    brightness, whichever's darker (see MINIATURE_LINE_SHARE): a dark hull's
+    (the Stealth ships', the Rocks' and Zoltans' Type B) own dark panels
+    aren't lines, and used to make it a black shape.
     """
     w, h = new_hull.size
-    scale = min(MINIATURE_SIZE[0] / w, MINIATURE_SIZE[1] / h)
+    # (inside a margin, for the glow)
+    # (the glow as wide for a bigger one, such as the hangar list's, as it
+    # is for the usual size)
+    margin = round(MINIATURE_GLOW_MARGIN * canvas_size[0] / MINIATURE_SIZE[0])
+    room = (canvas_size[0] - 2 * margin, canvas_size[1] - 2 * margin)
+    scale = min(room[0] / w, room[1] / h)
     size = (round(w * scale), round(h * scale))
     small = np.array(new_hull.resize(size, Image.BOX)).astype(np.float32)
+    # (the colours scaled sharply, and sharpened; the alpha, above, smoothly,
+    # for a clean edge and the glow)
+    sharp = new_hull.resize(size, Image.LANCZOS).convert("RGB").filter(
+        ImageFilter.UnsharpMask(MINIATURE_SHARPEN_RADIUS, MINIATURE_SHARPEN_PERCENT, 0))
+    small[..., :3] = np.array(sharp).astype(np.float32)
 
     src = np.array(new_hull).astype(np.float32)
-    dark = ((src[..., :3].max(axis=2) < 60) & (src[..., 3] > 200)).astype(np.float32)
+    brightness = src[..., :3].max(axis=2)
+    opaque = src[..., 3] > 200
+    level = min(MINIATURE_LINE_LEVEL, MINIATURE_LINE_SHARE * float(np.median(brightness[opaque])))
+    dark = ((brightness < level) & opaque).astype(np.float32)
     dark_share = np.array(Image.fromarray((dark * 255).astype(np.uint8)).resize(size, Image.BOX)) / 255
 
     solid = small[..., 3] >= 128
     out = small.copy()
     out[..., 3] = np.where(solid, 255, 0)
-    out[dark_share >= 0.35, :3] = 0
-    # The edge: solid pixels next to a clear one
+    # A dark hull's lightened, so it stands out from the hangar's and the
+    # achievements' dark panels (a light one's left as it is)
+    median = float(np.median(brightness[opaque]))
+    lift = min(MINIATURE_MAX_LIFT, max(1.0, MINIATURE_BRIGHTNESS / max(median, 1.0)))
+    out[..., :3] = 255 - (255 - out[..., :3]) * ((255 - min(255.0, median * lift)) / max(255 - median, 1.0))
+    out[(dark_share >= 0.35) & solid, :3] = 0
+    # The edge: solid pixels next to a clear one, vanilla's outline colour
     edge = solid & ~(np.roll(solid, 1, 0) & np.roll(solid, -1, 0) & np.roll(solid, 1, 1) & np.roll(solid, -1, 1))
-    out[edge, :3] = out[edge, :3] * 0.25
-    image = Image.fromarray(out.clip(0, 255).astype(np.uint8), "RGBA")
-    canvas = Image.new("RGBA", MINIATURE_SIZE)
-    canvas.paste(image, ((MINIATURE_SIZE[0] - size[0]) // 2, (MINIATURE_SIZE[1] - size[1]) // 2))
-    return canvas
+    out[edge, :3] = MINIATURE_OUTLINE
+
+    # On the miniature's canvas, with vanilla's glow round it: its pink,
+    # fading out over its margin
+    canvas = np.zeros((canvas_size[1], canvas_size[0], 4), np.float32)
+    left, top = (canvas_size[0] - size[0]) // 2, (canvas_size[1] - size[1]) // 2
+    canvas[top:top + size[1], left:left + size[0]] = out
+    reached = canvas[..., 3] > 0
+    distance = np.full(reached.shape, np.inf, np.float32)
+    distance[reached] = 0
+    for step in range(1, margin + 1):
+        grown = reached.copy()
+        for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1)):
+            grown |= np.roll(np.roll(reached, dy, 0), dx, 1)
+        distance[grown & ~reached] = step
+        reached = grown
+    glow = (~(canvas[..., 3] > 0)) & np.isfinite(distance)
+    fade = 1 - distance[glow] / (margin + 1)
+    canvas[glow, :3] = MINIATURE_GLOW
+    canvas[glow, 3] = MINIATURE_GLOW_ALPHA * fade * fade
+    return Image.fromarray(canvas.clip(0, 255).astype(np.uint8), "RGBA")
 
 
 def room(dat, name):

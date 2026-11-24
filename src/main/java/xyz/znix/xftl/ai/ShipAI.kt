@@ -1,17 +1,21 @@
 package xyz.znix.xftl.ai
 
+import xyz.znix.xftl.AbstractSystem
 import xyz.znix.xftl.Ship
 import xyz.znix.xftl.augments.AugmentBlueprint
 import xyz.znix.xftl.crew.AbstractCrew
 import xyz.znix.xftl.layout.Room
+import xyz.znix.xftl.systems.Artillery
 import xyz.znix.xftl.systems.Drones
 import xyz.znix.xftl.systems.Hacking
 import xyz.znix.xftl.systems.MindControl
+import xyz.znix.xftl.systems.Piloting
 import xyz.znix.xftl.systems.Weapons
 import xyz.znix.xftl.systems.Shields
 import xyz.znix.xftl.weapons.AbstractWeaponBlueprint
 import xyz.znix.xftl.weapons.AbstractWeaponInstance
 import xyz.znix.xftl.weapons.BeamBlueprint
+import xyz.znix.xftl.weapons.BombBlueprint
 import xyz.znix.xftl.weapons.DroneBlueprint
 import xyz.znix.xftl.weapons.IRoomTargetingWeapon
 import xyz.znix.xftl.weapons.WeaponSizes
@@ -191,7 +195,12 @@ class ShipAI(val ship: Ship, val player: Ship) {
             when (weapon) {
                 is IRoomTargetingWeapon -> {
                     val remainingRooms = ArrayList(player.rooms)
-                    weapon.fire { pickTarget(remainingRooms) }
+                    // On insane, a weapon that can go anywhere goes for the
+                    // player's key systems (see keySystemTarget)
+                    val keySystems = ship.sys.difficulty.enemiesTargetKeySystems && aimsAtSystems(weapon)
+                    weapon.fire {
+                        (if (keySystems) keySystemTarget(player) else null) ?: pickTarget(remainingRooms)
+                    }
                 }
 
                 is BeamBlueprint.BeamInstance -> {
@@ -245,6 +254,20 @@ class ShipAI(val ship: Ship, val player: Ship) {
         }
     }
 
+    /**
+     * Whether a weapon's worth aiming at the player's key systems, on
+     * insane: not a bomb (whose vanilla behaviour stays as it is), or one
+     * that only hurts the crew. (A beam's swept between two rooms, and
+     * isn't an [IRoomTargetingWeapon].)
+     */
+    private fun aimsAtSystems(weapon: IRoomTargetingWeapon): Boolean {
+        if (weapon is BombBlueprint.BombInstance)
+            return false
+        val type = weapon.asWeaponInstance().type
+        val crewOnly = type.damage <= 0 && type.sysDamage <= 0 && type.ionDamage <= 0 && type.personnelDamage > 0
+        return !crewOnly
+    }
+
     // A weapon that does no damage, only heals crew or repairs systems
     private fun isSupportWeapon(type: AbstractWeaponBlueprint): Boolean =
         type.damage <= 0 && (type.personnelDamage < 0 || type.sysDamage < 0) &&
@@ -274,8 +297,8 @@ class ShipAI(val ship: Ship, val player: Ship) {
             remainingRooms.addAll(player.rooms)
         }
 
-        // Enemies shoot at different targets with each shot
-        // TODO hard-mode targeting
+        // Enemies shoot at different targets with each shot (but on insane,
+        // see keySystemTarget)
         val room = remainingRooms.random()
         remainingRooms.remove(room)
         return room
@@ -318,6 +341,48 @@ class ShipAI(val ship: Ship, val player: Ship) {
         val shuffled = player.rooms.shuffled()
         for (room in shuffled) {
             mindControl.selectRoom(room)
+        }
+    }
+
+    companion object {
+        /**
+         * The player's systems the enemies aim for first on insane (see
+         * [keySystemTarget]), most valuable first: the shields, the weapons
+         * (and the artillery), then the piloting. The rest come after them.
+         */
+        private val KEY_SYSTEMS: List<(AbstractSystem) -> Boolean> = listOf(
+            { it is Shields },
+            { it is Weapons || it is Artillery },
+            { it is Piloting },
+        )
+
+        /**
+         * Where an enemy aims a shot at [target] on insane
+         * ([xyz.znix.xftl.game.Difficulty.enemiesTargetKeySystems]): the room
+         * of its most valuable system that isn't destroyed yet (see
+         * [KEY_SYSTEMS]), picking among several of a kind (such as a big
+         * ship's two shields) at random. Once they're all destroyed, they're
+         * all fair game again. Null if it has no systems at all, for the
+         * vanilla random target.
+         *
+         * This is BUGS.md's "Нацеливание врага на Hard" (the enemies on hard
+         * aiming at random rather than at the key systems), done for insane
+         * only: hard stays as vanilla.
+         */
+        @JvmStatic
+        fun keySystemTarget(target: Ship, random: Random = Random.Default): Room? {
+            val systemRooms = target.rooms.filter { it.system != null }
+            val candidates = systemRooms.filter { !it.system!!.broken }.ifEmpty { systemRooms }
+            if (candidates.isEmpty())
+                return null
+
+            fun rank(room: Room): Int {
+                val index = KEY_SYSTEMS.indexOfFirst { it(room.system!!) }
+                return if (index == -1) KEY_SYSTEMS.size else index
+            }
+
+            val best = candidates.minOf { rank(it) }
+            return candidates.filter { rank(it) == best }.random(random)
         }
     }
 }

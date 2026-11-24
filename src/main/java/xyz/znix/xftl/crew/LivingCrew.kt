@@ -613,7 +613,9 @@ class LivingCrewInfo(
                 val skillName = SaveUtil.getAttr(skillElem, "id")
                 val value = SaveUtil.getAttrFloat(skillElem, "value")
 
-                val skill = Skill.valueOf(skillName)
+                // (a skill this game doesn't know, from a newer one, is left
+                // out, rather than failing the whole save)
+                val skill = Skill.fromSaveName(skillName) ?: continue
                 info.skills[skill] = value
             }
 
@@ -638,6 +640,21 @@ enum class Skill(
     WEAPONS("weapons", 65),
     REPAIRS("repair", 18),
     COMBAT("combat", 8),
+
+    // An XFTL extension, for manning the drones system (see
+    // Drones.manningSpeed): a point for each shot a combat or defence drone
+    // fires. A defence drone fires far more often than most weapons, so it
+    // takes more shots than the weapons' 65. It's last, rather than after
+    // the weapons, as the game records keep the levels in this order (see
+    // GameRecord.CrewRecord), and the panels show it after the weapons by
+    // [DISPLAY_ORDER].
+    DRONES("drones", 80),
+
+    // An XFTL extension too, for manning the mind control and oxygen
+    // systems (see Manning): a point for each crewmember mind controlled,
+    // and for every so long refilling the air. Each's far rarer than a shot
+    // or a dodge. Last, as the drones', for the records.
+    LIFE_SUPPORT("life", 10),
     ;
 
     val iconPath: String = "img/people/skill_${xmlName}_white.png"
@@ -658,6 +675,8 @@ enum class Skill(
             ENGINES -> game.translator["engine_skill"].replaceArg(Engines.SKILL_BONUSES[levelNum])
             SHIELDS -> game.translator["shield_skill"].replaceArg(Shields.SKILL_BONUSES[levelNum])
             WEAPONS -> game.translator["weapon_skill"].replaceArg(Weapons.SKILL_BONUSES[levelNum])
+            DRONES -> game.translator["xftl_drones_skill"].replaceArg(Drones.SKILL_BONUSES[levelNum])
+            LIFE_SUPPORT -> game.translator["xftl_life_skill"].replaceArg(Manning.SKILL_BONUSES[levelNum])
 
             REPAIRS -> when {
                 level.isBase -> game.translator["repair_0"]
@@ -669,6 +688,41 @@ enum class Skill(
                 else -> game.translator["combat_skilled"].replaceArg(LivingCrew.COMBAT_SKILL_BONUS[levelNum])
             }
         }
+    }
+
+    /**
+     * The key its texts in the skills panels go by: `<key>_skill_infobox`
+     * and `<key>_skill_tooltip` (vanilla's, and en.xml's for the drones and the life support).
+     */
+    val textKey: String
+        get() = when (this) {
+            PILOTING -> "pilot"
+            ENGINES -> "engines"
+            SHIELDS -> "shields"
+            WEAPONS -> "weapons"
+            REPAIRS -> "repair"
+            COMBAT -> "combat"
+            DRONES -> "xftl_drones"
+            LIFE_SUPPORT -> "xftl_life"
+        }
+
+    /** Where it's shown in the skills panels, from the top (see [DISPLAY_ORDER]). */
+    val displayIndex: Int get() = DISPLAY_ORDER.indexOf(this)
+
+    companion object {
+        /**
+         * The order the skills panels show them in: the systems' first, the
+         * drones and the life support after the weapons, then repairs and combat, as
+         * vanilla's.
+         */
+        val DISPLAY_ORDER: List<Skill> = listOf(PILOTING, ENGINES, SHIELDS, WEAPONS, DRONES, LIFE_SUPPORT, REPAIRS, COMBAT)
+
+        // Skills' names in older saves: the Life Support skill was called
+        // Ops for a while
+        private val RENAMED = mapOf("OPS" to LIFE_SUPPORT)
+
+        /** The skill saved as [name] (see LivingCrewInfo.saveToXML), or null if there's none. */
+        fun fromSaveName(name: String): Skill? = entries.firstOrNull { it.name == name } ?: RENAMED[name]
     }
 }
 

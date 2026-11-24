@@ -61,7 +61,7 @@ Rebel capital. Destroying it stops the Chorus.
 **Why the Chonkestrel.** Project Chonkestrel was the Federation's answer to
 the Rebels' bigger ships: heavy cruisers built fast to an old, pre-network
 design, with no computers to speak of and everything done by hand (hence
-sixteen crew). The Federation's engineers were embarrassed by it. Now it's
+eighteen crew). The Federation's engineers were embarrassed by it. Now it's
 the one kind of warship CONCORD can't hack, because there's nothing to talk
 to.
 

@@ -1,5 +1,202 @@
 # Changelog
 
+## 2026-11-24: version 0.8.1-alpha
+
+### Features
+
+- **The Life Support skill, and more systems to man:** someone at the
+  mind control's or the oxygen's console speeds it up by their new Life
+  Support skill (its own icon, a heart monitor), 10 to 25%: the mind
+  control recharges sooner, the oxygen refills the air faster. The
+  hacking's manned by the Drones skill, its pulse recharging as much
+  sooner. Each mind control and hacking pulse trains the skill, as does
+  time at the oxygen's console while it's refilling. A system on its
+  cooldown stays manned. The crew's AI (the enemies' too) mans them, and
+  the wide doors keep clear of their consoles. In Crew Skills, the Drones
+  and Life Support skills have the bottom row. See doc/game/skills.md.
+- **Sold data:** sharing your data with the archivist (a civilian
+  sector's event) still gets you the sector's star chart, but half the
+  time the archivist sells it on: bounty hunters wait at one of the
+  sector's beacons (or the next sector's), unmarked, and hit first where
+  the data says the ship's weak. A cloak, a hacking system or an Engi
+  gets you away. Events can now place hidden quests like this
+  (`<quest xftlHidden="true"/>`, see doc/tools/modding.md).
+- **Bulwarks walk:** the enemies' twin and triple anti-personnel drones
+  no longer stand still. A bulwark walks between the rooms it can stand
+  in (big enough, without a system) through passages as wide as itself,
+  two or three doors side by side: it goes after the nearest boarders it
+  can get to and fights them in their room, and with none, walks slowly
+  round the edges of its rooms, stopping at the corners. The doors open
+  for it as for the crew; it never walks over anyone, holds the cells it
+  stands on (both squares on its way between them), and is saved with
+  where it's going. One bulwark to a room. For it, the walls between the
+  big empty rooms (no system the ship starts with) of the long and wide
+  ships, the hybrids and the bosses are wide doors: one door 2 or 3 cells
+  long, opening, closing and broken down as one, drawn from vanilla's
+  door stretched to its length (`tools/door_sizes.py`), a longer wall
+  split into several (`tools/wide_passages.py`, run by `make art`: 893
+  doors making 728 wide doors; `--scan` lists the walls). The player's
+  chonky ships (all 28, the Chonkestrel too) and the ten bosses (the
+  Mainframe's six too) get them between all their rooms at least 2x2,
+  whatever their systems, but where a console faces the wall (and a
+  console with no slot of its own keeps a wall free for it).
+  `XFTL_SCREENSHOTS_SET=boss` now shows the Mainframe's ships too.
+  `make bulwarks` fights a boss full of them. See doc/game/drone-sizes.md.
+- **A language option:** the options window has a Language button, to
+  play in English, French, German, Spanish, Italian or Russian (each
+  shown in its own language). It's kept in the profile; a new profile
+  starts in the computer's language, if it's one of these, or English. In
+  the main menu, the menu's shown again in the new language straight
+  away; in a game, it's used once the game goes back to the main menu or
+  a new one's started. `XFTL_LANG=ru` plays in a language for one run.
+  Vanilla's text comes from FTL's own translations, and everything XFTL
+  and the Chonkestrel mod add is translated too: the menus and windows,
+  and every event, ship, sector and achievement (about 2,500 texts in
+  each language), using vanilla's terms. Anything left untranslated is
+  shown in English. The mod's text is looked up by key, as vanilla's is
+  (see doc/tools/translations.md, and tools/check_translations.py to
+  check a translation).
+- **A fourth difficulty, Insane:** the new game window's fourth button can
+  now be picked. The enemies are a sector ahead, with a 40% chance of each
+  optional system in the first sector, two more power for their general
+  systems, and their optional systems a power each, as on Hard; rewards
+  are two sectors behind, and doors break sooner (5, 8 and 12 hits). The
+  map's hazards and the bigger enemies' boarders are two sectors ahead.
+  The Rebel fleet starts each sector a jump closer and takes an extra
+  step every fourth jump (in the last stand, a third beacon), and the
+  enemies aim at the player's shields, then their weapons, then their
+  piloting, rather than at random, skipping what's already destroyed.
+  The score's doubled, and a win counts for Against All Odds (win on
+  Hard). Otherwise it's as Hard. See doc/game/difficulty.md, which has
+  the whole table of what each difficulty does.
+- **Type C versions of the big ships:** every big ship whose race has a
+  vanilla Type C now has one too, made from it the same way: the
+  Chonkswallow (the Kestrel C, the Swallow, as big as the Chonkestrel),
+  the Chonkagon (Engi, beam drones in three drones systems), the
+  Chonkerenkov (Zoltan, three shields and two batteries), the Chonkatidae
+  (Federation, two Artillery Beams), the Chonkolimax (Slug, two of every
+  mind system), the Chonkeseus (Mantis, a teleporter pad for eight and one
+  for four), the Chonktite (Rock, three weapons systems) and Simo-CHONK
+  (Stealth, two cloaks and shield drones). The Lanius and the Crystals have
+  no vanilla Type C, so they have none. In the hangar, a vanilla Type C's
+  Chonky button goes to its big one, rather than the big Type A.
+- **Vanilla's ships are back in the hangar:** the ship list has vanilla's
+  ships below the big ones, in vanilla's order (each one's Type A, B and
+  C, a little apart from the big ones, whose pictures are half as big
+  again), scrolling with the mouse wheel, and the arrows go through both. **Normal** and **Chonky** buttons, in a TYPE section above the
+  layout's A, B and C, switch between a vanilla ship and its big version,
+  keeping the race and the layout (a Type C, which has no big version,
+  goes to the big Type A). Random Ship keeps to the size picked. A
+  vanilla ship fights one ship at a time, as in vanilla. Each big ship's
+  blueprint names the vanilla ship it was made from
+  (`<xftlVanillaShip>`, see doc/game/race-ships.md).
+- **The drones system can be manned, with a new Drones skill:** while a
+  drone's out, a crewmember at its console speeds its drones up by their
+  Drones skill, 10% to 25%, as the Weapons skill does a weapons system's
+  weapons: combat drones charge, defence drones reload and shield drones
+  recharge faster, and a drone that's shot down can go out again sooner.
+  Their shots train the skill. The enemies man theirs too. The skills
+  panels have a seventh row for it, after the Weapons skill; crew from
+  older saves start it at nothing.
+- **The Artillery Beam can be manned:** a crewmember at its console speeds
+  its charge up by half what their Weapons skill gives a weapons system
+  (5% to 12.5%), and its shots train the skill.
+- **The achievements' icons use vanilla's star,** as vanilla's ship
+  achievements do: the ship alone for the Blockade, under the star for the
+  win, with red rays behind it for the win on Hard, and one, two or three
+  gold stars for the race's own three (the last on red rays too). The achievements window shows
+  the icons and the ships from copies made at its sizes, as crisp as the
+  originals, rather than scaled down by the game, which skipped pixels.
+- **The achievement notice is see-through,** so it doesn't hide the fight.
+
+### Changes
+
+- **The hangar shows every weapon slot and drones system:** a row of
+  weapon slots for each weapons system (3+3+3 on the Rock ships, rather
+  than the first eight in rows of four), and a row of drone slots for
+  each of the Engi ships' three drones systems.
+- **A third weapons or drones system's power button goes with its box,**
+  when the box is moved off to the right of the others (to keep clear of
+  the enemy windows), rather than staying in the row with the first two's.
+- **Statistics:** a game's systems are in the power bar's order, the
+  subsystems on a row of their own, its weapons, drones and augments show
+  their descriptions when hovered, as in the game (without the buying
+  tip), and a game lost with the crew dead has no crew section. A Reset
+  button, across from Back, forgets all the games, once you've said yes
+  (the achievements stay).
+- A deployed drone's box no longer has vanilla's drone icon over it,
+  which covered the longer drone names
+- **Room for 18 crew** on every chonky ship, as on the Chonkestrel (16
+  on the Zoltan ships, whose three shields systems need the room on the
+  screen next to the crew list). Full House, the Chonkestrel's and the
+  Chonk-Tail's, now wants all 18 alive
+- **Debug mode fills every ship up,** not just the Chonkestrel: a ship
+  without a debug loadout of its own (the race ships, vanilla's) gets one
+  made up as full as the Chonkestrel's, shown in the hangar too (triple
+  weapons in every slot, drones, the Pre-Igniter and Zoltan shields, a
+  full cargo hold), and a full crew in the game.
+- **The main menu shows your ship:** the saved game's, if there's one,
+  just as it was saved (its own crew, systems, damage and all, rather
+  than a new one filled with random crew), or else one of the big ships
+  at random, rather than always the Chonkestrel, in front of a random
+  backdrop as before.
+- **The Artillery Beam is rarer in the stores,** offered only 30% of the
+  times it could be, and **goes to six bars,** each past vanilla's four
+  taking less off its charge (17 seconds at five bars, 14 at six, rather
+  than 20), for 150 and 300 scrap. At five bars each volley's at two of
+  the enemy ships, and at six at three, if there are that many, one after
+  another. The enemies' stay at four.
+- **The subsystems sit against the right-hand edge of the screen:** the
+  piloting, sensors, doors and backup battery power bars, with their box
+  and its label, moved right from where vanilla had them, the battery's
+  button now ending at the edge.
+
+### Fixes
+
+- **A crystal's lockdown waits for its boarding party:** the AI's
+  crystals (the enemies', and the player's mind controlled) lock a fight's
+  room down half a second after it starts, and while any of their side are
+  still on their way in, up to three seconds, rather than straight away,
+  shutting the rest of the party out.
+- **Hazards start over on a return:** coming back to a beacon you left,
+  its solar flares, pulsar pulses, asteroids and anti-ship battery carried
+  on with their timers from where you left them, so a flare could hit as
+  you arrived. They now start from the beginning, as on a first visit.
+- **A quest ship's surrender is offered once a fight:** in the Engi
+  quest, fighting two or three copies of the Rebel ship that knows where
+  the Engi went, each offered to surrender with the coordinates, so the
+  next stage, and with it the Engi cruiser's unlock, could be started two
+  or three times. A surrender that starts a quest, unlocks a ship or adds
+  to a counter (such as a CONCORD relay's codes) is now offered by the
+  first of them only; the rest fight on. (Rewards for destroying such
+  ships, or killing their crews, were already given once.)
+- **A ship with a small room for a mannable system with doors all round
+  loads,** such as a 1x1 hacking room, which the Artillery Beam can now
+  be bought for: its console goes on any edge without a door, and if
+  there's none, the system can't be manned there, rather than the game
+  failing to load.
+- **The dark ships' miniatures aren't black any more,** in the hangar's
+  list and the achievements: the Stealth ships', the Chonknisos', the
+  Chonkivan's and the Chonkoether's dark panels were drawn as outlines,
+  so they came out as black shapes. Now only lines much darker than the
+  rest of the hull are, and a dark hull's miniature is lightened a little.
+  And they look like vanilla's: sharper (scaled down with a sharp filter
+  and sharpened, as the big ships' hulls are shrunk five times or more,
+  where vanilla's hand-drawn ones are about three), with vanilla's dark
+  outline and its pink glow round them.
+
+- **A bought Artillery Beam works:** it was installed with no power bars,
+  so it showed red and broken, and opening the upgrades crashed the game.
+  It's now bought at one bar, and one saved with none loads with one.
+- **A third drones or weapons box isn't covered by the enemy windows:**
+  on the Engi ships, with three drones systems, and the Rocks, with three
+  weapons systems, the top one of their three stacked boxes was under the
+  window of a long (or colossal) third enemy. The boxes are now only
+  stacked as high as the enemy windows leave room for (two rows on a
+  1080-high screen, three on a taller one), the first systems' in order
+  from the top, and the rest (the third's) go to the right of them, where
+  there's room before the subsystems.
+
 ## 2026-11-21: version 0.8-alpha
 
 ### Features

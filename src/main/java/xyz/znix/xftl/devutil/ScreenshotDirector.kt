@@ -633,23 +633,65 @@ class ScreenshotDirector(
         )
 
         /**
-         * Screenshots of the four sector bosses (XFTL_SCREENSHOTS_SET=boss):
-         * a fight with each, alone, at its sector's exit. The enemy crew are
-         * shown, even in a nebula.
+         * The player's ship in each of [bossScenarios]' scenes, a different
+         * big ship each time: the Type Cs, in the hangar's order (the trailer
+         * shows the As and Bs, see [Trailer]), each boss's in [BOSSES]' order,
+         * then the rewards'.
          */
-        fun bossScenarios(): List<Scenario> = BOSSES.map { (sector, specName, environments) ->
-            bossFight(sector, specName, environments)
+        private val BOSS_PLAYER_SHIPS = listOf(
+            "PLAYER_SHIP_CHONKESTREL_3", "PLAYER_SHIP_XFTL_ENGI_3", "PLAYER_SHIP_XFTL_ZOLTAN_3", "PLAYER_SHIP_XFTL_MANTIS_3",
+        )
+        private const val BOSS_REWARDS_PLAYER_SHIP = "PLAYER_SHIP_XFTL_SLUG_3"
+
+        /**
+         * Screenshots of the four sector bosses (XFTL_SCREENSHOTS_SET=boss):
+         * a fight with each, alone, at its sector's exit, each in a different
+         * big ship (see [BOSS_PLAYER_SHIPS]), new, with its debug loadout. The
+         * enemy crew are shown, even in a nebula.
+         */
+        fun bossScenarios(): List<Scenario> = BOSSES.mapIndexed { index, (sector, specName, environments) ->
+            bossFight(sector, specName, environments, BOSS_PLAYER_SHIPS[index])
+        } + MAINFRAMES.mapIndexed { index, blueprint ->
+            mainframeFight(blueprint, BOSS_PLAYER_SHIPS[index % BOSS_PLAYER_SHIPS.size])
         } + Scenario("xftl-maw-devourer-rewards") { game ->
             // The Devourer's rewards, with every kind of reward there is:
             // resources, weapons, a drone, augments and a crew member
+            Trailer.newShip(game, BOSS_REWARDS_PLAYER_SHIP, "screenshots")
             game.debugRemoveEnemy()
             val destroyed = game.eventManager.getShip("XFTL_MAW_DEVOURER").destroyed!!
             game.shipUI.debugCloseWindow()
             game.shipUI.showEventDialogue(destroyed.resolve(), 1)
         }
 
-        private fun bossFight(sector: String, specName: String, environments: List<Beacon.EnvironmentType>) =
+        /**
+         * The Mainframe's ships (see doc/game/mainframe.md), for
+         * [bossScenarios]: each of its blueprints, as the final sector's
+         * three fights pick them.
+         */
+        private val MAINFRAMES = listOf(
+            "XFTL_BOSS_MAINFRAME_MIND", "XFTL_BOSS_MAINFRAME_BAYS", "XFTL_BOSS_MAINFRAME_MANTIS_ENGI",
+            "XFTL_BOSS_MAINFRAME_ROCK_ZOLTAN", "XFTL_BOSS_MAINFRAME_CRYSTAL_LANIUS", "XFTL_BOSS_MAINFRAME_SLUG_FED",
+        )
+
+        // A fight with one of the Mainframe's ships, alone, in the final sector
+        private fun mainframeFight(blueprint: String, playerShip: String) =
+            Scenario(blueprint.lowercase().replace('_', '-'), settleSeconds = SHIP_FIGHT_SECONDS, fight = true) { game ->
+                Trailer.newShip(game, playerShip, "screenshots")
+                enterSector(game, "FINAL", GameMap.SectorClass.HOSTILE)
+                game.shipUI.debugCloseWindow()
+                patchUp(game.player)
+                leaveTeleporter(game.player)
+                println("[screenshots] Fighting $blueprint")
+                game.debugRemoveEnemy()
+                game.debugWingmanSpecs = emptyList()
+                val spec = VideoDirector.enemySpec(game, blueprint, "The Mainframe")
+                game.debugSpawnShip(spec, Difficulty.NORMAL, game.currentBeacon.sector.difficultySectorNumber, 1)
+            }
+
+        private fun bossFight(sector: String, specName: String, environments: List<Beacon.EnvironmentType>, playerShip: String) =
             Scenario(specName.lowercase().replace('_', '-'), settleSeconds = SHIP_FIGHT_SECONDS, fight = true) { game ->
+                // (first, as the ship it was facing goes with the old one)
+                Trailer.newShip(game, playerShip, "screenshots")
                 enterSector(game, sector, GameMap.SectorClass.HOSTILE)
                 if (environments.isNotEmpty())
                     setEnvironments(game, environments)

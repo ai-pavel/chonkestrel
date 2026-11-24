@@ -6,7 +6,6 @@ import xyz.znix.xftl.Constants.ROOM_SIZE
 import xyz.znix.xftl.Ship
 import xyz.znix.xftl.crew.AbstractCrew
 import xyz.znix.xftl.f
-import xyz.znix.xftl.game.Difficulty
 import xyz.znix.xftl.math.ConstPoint
 import xyz.znix.xftl.math.Direction
 import xyz.znix.xftl.math.IPoint
@@ -24,6 +23,20 @@ data class Door(val position: ConstPoint, val left: Room?, val right: Room?, val
     }
 
     val ship: Ship = left?.ship ?: right!!.ship
+
+    /**
+     * The doors that are one wide door with this one (see
+     * tools/wide_passages.py and doc/game/drone-sizes.md): the doors side by
+     * side on 2 or 3 cells of a wall, from the first (this one, for a
+     * single door). They open and close as one, are broken down as one (the
+     * first keeping its damage), and the first draws them, as one door as
+     * long as they are.
+     */
+    var group: List<Door> = listOf(this)
+        internal set
+
+    // The wide door's first door, which keeps its state and draws it
+    private val leader: Door get() = group[0]
 
     // Offset of this room from the ship's 0,0 screen position
     val offsetX get() = ROOM_SIZE * (position.x + ship.offset.x)
@@ -53,7 +66,8 @@ data class Door(val position: ConstPoint, val left: Room?, val right: Room?, val
 
     val maxHealth: Int
         get() {
-            val healths = BASE_HEALTHS.getValue(ship.sys.difficulty)
+            // The number of attacks required to break a level 2/3/4 door
+            val healths = ship.sys.difficulty.doorHealths
 
             if (isHacked) {
                 return healths[2] // Level 3 equivalent
@@ -80,7 +94,8 @@ data class Door(val position: ConstPoint, val left: Room?, val right: Room?, val
         // A lockdown's crystal holds it shut (see isSealed)
         get() = isSetOpen && !isSealed
         set(value) {
-            isSetOpen = isBroken || value
+            for (door in group)
+                door.isSetOpen = door.isBroken || value
         }
 
     /**
@@ -105,7 +120,7 @@ data class Door(val position: ConstPoint, val left: Room?, val right: Room?, val
     // This tracks how much longer that is.
     private var brokenOpenTimer: Float? = null
 
-    val isBroken: Boolean get() = brokenOpenTimer != null
+    val isBroken: Boolean get() = leader.brokenOpenTimer != null
 
     // True if the player is hovering over this door
     private var hovered: Boolean = false
@@ -309,8 +324,13 @@ data class Door(val position: ConstPoint, val left: Room?, val right: Room?, val
     }
 
     fun render(g: Graphics, alpha: Float) {
+        // A wide door's drawn by its first door, the whole of it
+        if (leader !== this)
+            return
+        val size = group.size
+
         val animationDir = when {
-            open || crewOpenDemand -> 1
+            open || group.any { it.crewOpenDemand } -> 1
             else -> -1
         }
 
@@ -326,12 +346,12 @@ data class Door(val position: ConstPoint, val left: Room?, val right: Room?, val
 
         stateAnimation = (stateAnimation + animationDir * ship.sys.renderingDeltaTime / ANIMATION_TIME).coerceIn(0f..1f)
 
-        val doorSheet = ship.sys.getImg("img/effects/door_sheet.png")
-        val highlight = ship.sys.getImg("img/effects/door_highlight.png")
+        val doorSheet = ship.sys.getImg(if (size == 1) "img/effects/door_sheet.png" else "img/effects/xftl_door_sheet_x$size.png")
+        val highlight = ship.sys.getImg(if (size == 1) "img/effects/door_highlight.png" else "img/effects/xftl_door_highlight_x$size.png")
 
         // Broken and level 1 doors use the same sprite, but broken doors
         // have a colour filter applied to them.
-        val sheetY = ROOM_SIZE * (level - 1).coerceAtLeast(0)
+        val sheetY = ROOM_SIZE * size * (level - 1).coerceAtLeast(0)
 
         // This is used to animate the door opening and closing, selecting the
         // correct frame for its motion.
@@ -342,17 +362,20 @@ data class Door(val position: ConstPoint, val left: Room?, val right: Room?, val
         // Note that isVertical refers to whether the door is vertical
         // or not, NOT whether the two rooms it joins are placed one
         // above the other.
+        // (a wide door's sprite is as long as its cells, upright, turned
+        // round its far end for a horizontal one)
+        val length = ROOM_SIZE * size
         g.pushTransform()
         if (isVertical) {
             g.translate(offsetX.f - ROOM_SIZE / 2, offsetY.f)
         } else {
-            g.translate(offsetX.f + ROOM_SIZE, offsetY.f - ROOM_SIZE / 2)
+            g.translate(offsetX.f + length, offsetY.f - ROOM_SIZE / 2)
             g.rotate(0f, 0f, 90f)
         }
 
         // Draw the mouse hover highlight
         val frame = (stateAnimation * 4).toInt()
-        if (hovered) {
+        if (group.any { it.hovered }) {
             val highlightFilter = Colour(1f, 1f, 1f, 0.75f)
             drawHighlight(highlight, frame, highlightFilter)
         }
@@ -364,10 +387,10 @@ data class Door(val position: ConstPoint, val left: Room?, val right: Room?, val
         }
 
         doorSheet.draw(
-            0f, 0f, ROOM_SIZE.f, ROOM_SIZE.f,
+            0f, 0f, ROOM_SIZE.f, length.f,
 
             sheetX.f, sheetY.f,
-            sheetX.f + ROOM_SIZE, sheetY.f + ROOM_SIZE,
+            sheetX.f + ROOM_SIZE, sheetY.f + length,
             alpha, filter
         )
 
@@ -383,6 +406,14 @@ data class Door(val position: ConstPoint, val left: Room?, val right: Room?, val
      * apart, not filling the gap between them.
      */
     private fun drawHighlight(highlight: Image, frame: Int, filter: Colour) {
+        // A wide door's highlights are made for each frame (see
+        // tools/door_sizes.py)
+        if (group.size > 1) {
+            val length = (ROOM_SIZE * group.size).f
+            val x = (ROOM_SIZE * frame).f
+            highlight.draw(0f, 0f, ROOM_SIZE.f, length, x, 0f, x + ROOM_SIZE, length, 1f, filter)
+            return
+        }
         if (frame == 0) {
             highlight.draw(0f, 0f, filter)
             return
@@ -401,6 +432,11 @@ data class Door(val position: ConstPoint, val left: Room?, val right: Room?, val
     private var attackFlash = 0f
 
     fun attackDoor() {
+        // (a wide door's one door, its first keeping its damage)
+        if (leader !== this) {
+            leader.attackDoor()
+            return
+        }
         if (isSealed)
             return
 
@@ -455,8 +491,8 @@ data class Door(val position: ConstPoint, val left: Room?, val right: Room?, val
         // Skip the animation when the door is first opened.
         // Note the crew gets a few updates before this is called, so crew
         // requests will be handled properly.
-        val visualOpen = open || crewOpenDemand
-        stateAnimation = if (visualOpen) 1f else 0f
+        val visualOpen = open || group.any { it.crewOpenDemand }
+        leader.stateAnimation = if (visualOpen) 1f else 0f
     }
 
     /**
@@ -545,14 +581,5 @@ data class Door(val position: ConstPoint, val left: Room?, val right: Room?, val
         private const val HALVES_CLOSED_AT = 17
         private const val HALVES_STEP = 2
         private const val HIGHLIGHT_MARGIN = 1
-
-        // Door healths depend on the difficulty.
-        // These values are the number of attacks required to break
-        // a level 2/3/4 door.
-        private val BASE_HEALTHS: Map<Difficulty, List<Int>> = mapOf(
-            Pair(Difficulty.EASY, listOf(12, 16, 20)),
-            Pair(Difficulty.NORMAL, listOf(8, 12, 18)),
-            Pair(Difficulty.HARD, listOf(6, 10, 15))
-        )
     }
 }

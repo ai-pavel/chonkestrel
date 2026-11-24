@@ -45,6 +45,7 @@ class PauseWindow(val game: InGameState, val close: () -> Unit) : Window() {
     override val size: IPoint = widgetTree.root.size
 
     init {
+        makeRoomForTheButtons()
         buttons += widgetTree.buildButtons(game, this, ConstPoint.ZERO)
 
         widgetTree.addButtonListener("continue", this::continueClicked)
@@ -159,6 +160,11 @@ class PauseWindow(val game: InGameState, val close: () -> Unit) : Window() {
             val x = img.position.x + (img.size.x - lockIcon.width) / 2
             val y = img.position.y + (img.size.y - lockIcon.height) / 2
             lockIcon.draw(x, y)
+
+            // Crossed out in red, if it can't be unlocked in this game any
+            // more (as Into the Breach does)
+            if (tracker.isOutOfReach(achievement))
+                drawCross(g, img)
         }
 
         // Draw the outline
@@ -170,6 +176,19 @@ class PauseWindow(val game: InGameState, val close: () -> Unit) : Window() {
 
         if (hovering)
             g.tooltip = textTooltip(achievementTooltip(achievement))
+    }
+
+    // A red cross over [img], in squares down its diagonals, so it's as
+    // blocky as the rest of the UI
+    private fun drawCross(g: Graphics, img: ImageView) {
+        val size = minOf(img.size.x, img.size.y) - CROSS_MARGIN * 2
+        val x0 = img.position.x + (img.size.x - size) / 2
+        val y0 = img.position.y + (img.size.y - size) / 2
+        g.colour = CROSS_COLOUR
+        for (i in 0..size - CROSS_THICKNESS) {
+            g.fillRect(x0 + i, y0 + i, CROSS_THICKNESS, CROSS_THICKNESS)
+            g.fillRect(x0 + size - CROSS_THICKNESS - i, y0 + i, CROSS_THICKNESS, CROSS_THICKNESS)
+        }
     }
 
     /**
@@ -188,7 +207,9 @@ class PauseWindow(val game: InGameState, val close: () -> Unit) : Window() {
             lines += t["xftl_ach_best"].replace("\\1", "${best.coerceAtMost(goal.target)}/${goal.target}")
         }
         val unlock = game.mainGame.profile.getAchievement(ach)
-        lines += if (unlock != null) t["ach_" + unlock.difficulty.name.lowercase()] else t["xftl_ach_locked"]
+        lines += if (unlock != null) t[unlock.difficulty.achievementUnlockKey] else t["xftl_ach_locked"]
+        if (unlock == null && tracker.isOutOfReach(ach))
+            lines += t["xftl_ach_out_of_reach"]
         return lines.joinToString("\n")
     }
 
@@ -198,6 +219,25 @@ class PauseWindow(val game: InGameState, val close: () -> Unit) : Window() {
     }
 
     /** The achievements box's title: opens every ship's achievements (see AchievementsWindow). */
+    /**
+     * The buttons are as wide as their labels, which in some languages are
+     * wider than the space left for them (Russian's, say): then the boxes
+     * right of them (the difficulty, the DLC and the achievements) are moved
+     * right, and the window's widened, rather than the buttons running
+     * under them.
+     */
+    private fun makeRoomForTheButtons() {
+        val column = widgetTree.byId["column"] ?: return
+        val rightSide = listOf("info_difficulty", "info_dlc", "achievements").mapNotNull { widgetTree.byId[it] }
+        val left = rightSide.mapNotNull { it.parentLeft }.minOrNull() ?: return
+        val shift = column.size.x + COLUMN_GAP - left
+        if (shift <= 0)
+            return
+        for (widget in rightSide)
+            widget.parentLeft = widget.parentLeft?.plus(shift)
+        widgetTree.updateLayout()
+    }
+
     private inner class TitleButton(pos: IPoint, size: IPoint) : Button(game, pos, size) {
         // (the title's label is drawn with the rest of the box)
         override fun draw(g: Graphics) {}
@@ -270,6 +310,10 @@ class PauseWindow(val game: InGameState, val close: () -> Unit) : Window() {
     }
 
     companion object {
+        // The least gap between the buttons and the boxes right of them
+        // (see makeRoomForTheButtons): about what's left in English
+        private const val COLUMN_GAP = 12
+
         // The achievement icons' places in the box (ach1 to ach6)
         private const val ICONS = 6
 
@@ -277,5 +321,11 @@ class PauseWindow(val game: InGameState, val close: () -> Unit) : Window() {
         private const val TITLE_HEIGHT = 24
 
         private const val TOOLTIP_WIDTH = 330
+
+        // The red cross over an achievement out of reach (see drawCross):
+        // how far in from the icon's edges, and how thick
+        private const val CROSS_MARGIN = 6
+        private const val CROSS_THICKNESS = 4
+        private val CROSS_COLOUR = Colour(220, 40, 40)
     }
 }

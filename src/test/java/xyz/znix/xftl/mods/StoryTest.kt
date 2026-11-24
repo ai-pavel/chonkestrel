@@ -228,7 +228,6 @@ class StoryTest {
 
         // The Mind has a mind control system for its Chorus pulses, and the
         // Zoltan Shield Bypass, so the player's super shield doesn't stop them
-        val mind = (events.getShip("XFTL_MAINFRAME_MIND").autoBlueprint.list().single() as LazyShipBlueprint).real
         assertEquals(1, mind.loadElem().getChild("systemList").getChildren("mind").size)
         assertTrue("ZOLTAN_BYPASS" in mind.initialAugments)
     }

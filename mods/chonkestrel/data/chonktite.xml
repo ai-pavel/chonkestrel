@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The Chonktite's layout, made by tools/race_ships.py from the vanilla
+    rock_cruiser_3.xml (copyright (c) 2012 by Subset Games). Don't edit it by hand.
+-->
+<FTL>
+<img x="-140" y="-94" w="550" h="540"/>
+<offsets>
+	<floor x="132" y="86"/>
+	<cloak x="-10" y="-10"/>
+</offsets>
+<weaponMounts>
+	<mount x="260" y="40" rotate="true" mirror="true" gib="1" slide="up"/>
+	<mount x="260" y="498" rotate="true" mirror="false" gib="3" slide="down"/>
+	<mount x="460" y="60" rotate="true" mirror="true" gib="2" slide="up"/>
+	<mount x="460" y="479" rotate="true" mirror="false" gib="4" slide="down"/>
+	<mount x="349" y="90" rotate="true" mirror="true" gib="2" slide="up"/>
+	<mount x="308" y="89" rotate="true" mirror="true" gib="2" slide="up"/>
+	<mount x="140" y="30" rotate="true" mirror="true" gib="1" slide="up"/>
+	<mount x="349" y="448" rotate="true" mirror="false" gib="4" slide="down"/>
+	<mount x="308" y="449" rotate="true" mirror="false" gib="4" slide="down"/>
+</weaponMounts>
+<explosion>
+	<gib1>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="100" max="170"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>0</y>
+	</gib1>
+	<gib2>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="10" max="80"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>275</x>
+		<y>14</y>
+	</gib2>
+	<gib3>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="190" max="260"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>0</x>
+		<y>270</y>
+	</gib3>
+	<gib4>
+		<velocity min="0.2" max="0.8"/>
+		<direction min="280" max="350"/>
+		<angular min="-0.6" max="0.6"/>
+		<x>275</x>
+		<y>270</y>
+	</gib4>
+</explosion>
+</FTL>

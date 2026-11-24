@@ -179,9 +179,35 @@ object XftlDebug {
      */
     val autoplay: Boolean = isSet(System.getenv("XFTL_AUTOPLAY")) || isSet(System.getProperty("xftl.autoplay"))
 
-    // The screenshots, videos and the automatic playtest always skip it
+    /**
+     * The bulwarks' demo (XFTL_BULWARK_DEMO, or xftl.bulwark-demo): a new
+     * game against a boss full of bulwarks, with boarders for them to go
+     * after (see [xyz.znix.xftl.devutil.BulwarkDemo]).
+     */
+    val bulwarkDemo: Boolean = isSet(System.getenv("XFTL_BULWARK_DEMO")) || isSet(System.getProperty("xftl.bulwark-demo"))
+
+    /**
+     * XFTL_SHOW_FPS (or xftl.show-fps) shows the frames a second in the
+     * bottom-left corner (see MainGame.renderFps), as debug mode does, in
+     * any game.
+     */
+    val showFps: Boolean = isSet(System.getenv("XFTL_SHOW_FPS")) || isSet(System.getProperty("xftl.show-fps"))
+
+    /**
+     * Whether the game keeps running at full speed while its window isn't
+     * focused (see LWJGLGameContainer.renderWhenUnfocused), as it does
+     * unless XFTL_FULL_FPS_UNFOCUSED=0 (or xftl.full-fps-unfocused=0) slows
+     * it down to LWJGLGameContainer.UNFOCUSED_FPS, to save CPU. (Drawing a
+     * game this old at full speed hardly costs anything.)
+     */
+    val fullFpsUnfocused: Boolean =
+        (System.getenv("XFTL_FULL_FPS_UNFOCUSED") ?: System.getProperty("xftl.full-fps-unfocused"))
+            ?.let { isSet(it) } ?: true
+
+    // The screenshots, videos, the automatic playtest and the bulwarks'
+    // demo always skip it
     val skipMenu: Boolean = isSet(System.getenv("XFTL_SKIP_MENU")) || isSet(System.getProperty("xftl.skip-menu")) ||
-            recording || autoplay
+            recording || autoplay || bulwarkDemo
 
     /**
      * XFTL_SHOW_HANGAR (or xftl.show-hangar) shows the hangar buttons in the

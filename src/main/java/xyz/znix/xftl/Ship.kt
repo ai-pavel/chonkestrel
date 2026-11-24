@@ -415,6 +415,12 @@ class Ship(
     var opponentCloakActive: Boolean = false
 
     /**
+     * How many volleys the player's artillery has fired, so each goes at
+     * the next of the enemy ships (see Artillery.nextTarget).
+     */
+    var artilleryVolleys: Int = 0
+
+    /**
      * This is the list of all the possible systems that can be installed on this ship.
      *
      * It's simply the sum of all the [Room.systemSlots] lists.
@@ -788,6 +794,27 @@ class Ship(
             }
         }
 
+        // The layout's wide doors: the doors along each made one (see
+        // Door.group). One that doesn't match its doors (they aren't
+        // all there, or don't all join the same two rooms) is left as they are.
+        if (customised == null) {
+            for (wide in type.wideDoors) {
+                val group = (0 until wide.size).map { i ->
+                    val at = if (wide.isVertical) ConstPoint(wide.pos.x, wide.pos.y + i) else ConstPoint(wide.pos.x + i, wide.pos.y)
+                    doors.firstOrNull { it.isVertical == wide.isVertical && it.position == at && !it.isAirlock }
+                }
+                val found = group.filterNotNull()
+                // (whichever way round each names them)
+                val joins = found.map { setOf(it.left, it.right) }
+                if (found.size != wide.size || joins.distinct().size != 1) {
+                    println("[WARN] Ignoring wide door at ${wide.pos.x},${wide.pos.y} on ${type.name}: its doors don't match")
+                    continue
+                }
+                for (door in found)
+                    door.group = found
+            }
+        }
+
         for (room in rooms) {
             val roomDoors =
                 doors.stream().filter { d -> d.left == room || d.right == room }.collect(Collectors.toList())
@@ -825,8 +852,9 @@ class Ship(
 
         // The player's ship can buy an Artillery Beam in place of its
         // hacking or mind control (an XFTL extension): their rooms take one
-        // too, if they haven't one already (see BuyableArtillery)
-        if (isPlayerShip) {
+        // too, if they haven't one already (see BuyableArtillery). Some
+        // tests' small sets of blueprints have no Artillery Beam to buy.
+        if (isPlayerShip && sys.blueprintManager.getOrNull(Artillery.INFO.name) != null) {
             for (room in rooms) {
                 val slots = room.systemSlots
                 if (slots.none { it.spec.systemName == "hacking" || it.spec.systemName == "mind" })
@@ -881,6 +909,7 @@ class Ship(
         // last ones are left out.
         // (The trailer starts with the ship as a new game has it.)
         val debug = XftlDebug.enabled && isPlayerShip && !XftlDebug.plainPlayerShip
+        val randomDebug = debug && XftlDebug.randomize
         var mainCount = 0
         var subCount = 0
         for (config in systemSlots.sortedBy { it.spec.systemIndex }) {
@@ -942,6 +971,10 @@ class Ship(
             // This empty-name weapon isn't actually set in the vanilla XML, but
             // that's fine since only mods have ships with invalid weapon names.
             var weapon = sys.blueprintManager.getOrNull(name)
+            // (a made-up debug loadout's weapon that isn't there, without the
+            // mod's triple weapons, say, leaves its slot empty)
+            if (weapon == null && type.usesMadeUpDebugLoadout)
+                continue
             if (weapon == null) {
                 println("[WARN] Invalid weapon '$name' in ship '${this.name}' initial weapons")
                 weapon = sys.blueprintManager[""]
@@ -985,7 +1018,7 @@ class Ship(
         // Zoltan shields, and with XFTL_RANDOMIZE, random ones.
         val initialAugments = when {
             XftlDebug.zoltan && isPlayerShip -> List(maxAugments) { AugZoltanShield.NAME }
-            debug && XftlDebug.randomize -> randomDebugAugments()
+            randomDebug -> randomDebugAugments()
             else -> type.initialAugments
         }
         for (name in initialAugments) {
@@ -1020,7 +1053,7 @@ class Ship(
         // In debug mode, the drones systems and the cargo hold are full of
         // twin and triple drones (and with XFTL_RANDOMIZE, the weapons are
         // random too)
-        if (debug && XftlDebug.randomize) {
+        if (randomDebug) {
             randomizeDebugWeapons()
         } else if (debug) {
             fillDebugDrones()
@@ -2382,6 +2415,34 @@ class Ship(
     }
 
     /**
+     * For debug mode, for a ship without a debug loadout of its own (see
+     * ShipBlueprint.hasOwnDebugLoadout): a full crew, someone of each race in
+     * turn at every station that's empty, then anywhere, up to [maxCrew].
+     * No Lanius, who'd drain the air from the room they're in.
+     */
+    fun fillDebugCrew() {
+        val races = DEBUG_CREW_RACES.mapNotNull { sys.blueprintManager.getOrNull(it) as? CrewBlueprint }
+        if (races.isEmpty())
+            return
+        var next = 0
+        fun add(room: Room?): Boolean {
+            if (crew.size >= maxCrew)
+                return false
+            val before = crew.size
+            addCrewMember(LivingCrewInfo.generateRandom(races[next++ % races.size], sys), true, false, room)
+            return crew.size > before
+        }
+        for (system in systems) {
+            val room = system.room ?: continue
+            if (system.info.canBeManned && room.crew.isEmpty())
+                add(room)
+        }
+        while (add(null)) {
+            // (until it's full, or there's nowhere left to put them)
+        }
+    }
+
+    /**
      * For XFTL_RANDOMIZE: a random mix of different augments, filling the
      * augment slots, always with the Weapon Pre-Igniter, so the weapons are
      * ready to fire straight away, and a Zoltan shield.
@@ -3245,11 +3306,11 @@ class Ship(
 
         /**
          * The scrap a player ship of this size starts with: vanilla's (30 on
-         * easy, 10 otherwise), times its size.
+         * easy, 10 otherwise, see [Difficulty.startingScrapPerSize]), times its size.
          */
         @JvmStatic
         fun startingScrap(difficulty: Difficulty, shipSize: Int): Int =
-            (if (difficulty == Difficulty.EASY) 30 else 10) * shipSize
+            difficulty.startingScrapPerSize * shipSize
 
         /**
          * The maximum number of main systems a ship has, unless its blueprint says otherwise.
@@ -3283,6 +3344,9 @@ class Ship(
         }
 
         val RANDOMIZE_EXCLUDED = setOf("BOMB_HEAL", "BOMB_HEAL_SYSTEM", "BEAM_BIO", "BEAM_FIRE")
+
+        // The races a debug crew's made of, in turn (see fillDebugCrew)
+        private val DEBUG_CREW_RACES = listOf("human", "engi", "mantis", "rock", "energy", "slug", "crystal")
     }
 
     class Hardpoint(val spec: ShipBlueprint.ParsedHardpoint) {
@@ -3373,7 +3437,9 @@ class BuyableArtillery(override val systemIndex: Int) : ISystemConfiguration {
     override val systemName: String get() = Artillery.INFO.name
     override val slotNumber: Int? get() = null
     override val slotDirection: Direction? get() = null
-    override val startingPower: Int get() = 0
+    // (bought at one bar, as a system the blueprint lists is; at none it
+    // was broken, and crashed the upgrades screen)
+    override val startingPower: Int get() = 1
     override val availableByDefault: Boolean get() = false
     override val aiMaxPower: Int? get() = null
     override val interiorImage: String? get() = null

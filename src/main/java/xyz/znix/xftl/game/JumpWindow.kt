@@ -237,7 +237,7 @@ class JumpWindow(
         }
 
         val nextFleetPos = Point(sector.dangerZoneCentre)
-        nextFleetPos.x += sector.getFleetAdvanceFor(game.currentBeacon, game.player.type.shipSize)
+        nextFleetPos.x += nextFleetAdvance()
 
         // Whether or not the ship is equipped with long-range scanners
         val hasLRS = game.player.hasAugment(AugmentBlueprint.LONG_RANGE_SCANNERS)
@@ -434,9 +434,14 @@ class JumpWindow(
         }
     }
 
+    // How far the fleet advances on the next jump (with its extra step, on insane)
+    private fun nextFleetAdvance(): Int = sector.getFleetAdvanceFor(
+        game.currentBeacon, game.player.type.shipSize, sector.isFleetExtraStep(game.difficulty)
+    )
+
     private fun drawDangerZone(g: Graphics) {
         val dangerZoneRHS = sector.dangerZoneCentre.x + Sector.DANGER_ZONE_RADIUS
-        val nextDangerZoneRHS = dangerZoneRHS + sector.getFleetAdvanceFor(game.currentBeacon, game.player.type.shipSize)
+        val nextDangerZoneRHS = dangerZoneRHS + nextFleetAdvance()
         fleetAdvanceImg.draw(
             mapBase.x + nextDangerZoneRHS - 181f,
             mapBase.y + sector.dangerZoneCentre.y - 498f

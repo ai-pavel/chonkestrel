@@ -261,3 +261,14 @@ DOOR
 16
 0
 1
+DOOR
+4
+6
+0
+15
+1
+XFTL_WIDE_DOOR
+4
+5
+1
+2

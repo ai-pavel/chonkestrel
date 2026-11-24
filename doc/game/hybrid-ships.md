@@ -19,7 +19,9 @@ A hybrid has:
   back ship's behind a line of its, lined up on the same grid (a room the
   line goes through keeps its part on that side), with doors
   between the rooms either side of the join (and to any of the rooms that
-  had no doors in the vanilla ship);
+  had no doors in the vanilla ship), and a door on every cell of the
+  walls between big empty rooms, for the bulwarks (see
+  [ship-shapes.md](ship-shapes.md), Wide passages);
 - each half's systems in its own rooms. A system the front half has
   already becomes the back race's own instead (`SIGNATURE`: mind control
   for the Slugs, a teleporter for the Mantis and Crystals, hacking for the
@@ -100,7 +102,7 @@ them: one without gets one, in a room without a system or in place of its
 least needed one (`LEAST_NEEDED`), and a long one keeps it when it's cut
 down to 10 systems. It gets enough drone slots and parts for them too.
 Some of a bigger or Engi hybrid's anti-personnel drones are bulwarks:
-big ones standing guard in its empty hold (`ShipGenerator.withBulwarks`,
+big ones walking its empty hold (`ShipGenerator.withBulwarks`,
 see [drone-sizes.md](drone-sizes.md#bulwarks) and
 [ship-shapes.md](ship-shapes.md#bigger-versions)).
 

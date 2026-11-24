@@ -22,6 +22,17 @@ extensions of its own, which the Chonkestrel mod (`mods/chonkestrel`) uses.
   never fewer).
 - `<xftlDefaultShip/>` makes a ship the one picked by default in the hangar,
   and puts it first in the ship list.
+- `<xftlVanillaShip>` names the vanilla player ship a big player ship was
+  made from (`<xftlVanillaShip>PLAYER_SHIP_CIRCLE</xftlVanillaShip>`): the
+  hangar's Normal and Chonky buttons switch between the two (see
+  [race-ships.md](../game/race-ships.md#in-the-hangar)).
+
+## Text
+
+The Chonkestrel mod's events and blueprints refer to their text by key, as
+vanilla's do (`<text id="..."/>`), so it can be translated: write new ones
+with their English in them, and `tools/extract_mod_text.py` moves it into
+the mod's English text files. See [translations.md](translations.md).
 
 ## Sectors and events
 
@@ -41,7 +52,11 @@ for big ships, and use big hostile ships when there are some. See
 third of the time a triple one (see [weapon-sizes.md](../game/weapon-sizes.md)).
 A quest with `xftlAhead="true"` (`<quest event="..." xftlAhead="true"/>`)
 goes on the way to the sector's exit, at least three jumps on and as near the
-exit as it can be, or else in the next sector (`Sector.addQuest`). An event's
+exit as it can be, or else in the next sector (`Sector.addQuest`). One with
+`xftlHidden="true"` isn't marked on the map, keeps its beacon's hazards, and
+says nothing when it's added, so it's a trap waiting at one of the beacons
+(`Beacon.hasHiddenQuest`): the archivist who sells the ship's data
+(`XFTL_CIV_ARCHIVIST_AMBUSH`). An event's
 ship with `xftlAlone="true"` fights alone, with no wingmen, and is never a
 bigger version, so its rewards come once (for quests, whose rewards are set
 by hand).

@@ -190,11 +190,38 @@ class LockdownTest {
         // Nothing to lock down yet
         assertFalse(room.isLockedDown)
 
-        // A boarder of the player's comes in, and it's locked in with them
+        // A boarder of the player's comes in, and it's locked in with them,
+        // after a moment (for the rest of its side coming in with it)
         kit.addCrew(enemy, room, mode = AbstractCrew.SlotType.INTRUDER, owner = kit.player)
-        kit.run(0.5f)
+        kit.run(0.2f)
+        assertFalse(room.isLockedDown)
+        kit.run(CrewCrystal.AI_LOCKDOWN_DELAY + 0.3f)
         assertTrue(room.isLockedDown)
         assertTrue(crystal.lockdownCooldown > 0f)
+    }
+
+    @Test
+    fun testTheEnemysCrystalsWaitForTheirSideToComeIn() {
+        val kit = createKit()
+        kit.state.debugSpawnShip(kit.state.eventManager.getShip("TEST_LOCKDOWN_ENEMY"), Difficulty.NORMAL, 0, 1)
+        val enemy = kit.state.enemy!!
+        val room = enemy.rooms[2]
+        kit.addCrew(enemy, room, race = "crystal")
+
+        // One of its side on the way in, from the far end of the ship, and
+        // a boarder of the player's in the room
+        val far = enemy.rooms.maxBy { (it.x - room.x) * (it.x - room.x) + (it.y - room.y) * (it.y - room.y) }
+        val ally = kit.addCrew(enemy, far)
+        ally.setTargetRoom(room)
+        kit.addCrew(enemy, room, mode = AbstractCrew.SlotType.INTRUDER, owner = kit.player)
+
+        // It waits while they're coming, but not for ever
+        kit.run(CrewCrystal.AI_LOCKDOWN_DELAY + 0.1f)
+        // (unless the crew AI's sent them somewhere else)
+        if (ally.room != room && ally.pathingTarget?.room == room)
+            assertFalse(room.isLockedDown)
+        kit.run(CrewCrystal.AI_LOCKDOWN_MAX_WAIT)
+        assertTrue(room.isLockedDown)
     }
 
     @Test

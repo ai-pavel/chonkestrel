@@ -278,6 +278,11 @@ class StoreData {
         forcedSystems.removeIf { !canBuy(ship, it) }
         possibleSystems.removeIf { !canBuy(ship, it) }
 
+        // The Artillery Beam (bought in place of hacking or mind control, see
+        // BuyableArtillery) is rare: it's only offered some of the time
+        if (rand.nextFloat() >= ARTILLERY_CHANCE)
+            possibleSystems.removeIf { it.info == Artillery.INFO }
+
         // The forced systems first (as in vanilla, they're always offered),
         // then the others at random, three at most in all (or however many
         // the store has a section). With fewer to offer, the rest of the
@@ -397,6 +402,12 @@ class StoreData {
     }
 
     companion object {
+        /**
+         * The chance of a store's systems offering the Artillery Beam, when
+         * the ship could buy it (see generateSystems).
+         */
+        const val ARTILLERY_CHANCE = 0.3f
+
         /**
          * The chance of a store's augments section having a Zoltan Shield (see
          * addZoltanShield), at the start of the game and at the end.

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FTL>
+    <!--
+    XFTL's own strings in French (Français): the translations of
+    assets/lang/en.xml, which the game shows on top of vanilla's
+    data/text-fr.xml. Any string missing here is shown in English.
+
+    Write each one as en.xml has it, with the same name:
+        <text name="xftl_button_back">...</text>
+    Leave out the xftl_select_datafile_* and xftl_screen_small_* strings:
+    they're shown before the game has FTL's fonts, in one with only English
+    letters, so they stay in English.
+
+    - Keep the placeholders \1, \2 and \3: the game puts a number or a
+      name in their place. They can move within the sentence.
+    - \n is a line break. Keep the ones in short texts (such as the
+      confirmation boxes), which are laid out by hand.
+    - Escape & as &amp;, < as &lt; and > as &gt;.
+    - Only use characters FTL's fonts have: the Latin letters with accents
+      and the Cyrillic alphabet are fine, but not typographic quotes,
+      apostrophes and dashes (use " ' and -), nor the ellipsis (use ...).
+    - The buttons and titles have a fixed size: keep them about as long as
+      the English. The ones in capitals are in capitals in the game too.
+    - Use the words vanilla FTL's own French uses (data/text-fr.xml in
+      ftl.dat), for the systems, races, resources and so on.
+
+    Check it with: python3 tools/check_translations.py fr
+    (see doc/tools/translations.md, which also has a list of the missing ones
+    to start from).
+    -->
+
+    <text name="xftl_edit_ship">MODIFIER</text>
+    <text name="xftl_clear_edit_ship">ANNULER MODIFS</text>
+    <text name="xftl_hangar_type">TYPE</text>
+    <text name="xftl_hangar_normal">NORMAL</text>
+    <text name="xftl_hangar_chonky">DODU</text>
+    <text name="xftl_options_display">Configurer l'affichage</text>
+    <text name="xftl_button_back">RETOUR</text>
+    <text name="xftl_button_reset">EFFACER</text>
+    <text name="xftl_stats_reset_confirm">Êtes-vous sûr ?\nToutes vos statistiques\nseront effacées.</text>
+    <text name="xftl_display_title">AFFICHAGE</text>
+    <text name="xftl_display_desc">L'interface nécessite au moins 1920x1080.</text>
+    <text name="xftl_options_language">Changer de langue</text>
+    <text name="xftl_language_title">LANGUE</text>
+    <text name="xftl_language_desc">La langue des textes du jeu :</text>
+    <text name="xftl_language_later">En cours de partie, la nouvelle langue s'appliquera au prochain retour au menu principal ou à la prochaine partie.</text>
+    <text name="xftl_mainmenu_statistics">STATISTIQUES</text>
+    <text name="xftl_escape_statistics">STATISTIQUES</text>
+    <text name="xftl_escape_achievements_button">EXPLOITS</text>
+    <text name="xftl_stats_title">MEILLEURS SCORES</text>
+    <text name="xftl_stats_none">Aucune partie terminée pour l'instant.</text>
+    <text name="xftl_stats_started">Début</text>
+    <text name="xftl_stats_duration">Durée de jeu</text>
+    <text name="xftl_stats_difficulty">Difficulté</text>
+    <text name="xftl_stats_names">Noms d'équipage</text>
+    <text name="xftl_stats_sector">Secteur</text>
+    <text name="xftl_stats_beacons">Balises explorées</text>
+    <text name="xftl_stats_ships">Vaisseaux vaincus</text>
+    <text name="xftl_stats_crews_killed">Équipages tués</text>
+    <text name="xftl_stats_scrap">Ferraille récupérée</text>
+    <text name="xftl_stats_crew_lost">Hommes perdus</text>
+    <text name="xftl_stats_crew">Équipage (survolez-les pour leurs talents)</text>
+    <text name="xftl_stats_systems">Systèmes</text>
+    <text name="xftl_stats_weapons">Armes</text>
+    <text name="xftl_stats_drones">Drones</text>
+    <text name="xftl_stats_augments">Augmentations</text>
+    <text name="xftl_stats_won">Victoire</text>
+    <text name="xftl_stats_destroyed">Vaisseau détruit</text>
+    <text name="xftl_stats_crew_dead">Équipage tué</text>
+    <text name="xftl_stats_lost">Défaite</text>
+    <text name="xftl_mainmenu_exit">QUITTER</text>
+    <text name="xftl_mainmenu_achievements">EXPLOITS</text>
+    <text name="xftl_escape_achievements">Exploits - tous les vaisseaux</text>
+    <text name="xftl_escape_achievements_tip">Voir les exploits de chaque vaisseau.</text>
+    <text name="xftl_ach_title">EXPLOITS</text>
+    <text name="xftl_ach_none">Aucun vaisseau n'a d'exploits à suivre.</text>
+    <text name="xftl_ach_this_game">Cette partie : \1</text>
+    <text name="xftl_ach_best">Meilleure partie : \1</text>
+    <text name="xftl_ach_locked">Bloqué</text>
+    <text name="xftl_ach_out_of_reach">Impossible à obtenir dans cette partie</text>
+    <text name="xftl_ach_insane">Débloqué en mode DÉMENT</text>
+    <text name="xftl_new_game_names">NOMS</text>
+    <text name="xftl_insane_button">DÉMENT</text>
+    <text name="xftl_names_default">Par défaut</text>
+    <text name="xftl_names_random">Aléatoire</text>
+    <text name="xftl_names_all">TOUS</text>
+    <text name="xftl_names_american">Américains</text>
+    <text name="xftl_names_english">Anglais</text>
+    <text name="xftl_names_irish">Irlandais</text>
+    <text name="xftl_names_scottish">Écossais</text>
+    <text name="xftl_names_french">Français</text>
+    <text name="xftl_names_spanish">Espagnols</text>
+    <text name="xftl_names_italian">Italiens</text>
+    <text name="xftl_names_german">Allemands</text>
+    <text name="xftl_names_russian">Russes</text>
+    <text name="xftl_names_arabic">Arabes</text>
+    <text name="xftl_names_turkish">Turcs</text>
+    <text name="xftl_names_indian">Indiens</text>
+    <text name="xftl_names_chinese">Chinois</text>
+    <text name="xftl_names_japanese">Japonais</text>
+    <text name="xftl_names_korean">Coréens</text>
+    <text name="xftl_names_starwars">Star Wars</text>
+    <text name="xftl_names_startrek">Star Trek</text>
+    <text name="xftl_names_masseffect">Mass Effect</text>
+    <text name="xftl_confirm_overwrite_save">Êtes-vous sûr ?\nVotre sauvegarde\nsera écrasée.</text>
+    <text name="xftl_fleet_rewards">Une fois les vaisseaux ennemis neutralisés, vous récupérez ce qu'il en reste :\n</text>
+    <text name="xftl_reward_scrap">\1 ferraille</text>
+    <text name="xftl_reward_fuel">\1 carburant</text>
+    <text name="xftl_reward_missiles">\1 missiles</text>
+    <text name="xftl_reward_drones">\1 pièces de drone</text>
+    <text name="xftl_reward_nothing">rien</text>
+    <text name="xftl_max_piercing">Perforation max. : \1</text>
+    <text name="xftl_weapon_combined">\1 en une : tire sur jusqu'à \1 vaisseaux ennemis à la fois</text>
+    <text name="xftl_weapon_combined_beam">\1 en une : un long rayon, qui traverse jusqu'à \1 vaisseaux ennemis</text>
+    <text name="xftl_weapon_title_x2">Double \1</text>
+    <text name="xftl_weapon_title_x3">Triple \1</text>
+    <text name="xftl_weapon_short_x2">\1 (x2)</text>
+    <text name="xftl_weapon_short_x3">\1 (x3)</text>
+    <text name="xftl_level_manned">Avec homme</text>
+    <text name="xftl_artillery_5">17 secondes de recharge, 2 vaisseaux</text>
+    <text name="xftl_artillery_6">14 secondes de recharge, 3 vaisseaux</text>
+    <text name="xftl_crew_killed">ÉQUIPAGE TUÉ</text>
+    <text name="xftl_mind_duration">Dure \1 secondes</text>
+    <text name="xftl_fleet_surrender">Leur capitaine parle au nom de tout le groupe : si vous acceptez, les autres vaisseaux cesseront le combat eux aussi.</text>
+    <text name="xftl_fleet_reward_single">Une fois le vaisseau ennemi neutralisé, vous récupérez ce qu'il en reste.</text>
+    <text name="xftl_hotkeys_crew_group">GESTION DE L'ÉQUIPAGE</text>
+    <text name="xftl_hotkeys_system_power_group">PUISSANCE DES SYSTÈMES</text>
+    <text name="xftl_hotkeys_weapons_group">ARMES ET DRONES</text>
+    <text name="xftl_hotkeys_system_actions_group">ACTIONS DES SYSTÈMES</text>
+    <text name="xftl_hotkeys_ui_group">CONTRÔLE DU JEU</text>
+    <text name="xftl_hotkeys_dev_group">TRICHES ET MODDING</text>
+    <text name="xftl_hotkeys_default_tooltip">Par défaut : \1</text>
+    <text name="xftl_hotkeys_default_tooltip_none">Par défaut : aucun</text>
+    <text name="xftl_hotkeys_conflicts_tooltip">En conflit avec :</text>
+    <text name="xftl_hotkeys_crew9">Choisir homme 9</text>
+    <text name="xftl_hotkeys_crew10">Choisir homme 10</text>
+    <text name="xftl_hotkeys_crew11">Choisir homme 11</text>
+    <text name="xftl_hotkeys_crew12">Choisir homme 12</text>
+    <text name="xftl_hotkeys_crew13">Choisir homme 13</text>
+    <text name="xftl_hotkeys_crew14">Choisir homme 14</text>
+    <text name="xftl_hotkeys_crew15">Choisir homme 15</text>
+    <text name="xftl_hotkeys_crew16">Choisir homme 16</text>
+    <text name="xftl_hotkeys_weapon5">Empl. arme 5</text>
+    <text name="xftl_hotkeys_weapon6">Empl. arme 6</text>
+    <text name="xftl_hotkeys_weapon7">Empl. arme 7</text>
+    <text name="xftl_hotkeys_weapon8">Empl. arme 8</text>
+    <text name="xftl_hotkeys_console">Console de débogage</text>
+    <text name="xftl_hotkeys_frame_step">Reprendre 10 ms</text>
+    <text name="xftl_hotkeys_fast_forward">Avance rapide</text>
+    <text name="xftl_big_ship_salvage">Le reste de l'épave du grand vaisseau a de quoi récupérer davantage.</text>
+    <text name="xftl_hybrid_salvage">L'hybride était fait de deux vaisseaux soudés en un seul : son épave a de quoi récupérer davantage.</text>
+    <text name="xftl_sector_legend_hazard">Dangereux</text>
+    <text name="xftl_sector_hazard">Secteur dangereux non identifié</text>
+    <text name="xftl_artillery_skill">Artillerie rechargée \1% plus vite</text>
+    <text name="xftl_drones_skill">Drones rechargés \1% plus vite</text>
+    <text name="xftl_drones_skill_infobox">\1 avec un homme aux drones ou au piratage.</text>
+    <text name="xftl_drones_skill_tooltip">Talent Drones :\n\1\nLes drones abattus reviennent, et les impulsions de piratage se rechargent, d'autant plus vite.</text>
+    <text name="xftl_hacking_skill">Piratage rechargé \1% plus vite</text>
+    <text name="xftl_life_skill">Support vital \1% plus rapide</text>
+    <text name="xftl_life_skill_infobox">\1 avec un homme au contrôle mental ou à l'oxygène.</text>
+    <text name="xftl_life_skill_tooltip">Talent Support vital :\n\1\nLe contrôle mental se recharge, et l'oxygène se remplit, d'autant plus vite.</text>
+    <text name="xftl_mind_skill">Contrôle mental rechargé \1% plus vite</text>
+    <text name="xftl_oxygen_skill">Oxygène rempli \1% plus vite</text>
+    <text name="xftl_sensors_nebula">Bloqués par la nébuleuse : vos capteurs ne fonctionnent pas ici.</text>
+    <text name="xftl_map_extreme_loc">DANGER EXTRÊME : deux dangers à la fois.</text>
+    <text name="xftl_map_catastrophic_loc">DANGER CATASTROPHIQUE : trois dangers à la fois.</text>
+    <text name="xftl_map_apocalyptic_loc">DANGER APOCALYPTIQUE : une nébuleuse, des astéroïdes, un soleil et un pulsar, tout à la fois.</text>
+    <text name="xftl_map_radiation_loc">Nébuleuse radioactive. Les radiations blessent lentement tout homme d'équipage hors de l'infirmerie ou de la salle des clones, et perturbent vos capteurs.</text>
+    <text name="xftl_map_mirage_loc">Nébuleuse mirage. Des échos fantômes rendent votre carte peu fiable : vaisseaux et dangers ne sont peut-être pas ce qu'ils semblent être.</text>
+    <text name="xftl_map_dark_loc">Nébuleuse obscure. Rien ne traverse cette nébuleuse : vos capteurs et vos drones ne fonctionneront pas ici.</text>
+    <text name="xftl_map_mirage_confused">Vos capteurs sont trompés par la nébuleuse mirage. Ces informations sont peut-être fausses.</text>
+    <text name="xftl_map_chorus_loc">Sous l'emprise du Chœur. Le signal de CONCORD est si fort ici que vos capteurs montrent ce qu'il veut : vaisseaux et dangers ne sont peut-être pas ce qu'ils semblent être.</text>
+    <text name="xftl_warning_radiation">NÉBULEUSE RADIOACTIVE</text>
+    <text name="xftl_warning_mirage">MIRAGE\nVISION PEU FIABLE</text>
+    <text name="xftl_warning_dark">OBSCURITÉ\nDRONES HORS LIGNE</text>
+    <text name="xftl_map_boss_loc">Le boss du secteur garde la sortie : vous ne pourrez pas quitter le secteur avant de l'avoir vaincu.</text>
+    <text name="xftl_zoltan_shield_boarded">Vos hommes ont pris d'assaut deux vaisseaux équipés de boucliers zoltans. Vos ingénieurs démontent le meilleur des deux générateurs de bouclier et le branchent sur votre propre vaisseau.</text>
+    <text name="xftl_exit_hold_broken">Le vaisseau de commandement disparu, le blocus s'effondre, et la flotte rebelle derrière vous se rue en avant pour combler la brèche. Ses vaisseaux tiennent déjà les autres sorties de la ligne. Il ne reste qu'une voie : en avant, hors du secteur.</text>
+
+</FTL>

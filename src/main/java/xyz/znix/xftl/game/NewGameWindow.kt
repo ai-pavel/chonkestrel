@@ -15,8 +15,8 @@ import kotlin.math.roundToInt
  * preset (see [CrewNameManager]), in the game's own window with its title on
  * a tab, like the options windows.
  *
- * There's a fourth difficulty's button after hard, which can't be picked
- * yet. The presets are in three groups, with a gap between them: the game's
+ * There are four difficulties, XFTL's own insane after vanilla's three
+ * (see [Difficulty]). The presets are in three groups, with a gap between them: the game's
  * own names (the default), a random preset (picked when the game starts)
  * and all of them at once; then the countries' and languages' names; then
  * the characters' names, from films, series and games.
@@ -37,8 +37,8 @@ class NewGameWindow(
     private var difficulty = Difficulty.NORMAL
     private var namePreset = CrewNameManager.DEFAULT_PRESET
 
-    // The difficulties, and the one to come (null), which can't be picked yet
-    private val difficulties: List<Difficulty?> = Difficulty.entries + null
+    // The difficulties, easiest first
+    private val difficulties: List<Difficulty> = Difficulty.entries
 
     private val presetGroups = listOf(
         listOf(CrewNameManager.DEFAULT_PRESET, RANDOM_PRESET, CrewNameManager.ALL_PRESET),
@@ -67,14 +67,13 @@ class NewGameWindow(
     init {
         val difficultyWidth = columnWidth(difficulties.size)
         for ((i, choice) in difficulties.withIndex()) {
-            val label = game.translator[choice?.startButtonKey ?: FOURTH_DIFFICULTY_KEY]
+            val label = game.translator[choice.startButtonKey]
             buttons += ChoiceButton(
                 ConstPoint(PADDING + i * (difficultyWidth + COLUMN_GAP), DIFFICULTY_TOP),
                 ConstPoint(difficultyWidth, ROW - ROW_GAP),
                 label, buttonFont,
-                selected = { choice != null && choice == difficulty },
-                enabled = choice != null
-            ) { difficulty = choice!! }
+                selected = { choice == difficulty }
+            ) { difficulty = choice }
         }
 
         val presetWidth = columnWidth(PRESET_COLUMNS)
@@ -186,9 +185,6 @@ class NewGameWindow(
     }
 
     companion object {
-        // The fourth difficulty's name, for its button, which can't be picked yet
-        private const val FOURTH_DIFFICULTY_KEY = "xftl_difficulty_fourth"
-
         // Picks one of the presets at random when the game starts
         private const val RANDOM_PRESET = "random"
 

@@ -429,9 +429,10 @@ class LazyShipBlueprint(
     // See ShipBlueprint.shipSize
     val shipSize: Int = elem.getChildTextTrim("shipSize")?.toIntOrNull()?.coerceAtLeast(1) ?: 1
 
-    // See ShipBlueprint.shape and variantOf
+    // See ShipBlueprint.shape, variantOf and vanillaShip
     val shape: ShipShape = ShipShape.parse(elem.getChildTextTrim("xftlShape"), shipSize, name)
     val variantOf: List<String> = parseVariantOf(elem)
+    val vanillaShip: String? = elem.getChildTextTrim("xftlVanillaShip")?.takeIf { it.isNotEmpty() }
 }
 
 /**

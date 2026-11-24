@@ -32,7 +32,8 @@ import java.time.format.DateTimeFormatter
  * (see [Trailer]), a [timeline] of scripted fights, recording every frame
  * into a video with ffmpeg, then quits. Turn it on with XFTL_VIDEO (see
  * [XftlDebug]), which also starts a game with the default ship (the
- * Chonkestrel). The video's named after the time it was recorded, such as
+ * Chonkestrel); the trailer gives it a new ship for each fight (see
+ * [InGameState.debugReplacePlayerShip]). The video's named after the time it was recorded, such as
  * trailer-20261024-173718.mp4. The fights are fought by [BattleDriver],
  * which the screenshot generator uses too.
  *
@@ -355,7 +356,7 @@ class VideoDirector(
 
         /**
          * Each enemy ship teleports a couple of its crew aboard, each into a
-         * different room of the Chonkestrel, or with [randomRooms], each
+         * different room of the player's ship, or with [randomRooms], each
          * boarder into a room at random. With [onlyWithTeleporters], only
          * the ships with a teleporter do.
          */
@@ -952,7 +953,7 @@ class VideoDirector(
             val elem = Element("ship")
                 .setAttribute("name", "XFTL_VIDEO_$blueprint")
                 .setAttribute("auto_blueprint", blueprint)
-            elem.addContent(outcome("destroyed", "$description breaks apart under the Chonkestrel's guns."))
+            elem.addContent(outcome("destroyed", "$description breaks apart under your guns."))
             elem.addContent(outcome("deadCrew", "$description drifts silently, its crew dead."))
             return EnemyShipSpec(elem, game.blueprintManager, game.eventManager)
         }

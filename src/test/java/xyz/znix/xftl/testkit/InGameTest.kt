@@ -17,6 +17,7 @@ class InGameTest(
     playerShip: String = "TEST_SHIP",
     /** Replaces the test sector_data.xml, if set. */
     sectorData: String? = null,
+    difficulty: Difficulty = Difficulty.NORMAL,
 ) {
     val state: InGameState
     val player: Ship get() = state.player
@@ -37,6 +38,9 @@ class InGameTest(
             // A ship with bigger rooms (2x2 and 3x3), for the bulwarks
             "data/test_big_ship.xml",
             "data/test_big_ship.txt",
+            // Big rooms joined by a passage two doors wide, and by a single door
+            "data/test_bulwark_ship.xml",
+            "data/test_bulwark_ship.txt",
             "img/ship/test_ship_base.png",
 
             "data/names.xml",
@@ -99,7 +103,7 @@ class InGameTest(
             null,
             null
         )
-        state = InGameState(null, content, playerShip, Difficulty.NORMAL, null)
+        state = InGameState(null, content, playerShip, difficulty, null)
     }
 
     /**

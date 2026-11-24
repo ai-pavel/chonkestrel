@@ -28,7 +28,20 @@ a fight with each of the four size 3 bosses, at its sector's exit (see
 [bosses.md](../game/bosses.md)), alone, with
 their crew shown even in the Stormbreaker's ion storm, and then the
 Devourer's rewards window (resources, weapons, a drone, augments and a crew
-member), to check how the rewards are laid out.
+member), to check how the rewards are laid out. Each scene has a different
+big Type C ship, in the hangar's order, so the site shows every layout (the
+trailer has the As and Bs): the Chonkswallow (`PLAYER_SHIP_CHONKESTREL_3`)
+against the Devourer, the Engi C (`PLAYER_SHIP_XFTL_ENGI_3`) against the
+Blockade Command, the Zoltan C (`PLAYER_SHIP_XFTL_ZOLTAN_3`) against the
+Stormbreaker, the Mantis C (`PLAYER_SHIP_XFTL_MANTIS_3`) against the
+Ossuary, and the Slug C (`PLAYER_SHIP_XFTL_SLUG_3`) for the rewards.
+Between them are the six ships of the Mainframe (see
+[mainframe.md](../game/mainframe.md)), each alone in the final sector,
+against the four Type Cs again in turn, to check their wide doors (see
+[ship-shapes.md](../game/ship-shapes.md)). Each is
+new, as a new game in debug mode starts it, with its debug loadout (made
+up, for these, as full as the Chonkestrel's) and a full crew; the last
+scene's ship goes with it (see `InGameState.debugReplacePlayerShip`).
 
 `XFTL_SCREENSHOTS_SET=shape`, `hybrid` and `mixed` take other sets of
 screenshots, of the long and wide

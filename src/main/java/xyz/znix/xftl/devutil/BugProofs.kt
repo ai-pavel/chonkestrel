@@ -3,6 +3,7 @@ package xyz.znix.xftl.devutil
 import org.jdom2.Element
 import xyz.znix.xftl.Blueprint
 import xyz.znix.xftl.Ship
+import xyz.znix.xftl.ShipShape
 import xyz.znix.xftl.XftlDebug
 import xyz.znix.xftl.augments.AugmentBlueprint
 import xyz.znix.xftl.augments.AugZoltanShield
@@ -428,6 +429,30 @@ object BugProofs {
         // an Anti-Personnel Drone, whose stores' drones systems come with
         // something else
         freeDroneIsNotOneTheShipHas(),
+
+        // "On ships with three drone systems, the third (actually the first)
+        // is covered by a long third enemy ship": the Chonktorus, against
+        // two ships and a long one
+        Scenario("third-drones-box-clear-of-a-long-third-enemy", settleSeconds = 2f, caption = {
+            "Drones boxes: the Chonktorus's three against a long third enemy: the first system's box is " +
+                    "right of the bottom one, not stacked up under the long window"
+        }) { game ->
+            val newGame = newGame(game, "PLAYER_SHIP_XFTL_ENGI")
+            newGame.debugFlags.noEnemyFire.set = true
+            val spec = VideoDirector.enemySpec(newGame, "AUTO_ASSAULT", "The enemy")
+            newGame.debugFightShapes(spec, listOf(ShipShape.NORMAL, ShipShape.NORMAL, ShipShape.LONG))
+        },
+        // ...and the same for the Rocks' three weapons systems, against a
+        // wide ship, which pushes the long one over the weapons boxes
+        Scenario("third-weapons-box-clear-of-a-long-third-enemy", settleSeconds = 2f, caption = {
+            "Weapons boxes: the Chonkwark's three against a wide ship and a long one: the first system's box is " +
+                    "right of the bottom one, not stacked up under the long window"
+        }) { game ->
+            val newGame = newGame(game, "PLAYER_SHIP_XFTL_ROCK")
+            newGame.debugFlags.noEnemyFire.set = true
+            val spec = VideoDirector.enemySpec(newGame, "AUTO_ASSAULT", "The enemy")
+            newGame.debugFightShapes(spec, listOf(ShipShape.NORMAL, ShipShape.WIDE, ShipShape.LONG))
+        },
     )
 
     /**

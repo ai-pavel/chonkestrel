@@ -11,12 +11,14 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.InputAdapter;
 import xyz.znix.xftl.BuildInfo;
 import xyz.znix.xftl.Datafile;
+import xyz.znix.xftl.Language;
 import xyz.znix.xftl.SILFontLoader;
 import xyz.znix.xftl.VanillaDatafile;
 import xyz.znix.xftl.Utils;
 import xyz.znix.xftl.XftlDebug;
 import xyz.znix.xftl.devutil.DebugConsole;
 import xyz.znix.xftl.devutil.IconDirector;
+import xyz.znix.xftl.devutil.BulwarkDemo;
 import xyz.znix.xftl.devutil.ScreenshotDirector;
 import xyz.znix.xftl.devutil.AutoplayDirector;
 import xyz.znix.xftl.devutil.VideoDirector;
@@ -74,6 +76,14 @@ public class MainGame implements Game {
 
     private SaveProfile profile;
 
+    // The language the game's text is in (see Language): XFTL_LANG's, or
+    // the profile's, until another's picked in the options
+    private Language language = Language.ENGLISH;
+
+    // Set when another language is picked in the main menu's options, to
+    // show the menu again in it (see update)
+    private boolean languageReloadPending = false;
+
     private Cursor currentCursor;
 
     public MainGame(CommandLineArgs args) {
@@ -99,6 +109,14 @@ public class MainGame implements Game {
         }
 
         profile = loadProfile();
+
+        // A new profile starts in the computer's language, if the game has
+        // it (or English), and keeps it until another's picked
+        if (Language.fromCode(profile.getLanguage()) == null) {
+            profile.setLanguage(Language.fromLocale().getCode());
+        }
+        Language savedLanguage = Language.fromCode(profile.getLanguage());
+        language = Language.getOverride() != null ? Language.getOverride() : savedLanguage;
 
         // Use the size the player picked in the display options, if this
         // screen still has it. Otherwise (on a smaller screen, say) it stays
@@ -170,8 +188,9 @@ public class MainGame implements Game {
             startNewGame(commandLineArgs.newGameShip, Difficulty.NORMAL, null);
         } else if (XftlDebug.INSTANCE.getSkipMenu()) {
             // Skip the main menu: continue the saved game if there is one, or
-            // start with the ship the hangar would pick by default
-            if (!continueSavedGame()) {
+            // start with the ship the hangar would pick by default (always a
+            // new one for the bulwarks' demo)
+            if (XftlDebug.INSTANCE.getBulwarkDemo() || !continueSavedGame()) {
                 startDefaultNewGame();
             }
 
@@ -181,6 +200,8 @@ public class MainGame implements Game {
             VideoDirector.install(this, gc);
             // and XFTL_AUTOPLAY plays it by itself, to find crashes
             AutoplayDirector.install(this, gc);
+            // XFTL_BULWARK_DEMO fights a boss full of bulwarks
+            BulwarkDemo.install(this, gc);
         } else if (commandLineArgs.debugLoad != null) {
             Path path = DebugConsole.DEBUG_SAVE_DIR.resolve(commandLineArgs.debugLoad + ".xml");
             Document doc;
@@ -252,7 +273,66 @@ public class MainGame implements Game {
             sounds.stopMusic();
         }
 
+        InGameState.GameContent oldContent = reloadContentForLanguage();
         setCurrentState(new MainMenuState(this, content));
+        freeOldContent(oldContent);
+    }
+
+    /**
+     * If another language was picked since the game's content was loaded
+     * (see setLanguage), load it again in that one, as the events' text is
+     * looked up as they're loaded. This returns the old content, to free
+     * once the next state has taken over from the one using it (see
+     * freeOldContent), or null if it's still the same.
+     */
+    private @Nullable InGameState.GameContent reloadContentForLanguage() {
+        if (!isLanguagePending()) {
+            return null;
+        }
+        InGameState.GameContent old = content;
+        content = new InGameState.GameContent(datafile, true, language.getCode());
+        return old;
+    }
+
+    private void freeOldContent(@Nullable InGameState.GameContent oldContent) {
+        if (oldContent != null) {
+            oldContent.freeResources();
+        }
+    }
+
+    /**
+     * The language the game's text is in, or will be once the main menu's
+     * shown again, if another was picked in a game.
+     */
+    public Language getLanguage() {
+        return language;
+    }
+
+    /**
+     * Switch to another language, picked in the options window, and
+     * remember it. In the main menu, the menu's shown again in it straight
+     * away (on the next update, once the options window's click is done);
+     * in a game, the game carries on in the old one until it goes back to
+     * the main menu, or another game's started.
+     */
+    public void setLanguage(@NotNull Language language) {
+        if (language == this.language) {
+            return;
+        }
+        this.language = language;
+        profile.setLanguage(language.getCode());
+
+        if (currentState instanceof MainMenuState) {
+            languageReloadPending = true;
+        }
+    }
+
+    /**
+     * True if the game's content (and so its text) isn't in the language
+     * picked, as another was picked in a game (see setLanguage).
+     */
+    public boolean isLanguagePending() {
+        return content != null && !content.translator.getLanguage().equals(language.getCode());
     }
 
     /**
@@ -318,8 +398,10 @@ public class MainGame implements Game {
                              @Nullable String namePreset) {
         // A new game replaces the saved one
         ContinueSave.delete();
+        InGameState.GameContent oldContent = reloadContentForLanguage();
         InGameState inGameState = new InGameState(this, content, shipName, difficulty, customised, namePreset);
         setCurrentState(inGameState);
+        freeOldContent(oldContent);
     }
 
     public void restartGame() {
@@ -329,12 +411,24 @@ public class MainGame implements Game {
     }
 
     public void loadSavedGame(Document savedGame) {
+        InGameState.GameContent oldContent = reloadContentForLanguage();
         InGameState inGameState = new InGameState(this, content, savedGame);
         setCurrentState(inGameState);
+        freeOldContent(oldContent);
     }
 
     @Override
     public void update(@NotNull GameContainer gc, float dt) throws SlickException {
+        // Show the main menu again in the language just picked in its
+        // options, still with the options window open
+        if (languageReloadPending) {
+            languageReloadPending = false;
+            switchToMainMenu();
+            if (currentState instanceof MainMenuState menu) {
+                menu.showOptions();
+            }
+        }
+
         currentState.update(gc, dt);
 
         // If the profile needs saving, do that now. This means that if there's
@@ -391,12 +485,14 @@ public class MainGame implements Game {
     }
 
     /**
-     * In debug mode (and so in the playtest), show how many frames a second
-     * the game's drawing, in the bottom-left corner, in the same small font
-     * as the build label. It's counted over half a second at a time.
+     * In debug mode (and so in the playtest), or with XFTL_SHOW_FPS, show
+     * how many frames a second the game's drawing, in the bottom-left
+     * corner, in the same small font as the build label. It's counted over
+     * half a second at a time.
      */
     private void renderFps(GameContainer gc) {
-        if (buildLabelFont == null || !XftlDebug.INSTANCE.getEnabled() || XftlDebug.INSTANCE.getRecording())
+        boolean shown = XftlDebug.INSTANCE.getEnabled() || XftlDebug.INSTANCE.getShowFps();
+        if (buildLabelFont == null || !shown || XftlDebug.INSTANCE.getRecording())
             return;
 
         long now = System.nanoTime();
@@ -492,7 +588,7 @@ public class MainGame implements Game {
 
         // Load the game content immediately - this will work until
         // we support mods or turning Advanced Edition on or off.
-        content = new InGameState.GameContent(datafile, true);
+        content = new InGameState.GameContent(datafile, true, language.getCode());
 
         return true;
     }

@@ -241,8 +241,9 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
     // with several of either system, as their boxes stack upwards
     val weaponBoxStackHeight: Int
         get() {
-            val weapons = ship.mainSystems.count { it is Weapons }
-            val drones = ship.mainSystems.count { it is Drones }
+            // (the boxes in the rows they're laid out in)
+            val weapons = weaponBoxPositions.distinctBy { it.y }.size
+            val drones = droneBoxPositions.distinctBy { it.y }.size
             return (maxOf(weapons, drones) - 1).coerceAtLeast(0) * WEAPON_BOX_STACK_SPACING
         }
 
@@ -824,7 +825,7 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
 
         // Draw the floating numbers that show a change in a resource
         for (anim in resourceDeltaAnimations) {
-            anim.draw(g)
+            anim.draw()
         }
 
         // The notice of an achievement just unlocked
@@ -904,31 +905,31 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
         // Draw the systems and the wires under them
         // If there's several weapons systems, their power buttons go next to
         // each other, followed by their boxes stacked on top of each other.
+        // A box that'd be under the enemy windows goes into a column of its
+        // own to the right instead, with its power button beside it, out of
+        // this row (see layOutBar).
         val weaponSystemsInUI = ship.mainSystems.filterIsInstance<Weapons>()
-        val lastWeapons = weaponSystemsInUI.lastOrNull()
-        val weaponBoxSlots = weaponSystemsInUI.maxOfOrNull { it.uiSlots.count() } ?: 0
-        var weaponBoxX: Int? = null
+        val droneBoxes = ship.droneSystems
+        val layout = layOutBar(weaponSystemsInUI, droneBoxes, BAR_POWER_X + reactorExtraWidth)
+        val detached = layout.detached
+        val rowSystems = ship.mainSystems.filter { it !in detached }
+
+        val rowWeapons = weaponSystemsInUI.filter { it !in detached }
+        val lastWeapons = rowWeapons.lastOrNull()
+        val weaponBoxSlots = rowWeapons.maxOfOrNull { it.uiSlots.count() } ?: 0
+        val weaponBoxX: Int? = layout.weaponBoxX
 
         // The same goes for drones systems
-        val droneSystemsInUI = ship.mainSystems.filterIsInstance<Drones>()
-        val lastDrones = droneSystemsInUI.lastOrNull()
-        var droneBoxX: Int? = null
-        var powerX = 58 + reactorExtraWidth
+        val lastDrones = droneBoxes.lastOrNull { it !in detached }
+        var powerX = BAR_POWER_X + reactorExtraWidth
         val powerY = height - 69
-        for ((i, system) in ship.mainSystems.withIndex()) {
+        for ((i, system) in rowSystems.withIndex()) {
             // Draw the power bar to the next item
             val wireX = powerX + 31
             val wireY = powerY +
                     45 + // Top of the power button image to the bottom
                     12 + // Distance between the power button and the main horizontal wire
                     -26 // Go back up to the top of the wire image
-
-            // Save the position of the weapon and drone power icons, since
-            // they're used to position the weapon and drone selection boxes.
-            if (system == lastWeapons)
-                weaponBoxX = wireX + 1
-            if (system == lastDrones)
-                droneBoxX = wireX + 1
 
             if (updatingButtons) {
                 val powerPos = ConstPoint(powerX + 19, powerY + 19)
@@ -937,21 +938,14 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
                 buttons += system.makeExtraButtons(powerPos)
             }
 
-            powerX += when {
-                system == lastWeapons -> 48 + weaponBoxSlots * 97
-                system is Weapons -> 36
-                system == lastDrones -> 48 + ship.droneSlots!! * 97
-                system is Drones -> 36
-                system.insertButtonSpace -> 54
-                else -> 36
-            }
+            powerX += barStep(system, lastWeapons, weaponBoxSlots, lastDrones)
 
             // Don't draw the bar under the last item - since each item draws the
             // wire to the next item, this would result in a wire sticking out.
-            if (i == ship.mainSystems.size - 1)
+            if (i == rowSystems.size - 1)
                 continue
 
-            val lastSystem = i == ship.mainSystems.size - 2
+            val lastSystem = i == rowSystems.size - 2
 
             val wireWidth = when {
                 // Remember that we'll only run this if this isn't the last system,
@@ -984,6 +978,24 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
             }
         }
 
+        weaponBoxPositions = layout.weaponBoxes
+        droneBoxPositions = layout.droneBoxes
+
+        // The detached systems' power buttons, beside their boxes, as they'd
+        // be in the row (their boxes as far right of them)
+        if (updatingButtons) {
+            for ((systems, boxes) in listOf(weaponSystemsInUI to weaponBoxPositions, droneBoxes to droneBoxPositions)) {
+                for ((index, system) in systems.withIndex()) {
+                    if (system !in detached)
+                        continue
+                    val box = boxes[index]
+                    val powerPos = ConstPoint(box.x - BAR_BOX_FROM_POWER + 19, powerY + 19 + (box.y - weaponBoxY))
+                    buttons += SystemPowerButton(powerPos, system)
+                    buttons += system.makeExtraButtons(powerPos)
+                }
+            }
+        }
+
         // If a weapon is being targeted, check that our click event is still the game's active click
         // event. This ensures that if the click event is cancelled or overridden, targeting mode
         // is disabled.
@@ -1002,19 +1014,20 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
 
         // The autofire button is a tab under the right-hand corner of the
         // (bottom) weapons box, like its label on the left
-        if (updatingButtons && weaponSystemsInUI.isNotEmpty()) {
-            val slots = weaponSystemsInUI.last().uiSlots.count()
+        if (updatingButtons && lastWeapons != null && weaponBoxX != null) {
+            val slots = lastWeapons.uiSlots.count()
             // Just past the right of the box's outline
-            val boxRight = weaponBoxX!! + 25 + slots * 97
+            val boxRight = weaponBoxX + 25 + slots * 97
             buttons += AutofireButton(boxRight, weaponBoxY + 61)
         }
 
         // Draw the weapons boxes, one for each weapons system.
         // Note that some modded ships don't have a weapons system
         for ((index, weapons) in weaponSystemsInUI.withIndex()) {
-            // The first system's box is on top, and the last one's in the normal position
-            val boxX = weaponBoxX!!
-            val boxY = weaponBoxY - (weaponSystemsInUI.size - 1 - index) * WEAPON_BOX_STACK_SPACING
+            // The first system's box is on top, and the last one's in the
+            // normal position
+            val boxX = weaponBoxPositions[index].x
+            val boxY = weaponBoxPositions[index].y
             drawWeaponBox(boxX, "weapons_label", weapons.uiSlots.count(), boxY, weapons.uiIndex)
 
             // i is the hardpoint index, slotInBox is the position in this box
@@ -1129,11 +1142,12 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
         // Draw the drone areas, if they're installed. Like the weapons, if
         // there's several drones systems their boxes are stacked up, in the
         // ship's order of them (Ship.droneSystems), the first at the top, as
-        // in the ship window's equipment and where bought drones go
-        val droneBoxes = ship.droneSystems
+        // in the ship window's equipment and where bought drones go (any
+        // that would be under the enemy windows go beside them, see
+        // layOutBar)
         for ((index, drones) in droneBoxes.withIndex()) {
-            val boxX = droneBoxX!!
-            val boxY = weaponBoxY - (droneBoxes.size - 1 - index) * WEAPON_BOX_STACK_SPACING
+            val boxX = droneBoxPositions[index].x
+            val boxY = droneBoxPositions[index].y
             drawWeaponBox(boxX, "drones_label", ship.droneSlots!!, boxY, drones.uiIndex)
 
             // Draw the in-operation drone boxes - this seems very similar to weapons
@@ -1187,13 +1201,8 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
                         }
                     }
 
-                    override fun draw(g: Graphics) {
-                        super.draw(g)
-
-                        if (info?.instance != null) {
-                            game.getImg("img/ui_icons/icon_drones.png").draw(pos.x + 43 - 9, pos.y + 18 - 8, mainColour)
-                        }
-                    }
+                    // (no drone icon over a deployed drone's box, as
+                    // vanilla has: it'd cover the longer names)
                 }
             }
         }
@@ -1214,6 +1223,176 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
         }
     }
 
+    // Where each weapons and drones system's box was last put (see
+    // layOutBar), in the ship's order of them (the weapons systems
+    // in the power bar's, and Ship.droneSystems)
+    private var weaponBoxPositions: List<ConstPoint> = emptyList()
+    private var droneBoxPositions: List<ConstPoint> = emptyList()
+
+    /**
+     * The weapons or drones systems' boxes, each [widths] wide (their
+     * images', glow and all), in the ship's order of them, stacked up from
+     * the last one's at ([x], [weaponBoxY]), right of its power button.
+     */
+    private class BoxStack(val x: Int, val widths: List<Int>)
+
+    /**
+     * Where the power bar's weapons and drones boxes go (each image's
+     * top-left corner, in the ship's order of the systems), and which of
+     * those systems are [detached] from the row of power buttons, their
+     * buttons beside their boxes instead (see [layOutBar]). [weaponBoxX] is
+     * the weapons' stack's, right of the last weapons power button in the row.
+     */
+    private class BarLayout(
+        val detached: Set<AbstractSystem>,
+        val weaponBoxX: Int?,
+        val weaponBoxes: List<ConstPoint>,
+        val droneBoxes: List<ConstPoint>,
+    )
+
+    private fun boxImageWidth(slots: Int): Int = game.getImg("img/box_weapons_bottom$slots.png").width
+
+    /**
+     * How far along the row of power buttons the next one goes after
+     * [system]'s: past its box, for the last weapons or drones system in
+     * the row.
+     */
+    private fun barStep(system: MainSystem, lastWeapons: Weapons?, weaponBoxSlots: Int, lastDrones: Drones?): Int =
+        when {
+            system == lastWeapons -> 48 + weaponBoxSlots * 97
+            system is Weapons -> 36
+            system == lastDrones -> 48 + ship.droneSlots!! * 97
+            system is Drones -> 36
+            system.insertButtonSpace -> 54
+            else -> 36
+        }
+
+    /**
+     * Lay out the power bar's weapons and drones boxes, its row of power
+     * buttons starting at [rowStart] (past the reactor's bars).
+     *
+     * The boxes are stacked up right of their power buttons, the first
+     * system's on top and the last's in the bottom row, as in vanilla, as
+     * long as they're below the enemy windows: on a 1080-high screen a long
+     * ship's window reaches down past the top of a third row (though not a
+     * second, see HostileShipUI.lowestWindowBottom), so it would cover a
+     * third weapons or drones box. Then the first systems' boxes stay in
+     * the rows that are clear, still in order from the top, and the rest
+     * (the third system's, say) go in columns right of the stacks, past
+     * everything else in the power bar, the weapons' first, each column in
+     * order from the top and ending on the bottom row, as long as that's
+     * clear of the subsystems (as it is for the Engi ships' three drones
+     * systems and the Rocks' three weapons systems, whatever systems
+     * they've bought). Those systems' power buttons go with them, each
+     * beside its box (as the others' are), rather than in the row with the
+     * rest. If they don't fit there, they're all stacked up, as before.
+     */
+    private fun layOutBar(weapons: List<Weapons>, drones: List<Drones>, rowStart: Int): BarLayout {
+        val windowsBottom = HostileShipUI.lowestWindowBottom(ship.type, height)
+        val tallest = maxOf(weapons.size, drones.size)
+        val clearRows = (0 until tallest).count { row -> weaponBoxY - row * WEAPON_BOX_STACK_SPACING >= windowsBottom }
+            .coerceAtLeast(1)
+        if (tallest > clearRows) {
+            val overflowing = (weapons.drop(clearRows) + drones.drop(clearRows)).toSet<AbstractSystem>()
+            tryLayOutBar(weapons, drones, rowStart, overflowing, clearRows)?.let { return it }
+        }
+        return tryLayOutBar(weapons, drones, rowStart, emptySet(), null)!!
+    }
+
+    /**
+     * The bar laid out with [detached]'s boxes in columns to the right,
+     * each column [clearRows] tall at the most, or null if they don't fit;
+     * with none, and a null [clearRows], all stacked up.
+     */
+    private fun tryLayOutBar(
+        weapons: List<Weapons>, drones: List<Drones>, rowStart: Int,
+        detached: Set<AbstractSystem>, clearRows: Int?
+    ): BarLayout? {
+        // Where the stacks go, right of the last weapons and drones power
+        // buttons left in the row
+        val rowWeapons = weapons.filter { it !in detached }
+        val lastWeapons = rowWeapons.lastOrNull()
+        val lastDrones = drones.lastOrNull { it !in detached }
+        val weaponBoxSlots = rowWeapons.maxOfOrNull { it.uiSlots.count() } ?: 0
+        var powerX = rowStart
+        var weaponBoxX: Int? = null
+        var droneBoxX: Int? = null
+        for (system in ship.mainSystems) {
+            if (system in detached)
+                continue
+            if (system == lastWeapons)
+                weaponBoxX = powerX + BAR_BOX_FROM_POWER
+            if (system == lastDrones)
+                droneBoxX = powerX + BAR_BOX_FROM_POWER
+            powerX += barStep(system, lastWeapons, weaponBoxSlots, lastDrones)
+        }
+        val rowEnd = powerX
+
+        val weaponStack = weaponBoxX?.let { x -> BoxStack(x, weapons.map { boxImageWidth(it.uiSlots.count()) }) }
+        val droneStack = droneBoxX?.let { x -> BoxStack(x, drones.map { boxImageWidth(ship.droneSlots!!) }) }
+        val stacks = listOfNotNull(weaponStack, droneStack).filter { it.widths.isNotEmpty() }
+
+        val positions = if (clearRows == null) {
+            stacks.map { stack ->
+                stack.widths.indices.map { index ->
+                    ConstPoint(stack.x, weaponBoxY - (stack.widths.size - 1 - index) * WEAPON_BOX_STACK_SPACING)
+                }
+            }
+        } else {
+            overflowBoxes(stacks, clearRows, rowEnd) ?: return null
+        }
+        val iterator = positions.iterator()
+        return BarLayout(
+            detached, weaponBoxX,
+            if (weaponStack != null && weaponStack.widths.isNotEmpty()) iterator.next() else emptyList(),
+            if (droneStack != null && droneStack.widths.isNotEmpty()) iterator.next() else emptyList(),
+        )
+    }
+
+    /**
+     * Where the boxes of each of the [stacks] go, each stack's first
+     * [clearRows] in its own column, and the rest in columns of their own
+     * to the right, past the row of power buttons (which ends at [rowEnd]),
+     * each with room for its power button left of it; or null if they'd
+     * reach the subsystems.
+     */
+    private fun overflowBoxes(stacks: List<BoxStack>, clearRows: Int, rowEnd: Int): List<List<ConstPoint>>? {
+        // (stack, index)
+        val overflow = stacks.withIndex().flatMap { (stackIndex, stack) ->
+            (clearRows until stack.widths.size).map { index -> stackIndex to index }
+        }
+
+        // The subsystems' leftmost part is the piloting's icon, drawn 19px
+        // left of its power button (see drawSubSystems and drawIconAndPower)
+        val subsystemsLeft = subsystemBoxX + 6 - 19
+
+        // (a column's boxes from the top, the last on the bottom row)
+        fun rowY(position: Int, count: Int) = weaponBoxY - (count - 1 - position) * WEAPON_BOX_STACK_SPACING
+
+        val result = stacks.map { stack ->
+            val kept = minOf(stack.widths.size, clearRows)
+            stack.widths.indices.map { index -> ConstPoint(stack.x, rowY(index, kept)) }.toMutableList()
+        }
+        // (each column's power buttons where the next one in the row would
+        // go, its boxes as far right of them as the row's are)
+        var buttonX = maxOf(
+            stacks.maxOf { stack -> stack.x + stack.widths.take(clearRows).max() } + BAR_BOX_COLUMN_GAP,
+            rowEnd
+        )
+        for (column in overflow.chunked(clearRows)) {
+            val columnX = buttonX + BAR_BOX_FROM_POWER
+            val columnRight = columnX + column.maxOf { (stackIndex, index) -> stacks[stackIndex].widths[index] }
+            if (columnRight > subsystemsLeft)
+                return null
+            for ((position, place) in column.withIndex()) {
+                val (stackIndex, index) = place
+                result[stackIndex][index] = ConstPoint(columnX, rowY(position, column.size))
+            }
+            buttonX = columnRight + BAR_BOX_COLUMN_GAP
+        }
+        return result
+    }
+
     // How much wider the subsystems box is than vanilla, to fit extra
     // batteries and sensors.
     private val subsystemBoxExtraWidth: Int
@@ -1223,10 +1402,16 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
             return extraBatteries * BATTERY_SPACING + extraSensors * SUBSYSTEM_SPACING
         }
 
+    // The subsystems box's position, not including the glow. The subsystems
+    // go against the right-hand edge of the screen: the last backup
+    // battery's button, which sticks out past the end of the box, ends at
+    // the edge (and where it would, without one). It's moved left as it's
+    // widened, so it stays on the screen.
+    private val subsystemBoxX: Int
+        get() = width - SUBSYSTEMS_WIDTH - subsystemBoxExtraWidth
+
     private fun drawSubSystems(gc: GameContainer) {
-        // The box position, not including the glow. It's moved left as it's
-        // widened, so it stays on the screen.
-        val boxX = gc.width - 252 - subsystemBoxExtraWidth
+        val boxX = subsystemBoxX
         val boxY = gc.height - 47
 
         // The box is widened to fit any extra sensors and batteries. Its top
@@ -2019,7 +2204,7 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
             if (!hasLockdownButton(crew))
                 g.fillRect(columnX + 2f, y + SKILLS_PANEL_HEIGHT - 2f, SKILLS_COLUMN_WIDTH - 4f, 2f)
 
-            for (skill in Skill.entries)
+            for (skill in Skill.DISPLAY_ORDER)
                 drawSkillBar(g, columnX + 4, y, crew, skill)
 
             if (crew is CrewCrystal && hasLockdownButton(crew))
@@ -2076,8 +2261,8 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
                 ) {
                     // Over one of the skills, what it gives them, and how
                     // far they are to the next level
-                    val skill = Skill.entries.firstOrNull { skill ->
-                        val rowY = y + skill.ordinal * SKILL_ROW_HEIGHT
+                    val skill = Skill.DISPLAY_ORDER.firstOrNull { skill ->
+                        val rowY = y + skill.displayIndex * SKILL_ROW_HEIGHT
                         mouseX in x + SKILLS_COLUMN_X until x + SKILLS_PANEL_WIDTH &&
                                 mouseY in rowY until rowY + SKILL_ROW_HEIGHT
                     }
@@ -2091,7 +2276,7 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
 
                         else -> skillTooltip(crew, skill)
                     }
-                    val tipY = if (skill == null) y else y + skill.ordinal * SKILL_ROW_HEIGHT
+                    val tipY = if (skill == null) y else y + skill.displayIndex * SKILL_ROW_HEIGHT
 
                     val width = TooltipConstants.widthOf(lines, tooltipFont)
                     val height = TooltipConstants.heightOf(lines)
@@ -2109,14 +2294,7 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
      * the next.
      */
     private fun skillTooltip(crew: LivingCrew, skill: Skill): List<String> {
-        val key = when (skill) {
-            Skill.PILOTING -> "pilot"
-            Skill.ENGINES -> "engines"
-            Skill.SHIELDS -> "shields"
-            Skill.WEAPONS -> "weapons"
-            Skill.REPAIRS -> "repair"
-            Skill.COMBAT -> "combat"
-        }
+        val key = skill.textKey
         val level = crew.getSkillLevel(skill)
         val bonus = game.translator[key + "_skill_infobox"].replaceArg(skill.getDescription(game, level))
         val lines = game.translator[key + "_skill_tooltip"].replaceArg(bonus)
@@ -2222,7 +2400,7 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
         x: Int, baseY: Int,
         crew: LivingCrew, skill: Skill
     ) {
-        val y = baseY + skill.ordinal * SKILL_ROW_HEIGHT // Not 26, which is the icon height
+        val y = baseY + skill.displayIndex * SKILL_ROW_HEIGHT // Not 26, which is the icon height
         val skillLevel = crew.getSkillLevel(skill)
 
         // Draw the icon
@@ -2567,6 +2745,11 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
         // It's opened from the options window, and goes back to it, like
         // the keybinds window
         pauseWindow = DisplayWindow(game) { showOptionsWindow() }
+    }
+
+    fun showLanguageWindow() {
+        // Like the display window, it goes back to the options window
+        pauseWindow = LanguageWindow(game) { showOptionsWindow() }
     }
 
     /**
@@ -3442,7 +3625,7 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
             y += numberDeltaFont.baselineToTop * numberDeltaFont.scale
         }
 
-        fun draw(g: Graphics) {
+        fun draw() {
             numberDeltaFont.drawStringPaired(numberDeltaFontBg, x, y, text, Colour.black, Colour.white)
         }
 
@@ -3531,8 +3714,11 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
         private const val CREW_BOX_HEIGHT = 27
 
         // The open skills panel (see drawCrewBox), and a Crystal's lockdown
-        // button in it (see drawLockdownButton)
-        private const val SKILLS_PANEL_HEIGHT = 146
+        // button in it (see drawLockdownButton): a row for each skill, the
+        // last as tall as its icon (vanilla's six made it 146 pixels; seven,
+        // with the Drones skill, 170)
+        private const val SKILL_ROW_HEIGHT = 24
+        private val SKILLS_PANEL_HEIGHT = (Skill.entries.size - 1) * SKILL_ROW_HEIGHT + 26
         private const val SKILLS_COLUMN_X = 89
 
         // Wider than vanilla's (whose bar was 40 pixels), for the six levels'
@@ -3544,7 +3730,6 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
         // As wide as the column it's in, less a margin either side (vanilla's
         // was 70 in an 80 pixel column)
         private val LOCKDOWN_BUTTON_WIDTH = SKILLS_COLUMN_WIDTH - 10
-        private const val SKILL_ROW_HEIGHT = 24
         private const val LOCKDOWN_BOX_HEIGHT = 20
         private const val LOCKDOWN_BUTTON_HEIGHT = 12
         private const val LOCKDOWN_BUTTON_RADIUS = 2
@@ -3593,6 +3778,23 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
         // The vertical distance between the boxes of ships with multiple
         // weapons systems, which are stacked on top of each other.
         private const val WEAPON_BOX_STACK_SPACING = 80
+
+        // The gap between the images of weapons or drones boxes side by
+        // side, when they don't all fit in a stack (see layOutBar)
+        private const val BAR_BOX_COLUMN_GAP = 6
+
+        // Where the row of power buttons starts (past the reactor's), and how
+        // far right of a power button's place in it a weapons or drones box
+        // goes (see layOutBar)
+        private const val BAR_POWER_X = 58
+        private const val BAR_BOX_FROM_POWER = 32
+
+        // From the subsystems box's left-hand edge (without its glow) to the
+        // right-hand edge of the backup battery's button: the battery's power
+        // icon is 129px in, and its button's image starts 17px right of that
+        // and is 40px wide (see SystemPowerButton). Vanilla's box was 252px
+        // from the right of its screen, leaving 66px.
+        private const val SUBSYSTEMS_WIDTH = 129 + 17 + 40
 
         // Where the pulsar's warning goes, and with a sun's warning too:
         // under the FTL button, as right under the sun's it would be covered

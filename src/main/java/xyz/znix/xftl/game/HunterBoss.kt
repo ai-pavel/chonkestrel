@@ -193,7 +193,7 @@ class HunterBoss private constructor(val sector: Sector, val game: InGameState) 
             beacon.clearEnvironment()
         }
 
-        sector.startFleetPursuit(realBeacon)
+        sector.startFleetPursuit(realBeacon, game.difficulty)
     }
 
     override fun bossShipKilled(enemy: Ship) {

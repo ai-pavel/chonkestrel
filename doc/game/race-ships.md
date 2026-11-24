@@ -13,7 +13,54 @@ what that ship has and plays like. The Chonkestrel has one too, the
 Chonk-Tail (`PLAYER_SHIP_CHONKESTREL_2`), from the Kestrel B, the Red-Tail;
 the Chonkestrel itself is hand-made (see `tools/chonkestrel_art.py`), but
 the Chonk-Tail is made by the same script as the rest. The hangar treats a
-ship and the one with `_2` on the end as Type A and B of one family.
+ship and the ones with `_2` and `_3` on the end as Type A, B and C of one
+family.
+
+The races with a vanilla Type C (in the Advanced Edition's
+`dlcBlueprintsOverwrite.xml`) have a big Type C too
+(`PLAYER_SHIP_XFTL_<RACE>_3`), made from it, and so does the Chonkestrel:
+the Chonkswallow (`PLAYER_SHIP_CHONKESTREL_3`), from the Kestrel C, the
+Swallow. The Lanius and the Crystals have no vanilla Type C, so they have
+no big one.
+
+## In the hangar
+
+The ship list has the big ships first, in a row of their own (the
+Chonkestrel first, the Lanius and then the Crystal ships last, each Type A
+then its B), and vanilla's ships below them, in vanilla's order, each
+family's Type A, B and C together, a little apart from the big ships
+(`ShipList.BIG_SHIPS_GAP`). The big ships' pictures are half as big again
+as the others', made from their hulls by `tools/hangar_art.py` (as their
+miniatures are, so they're as crisp). It scrolls with the mouse wheel, with
+a bar on the right showing where it's at, when it's taller than the
+screen. The arrows either side of the list button go through both, in
+that order, and back round. Every ship can be picked, as it always could in
+XFTL: the hangar has never locked ships.
+
+Above the layout's A, B and C buttons, in a section of their own (TYPE),
+are **Normal** and **Chonky**, one above the other, which switch between
+a vanilla ship and its big version, keeping the race and the layout
+letter: the Engi Type B (`PLAYER_SHIP_CIRCLE_2`) goes to the
+Chonkvortex (`PLAYER_SHIP_XFTL_ENGI_2`) and back. The one the ship is
+shows as picked, as the layout's does. A vanilla Type C goes to its big
+Type C the same way (the Swallow to the Chonkswallow). Only a race without
+a big ship of that layout would fall back to its big Type A, whose layout
+buttons then show A; none does now, as the Lanius and Crystals have no
+vanilla Type C either. A ship with nothing to switch to has the other
+button disabled.
+
+Which vanilla ship each big one was made from is in its blueprint, an
+`<xftlVanillaShip>` element (an XFTL extension, see
+[modding](../tools/modding.md)): `race_ships.py` writes the one each was made
+from, and the Chonkestrel's (`PLAYER_SHIP_HARD`) is in its hand-made
+blueprint. The hangar maps both ways from them.
+
+Random Ship picks a ship as big as the current one: a big ship (of either
+layout) on a big ship, a vanilla one (of any layout) on a vanilla ship. So
+it keeps to what Normal and Chonky picked.
+
+A vanilla ship is size 1, so it fights one vanilla-sized ship at a time,
+as in vanilla.
 
 They're made by `tools/race_ships.py` (`make art`, see
 [art](../tools/art.md)), from the vanilla ships in `ftl.dat`: their layouts
@@ -43,7 +90,8 @@ As the Chonkestrel:
   eight weapon slots (three of nine), and a weapon mount for each slot: the
   vanilla ship's four, and the rest along the top and bottom of the hull.
   The second weapons system starts with about what the vanilla ship has.
-- Room for 16 crew, 8 cargo and 6 augments, and for every system it has
+- Room for 18 crew (16 on the ships with three shields systems, so the
+  shields and the crew list both fit on the screen), 8 cargo and 6 augments, and for every system it has
   rooms for (`maxSystems`). Its reactor is enough to power everything it
   starts with at once.
 - A crew of its own race, about twice the vanilla ship's, each at a station
@@ -78,6 +126,19 @@ And the Type B versions:
 | The Chonkelian | Crystal | Carnelian | 14 x 12 | two cloaking systems, a teleporter |
 | The Chonknisos | Federation | The Nisos | 13 x 13 | two Artillery Beams |
 | DA-CHONK 24 | Stealth | DA-SR 12 | 12 x 11 | two cloaking systems, no shields to start with |
+
+And the Type C versions:
+
+| Ship | Race | Made from | Size in rooms | Its race's systems |
+|---|---|---|---|---|
+| The Chonkswallow | Human | The Swallow (Kestrel C) | 15 x 10 | two each of weapons, shields, engines, oxygen and sensors |
+| The Chonkagon | Engi | The Tetragon | 9 x 11 | three drones systems, beam drones |
+| The Chonkerenkov | Zoltan | Cerenkov | 13 x 11 | three shields systems, two backup batteries |
+| The Chonkatidae | Federation | The Fregatidae | 15 x 12 | two Artillery Beams |
+| The Chonkolimax | Slug | Ariolimax | 8 x 12 | two sensors, two hacking, two mind control |
+| The Chonkeseus | Mantis | The Theseus | 12 x 14 | two teleporters (one for eight), two medbays |
+| The Chonktite | Rock | Tektite | 9 x 10 | three weapons systems |
+| Simo-CHONK | Stealth | Simo-H | 13 x 10 | two cloaking systems, shield drones, no shields to start with |
 
 ### The Chonktorus (Engi)
 
@@ -150,7 +211,11 @@ rooms for its six Crystals, who have Crystal Vengeance.
 
 The Osprey, with the Federation's artillery doubled: two Artillery Beams,
 each an artillery system in a 2x1 room of its own, the Osprey's at the rear
-and a new one in the middle, firing on their own as they charge. Their guns
+and a new one in the middle, firing on their own as they charge: against
+several enemy ships, each volley (from either) at the next of them in turn
+(`Artillery.nextTargets`), rather than all at the first, and at five bars
+at two of them, at six at three (`Artillery.SHIPS_PER_VOLLEY`), one after
+another. Their guns
 are on the nose, one above and one below where the Osprey's is, on mounts
 of their own after the eight weapon slots' (the game takes an artillery
 system's mount from there, see `Artillery.hardpoint`). Its rows go in two
@@ -266,3 +331,75 @@ DA-SR 12's is), a Glaive Beam to fire from the dark and a twin Mini Beam,
 and no shields to start with (two shields systems to buy), for the same
 reasons as the Chonkasio. Its rows go across its middle, where no rooms are
 in the way. Four humans and two Zoltan, one powering the second cloak.
+
+## The Type C versions
+
+As the vanilla Type C ships do, they start with their clonebay rather than
+their medbay (the Chonkswallow and Chonkeseus have a second, new medbay
+installed as well).
+
+### The Chonkswallow (Kestrel C)
+
+The Swallow, doubled as the Chonkestrel is: two each of weapons, shields,
+engines, oxygen and sensors, with a Dual Shot Laser and an Ion Stunner in
+each weapons system, and a new 2x4 medbay. Its rows go in through the
+weapons room, which gets taller, so its body and nose carry on cleanly.
+Six humans and two Lanius (at the engines), as the Swallow has a Lanius.
+
+### The Chonkagon (Engi C)
+
+The Tetragon's beam drones, three drones systems' worth: two Anti-Ship
+Beam Drones and a Defense Drone in the first, a twin Beam Drone in the second, and 40 drone
+parts, with the Tetragon's defense scrambler. A Dual Shot Laser and a twin
+one. The shields and the empty room by the nose that the new rows go
+through are 2x6 and 1x6. Five Engi and a Lanius at the hacking.
+
+### The Chonkerenkov (Zoltan C)
+
+Cerenkov runs on its crew and its batteries: three shields systems, its
+own backup battery and a new one, both installed, two Zoltan shields, an
+Ion Charger in each weapons system and its Anti-Ship Beam Drone. Its rows go in below
+its middle, where no rooms are in the way. Seven Zoltan.
+
+### The Chonkatidae (Federation C)
+
+The Fregatidae with two Artillery Beams, as the Chonksprey has: its own,
+in its 2x2 room (2x6 now, as the new rows go through it), and a new one, in
+a 2x1 room, their guns on the nose. A Dual Shot Laser in each weapons
+system and a second shields system. Five humans, two Zoltan (one in the
+artillery room) and a Mantis.
+
+### The Chonkolimax (Slug C)
+
+Ariolimax with two of each of the Slugs' systems: sensors, hacking and
+mind control, its own and new ones, all installed. A Chain Burst Laser in
+each weapons system. Its rows go in below its middle, where no rooms are
+in the way. Six Slugs and Slug Repair Gel.
+
+### The Chonkeseus (Mantis C)
+
+The Theseus, built to board: its rows go in two on either side of its
+middle, so its own teleporter, which they go through, becomes a 2x4 pad
+for eight, and there's a new 2x2 one for four, and a second medbay (as
+well as its clonebay). A Crystal Lockdown Bomb and a Stun Bomb in each
+weapons system.
+Seven Mantis (two on each teleporter), an Engi and a Lanius. The row of
+pixels repeated is eight above each cut, as the rows just above have a
+pale highlight that would make pale blocks.
+
+### The Chonktite (Rock C)
+
+Tektite's Rock and Crystal guns in three weapons systems: Swarm Missiles
+and a Heavy Crystal in the first, Swarm Missiles in the second and a
+Heavy Crystal and a twin one in the third, nine slots between them. Its
+blueprint's hull is 40, as the other Rock ships', with Rock Plating and a
+second shields system. Five Rocks and two Crystals.
+
+### Simo-CHONK (Stealth C)
+
+The Simo-H, doubled: two cloaking systems (its own, installed now, and a
+new one), and, as the Simo-H, no shields but Shield Overchargers (two, and
+an Anti-Combat Drone, in three drone slots). A Laser Charger and a Mini
+Beam in the first weapons system and a Laser Charger in the second. The engines,
+shields and piloting rooms the new rows go through are 2x6 and 1x6. Four
+humans, a Rock and a Slug.

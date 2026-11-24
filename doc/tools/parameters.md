@@ -24,6 +24,13 @@ runs. Most have a `Makefile` target too.
   start a new game with the ship the hangar picks by default (the
   Chonkestrel, with the mod). The pause and game over menus don't have the
   hangar and main menu buttons.
+- `XFTL_SHOW_FPS=1` (or `-Dxftl.show-fps`): show the frames a second in
+  the bottom-left corner, in the build label's font, as debug mode does,
+  in any game (not in the screenshots and videos). The Makefile's targets
+  set it; `make run SHOW_FPS=0` hides them.
+- `XFTL_FULL_FPS_UNFOCUSED=0` (or `-Dxftl.full-fps-unfocused=0`): slow the
+  game down to about 20 frames a second while its window isn't focused, to
+  save CPU. By default it runs at full speed, focused or not.
 - `XFTL_SHOW_HANGAR=1`: show the hangar buttons in the pause and game over
   menus, to pick another ship. They're hidden otherwise (and always with
   `XFTL_SKIP_MENU`).
@@ -36,6 +43,12 @@ runs. Most have a `Makefile` target too.
   `all` for all of them at once (the `Makefile`'s default). The default is
   the game's own names (plus the Chonkestrel mod's). See [names.md](../game/names.md).
 - `-Dxftl.sectors=N`: change the number of sectors.
+- `XFTL_LANG=<code>` (or `-Dxftl.lang`): play in another language for this
+  run, one of `en`, `fr`, `de`, `es`, `it` or `ru`, rather than the one
+  picked in the options (which it doesn't change; picking another in the
+  options still switches to it). See [translations.md](translations.md).
+  The screenshots and videos (`XFTL_SCREENSHOTS`, `XFTL_VIDEO`) are taken
+  in English without it, whatever the options say.
 
 ## Debugging
 
@@ -47,7 +60,15 @@ runs. Most have a `Makefile` target too.
   - the ship's debug loadout, with every drone slot and the whole cargo
     hold full of random twin and triple drones (see
     [drone-sizes.md](../game/drone-sizes.md)), whether or not there's the
-    power for them all;
+    power for them all. A player ship without a debug loadout of its own
+    (an `xftlDebug` element, as the Chonkestrel has), such as the race
+    ships and vanilla's, gets one made up as full as the Chonkestrel's
+    (`ShipBlueprint.madeUpDebugLoadout`), which the hangar shows too: triple
+    Burst Laser IIs, Glaive Beams and Ion Bombs in every weapon slot, the
+    Weapon Pre-Igniter and Zoltan shields in every augment slot, and the
+    Chonkestrel's cargo; and in the game a full crew, someone of each race
+    in turn at every station, then anywhere (`Ship.fillDebugCrew`, no
+    Lanius);
   - every beacon in a sector is scanned, as if the map was revealed and
     the long-range scanners reached everywhere;
   - the beacons whose events can start a quest (such as the act 2

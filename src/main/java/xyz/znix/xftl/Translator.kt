@@ -7,27 +7,44 @@ import org.jdom2.input.SAXBuilder
 class Translator {
     val translations: Map<String, String>
 
+    /** The code of the language this is in, such as `en` or `fr` (see [Language]). */
+    val language: String
+
+    /**
+     * The game's text in [lang]: each layer over the last, so a text a
+     * language hasn't got (yet) is in English rather than missing:
+     *
+     * - vanilla's English (`data/text_*.xml`), with the mods' English;
+     * - vanilla's [lang] (`data/text-<lang>.xml`), with the mods' own
+     *   translations, which they append to it (such as the Chonkestrel
+     *   mod's `text-fr.xml.append`), as [df] has them patched in;
+     * - XFTL's own English (`assets/lang/en.xml`);
+     * - XFTL's own [lang] (`assets/lang/<lang>.xml`), if there is one.
+     *
+     * See doc/tools/translations.md.
+     */
     constructor(df: Datafile, lang: String) {
         translations = HashMap()
+        language = lang
         fun load(name: String) = parseFile(name, df, translations)
 
-        when (lang) {
-            "en" -> {
-                load("data/text_achievements.xml")
-                load("data/text_blueprints.xml")
-                load("data/text_events.xml")
-                load("data/text_misc.xml")
-                load("data/text_sectorname.xml")
-                load("data/text_tooltips.xml")
-                load("data/text_tutorial.xml")
-            }
+        load("data/text_achievements.xml")
+        load("data/text_blueprints.xml")
+        load("data/text_events.xml")
+        load("data/text_misc.xml")
+        load("data/text_sectorname.xml")
+        load("data/text_tooltips.xml")
+        load("data/text_tutorial.xml")
 
+        when (lang) {
+            "en" -> Unit
             "zh" -> load("data/text-zh-Hans.xml")
             else -> load("data/text-$lang.xml")
         }
 
-        // Put a when block here if/when our strings are translated.
         parseEmbedded("assets/lang/en.xml", translations)
+        if (lang != "en")
+            parseEmbeddedIfPresent("assets/lang/$lang.xml", translations)
     }
 
     /**
@@ -36,6 +53,7 @@ class Translator {
      */
     constructor(embeddedPath: String) {
         translations = HashMap()
+        language = "en"
         parseEmbedded(embeddedPath, translations)
     }
 
@@ -45,11 +63,19 @@ class Translator {
     }
 
     private fun parseEmbedded(path: String, tl: HashMap<String, String>) {
+        check(parseEmbeddedIfPresent(path, tl)) { "Missing translation file $path" }
+    }
+
+    // Returns false if there's no such file
+    private fun parseEmbeddedIfPresent(path: String, tl: HashMap<String, String>): Boolean {
+        val stream = javaClass.classLoader.getResourceAsStream(path) ?: return false
+
         val builder = SAXBuilder()
         builder.expandEntities = false
-        val doc = builder.build(javaClass.classLoader.getResourceAsStream(path)!!)
+        val doc = stream.use { builder.build(it) }
 
         parseDoc(path, doc, tl)
+        return true
     }
 
     private fun parseDoc(fileName: String, doc: Document, tl: HashMap<String, String>) {

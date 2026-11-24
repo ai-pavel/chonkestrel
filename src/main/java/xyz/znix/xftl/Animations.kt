@@ -273,15 +273,27 @@ class Animations {
             // down a bit and the bottom part of their images were cut off.
             val effectiveFrameHeight = frameHeight.coerceAtMost(sheetImage.height)
 
-            return sheetImage.getSubImage(
-                x * frameWidth, y * frameHeight,
-                frameWidth, effectiveFrameHeight
-            )
+            // And some sheets are smaller than their frames altogether, such
+            // as the Federation's artillery's (weapons/blank.png, a single
+            // clear pixel, for a 400x100 sheet): a frame outside the image
+            // would show whatever's next to it in the texture atlas (the
+            // missing image's warning sign, on the Chonksprey's nose), so it
+            // only shows what's in the image.
+            val effectiveFrameWidth = frameWidth.coerceAtMost(sheetImage.width)
+            val left = (x * frameWidth).coerceAtMost(sheetImage.width - effectiveFrameWidth)
+            val top = (y * frameHeight).coerceAtMost(sheetImage.height - effectiveFrameHeight)
+
+            return sheetImage.getSubImage(left, top, effectiveFrameWidth, effectiveFrameHeight)
         }
     }
 
     companion object {
-        val TMP_BROKEN_IMAGES = setOf("artillery_fed", "explosion_big1", "room_touch2x2", "room_touch2x1")
+        // (the Federation's artillery's, artillery_fed, isn't skipped: its
+        // sheet's a single clear pixel, as its gun's drawn in its ship's
+        // hull, and getSprite keeps its frames inside it. Skipping it gave
+        // its weapon the missing image, a warning sign on the Chonksprey's
+        // nose, where its guns are mounted.)
+        val TMP_BROKEN_IMAGES = setOf("explosion_big1", "room_touch2x2", "room_touch2x1")
 
         // How long it takes a weapon animation to play from the charged frame to the end.
         // These were reverse-engineered from vanilla FTL.

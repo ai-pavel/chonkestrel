@@ -85,7 +85,9 @@ class AntiShipBatteryTest {
         assertTrue("shots $shots, super ${kit.player.superShield}/${kit.player.maxSuperShield}, evasion ${kit.player.evasion}",
             kit.player.health < health)
         assertEquals(AugZoltanShield.SHIELD_PER_AUGMENT, kit.player.superShield)
-        assertTrue(kit.player.rooms.any { room -> room.breaches.any { it != null } })
+        // (a breach, unless its one-in-ten chance of a fire came up, as
+        // the two never come from the same hit)
+        assertTrue(kit.player.rooms.any { room -> room.breaches.any { it != null } || room.fires.any { it != null } })
     }
 
     @Test

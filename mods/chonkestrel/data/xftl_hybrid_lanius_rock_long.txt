@@ -201,3 +201,14 @@ DOOR
 5
 13
 1
+DOOR
+1
+7
+9
+12
+0
+XFTL_WIDE_DOOR
+0
+7
+0
+2

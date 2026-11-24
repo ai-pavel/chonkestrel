@@ -1,6 +1,7 @@
 package xyz.znix.xftl.systems
 
 import org.jdom2.Element
+import xyz.znix.xftl.crew.Skill
 import xyz.znix.xftl.Ship
 import xyz.znix.xftl.SystemInfo
 import xyz.znix.xftl.Translator
@@ -202,6 +203,14 @@ class MindControl(blueprint: SystemBlueprint) : MainSystem(blueprint) {
         startSound.play()
     }
 
+    // Manned (an XFTL extension, see Manning): it recharges faster by the
+    // Life Support skill
+    override val cooldownSpeed: Float get() = Manning.speed(this, Skill.LIFE_SUPPORT)
+
+    override fun drawManningIcon(g: Graphics, x: Int, y: Int) {
+        drawManningSkillIcon(x, y, getSkillLevel(Skill.LIFE_SUPPORT))
+    }
+
     fun selectRoom(room: Room) {
         if (!ready)
             return
@@ -265,6 +274,7 @@ class MindControl(blueprint: SystemBlueprint) : MainSystem(blueprint) {
         crew.mindControlledBy = this
         controlledCrew = crew
         timeRemaining = duration
+        addSkillPoint(Skill.LIFE_SUPPORT)
 
         // An enemy taken over by the player, for the achievements
         if (ship.isPlayerShip && room.ship != ship)
@@ -376,7 +386,8 @@ class MindControl(blueprint: SystemBlueprint) : MainSystem(blueprint) {
 }
 
 private object MindControlInfo : SystemInfo("mind") {
-    override val canBeManned: Boolean get() = false
+    // (an XFTL extension, see Manning)
+    override val canBeManned: Boolean get() = true
 
     override fun create(blueprint: SystemBlueprint) = MindControl(blueprint)
 

@@ -5,9 +5,11 @@ import xyz.znix.xftl.Ship
 import xyz.znix.xftl.SystemInfo
 import xyz.znix.xftl.Translator
 import xyz.znix.xftl.augments.AugmentBlueprint
+import xyz.znix.xftl.crew.Skill
 import xyz.znix.xftl.drones.AbstractDrone
 import xyz.znix.xftl.drones.AbstractExternalDrone
 import xyz.znix.xftl.drones.BoardingDrone
+import xyz.znix.xftl.rendering.Graphics
 import xyz.znix.xftl.savegame.ObjectRefs
 import xyz.znix.xftl.savegame.RefLoader
 import xyz.znix.xftl.savegame.SaveUtil
@@ -72,6 +74,23 @@ class Drones(blueprint: SystemBlueprint) : MainSystem(blueprint) {
         powerManager.decreasePower()
     }
 
+    /**
+     * How much faster its drones charge, and come back after being shot
+     * down, while it's manned (an XFTL extension; vanilla's drones can't
+     * be): by the crewmember's Drones skill (an XFTL one too), as a weapons
+     * system's weapons charge by the Weapons skill, 10% at the least and
+     * 25% at the most (see [SKILL_BONUSES]). Their shots train the skill.
+     */
+    val manningSpeed: Float
+        get() {
+            val level = getSkillLevel(Skill.DRONES) ?: return 1f
+            return 1f / (1f - SKILL_BONUSES[level.level] / 100f)
+        }
+
+    override fun drawManningIcon(g: Graphics, x: Int, y: Int) {
+        drawManningSkillIcon(x, y, getSkillLevel(Skill.DRONES))
+    }
+
     override fun update(dt: Float) {
         super.update(dt)
 
@@ -84,7 +103,7 @@ class Drones(blueprint: SystemBlueprint) : MainSystem(blueprint) {
 
             val oldCooldown = info.cooldown
             if (oldCooldown != null) {
-                val newCooldown = oldCooldown - dt
+                val newCooldown = oldCooldown - dt * manningSpeed
                 if (newCooldown <= 0) {
                     info.cooldown = null
                 } else {
@@ -343,11 +362,16 @@ class Drones(blueprint: SystemBlueprint) : MainSystem(blueprint) {
 
     companion object {
         val INFO: SystemInfo = DronesInfo
+
+        // For each level of the Drones skill (see SkillLevel and
+        // manningSpeed): as the weapons' (Weapons.SKILL_BONUSES)
+        val SKILL_BONUSES = listOf(10, 13, 16, 19, 22, 25)
     }
 }
 
 private object DronesInfo : SystemInfo("drones") {
-    override val canBeManned: Boolean get() = false
+    // (an XFTL extension, see Drones.manningSpeed)
+    override val canBeManned: Boolean get() = true
 
     override fun create(blueprint: SystemBlueprint) = Drones(blueprint)
 

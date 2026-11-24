@@ -235,6 +235,13 @@ class Beacon(
     var hasQuest: Boolean = false
 
     /**
+     * True if the event at this beacon was put there by a hidden quest (see
+     * Event.questHidden): it's not marked on the map, and the beacon keeps
+     * its hazards, so the player can't tell.
+     */
+    var hasHiddenQuest: Boolean = false
+
+    /**
      * For all the status effects applied at this beacon, this states what
      * the final power limit is for each system by name.
      *
@@ -257,6 +264,7 @@ class Beacon(
             if (value) {
                 hasStore = false
                 hasQuest = false
+                hasHiddenQuest = false
             }
         }
 
@@ -358,6 +366,7 @@ class Beacon(
         SaveUtil.addTagBoolIfTrue(elem, "isBase", isBase)
         SaveUtil.addTagBoolIfTrue(elem, "hasStore", hasStore)
         SaveUtil.addTagBoolIfTrue(elem, "hasQuest", hasQuest)
+        SaveUtil.addTagBoolIfTrue(elem, "hasHiddenQuest", hasHiddenQuest)
         SaveUtil.addTagBoolIfTrue(elem, "overtaken", isOvertaken)
         fleetBatteryTarget?.let { SaveUtil.addAttr(elem, "fleetBattery", it.name) }
 
@@ -447,6 +456,7 @@ class Beacon(
             beacon.hazardsEased = SaveUtil.getOptionalTagBool(elem, "hazardsEased") ?: false
             beacon.hasStore = SaveUtil.getOptionalTagBool(elem, "hasStore") ?: false
             beacon.hasQuest = SaveUtil.getOptionalTagBool(elem, "hasQuest") ?: false
+            beacon.hasHiddenQuest = SaveUtil.getOptionalTagBool(elem, "hasHiddenQuest") ?: false
             // (an older save's overtaken beacons are taken again as the fleet
             // advances, besides the last stand's)
             beacon.isOvertaken = SaveUtil.getOptionalTagBool(elem, "overtaken") ?: false

@@ -4,9 +4,10 @@ Make the race ships (see doc/game/race-ships.md): a bigger player ship for
 each of seven races, made from that race's vanilla Type A ship in ftl.dat as
 the Chonkestrel is from the Kestrel, with a layout that plays up what the
 race is good at, the Federation's (with two Artillery Beams), the Stealth
-cruisers' (with two cloaking systems), and a Type B
-of each (and of the Chonkestrel, the Chonk-Tail) from the vanilla Type B
-ships. For each one, this makes its layout (data/<img>.txt and .xml in
+cruisers' (with two cloaking systems), a Type B of each (and of the
+Chonkestrel, the Chonk-Tail) from the vanilla Type B ships, and a Type C
+of each that has a vanilla Type C (and the Chonkswallow, from the
+Kestrel C). For each one, this makes its layout (data/<img>.txt and .xml in
 the mod), its images (hull, cloak, floor, gibs, shield, the miniature for
 the hangar and the interiors of its bigger rooms, in the mod's img/) and its
 blueprint (in autoBlueprints.xml.append, between this script's own marks).
@@ -50,6 +51,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from chonkestrel_art import miniature
+import mod_text
 from ship_variants import (BLUEPRINTS_FILE, GIB_DIRECTIONS, MOD, ROOM, Dat, Layout, gibs, hull_image, insert,
                            keep_rows, layout_xml_parts, moved_row, stretch_layout, tail_rows, vanilla_blueprints)
 
@@ -366,6 +368,8 @@ SHIPS += [
         "title": "The Chonksprey", "class": "Chonksprey",
         "desc": "The Osprey, with twice the guns: two Artillery Beams sweeping the enemies' ships, two "
                 "weapons systems with Burst Lasers, and a Federation crew of every race.",
+        # (the stretched hull cleaned as it first was, see BLACK_LEVEL)
+        "black": (60, 0.4, 1),
         # (two rows either side of its middle, through the doors and weapons
         # rooms above it and the oxygen and drones rooms below, which get
         # taller)
@@ -451,6 +455,156 @@ SHIPS += [
     },
 ]
 
+
+# The Type C versions, each made from the vanilla Type C ship (in the
+# Advanced Edition's dlcBlueprintsOverwrite.xml), with its race's systems,
+# built on what that ship has. The Lanius and the Crystals have no Type C,
+# so they get none either.
+SHIPS += [
+    {
+        "vanilla": "PLAYER_SHIP_HARD_3", "name": "PLAYER_SHIP_CHONKESTREL_3", "img": "chonkswallow",
+        "title": "The Chonkswallow", "class": "Chonkswallow",
+        "desc": "The Swallow, as big as the Chonkestrel: two of most systems, Dual Shot Lasers and Ion "
+                "Stunners in two weapons systems, a long medbay, and a human crew with two Lanius.",
+        # (through the weapons room, which gets taller, as the hull's
+        # body and nose carry on cleanly)
+        "cuts": [{"line": 2, "add": 4, "rooms": [
+            (0, 0, 2, 2, S("engines", 2)), (2, 0, 2, 2, S("shields", 2)), (0, 2, 2, 2, None),
+            (2, 2, 2, 2, S("oxygen", 1)), (6, 0, 2, 2, S("weapons", 2)), (6, 2, 2, 2, None),
+            (8, 0, 2, 1, S("sensors", 1)), (8, 1, 2, 3, None), (10, 0, 2, 4, S("medbay", 1)),
+            (12, 0, 3, 4, None)]}],
+        "weapons": [["LASER_BURST_2", "ION_STUN"], ["LASER_BURST_2", "ION_STUN"]], "missiles": 8,
+        "drones": [], "drone_parts": 6, "drone_slots": 2,
+        "augments": [],
+        "crew": [("human", "pilot", 0), ("human", "shields", 0), ("human", "shields", 1), ("human", "weapons", 0),
+                 ("human", "weapons", 1), ("human", "sensors", 1), ("anaerobic", "engines", 0),
+                 ("anaerobic", "engines", 1)],
+    },
+    {
+        "vanilla": "PLAYER_SHIP_CIRCLE_3", "name": "PLAYER_SHIP_XFTL_ENGI_3", "img": "chonkagon",
+        "title": "The Chonkagon", "class": "Chonkagon",
+        "desc": "The Tetragon, with beam drones to spare: three drones systems with beam drones in all of "
+                "them, the Tetragon's defense scrambler, and Engi with a Lanius to hack.",
+        # (through the shields and the empty room by the nose, which get
+        # taller)
+        "cuts": [{"line": 4, "add": 4, "rooms": [
+            (0, 0, 2, 2, S("drones", 2)), (2, 0, 2, 2, S("drones", 2)), (0, 2, 2, 2, S("weapons", 2)),
+            (2, 2, 2, 2, None), (7, 0, 1, 4, None)]}],
+        "weapons": [["LASER_BURST_2"], ["XFTL_X2_LASER_BURST_2"]], "missiles": 0,
+        "drones": ["COMBAT_BEAM", "DEFENSE_1", "COMBAT_BEAM", "XFTL_X2_COMBAT_BEAM"], "drone_parts": 40,
+        "drone_slots": 3, "augments": ["DEFENSE_SCRAMBLER"],
+        "crew": [("engi", "pilot", 0), ("engi", "shields", 0), ("engi", "weapons", 0), ("engi", "weapons", 1),
+                 ("engi", "engines", 0), ("anaerobic", "hacking", 0)],
+    },
+    {
+        "vanilla": "PLAYER_SHIP_ENERGY_3", "name": "PLAYER_SHIP_XFTL_ZOLTAN_3", "img": "chonkerenkov",
+        "title": "The Chonkerenkov", "class": "Chonkerenkov",
+        "desc": "The Cerenkov, run on its crew and its batteries: three shields systems, two backup "
+                "batteries, two Zoltan shields, Ion Chargers and a crew of Zoltan.",
+        # (below its middle, where no rooms are in the way)
+        "cuts": [{"line": 5, "add": 4, "rooms": [
+            (0, 0, 2, 2, S("shields", 2)), (2, 0, 2, 2, S("shields", 2)), (4, 0, 2, 2, S("weapons", 3)),
+            (0, 2, 2, 2, S("battery", 1)), (2, 2, 4, 2, None), (6, 0, 2, 4, None), (8, 0, 5, 4, None)]}],
+        "weapons": [["ION_CHARGEGUN"], ["ION_CHARGEGUN"]], "missiles": 4,
+        "drones": ["COMBAT_BEAM"], "drone_parts": 30, "drone_slots": 2,
+        "augments": ["ENERGY_SHIELD", "ENERGY_SHIELD"],
+        "crew": [("energy", "pilot", 0), ("energy", "shields", 0), ("energy", "shields", 1),
+                 ("energy", "shields", 2), ("energy", "weapons", 0), ("energy", "weapons", 1),
+                 ("energy", "engines", 0)],
+    },
+    {
+        "vanilla": "PLAYER_SHIP_FED_3", "name": "PLAYER_SHIP_XFTL_FED_3", "img": "chonkatidae",
+        "title": "The Chonkatidae", "class": "Chonkatidae",
+        "desc": "The Fregatidae, with two Artillery Beams, a Dual Shot Laser in each weapons system, and a "
+                "Federation crew of humans with Zoltan and a Mantis.",
+        # (through its middle, and the engines, piloting, battery, artillery
+        # and weapons rooms, which get taller)
+        "cuts": [{"line": 4, "add": 4, "rooms": [
+            (3, 0, 1, 4, None), (5, 0, 2, 1, S("artillery", 1, weapon="ARTILLERY_FED")), (5, 1, 2, 3, None),
+            (9, 0, 2, 2, S("shields", 2)), (9, 2, 2, 2, S("weapons", 2)), (11, 0, 2, 4, None)]}],
+        "weapons": [["LASER_BURST_2"], ["LASER_BURST_2"]], "missiles": 10,
+        "drones": [], "drone_parts": 0, "drone_slots": 2,
+        "augments": ["O2_MASKS"],
+        "crew": [("human", "pilot", 0), ("human", "shields", 0), ("human", "weapons", 0), ("human", "weapons", 1),
+                 ("human", "sensors", 0), ("energy", "engines", 0), ("energy", "artillery", 0),
+                 ("mantis", "shields", 1)],
+    },
+    {
+        "vanilla": "PLAYER_SHIP_JELLY_3", "name": "PLAYER_SHIP_XFTL_SLUG_3", "img": "chonkolimax",
+        "title": "The Chonkolimax", "class": "Chonkolimax",
+        "desc": "The Ariolimax, all eyes and minds: two sensors, two hacking and two mind control systems, "
+                "all installed, Chain Burst Lasers, and a crew of Slugs.",
+        # (below its middle, where no rooms are in the way)
+        "cuts": [{"line": 5, "add": 4, "rooms": [
+            (0, 0, 2, 1, S("sensors", 1)), (0, 1, 2, 1, S("mind", 1)), (0, 2, 2, 2, S("hacking", 1)),
+            (2, 0, 2, 2, S("weapons", 3)), (2, 2, 2, 2, None), (4, 0, 2, 4, None), (6, 0, 2, 4, None)]}],
+        "enable": {"sensors": 1},
+        "weapons": [["LASER_CHAINGUN"], ["LASER_CHAINGUN"]], "missiles": 2,
+        "drones": [], "drone_parts": 15, "drone_slots": 2,
+        "augments": ["SLUG_GEL"],
+        "crew": [("slug", "pilot", 0), ("slug", "shields", 0), ("slug", "weapons", 0), ("slug", "weapons", 1),
+                 ("slug", "engines", 0), ("slug", "sensors", 0)],
+    },
+    {
+        "vanilla": "PLAYER_SHIP_MANTIS_3", "name": "PLAYER_SHIP_XFTL_MANTIS_3", "img": "chonkeseus",
+        "title": "The Chonkeseus", "class": "Chonkeseus",
+        "desc": "The Theseus, built to board: its teleporter now a pad for eight, a second one for four, "
+                "two medbays, Lockdown and Stun Bombs, and Mantis with an Engi and a Lanius.",
+        # (two rows either side of its middle, through the hacking and medbay
+        # rooms above it and the cloaking room and teleporter below, which get
+        # taller; repeating the row of pixels eight above each cut, as the ones
+        # just above have a pale highlight across its windows, which would make
+        # pale blocks)
+        "cuts": [
+            {"line": 3, "add": 2, "source": -8, "rooms": [
+                (3, 0, 2, 2, S("teleporter", 1)), (5, 0, 2, 2, None), (7, 0, 1, 2, None),
+                (10, 0, 2, 2, S("weapons", 2))]},
+            {"line": 7, "add": 2, "source": -8, "rooms": [
+                (3, 0, 2, 2, S("medbay", 1)), (5, 0, 3, 2, None), (10, 0, 2, 2, None)]},
+        ],
+        "weapons": [["BOMB_LOCK", "BOMB_STUN"], ["BOMB_LOCK", "BOMB_STUN"]], "missiles": 40,
+        "drones": [], "drone_parts": 0, "drone_slots": 2,
+        "augments": ["CREW_STIMS"],
+        "crew": [("engi", "pilot", 0), ("anaerobic", "engines", 0), ("mantis", "shields", 0),
+                 ("mantis", "weapons", 0), ("mantis", "weapons", 1), ("mantis", "teleporter", 0),
+                 ("mantis", "teleporter", 1)],
+    },
+    {
+        "vanilla": "PLAYER_SHIP_ROCK_3", "name": "PLAYER_SHIP_XFTL_ROCK_3", "img": "chonktite",
+        "title": "The Chonktite", "class": "Chonktite",
+        "desc": "The Tektite, with Rock and Crystal guns: three weapons systems with Swarm Missiles and "
+                "Heavy Crystals, more hull than any other ship its size, Rock Plating, Rocks and Crystals.",
+        # (across its middle, through the engines, which get taller)
+        "cuts": [{"line": 3, "add": 4, "rooms": [
+            (2, 0, 2, 2, S("weapons", 3)), (4, 0, 2, 2, S("weapons", 3)), (2, 2, 2, 2, S("shields", 2)),
+            (4, 2, 2, 2, None), (6, 0, 2, 4, None)]}],
+        "weapons": [["MISSILE_CHARGEGUN", "CRYSTAL_HEAVY_1"], ["MISSILE_CHARGEGUN"],
+                    ["CRYSTAL_HEAVY_1", "XFTL_X2_CRYSTAL_HEAVY_1"]],
+        "missiles": 30, "weapon_slots": 9, "health": 40,
+        "drones": [], "drone_parts": 0, "drone_slots": 2,
+        "augments": ["ROCK_ARMOR"],
+        "crew": [("rock", "pilot", 0), ("rock", "shields", 0), ("rock", "shields", 1), ("rock", "weapons", 0),
+                 ("crystal", "weapons", 1), ("crystal", "weapons", 2), ("rock", "engines", 0)],
+    },
+    {
+        "vanilla": "PLAYER_SHIP_STEALTH_3", "name": "PLAYER_SHIP_XFTL_STEALTH_3", "img": "simo_chonk",
+        "title": "Simo-CHONK", "class": "Simo-CHONK",
+        "desc": "The Simo-H, doubled: two cloaking systems, Shield Overchargers instead of shields, a "
+                "Laser Charger in each weapons system, and a crew of humans with a Rock and a Slug.",
+        # (through its middle, and the engines, shields and piloting rooms,
+        # which get taller)
+        "cuts": [{"line": 3, "add": 4, "rooms": [
+            (0, 0, 2, 2, S("cloaking", 1)), (0, 2, 2, 2, None), (4, 0, 1, 4, None),
+            (5, 0, 2, 2, S("weapons", 2)), (5, 2, 2, 2, None), (10, 0, 2, 4, None)]}],
+        "enable": {"cloaking": 1},
+        "weapons": [["LASER_CHARGEGUN_PLAYER", "BEAM_1"], ["LASER_CHARGEGUN_PLAYER"]], "missiles": 0,
+        "drones": ["DRONE_SHIELD_PLAYER", "ANTI_DRONE", "DRONE_SHIELD_PLAYER"], "drone_parts": 30, "drone_slots": 3,
+        "augments": ["ADV_SCANNERS"],
+        "crew": [("human", "pilot", 0), ("human", "weapons", 0), ("human", "weapons", 1), ("human", "engines", 0),
+                 ("rock", "doors", 0), ("slug", "sensors", 0)],
+    },
+]
+
 # The tallest a ship's hull can be, to fit on the screen (the Chonkestrel's
 # is 558), and how far above and below its rooms it's kept as it is, if it's
 # made shorter
@@ -478,12 +632,16 @@ MOUNT_REACH_COST = 1.5
 # systems than the vanilla ship has (see nose_mounts)
 ARTILLERY_SPACING = 70
 
-# How dark a pixel of the hull has to be to count as black (an edge line or
-# a gap between its panels), which isn't repeated when it's stretched (see
-# clean_row): darker than this, and than this share of the hull's usual
-# brightness
-BLACK_LEVEL = 60
-BLACK_SHARE = 0.4
+# How dark a pixel of the hull has to be to count as black (an edge line, a
+# gap between its panels, or dark machinery, as the Crystals' guns), which
+# isn't repeated when it's stretched (see clean_row): darker than this, and
+# than this share of the hull's usual brightness; and how many rooms above
+# and below the split it looks for a row that's less black there. A ship can
+# set its own (its "black"), as the Chonksprey keeps the narrower search it
+# was made with, which keeps the Osprey's orange and olive panels
+BLACK_LEVEL = 90
+BLACK_SHARE = 0.5
+BLACK_SEARCH_ROOMS = 3
 
 # The floor: how far it reaches past the rooms, and its edge and colour (as
 # vanilla's)
@@ -505,7 +663,10 @@ SUBSYSTEMS = {"pilot", "doors", "sensors", "battery"}
 NO_DEFAULT_IMAGE = {"clonebay", "teleporter"}
 
 # The rest of each ship's blueprint, as the Chonkestrel's
-MAX_CREW = 16
+MAX_CREW = 18
+# (two fewer on a ship with three or more shields systems, so its
+# shields' bars and the crew list both fit on the screen)
+MAX_CREW_MANY_SHIELDS = MAX_CREW - 2
 MAX_CARGO = 8
 MAX_AUGMENTS = 6
 OPPONENT_SHIPS = 3
@@ -605,13 +766,13 @@ def spread(image, size):
     return out
 
 
-def clean_row(hull, split, source):
+def clean_row(hull, split, source, black=(BLACK_LEVEL, BLACK_SHARE, BLACK_SEARCH_ROOMS)):
     """
     The row of pixels to repeat when the hull's stretched at split: the one
-    at source, but where that's black (an edge line, or a gap between
-    panels, which repeated would make a black block), each run of black
-    pixels is taken from the row near the split (up to a room above or
-    below it) with the least black there, as long as it's solid where the
+    at source, but where that's black (an edge line, a gap between panels
+    or dark machinery, which repeated would make a black block), each run
+    of black pixels is taken from the row near the split (up to
+    BLACK_SEARCH_ROOMS rooms above or below it) with the least black there, as long as it's solid where the
     row at source is. So the stretched hull looks closed, as the rest is.
     """
     pixels = np.asarray(hull).astype(np.int32)
@@ -620,14 +781,16 @@ def clean_row(hull, split, source):
     # (black for this hull: darker than most of it, so a dark ship's own
     # dark panels aren't taken for gaps)
     solid_pixels = pixels[pixels[..., 3] > 200][:, :3].max(axis=1)
-    level = min(BLACK_LEVEL, BLACK_SHARE * float(np.median(solid_pixels)))
+    black_level, black_share, search_rooms = black
+    level = min(black_level, black_share * float(np.median(solid_pixels)))
 
     def black(line):
         return (line[:, 3] > 200) & (line[:, :3].max(axis=1) < level)
 
     solid = row[:, 3] > 200
     dark = black(row)
-    candidates = [r for r in range(split - ROOM, split + ROOM) if 0 <= r < h and r != source]
+    reach = search_rooms * ROOM
+    candidates = [r for r in range(split - reach, split + reach) if 0 <= r < h and r != source]
     x = 0
     while x < w:
         if not dark[x]:
@@ -925,7 +1088,8 @@ def make_ship(dat, blueprints, cat, ship):
 
         split = origin[1] + line * ROOM + cut.get("shift", 0)
         source = split + cut.get("source", -1)
-        hull = insert_row(hull, split, add * ROOM, clean_row(hull, split, source))
+        black = ship.get("black", (BLACK_LEVEL, BLACK_SHARE, BLACK_SEARCH_ROOMS))
+        hull = insert_row(hull, split, add * ROOM, clean_row(hull, split, source, black))
         cloak = insert(cloak, "y", split - cloak_offset[1], add * ROOM, source - cloak_offset[1])
         for m in mounts + artillery_mounts:
             if int(m["y"]) >= split:
@@ -1021,7 +1185,8 @@ def blueprint_xml(made):
     main = [e for e in made.systems if e.tag not in SUBSYSTEMS]
     medbay_rooms = {e.get("room") for e in main if e.tag == "medbay"}
     count = len([e for e in main if not (e.tag == "clonebay" and e.get("room") in medbay_rooms)])
-    ET.SubElement(bp, "maxCrew").text = str(MAX_CREW)
+    shields = len(system_rooms(made, "shields"))
+    ET.SubElement(bp, "maxCrew").text = str(MAX_CREW_MANY_SHIELDS if shields >= 3 else MAX_CREW)
     ET.SubElement(bp, "maxSystems").text = str(count)
 
     weapons_systems = len(system_rooms(made, "weapons"))
@@ -1056,6 +1221,9 @@ def blueprint_xml(made):
     for tag, text in (("maxCargo", MAX_CARGO), ("maxAugments", MAX_AUGMENTS), ("shipSize", 2),
                       ("opponentShips", OPPONENT_SHIPS), ("opponentShipsAtStart", OPPONENT_SHIPS_AT_START)):
         ET.SubElement(bp, tag).text = str(text)
+    # The vanilla ship it's made from, which the hangar's Normal and Chonky
+    # buttons switch between it and
+    ET.SubElement(bp, "xftlVanillaShip").text = ship["vanilla"]
     ET.indent(bp, "    ")
     return ET.tostring(bp, encoding="unicode")
 
@@ -1131,9 +1299,12 @@ def write(made):
 
 
 def write_blueprints(entries):
+    # (their classes and names as keys, with the English in text_blueprints.xml.append)
+    entries = mod_text.keyed_blueprints(entries, "tools/race_ships.py")
     text = BLUEPRINTS_FILE.read_text() if BLUEPRINTS_FILE.exists() else ""
     if BEGIN_MARK in text:
-        text = text[:text.index(BEGIN_MARK)] + text[text.index(END_MARK) + len(END_MARK):]
+        # (the blank lines either side of it kept to one gap, so they don't pile up)
+        text = text[:text.index(BEGIN_MARK)].rstrip() + "\n\n" + text[text.index(END_MARK) + len(END_MARK):].lstrip()
     block = "\n".join([
         BEGIN_MARK,
         "<!--",

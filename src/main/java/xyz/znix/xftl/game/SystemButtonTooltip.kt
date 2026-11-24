@@ -45,11 +45,24 @@ class SystemButtonTooltip(val game: InGameState, val system: AbstractSystem) : D
                     is Engines -> Skill.ENGINES
                     is Shields -> Skill.SHIELDS
                     is Weapons -> Skill.WEAPONS
+                    // (an XFTL extension, see Drones.manningSpeed)
+                    is Drones -> Skill.DRONES
+                    // (and Artillery.manningBonus)
+                    is Artillery -> Skill.WEAPONS
+                    // (and Manning)
+                    is Hacking -> Skill.DRONES
+                    is MindControl, is Oxygen -> Skill.LIFE_SUPPORT
                     else -> null
                 }
                 val skillLevel = skillType?.let { system.getSkillLevel(it) }
                 if (skillLevel != null && power > 0) {
-                    val desc = skillType.getDescription(game, skillLevel)
+                    val desc = when (system) {
+                        is Artillery -> game.translator["xftl_artillery_skill"].replaceArg(Weapons.SKILL_BONUSES[skillLevel.level] * Artillery.MANNING_SHARE)
+                        is Hacking -> game.translator["xftl_hacking_skill"].replaceArg(Manning.SKILL_BONUSES[skillLevel.level])
+                        is MindControl -> game.translator["xftl_mind_skill"].replaceArg(Manning.SKILL_BONUSES[skillLevel.level])
+                        is Oxygen -> game.translator["xftl_oxygen_skill"].replaceArg(Manning.SKILL_BONUSES[skillLevel.level])
+                        else -> skillType.getDescription(game, skillLevel)
+                    }
                     lines += ""
                     lines += game.translator["manning_bonus"].replaceArg(desc)
                 }

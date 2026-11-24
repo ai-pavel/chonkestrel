@@ -655,7 +655,8 @@ class ExtinguishFireTask(ai: FriendlyCrewAI, room: Room) : AITask(ai, room) {
 
 class ManningTask(ai: FriendlyCrewAI, room: Room) : AITask(ai, room) {
     override fun priorityWithoutDanger(crew: AbstractCrew): Int {
-        val isHard = room.ship.sys.difficulty == Difficulty.HARD
+        // (insane does as hard does)
+        val isHard = room.ship.sys.difficulty.atLeast(Difficulty.HARD)
 
         // See the original XFTL's doc/crew-ai
         val systemPriority = when (room.system) {
@@ -663,9 +664,13 @@ class ManningTask(ai: FriendlyCrewAI, room: Room) : AITask(ai, room) {
             is Shields -> if (isHard) 67 else 65
             is Engines -> if (isHard) 65 else 67
             is Weapons, is Artillery -> 66
-            is Oxygen -> 68
+            // (the drones can be manned too, an XFTL extension, with their
+            // own skill: after the weapons, as their bonus is as big; and
+            // the hacking, by the same skill, and the mind control and
+            // oxygen by the Life Support skill, see Manning)
+            is Oxygen, is Drones, is Hacking -> 68
             is Sensors -> 69
-            is Doors, is Cloaking -> 70
+            is Doors, is Cloaking, is MindControl -> 70
             is Teleporter -> 71
             is Medbay -> 72
             else -> 1000

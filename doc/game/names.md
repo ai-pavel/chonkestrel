@@ -79,7 +79,7 @@ names in the second female list (Beth, Debbie and Kara).
 
 The Chonkestrel mod adds 169 more names (140 male and 29 female, as many as
 the game has) to the first English lists, in `names.xml.append`, as it has
-room for sixteen crew.
+room for eighteen crew.
 
 ## Adding a preset
 

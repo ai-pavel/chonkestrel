@@ -8,6 +8,7 @@ import xyz.znix.xftl.math.ConstPoint
 import xyz.znix.xftl.math.IPoint
 import xyz.znix.xftl.rendering.Colour
 import xyz.znix.xftl.rendering.Graphics
+import xyz.znix.xftl.rendering.Image
 import xyz.znix.xftl.rendering.StandardTooltip
 import xyz.znix.xftl.sys.Input
 import kotlin.math.roundToInt
@@ -126,12 +127,17 @@ class AchievementsWindow(private val game: InGameState, private val close: () ->
         g.colour = Constants.JUMP_DISABLED_TEXT
         Buttons.drawRounded(g, x + 2, y + 2, CELL_WIDTH - 4, CELL_HEIGHT - 4, 3)
 
-        // The hangar's miniature, at half its size
+        // The ship's picture for this window, the hangar's miniature at
+        // half its size (made by tools/achievement_art.py, as crisp as the
+        // miniature, rather than the game halving it, which skips pixels),
+        // or the miniature halved, for a ship without one
         val blueprint = row.blueprint
-        val mini = blueprint?.let { game.getImgIfExists("img/customizeUI/miniship_${it.img}.png") }
+        val picture = blueprint?.let { game.getImgIfExists("img/customizeUI/xftl_ach_ship_${it.img}.png") }
+        val mini = picture ?: blueprint?.let { game.getImgIfExists("img/customizeUI/miniship_${it.img}.png") }
         if (mini != null) {
-            val w = mini.width * MINI_SCALE
-            val h = mini.height * MINI_SCALE
+            val scale = if (picture != null) 1f else MINI_SCALE
+            val w = mini.width * scale
+            val h = mini.height * scale
             mini.draw(x + 8f, y + (CELL_HEIGHT - h) / 2f, w, h)
         }
 
@@ -148,7 +154,8 @@ class AchievementsWindow(private val game: InGameState, private val close: () ->
         for ((index, ach) in row.achievements.withIndex()) {
             val iconX = x + ICONS_LEFT + index * (ICON + ICON_GAP)
             val unlocked = profile.getAchievement(ach) != null
-            val icon = game.getImg(ach.img)
+            // (its icon at this window's size, if there's one, see smallIcon)
+            val icon = smallIcon(ach.img)
             if (unlocked) {
                 icon.draw(iconX.f, iconTop.f, ICON.f, ICON.f)
             } else {
@@ -180,7 +187,7 @@ class AchievementsWindow(private val game: InGameState, private val close: () ->
             lines += t["xftl_ach_best"].replace("\\1", "${best.coerceAtMost(goal.target)}/${goal.target}")
         }
         val unlock = profile.getAchievement(ach)
-        lines += if (unlock != null) t["ach_" + unlock.difficulty.name.lowercase()] else t["xftl_ach_locked"]
+        lines += if (unlock != null) t[unlock.difficulty.achievementUnlockKey] else t["xftl_ach_locked"]
         return lines.joinToString("\n")
     }
 
@@ -231,6 +238,14 @@ class AchievementsWindow(private val game: InGameState, private val close: () ->
     private fun centredBaseline(font: SILFontLoader, height: Int): Int =
         ((height - (font.baselineToTop + font.trueBaselineOffset) * font.scale) / 2 +
                 font.baselineToTop * font.scale).roundToInt()
+
+    /**
+     * An achievement's icon at this window's size, [ICON] (`<image>_48.png`,
+     * made by tools/achievement_art.py, scaled down smoothly), or its full
+     * one, which the game scales down, for one without it (vanilla's).
+     */
+    private fun smallIcon(img: String): Image =
+        game.getImgIfExists(img.removeSuffix(".png") + "_$ICON.png") ?: game.getImg(img)
 
     companion object {
         private const val WIDTH = 1240

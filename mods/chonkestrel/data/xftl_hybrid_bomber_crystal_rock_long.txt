@@ -255,3 +255,14 @@ DOOR
 15
 0
 1
+DOOR
+3
+6
+0
+14
+1
+XFTL_WIDE_DOOR
+3
+5
+1
+2

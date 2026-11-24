@@ -34,14 +34,16 @@ class InfoPanel(private val game: InGameState) {
         drawDescriptionBox(blueprint.title, blueprint.desc, null, emptyList(), INFO_HEIGHT_ITEM)
     }
 
-    fun drawDrone(blueprint: DroneBlueprint) {
+    // (without the tip under it, with [withTip] false, as the statistics
+    // screen shows it, the tip being for buying it)
+    fun drawDrone(blueprint: DroneBlueprint, withTip: Boolean = true) {
         val lines = ArrayList<String>()
         lines += game.translator["required_power"].replaceArg(blueprint.power)
         lines += game.translator["drone_required"]
-        drawDescriptionBox(blueprint.title, blueprint.desc, blueprint.tip, lines, INFO_HEIGHT_DRONE)
+        drawDescriptionBox(blueprint.title, blueprint.desc, blueprint.tip.takeIf { withTip }, lines, INFO_HEIGHT_DRONE)
     }
 
-    fun drawWeapon(blueprint: AbstractWeaponBlueprint) {
+    fun drawWeapon(blueprint: AbstractWeaponBlueprint, withTip: Boolean = true) {
         val lines = ArrayList<String>()
 
         // Properly calculate the effective system and crew damage.
@@ -110,7 +112,7 @@ class InfoPanel(private val game: InGameState) {
             lines += game.translator["double_damage"]
         }
 
-        drawDescriptionBox(blueprint.title, blueprint.desc, blueprint.tip, lines, INFO_HEIGHT_WEAPON)
+        drawDescriptionBox(blueprint.title, blueprint.desc, blueprint.tip.takeIf { withTip }, lines, INFO_HEIGHT_WEAPON)
     }
 
     fun drawCrew(g: Graphics, info: LivingCrewInfo) {
@@ -119,19 +121,36 @@ class InfoPanel(private val game: InGameState) {
         val powers = info.race.powerStringIds.map { "-" + game.translator[it] }
         drawDescriptionBox(title, info.race.desc, null, powers, INFO_HEIGHT_CREW)
 
-        // Draw the skills box
+        // Draw the skills box: two to a row, vanilla's six as vanilla has
+        // them, and XFTL's two (the Drones and Life Support skills) in a row of their
+        // own at the bottom (see CREW_PANEL_ORDER). Each row's as tall as
+        // its longer description needs, two lines at the least, as vanilla's.
+        val skills = CREW_PANEL_ORDER
+        val descriptions = skills.map { skill ->
+            val level = info.getSkillLevel(skill)
+            val description = game.translator[skill.textKey + "_skill_infobox"]
+                .replaceArg(skill.getDescription(game, level))
+            tipFont.wrapString(description, 140)
+        }
+        val rowHeights = descriptions.chunked(2).map { row ->
+            SKILL_ROW_BASE_HEIGHT + maxOf(2, row.maxOf { it.size }) * SKILL_LINE_HEIGHT
+        }
         val skillsY = position.y + INFO_HEIGHT_CREW + 24
-        game.windowRenderer.render(position.x, skillsY, 323, 242)
+        game.windowRenderer.render(position.x, skillsY, 323, 44 + rowHeights.sum())
 
         val leftIconX = position.x + 9
         val rightIconX = position.x + 164
 
         titleFont.drawString(position.x + 28f, skillsY + 32f, game.translator["crew_skills"], Colour.white)
 
-        for ((index, skill) in Skill.values().withIndex()) {
+        for ((index, skill) in skills.withIndex()) {
             val row = index / 2
-            val iconX = if (index % 2 == 0) leftIconX else rightIconX
-            val iconY = skillsY + 46 + row * 66
+            val iconX = when {
+                index == skills.size - 1 && index % 2 == 0 -> (leftIconX + rightIconX) / 2
+                index % 2 == 0 -> leftIconX
+                else -> rightIconX
+            }
+            val iconY = skillsY + 46 + rowHeights.take(row).sum()
 
             val skillLevel = info.getSkillLevel(skill)
             val iconColour = when {
@@ -146,22 +165,9 @@ class InfoPanel(private val game: InGameState) {
             info.drawSkillProgressBar(g, iconX + 30, iconY + 8, 111, 9, skill)
 
             // Draw the description text
-            val level = info.getSkillLevel(skill)
-            val baseDescription = skill.getDescription(game, level)
-            val skillLocName = when (skill) {
-                Skill.PILOTING -> "pilot"
-                Skill.ENGINES -> "engines"
-                Skill.SHIELDS -> "shields"
-                Skill.WEAPONS -> "weapons"
-                Skill.REPAIRS -> "repair"
-                Skill.COMBAT -> "combat"
-            }
-            val description = game.translator[skillLocName + "_skill_infobox"].replaceArg(baseDescription)
-            val lines = tipFont.wrapString(description, 140)
             val textCentreX = iconX + 85
-
-            for ((i, line) in lines.withIndex()) {
-                val lineY = iconY + 32 + i * 15
+            for ((i, line) in descriptions[index].withIndex()) {
+                val lineY = iconY + 32 + i * SKILL_LINE_HEIGHT
                 tipFont.drawStringCentred(textCentreX.f, lineY.f, 0f, line, Colour.white)
             }
         }
@@ -365,6 +371,22 @@ class InfoPanel(private val game: InGameState) {
         const val INFO_HEIGHT_SYSTEM = 121
         const val INFO_HEIGHT_AUGMENT = 136
         const val INFO_HEIGHT_CREW = 168
+
+        // The crew's skills panel's rows (see drawCrew): vanilla's 66 pixels
+        // for two lines of description, and a line's height more for each
+        // line past that
+        private const val SKILL_LINE_HEIGHT = 15
+        private const val SKILL_ROW_BASE_HEIGHT = 66 - 2 * SKILL_LINE_HEIGHT
+
+        /**
+         * The order the crew's skills panel shows the skills in, two to a
+         * row: vanilla's six as vanilla has them, then XFTL's Drones and Life
+         * Support skills in the bottom row.
+         */
+        val CREW_PANEL_ORDER: List<Skill> = listOf(
+            Skill.PILOTING, Skill.ENGINES, Skill.SHIELDS, Skill.WEAPONS,
+            Skill.REPAIRS, Skill.COMBAT, Skill.DRONES, Skill.LIFE_SUPPORT
+        )
         const val INFO_HEIGHT_ITEM = 121
         const val INFO_HEIGHT_DRONE = 162
         const val INFO_HEIGHT_WEAPON = 252

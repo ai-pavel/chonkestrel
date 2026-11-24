@@ -106,6 +106,15 @@ class Event(
     val questAhead: Boolean = elem.getChild("quest")?.getAttributeValue("xftlAhead")?.toBoolean() ?: false
 
     /**
+     * Whether the quest's hidden, an XFTL extension
+     * (`<quest event="..." xftlHidden="true"/>`): its beacon isn't marked on
+     * the map, and the player isn't told it's been added, so it's a trap
+     * (or a surprise) waiting at one of the sector's beacons, or the next
+     * sector's. See Sector.addQuest and Beacon.hasHiddenQuest.
+     */
+    val questHidden: Boolean = elem.getChild("quest")?.getAttributeValue("xftlHidden")?.toBoolean() ?: false
+
+    /**
      * Whether this event can start a quest: itself, or through its choices
      * and the lists they lead to. The debug mode's map marks such beacons
      * (see JumpWindow).
@@ -122,6 +131,14 @@ class Event(
     val counterChanges: List<Pair<String, Int>> = elem.getChildren("xftlCounter").map {
         it.getAttributeValue("name") to (it.getAttributeValue("add")?.toInt() ?: 1)
     }
+
+    /**
+     * Whether this event moves a story on, which mustn't happen twice: it
+     * starts a quest, unlocks a ship or adds to a counter, itself or
+     * through its choices. A fight against several copies of a ship offers
+     * such a surrender only once (see InGameState.surrenderOffered).
+     */
+    val advancesStory: Boolean by lazy { advancesStory(this) }
 
     val revealMap: Boolean = elem.getChild("reveal_map") != null
     val isLastStandRepair: Boolean = elem.getChild("repair") != null
@@ -530,6 +547,21 @@ class Event(
             return when (event) {
                 is Event -> event.questName != null || event.choices.any { givesQuest(it.event, visited) }
                 is EventList -> event.events.any { givesQuest(it, visited) }
+                else -> false
+            }
+        }
+
+        /** [Event.advancesStory], for any event (a list's, if any of its events does). */
+        @JvmStatic
+        fun advancesStory(event: IEvent): Boolean = advancesStory(event, HashSet())
+
+        private fun advancesStory(event: IEvent, visited: MutableSet<IEvent>): Boolean {
+            if (!visited.add(event))
+                return false
+            return when (event) {
+                is Event -> event.questName != null || event.unlockShip != null || event.counterChanges.isNotEmpty() ||
+                        event.choices.any { advancesStory(it.event, visited) }
+                is EventList -> event.events.any { advancesStory(it, visited) }
                 else -> false
             }
         }

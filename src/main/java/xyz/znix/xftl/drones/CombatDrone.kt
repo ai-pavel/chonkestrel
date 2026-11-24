@@ -80,7 +80,7 @@ class CombatDrone(type: DroneBlueprint) : AbstractExternalDrone(type, true) {
         // This makes beams stop firing when the drone is de-powered
         // while shooting.
         weapon.forceSetPowered(isRunning)
-        weapon.update(dt, dt, weapon.isPowered)
+        weapon.update(dt, dt * manningSpeed, weapon.isPowered)
 
         if (!flightController.paused || !isRunning)
             return
@@ -139,6 +139,7 @@ class CombatDrone(type: DroneBlueprint) : AbstractExternalDrone(type, true) {
 
             else -> error("Unsupported weapon type for drone: ${weapon.type}")
         }
+        trainManningCrew()
     }
 
     private fun pickNewTarget() {

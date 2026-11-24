@@ -57,12 +57,15 @@
     - Room 15 runs the full height of the rear, with an airlock in every cell.
 -->
 <shipBlueprint name="PLAYER_SHIP_CHONKESTREL" layout="chonkestrel" img="chonkestrel">
-    <class>Chonkestrel</class>
-    <name>The Chonkestrel</name>
-    <desc>A much bigger take on the Kestrel, with room for sixteen crew, eight weapons and two of nearly every system. It's twice the size of the ships it meets, so they come in pairs.</desc>
+    <class id="xftl_ship_PLAYER_SHIP_CHONKESTREL_class"/>
+    <name id="xftl_ship_PLAYER_SHIP_CHONKESTREL_name"/>
+    <desc id="xftl_ship_PLAYER_SHIP_CHONKESTREL_desc"/>
 
     <!-- Picked by default in the hangar (an XFTL extension) -->
     <xftlDefaultShip/>
+    <!-- The vanilla ship it's a bigger take on, which the hangar's Normal
+         button switches to (an XFTL extension) -->
+    <xftlVanillaShip>PLAYER_SHIP_HARD</xftlVanillaShip>
 
     <weaponSlots>8</weaponSlots>
     <!-- Each drones system gets this many slots -->
@@ -350,11 +353,22 @@
     The Artillery Beam, never sold in vanilla (its rarity is 0), can be
     bought for the player's ship's hacking or mind control room, in place of
     that system (see BuyableArtillery in Ship.kt): it's the Federation's,
-    firing from the room if the ship hasn't a mount for it.
+    firing from the room if the ship hasn't a mount for it. It's rare: a
+    store only offers it 30% of the times it could (see
+    StoreData.ARTILLERY_CHANCE). And it goes to six bars rather than four,
+    each past vanilla's taking less off the charge (see
+    Artillery.COOLDOWN_FACTORS); the enemies' stay at four.
 -->
 <mod:findName type="systemBlueprint" name="artillery">
     <mod:findLike type="rarity">
-        <mod:setValue>4</mod:setValue>
+        <mod:setValue>5</mod:setValue>
+    </mod:findLike>
+    <mod:findLike type="maxPower">
+        <mod:setValue>6</mod:setValue>
+    </mod:findLike>
+    <mod:findLike type="upgradeCost">
+        <mod-append:level>150</mod-append:level> <!-- level 5 -->
+        <mod-append:level>300</mod-append:level> <!-- level 6 -->
     </mod:findLike>
 </mod:findName>
 
@@ -437,8 +451,8 @@
     they're never sold).
 -->
 <augBlueprint name="XFTL_HIVE_CORE">
-	<title>Devourer Hive-Core</title>
-	<desc>The Lanius hive-ship's still-living core. One asteroid in four that hits the ship is eaten, repairing a point of hull instead of doing damage.</desc>
+	<title id="aug_XFTL_HIVE_CORE_title"/>
+	<desc id="aug_XFTL_HIVE_CORE_desc"/>
 	<cost>90</cost>
 	<bp>8</bp>
 	<rarity>0</rarity>
@@ -446,8 +460,8 @@
 	<value>0.25</value>
 </augBlueprint>
 <augBlueprint name="XFTL_COMMAND_CODES">
-	<title>Vigilance Command Codes</title>
-	<desc>The blockade's command codes. Rebel automated ships in the second act hesitate when they see them: their weapons charge 20% slower.</desc>
+	<title id="aug_XFTL_COMMAND_CODES_title"/>
+	<desc id="aug_XFTL_COMMAND_CODES_desc"/>
 	<cost>90</cost>
 	<bp>8</bp>
 	<rarity>0</rarity>
@@ -455,8 +469,8 @@
 	<value>0.2</value>
 </augBlueprint>
 <augBlueprint name="XFTL_RELAY_SHARD">
-	<title>Chorus Relay Shard</title>
-	<desc>A shard of the Stormbreaker's relay dish, still humming. The crew hear the Chorus coming: they can't be mind controlled for the first 10 seconds of a fight.</desc>
+	<title id="aug_XFTL_RELAY_SHARD_title"/>
+	<desc id="aug_XFTL_RELAY_SHARD_desc"/>
 	<cost>90</cost>
 	<bp>8</bp>
 	<rarity>0</rarity>
@@ -464,8 +478,8 @@
 	<value>10</value>
 </augBlueprint>
 <augBlueprint name="XFTL_OSSUARY_SCHEMATICS">
-	<title>Ossuary Schematics</title>
-	<desc>The salvage ark's reclamation schematics. A destroyed enemy ship's drones are salvaged as drone parts: one for each drone it had.</desc>
+	<title id="aug_XFTL_OSSUARY_SCHEMATICS_title"/>
+	<desc id="aug_XFTL_OSSUARY_SCHEMATICS_desc"/>
 	<cost>90</cost>
 	<bp>8</bp>
 	<rarity>0</rarity>
@@ -480,8 +494,8 @@
     for) and DEEP_FIELD_SENSORS.
 -->
 <augBlueprint name="XFTL_RADIATION_SHIELDING">
-	<title>Radiation Shielding</title>
-	<desc>Lead-lined bulkheads from a research station at the heart of the Radiation Fields. Radiation nebulas don't hurt anyone aboard the ship.</desc>
+	<title id="aug_XFTL_RADIATION_SHIELDING_title"/>
+	<desc id="aug_XFTL_RADIATION_SHIELDING_desc"/>
 	<cost>70</cost>
 	<bp>8</bp>
 	<rarity>0</rarity>
@@ -489,8 +503,8 @@
 	<value>1</value>
 </augBlueprint>
 <augBlueprint name="XFTL_PHANTOM_PROJECTOR">
-	<title>Phantom Projector</title>
-	<desc>A derelict's sensor-ghost projector, from the Mirage Expanse. For the first 12 seconds of each fight, phantom copies of the ship draw the enemies' fire: they miss far more often.</desc>
+	<title id="aug_XFTL_PHANTOM_PROJECTOR_title"/>
+	<desc id="aug_XFTL_PHANTOM_PROJECTOR_desc"/>
 	<cost>90</cost>
 	<bp>8</bp>
 	<rarity>0</rarity>
@@ -498,8 +512,8 @@
 	<value>12</value>
 </augBlueprint>
 <augBlueprint name="XFTL_DEEP_FIELD_SENSORS">
-	<title>Deep-Field Sensors</title>
-	<desc>Sensors from a dreadnought lost in the Dark Reach, built to see through nebulas too thick for light. The sensors work in a nebula.</desc>
+	<title id="aug_XFTL_DEEP_FIELD_SENSORS_title"/>
+	<desc id="aug_XFTL_DEEP_FIELD_SENSORS_desc"/>
 	<cost>80</cost>
 	<bp>8</bp>
 	<rarity>0</rarity>

@@ -145,7 +145,7 @@ class DefenceDrone(type: DroneBlueprint) : AbstractExternalDrone(type, false) {
             return
         }
 
-        cooldown = max(0f, cooldown - dt)
+        cooldown = max(0f, cooldown - dt * manningSpeed)
 
         // A Defense Scrambler on a ship it's fighting stops it targeting
         // anything at all: it glitches, its gun spinning round
@@ -446,6 +446,7 @@ class DefenceDrone(type: DroneBlueprint) : AbstractExternalDrone(type, false) {
 
         cooldown = typeCooldown
         lastShotAtTarget = interception.target
+        trainManningCrew()
     }
 
     override fun saveToXML(elem: Element, refs: ObjectRefs) {

@@ -35,12 +35,12 @@ class AchievementTrackerTest {
     private val drones = achievement("DRONES", "dronesOut", 4)
     private val win = achievement("WIN", "win")
     private val hard = achievement("HARD", "winHard")
-    private val crew = achievement("CREW", "crewAtWin", 16)
+    private val crew = achievement("CREW", "crewAtWin", 18)
     private val noLosses = achievement("NO_LOSSES", "winNoLosses")
 
     // A game tracking those, unlocking them in a profile of its own
-    private fun tracked(): Triple<InGameTest, AchievementTracker, SaveProfile> {
-        val kit = InGameTest()
+    private fun tracked(difficulty: Difficulty = Difficulty.NORMAL): Triple<InGameTest, AchievementTracker, SaveProfile> {
+        val kit = InGameTest(difficulty = difficulty)
         val tracker = kit.state.achievementTracker
         tracker.useAchievementsForTests(listOf(missiles, drones, win, hard, crew, noLosses))
         val profile = SaveProfile.createBlank()
@@ -52,7 +52,7 @@ class AchievementTrackerTest {
     fun theGoals() {
         assertEquals(AchievementGoal(Kind.MISSILES, 10), missiles.goal)
         // The kind's own target, if it's not given
-        assertEquals(AchievementGoal(Kind.CREW_AT_WIN, 16), achievement("X", "crewAtWin").goal)
+        assertEquals(AchievementGoal(Kind.CREW_AT_WIN, 18), achievement("X", "crewAtWin").goal)
         // An unknown kind is a vanilla achievement, which isn't tracked
         assertNull(achievement("X", "somethingNew").goal)
     }
@@ -89,15 +89,50 @@ class AchievementTrackerTest {
         tracker.gameOver(GameOverWindow.Outcome.WIN)
         assertTrue(profile.getAchievement(win) != null)
         assertTrue(profile.getAchievement(noLosses) != null)
-        // Not on Hard, and without sixteen crew
+        // Not on Hard, and without eighteen crew
         assertNull(profile.getAchievement(hard))
         assertNull(profile.getAchievement(crew))
 
         // An event's value, at least the target (or, for crew lost, at most)
-        tracker.event(Kind.CREW_AT_WIN, 15)
+        tracker.event(Kind.CREW_AT_WIN, 17)
         assertNull(profile.getAchievement(crew))
-        tracker.event(Kind.CREW_AT_WIN, 16)
+        tracker.event(Kind.CREW_AT_WIN, 18)
         assertTrue(profile.getAchievement(crew) != null)
+    }
+
+    @Test
+    fun aWinOnHardOrInsaneUnlocksTheHardOne() {
+        for (difficulty in listOf(Difficulty.HARD, Difficulty.INSANE)) {
+            val (_, tracker, profile) = tracked(difficulty)
+            tracker.gameOver(GameOverWindow.Outcome.WIN)
+            // at the game's difficulty
+            assertEquals(difficulty, profile.getAchievement(hard)?.difficulty)
+            assertEquals(difficulty, profile.getAchievement(win)?.difficulty)
+        }
+
+        // An insane unlock is saved with the profile
+        val (_, tracker, profile) = tracked(Difficulty.INSANE)
+        tracker.gameOver(GameOverWindow.Outcome.WIN)
+        val loaded = SaveProfile.fromDocument(profile.save())
+        assertEquals(Difficulty.INSANE, loaded.getAchievement(hard)?.difficulty)
+    }
+
+    @Test
+    fun theOnesThisGameCantUnlockAnyMore() {
+        // Winning on Hard, on Normal
+        val (kit, tracker, _) = tracked()
+        assertTrue(tracker.isOutOfReach(hard))
+        assertFalse(tracker.isOutOfReach(win))
+        assertFalse(tracker.isOutOfReach(missiles))
+
+        // Winning without losing crew, once some have been
+        assertFalse(tracker.isOutOfReach(noLosses))
+        kit.state.stats.crewLost = 1
+        assertTrue(tracker.isOutOfReach(noLosses))
+
+        // On Hard, it's still to be won
+        val (_, onHard, _) = tracked(Difficulty.HARD)
+        assertFalse(onHard.isOutOfReach(hard))
     }
 
     @Test

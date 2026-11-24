@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FTL>
+    <!--
+    XFTL's own strings in Italian (Italiano): the translations of
+    assets/lang/en.xml, which the game shows on top of vanilla's
+    data/text-it.xml. Any string missing here is shown in English.
+
+    Write each one as en.xml has it, with the same name:
+        <text name="xftl_button_back">...</text>
+    Leave out the xftl_select_datafile_* and xftl_screen_small_* strings:
+    they're shown before the game has FTL's fonts, in one with only English
+    letters, so they stay in English.
+
+    - Keep the placeholders \1, \2 and \3: the game puts a number or a
+      name in their place. They can move within the sentence.
+    - \n is a line break. Keep the ones in short texts (such as the
+      confirmation boxes), which are laid out by hand.
+    - Escape & as &amp;, < as &lt; and > as &gt;.
+    - Only use characters FTL's fonts have: the Latin letters with accents
+      and the Cyrillic alphabet are fine, but not typographic quotes,
+      apostrophes and dashes (use " ' and -), nor the ellipsis (use ...).
+    - The buttons and titles have a fixed size: keep them about as long as
+      the English. The ones in capitals are in capitals in the game too.
+    - Use the words vanilla FTL's own Italian uses (data/text-it.xml in
+      ftl.dat), for the systems, races, resources and so on.
+
+    Check it with: python3 tools/check_translations.py it
+    (see doc/tools/translations.md, which also has a list of the missing ones
+    to start from).
+    -->
+    <text name="xftl_edit_ship">MODIFICA NAVE</text>
+    <text name="xftl_clear_edit_ship">ANNULLA MODIFICHE</text>
+    <text name="xftl_hangar_type">TIPO</text>
+    <text name="xftl_hangar_normal">NORMALE</text>
+    <text name="xftl_hangar_chonky">CHONKY</text>
+    <text name="xftl_options_display">Impostazioni schermo</text>
+    <text name="xftl_button_back">INDIETRO</text>
+    <text name="xftl_button_reset">AZZERA</text>
+    <text name="xftl_stats_reset_confirm">Sei sicuro?\nTutte le statistiche\nverranno cancellate.</text>
+    <text name="xftl_display_title">SCHERMO</text>
+    <text name="xftl_display_desc">L'interfaccia richiede almeno 1920x1080.</text>
+    <text name="xftl_options_language">Cambia lingua</text>
+    <text name="xftl_language_title">LINGUA</text>
+    <text name="xftl_language_desc">La lingua dei testi del gioco:</text>
+    <text name="xftl_language_later">Durante una partita, la nuova lingua sarà usata dal prossimo ritorno al menu principale o dalla prossima nuova partita.</text>
+    <text name="xftl_mainmenu_statistics">STATISTICHE</text>
+    <text name="xftl_escape_statistics">STATISTICHE</text>
+    <text name="xftl_escape_achievements_button">OBIETTIVI</text>
+    <text name="xftl_stats_title">MIGLIORI PUNTEGGI</text>
+    <text name="xftl_stats_none">Ancora nessuna partita conclusa.</text>
+    <text name="xftl_stats_started">Iniziata</text>
+    <text name="xftl_stats_duration">Durata</text>
+    <text name="xftl_stats_difficulty">Difficoltà</text>
+    <text name="xftl_stats_names">Nomi equipaggio</text>
+    <text name="xftl_stats_sector">Settore</text>
+    <text name="xftl_stats_beacons">Astrofari esplorati</text>
+    <text name="xftl_stats_ships">Navi sconfitte</text>
+    <text name="xftl_stats_crews_killed">Equipaggi uccisi</text>
+    <text name="xftl_stats_scrap">Moduli raccolti</text>
+    <text name="xftl_stats_crew_lost">Equipaggio perso</text>
+    <text name="xftl_stats_crew">Equipaggio (punta per le abilità)</text>
+    <text name="xftl_stats_systems">Sistemi</text>
+    <text name="xftl_stats_weapons">Armi</text>
+    <text name="xftl_stats_drones">Droni</text>
+    <text name="xftl_stats_augments">Potenziamenti</text>
+    <text name="xftl_stats_won">Vittoria</text>
+    <text name="xftl_stats_destroyed">Nave distrutta</text>
+    <text name="xftl_stats_crew_dead">Equipaggio ucciso</text>
+    <text name="xftl_stats_lost">Sconfitta</text>
+    <text name="xftl_mainmenu_exit">ESCI</text>
+    <text name="xftl_mainmenu_achievements">OBIETTIVI</text>
+    <text name="xftl_escape_achievements">Obiettivi - tutte le navi</text>
+    <text name="xftl_escape_achievements_tip">Vedi gli obiettivi di ogni nave.</text>
+    <text name="xftl_ach_title">OBIETTIVI</text>
+    <text name="xftl_ach_none">Nessuna nave ha obiettivi da seguire.</text>
+    <text name="xftl_ach_this_game">Questa partita: \1</text>
+    <text name="xftl_ach_best">Partita migliore: \1</text>
+    <text name="xftl_ach_locked">Bloccato</text>
+    <text name="xftl_ach_out_of_reach">Non più ottenibile in questa partita</text>
+    <text name="xftl_ach_insane">Sbloccato a FOLLE</text>
+    <text name="xftl_new_game_names">NOMI EQUIP.</text>
+    <text name="xftl_insane_button">FOLLE</text>
+    <text name="xftl_names_default">Predefiniti</text>
+    <text name="xftl_names_random">Casuali</text>
+    <text name="xftl_names_all">TUTTI</text>
+    <text name="xftl_names_american">Americani</text>
+    <text name="xftl_names_english">Inglesi</text>
+    <text name="xftl_names_irish">Irlandesi</text>
+    <text name="xftl_names_scottish">Scozzesi</text>
+    <text name="xftl_names_french">Francesi</text>
+    <text name="xftl_names_spanish">Spagnoli</text>
+    <text name="xftl_names_italian">Italiani</text>
+    <text name="xftl_names_german">Tedeschi</text>
+    <text name="xftl_names_russian">Russi</text>
+    <text name="xftl_names_arabic">Arabi</text>
+    <text name="xftl_names_turkish">Turchi</text>
+    <text name="xftl_names_indian">Indiani</text>
+    <text name="xftl_names_chinese">Cinesi</text>
+    <text name="xftl_names_japanese">Giapponesi</text>
+    <text name="xftl_names_korean">Coreani</text>
+    <text name="xftl_names_starwars">Star Wars</text>
+    <text name="xftl_names_startrek">Star Trek</text>
+    <text name="xftl_names_masseffect">Mass Effect</text>
+    <text name="xftl_confirm_overwrite_save">Sei sicuro?\nQuesto sovrascriverà\nil tuo salvataggio.</text>
+    <text name="xftl_fleet_rewards">Sistemate le navi nemiche, recuperi ciò che ne resta:\n</text>
+    <text name="xftl_reward_scrap">\1 moduli</text>
+    <text name="xftl_reward_fuel">\1 carburante</text>
+    <text name="xftl_reward_missiles">\1 missili</text>
+    <text name="xftl_reward_drones">\1 chip per droni</text>
+    <text name="xftl_reward_nothing">niente</text>
+    <text name="xftl_max_piercing">Perforazione max: \1</text>
+    <text name="xftl_weapon_combined">\1 in una: spara fino a \1 navi nemiche insieme</text>
+    <text name="xftl_weapon_combined_beam">\1 in una: un lungo raggio che attraversa fino a \1 navi nemiche</text>
+    <text name="xftl_weapon_title_x2">\1 doppio</text>
+    <text name="xftl_weapon_title_x3">\1 triplo</text>
+    <text name="xftl_weapon_short_x2">\1 (x2)</text>
+    <text name="xftl_weapon_short_x3">\1 (x3)</text>
+    <text name="xftl_level_manned">Presidiato</text>
+    <text name="xftl_artillery_5">Ricarica di 17 secondi, 2 navi</text>
+    <text name="xftl_artillery_6">Ricarica di 14 secondi, 3 navi</text>
+    <text name="xftl_crew_killed">EQUIPAGGIO UCCISO</text>
+    <text name="xftl_mind_duration">Dura \1 secondi</text>
+    <text name="xftl_fleet_surrender">Il loro capitano parla per tutto il gruppo: se accetti, anche le altre navi si ritireranno.</text>
+    <text name="xftl_fleet_reward_single">Sistemata la nave nemica, recuperi ciò che ne resta.</text>
+    <text name="xftl_hotkeys_crew_group">GESTIONE EQUIPAGGIO</text>
+    <text name="xftl_hotkeys_system_power_group">ENERGIA AI SISTEMI</text>
+    <text name="xftl_hotkeys_weapons_group">ARMI E DRONI</text>
+    <text name="xftl_hotkeys_system_actions_group">AZIONI DEI SISTEMI</text>
+    <text name="xftl_hotkeys_ui_group">CONTROLLO DI GIOCO</text>
+    <text name="xftl_hotkeys_dev_group">TRUCCHI E MODDING</text>
+    <text name="xftl_hotkeys_default_tooltip">Predefinito: \1</text>
+    <text name="xftl_hotkeys_default_tooltip_none">Predefinito: nessuno</text>
+    <text name="xftl_hotkeys_conflicts_tooltip">In conflitto con:</text>
+    <text name="xftl_hotkeys_crew9">Seleziona membro 9</text>
+    <text name="xftl_hotkeys_crew10">Seleziona membro 10</text>
+    <text name="xftl_hotkeys_crew11">Seleziona membro 11</text>
+    <text name="xftl_hotkeys_crew12">Seleziona membro 12</text>
+    <text name="xftl_hotkeys_crew13">Seleziona membro 13</text>
+    <text name="xftl_hotkeys_crew14">Seleziona membro 14</text>
+    <text name="xftl_hotkeys_crew15">Seleziona membro 15</text>
+    <text name="xftl_hotkeys_crew16">Seleziona membro 16</text>
+    <text name="xftl_hotkeys_weapon5">Slot arma 5</text>
+    <text name="xftl_hotkeys_weapon6">Slot arma 6</text>
+    <text name="xftl_hotkeys_weapon7">Slot arma 7</text>
+    <text name="xftl_hotkeys_weapon8">Slot arma 8</text>
+    <text name="xftl_hotkeys_console">Console di debug</text>
+    <text name="xftl_hotkeys_frame_step">Riprendi per 10ms</text>
+    <text name="xftl_hotkeys_fast_forward">Avanti veloce</text>
+    <text name="xftl_big_ship_salvage">Il resto del relitto della nave più grande ha altro da recuperare.</text>
+    <text name="xftl_hybrid_salvage">L'ibrido era due navi saldate in una, e il suo relitto ha altro da recuperare.</text>
+    <text name="xftl_sector_legend_hazard">Pericoloso</text>
+    <text name="xftl_sector_hazard">Settore pericoloso non identificato</text>
+    <text name="xftl_artillery_skill">Carica artiglieria +\1%</text>
+    <text name="xftl_drones_skill">Carica droni +\1%</text>
+    <text name="xftl_drones_skill_infobox">\1 se è ai droni o all'hacking.</text>
+    <text name="xftl_drones_skill_tooltip">Abilità droni:\n\1\nI droni abbattuti tornano, e gli impulsi di hacking si ricaricano, altrettanto prima.</text>
+    <text name="xftl_hacking_skill">Ricarica hacking +\1%</text>
+    <text name="xftl_life_skill">Supporto vitale +\1%</text>
+    <text name="xftl_life_skill_infobox">\1 se è al controllo mentale o all'ossigeno.</text>
+    <text name="xftl_life_skill_tooltip">Abilità supporto vitale:\n\1\nIl controllo mentale si ricarica, e l'ossigeno si riempie, altrettanto più in fretta.</text>
+    <text name="xftl_mind_skill">Ricarica controllo mentale +\1%</text>
+    <text name="xftl_oxygen_skill">Ossigeno +\1%</text>
+    <text name="xftl_sensors_nebula">Bloccati dalla nebulosa: qui i tuoi sensori non funzionano.</text>
+    <text name="xftl_map_extreme_loc">PERICOLO ESTREMO: due pericoli insieme.</text>
+    <text name="xftl_map_catastrophic_loc">PERICOLO CATASTROFICO: tre pericoli insieme.</text>
+    <text name="xftl_map_apocalyptic_loc">PERICOLO APOCALITTICO: una nebulosa, asteroidi, una stella e una pulsar, tutti insieme.</text>
+    <text name="xftl_map_radiation_loc">Nebulosa radioattiva. Le radiazioni feriscono lentamente l'equipaggio fuori dall'infermeria o dalla sala clonazione, e disturbano i sensori.</text>
+    <text name="xftl_map_mirage_loc">Nebulosa miraggio. I fantasmi dei sensori rendono la mappa inaffidabile: navi e pericoli potrebbero non essere ciò che sembrano.</text>
+    <text name="xftl_map_dark_loc">Nebulosa oscura. Niente attraversa questa nebulosa: qui sensori e droni non funzioneranno.</text>
+    <text name="xftl_map_mirage_confused">I tuoi sensori sono confusi dalla nebulosa miraggio. Potrebbe non essere accurato.</text>
+    <text name="xftl_map_chorus_loc">Controllato dal Coro. Il segnale di CONCORD qui è così forte che i sensori mostrano ciò che vuole lui: navi e pericoli potrebbero non essere ciò che sembrano.</text>
+    <text name="xftl_warning_radiation">NEBULOSA RADIOATTIVA</text>
+    <text name="xftl_warning_mirage">MIRAGGIO\nVISTA INAFFIDABILE</text>
+    <text name="xftl_warning_dark">OSCURITÀ\nDRONI DISATTIVATI</text>
+    <text name="xftl_map_boss_loc">Il boss del settore presidia l'uscita: non puoi lasciare il settore finché non è sconfitto.</text>
+    <text name="xftl_zoltan_shield_boarded">I tuoi abbordatori hanno preso due navi con scudi zoltan. I tuoi ingegneri smontano il migliore dei due generatori e lo collegano alla tua nave.</text>
+    <text name="xftl_exit_hold_broken">Senza la nave comando, il blocco si sfalda e la flotta ribelle alle tue spalle avanza a chiudere il varco. Le sue navi sono già alle altre uscite della linea. Resta una sola via: avanti, fuori dal settore.</text>
+
+</FTL>

@@ -1,7 +1,6 @@
 package xyz.znix.xftl.shipgen
 
 import xyz.znix.xftl.Ship
-import xyz.znix.xftl.game.Difficulty
 import xyz.znix.xftl.game.InGameState
 import xyz.znix.xftl.game.ShipBlueprint
 import kotlin.math.roundToInt
@@ -26,7 +25,7 @@ object ShipScaling {
      * This is one if the ships are the same size. Otherwise it starts at one
      * in the first sector, so the player's starting crew can hold off one
      * ship's boarders, and rises to twice the size ratio by the last sector
-     * (or a sector later on easy, and earlier on hard): one to four times
+     * (or a sector later on easy, earlier on hard, and two sectors earlier on insane): one to four times
      * for a ship twice the size of the vanilla ships.
      *
      * [sector] is the vanilla sector number, as used for the difficulty.
@@ -38,11 +37,7 @@ object ShipScaling {
         if (ratio <= 1)
             return 1
 
-        val difficultyOffset = when (game.difficulty) {
-            Difficulty.EASY -> -1
-            Difficulty.NORMAL -> 0
-            Difficulty.HARD -> 1
-        }
+        val difficultyOffset = game.difficulty.boardingSectorOffset
         val progress = ((sector + difficultyOffset) / LAST_SECTOR).coerceIn(0f, 1f)
         return (1 + (2 * ratio - 1) * progress).roundToInt()
     }

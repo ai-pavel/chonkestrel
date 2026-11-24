@@ -11,22 +11,22 @@
 </eventList>
 
 <event name="XFTL_REBEL_SUPPLY_DEPOT">
-	<text>A Rebel supply depot is refuelling the fleet that's chasing you. It's only lightly guarded.</text>
+	<text id="event_XFTL_REBEL_SUPPLY_DEPOT_text"/>
 	<choice>
-		<text>Attack the depot.</text>
+		<text id="event_XFTL_REBEL_SUPPLY_DEPOT_c1_choice"/>
 		<event>
-			<text>The depot's guard ship moves to defend it.</text>
+			<text id="event_XFTL_REBEL_SUPPLY_DEPOT_c1_text"/>
 			<ship load="XFTL_REBEL_DEPOT_GUARD" hostile="true"/>
 		</event>
 	</choice>
 	<choice>
-		<text>Leave before they notice you.</text>
+		<text id="event_XFTL_REBEL_SUPPLY_DEPOT_c2_choice"/>
 		<event/>
 	</choice>
 </event>
 <ship name="XFTL_REBEL_DEPOT_GUARD" auto_blueprint="SHIPS_REBEL">
 	<destroyed>
-		<text>With the guard gone, you blow up the depot's fuel tanks. The fleet will have to wait for more fuel, and you help yourself to some first.</text>
+		<text id="ship_XFTL_REBEL_DEPOT_GUARD_destroyed_text"/>
 		<item_modify>
 			<item type="fuel" min="2" max="4"/>
 		</item_modify>
@@ -34,7 +34,7 @@
 		<autoReward level="LOW">standard</autoReward>
 	</destroyed>
 	<deadCrew>
-		<text>With the guard ship's crew dead, you blow up the depot's fuel tanks, after filling your own.</text>
+		<text id="ship_XFTL_REBEL_DEPOT_GUARD_deadCrew_text"/>
 		<item_modify>
 			<item type="fuel" min="2" max="4"/>
 		</item_modify>
@@ -44,122 +44,122 @@
 </ship>
 
 <event name="XFTL_REBEL_RECRUITER">
-	<text>A Rebel recruitment ship is broadcasting propaganda. "Join the Rebellion! The Federation is finished!" It hails you, mistaking you for a freighter.</text>
+	<text id="event_XFTL_REBEL_RECRUITER_text"/>
 	<choice>
-		<text>Play along, and ask about the fleet.</text>
+		<text id="event_XFTL_REBEL_RECRUITER_c1_choice"/>
 		<event load="XFTL_REBEL_RECRUITER_OUTCOME"/>
 	</choice>
 	<choice>
-		<text>Open fire.</text>
+		<text id="event_XFTL_REBEL_RECRUITER_c2_choice"/>
 		<event>
-			<text>The recruiter's escort turns to fight.</text>
+			<text id="event_XFTL_REBEL_RECRUITER_c2_text"/>
 			<ship load="REBEL" hostile="true"/>
 		</event>
 	</choice>
 </event>
 <eventList name="XFTL_REBEL_RECRUITER_OUTCOME">
 	<event>
-		<text>The recruiter happily tells you where the fleet is refuelling. You'll have more time to get ahead.</text>
+		<text id="event_XFTL_REBEL_RECRUITER_OUTCOME_1_text"/>
 		<modifyPursuit amount="-1"/>
 	</event>
 	<event>
-		<text>The recruiter sees through your act, and calls for help.</text>
+		<text id="event_XFTL_REBEL_RECRUITER_OUTCOME_2_text"/>
 		<ship load="REBEL" hostile="true"/>
 	</event>
 </eventList>
 
 <event name="XFTL_REBEL_FALSE_FLAG">
-	<text>A Federation ship is calling for help. But its transponder codes are a year out of date, and its hull looks suspiciously Rebel.</text>
+	<text id="event_XFTL_REBEL_FALSE_FLAG_text"/>
 	<choice>
-		<text>Move in to help.</text>
+		<text id="event_XFTL_REBEL_FALSE_FLAG_c1_choice"/>
 		<event>
-			<text>It was a trap! The ship opens fire as you approach.</text>
+			<text id="event_XFTL_REBEL_FALSE_FLAG_c1_text"/>
 			<ship load="REBEL" hostile="true"/>
 			<damage amount="2"/>
 		</event>
 	</choice>
 	<choice req="sensors" lvl="2" hidden="true">
-		<text>(Upgraded Sensors) Scan the ship before getting closer.</text>
+		<text id="event_XFTL_REBEL_FALSE_FLAG_c2_choice"/>
 		<event>
-			<text>Your sensors show it's a Rebel ship in disguise. You open fire before it can spring its trap.</text>
+			<text id="event_XFTL_REBEL_FALSE_FLAG_c2_text"/>
 			<ship load="REBEL" hostile="true"/>
 		</event>
 	</choice>
 	<choice>
-		<text>Ignore the call.</text>
+		<text id="event_XFTL_REBEL_FALSE_FLAG_c3_choice"/>
 		<event/>
 	</choice>
 </event>
 
 <event name="XFTL_REBEL_COURIER">
-	<text>A fast Rebel courier is passing through the beacon. It's carrying orders for the fleet chasing you.</text>
+	<text id="event_XFTL_REBEL_COURIER_text"/>
 	<choice>
-		<text>Intercept the courier.</text>
+		<text id="event_XFTL_REBEL_COURIER_c1_choice"/>
 		<event>
-			<text>The courier tries to run.</text>
+			<text id="event_XFTL_REBEL_COURIER_c1_text"/>
 			<ship load="XFTL_REBEL_COURIER_SHIP" hostile="true"/>
 		</event>
 	</choice>
 	<choice>
-		<text>Let it go.</text>
+		<text id="event_XFTL_REBEL_COURIER_c2_choice"/>
 		<event/>
 	</choice>
 </event>
 <ship name="XFTL_REBEL_COURIER_SHIP" auto_blueprint="SHIPS_REBEL">
 	<escape timer="40" min="4" max="6"/>
 	<gotaway>
-		<text>The courier jumps away. The fleet will get its orders.</text>
+		<text id="ship_XFTL_REBEL_COURIER_SHIP_gotaway_text"/>
 		<modifyPursuit amount="1"/>
 	</gotaway>
 	<destroyed>
-		<text>You recover the courier's orders from the wreckage. They include the fleet's patrol routes.</text>
+		<text id="ship_XFTL_REBEL_COURIER_SHIP_destroyed_text"/>
 		<reveal_map/>
 		<autoReward level="LOW">standard</autoReward>
 	</destroyed>
 	<deadCrew>
-		<text>You board the courier, and take its orders. They include the fleet's patrol routes.</text>
+		<text id="ship_XFTL_REBEL_COURIER_SHIP_deadCrew_text"/>
 		<reveal_map/>
 		<autoReward level="MED">standard</autoReward>
 	</deadCrew>
 </ship>
 
 <event name="XFTL_REBEL_LABOUR_CAMP">
-	<text>A Rebel labour camp is orbiting the planet below. Its prisoners are building parts for the Rebel flagship.</text>
+	<text id="event_XFTL_REBEL_LABOUR_CAMP_text"/>
 	<choice>
-		<text>Attack the camp's guards and free the prisoners.</text>
+		<text id="event_XFTL_REBEL_LABOUR_CAMP_c1_choice"/>
 		<event>
-			<text>The camp's guard ship moves to stop you.</text>
+			<text id="event_XFTL_REBEL_LABOUR_CAMP_c1_text"/>
 			<ship load="XFTL_REBEL_CAMP_GUARD" hostile="true"/>
 		</event>
 	</choice>
 	<choice req="teleporter" hidden="true">
-		<text>(Teleporter) Beam a team down to free the prisoners quietly.</text>
+		<text id="event_XFTL_REBEL_LABOUR_CAMP_c2_choice"/>
 		<event load="XFTL_REBEL_LABOUR_CAMP_RAID"/>
 	</choice>
 	<choice>
-		<text>You can't save everyone. Move on.</text>
+		<text id="event_XFTL_REBEL_LABOUR_CAMP_c3_choice"/>
 		<event/>
 	</choice>
 </event>
 <eventList name="XFTL_REBEL_LABOUR_CAMP_RAID">
 	<event>
-		<text>Your team gets the prisoners out without a shot fired. One of them joins your crew.</text>
+		<text id="event_XFTL_REBEL_LABOUR_CAMP_RAID_1_text"/>
 		<crewMember amount="1"/>
 	</event>
 	<event>
-		<text>Your team is spotted, and has to fight its way out. They make it, with one of the prisoners, but the guards are coming.</text>
+		<text id="event_XFTL_REBEL_LABOUR_CAMP_RAID_2_text"/>
 		<crewMember amount="1"/>
 		<ship load="REBEL" hostile="true"/>
 	</event>
 </eventList>
 <ship name="XFTL_REBEL_CAMP_GUARD" auto_blueprint="SHIPS_REBEL">
 	<destroyed>
-		<text>With the guards gone, the prisoners take over the camp. One of them joins your crew, and the rest give you what they can.</text>
+		<text id="ship_XFTL_REBEL_CAMP_GUARD_destroyed_text"/>
 		<crewMember amount="1"/>
 		<autoReward level="LOW">standard</autoReward>
 	</destroyed>
 	<deadCrew>
-		<text>With the guards dead, the prisoners take over the camp. One of them joins your crew, and the rest give you what they can.</text>
+		<text id="ship_XFTL_REBEL_CAMP_GUARD_deadCrew_text"/>
 		<crewMember amount="1"/>
 		<autoReward level="MED">standard</autoReward>
 	</deadCrew>

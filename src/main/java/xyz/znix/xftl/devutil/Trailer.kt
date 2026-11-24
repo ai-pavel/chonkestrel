@@ -1,5 +1,6 @@
 package xyz.znix.xftl.devutil
 
+import xyz.znix.xftl.LazyShipBlueprint
 import xyz.znix.xftl.Ship
 import xyz.znix.xftl.ShipShape
 import xyz.znix.xftl.XftlDebug
@@ -25,17 +26,20 @@ import kotlin.random.Random
  * The release trailer, which the video recorder records (XFTL_VIDEO,
  * see [VideoDirector] and doc/tools/trailer.md): the first few seconds of sixteen fights, a
  * game's worth of them, with a screenshot of each, as the hazards build up
- * from a nebula to all four at once (see [FIGHTS]). It starts with a
- * Chonkestrel that's had its first upgrades, against two vanilla ships, and
- * with each fight the Chonkestrel gets more crew, systems and weapons, and
- * its enemies get bigger and more of them, until it fights three hybrid
- * ships, all of them (and it) armed with double and triple weapons (see
- * doc/game/weapon-sizes.md). The enemies' rooms and crew are shown, even in a
- * nebula. Every enemy has the Zoltan Shield Bypass, and those with
- * teleporters board the Chonkestrel.
+ * from a nebula to all four at once (see [FIGHTS]). There's a different big
+ * ship in each fight: every race's Type A, then the Type Bs (see [SHIPS]).
+ * The first is a Chonkestrel that's had its first upgrades, against two
+ * vanilla ships, and with each fight the player's ship has more crew,
+ * systems and weapons, and its enemies get bigger and more of them, until
+ * it fights three hybrid ships, all of them (and it) armed with double and
+ * triple weapons (see doc/game/weapon-sizes.md). The enemies' rooms and crew
+ * are shown, even in a nebula. Every enemy has the Zoltan Shield Bypass, and
+ * those with teleporters board the player's ship.
  *
- * Its Chonkestrel doesn't get debug mode's loadout (see
- * [XftlDebug.plainPlayerShip]): it's built up here, a fight at a time.
+ * Each fight's ship starts as a new game has it, with its own crew, systems
+ * and weapons, not debug mode's loadout (see [XftlDebug.plainPlayerShip]),
+ * and gets every fight's [Loadout] so far on top of that, as the ships before
+ * it had them by then.
  */
 object Trailer {
     const val NAME = "trailer"
@@ -48,29 +52,38 @@ object Trailer {
     private const val SCREENSHOT_AT = 4f
 
     /**
-     * When in each fight the enemies with teleporters board the Chonkestrel,
-     * and when its boarding party boards them (before the enemies' cloaks
-     * are ready, see [CLOAK_DELAY]).
+     * When in each fight the enemies with teleporters board the player's
+     * ship, and when its boarding party boards them (before the enemies'
+     * cloaks are ready, see [CLOAK_DELAY]).
      */
     private const val BOARDING_AT = 1.5f
     private const val PLAYER_BOARDING_AT = 1f
 
     /**
      * How long the enemies' cloaking takes to get ready as each fight
-     * starts, so the Chonkestrel's boarders have time to get aboard.
+     * starts, so the player's boarders have time to get aboard.
      */
     private const val CLOAK_DELAY = 2.5f
 
-    /** The most crew in the Chonkestrel's boarding party, and who's best at it, best first. */
+    /** The most crew in the player's boarding party, and who's best at it, best first. */
     private const val BOARDING_PARTY = 4
     private val BOARDERS = listOf("mantis", "rock", "crystal", "human", "engi", "slug", "energy")
 
     /**
      * The Lanius (who take the air out of the room they're in) never wait
      * in the medbay, where they'd suffocate the others: they man the
-     * engines, and wait there.
+     * engines, and wait there. A ship with no oxygen system (the Lanius A)
+     * only takes on more Lanius, as anyone else would suffocate.
      */
     private const val LANIUS = "anaerobic"
+
+    /**
+     * How many weapon and drone slots each of the Chonkestrel's weapons and
+     * drones systems has, which the loadouts' weapons and drones are listed
+     * for (see [setWeapons] and [grow]).
+     */
+    private const val WEAPON_SLOTS_PER_SYSTEM = 4
+    private const val DRONE_SLOTS_PER_SYSTEM = 3
 
     /**
      * How charged everyone's weapons are as a fight starts (as a fraction,
@@ -85,7 +98,7 @@ object Trailer {
     /**
      * One fight: where it is (a sector, how far through the game, and any
      * hazards), who it's against (and the biggest combined weapons they're
-     * given, 1 for none), and what the Chonkestrel has by then.
+     * given, 1 for none), and what the player's ship gets for it.
      */
     private class Fight(
         val sector: String,
@@ -98,12 +111,14 @@ object Trailer {
     )
 
     /**
-     * What the Chonkestrel gets for a fight, on top of what it had: more
-     * crew (by race), more systems (one of each listed that isn't
-     * installed yet), each system's level (by name, or "all", but for the
-     * cloaking, which grows a level at a time, see [CLOAK]), its weapons
-     * (by slot: a blueprint and its size), drones, Zoltan shields and
-     * other augments.
+     * What the player's ship gets for a fight, on top of what the fights
+     * before gave it (as the Chonkestrel, which they're listed for, would
+     * have had it): more crew (by race), more systems (one of each listed
+     * that isn't installed yet, where there's a place for it), each system's
+     * level (by name, or "all", but for the cloaking, which grows a level at
+     * a time, see [CLOAK]), its weapons (by slot: a blueprint and its size,
+     * four to a weapons system, see [setWeapons]), drones (three to a drones
+     * system), Zoltan shields (how many it has by then) and other augments.
      */
     private class Loadout(
         val crew: List<String> = emptyList(),
@@ -118,7 +133,7 @@ object Trailer {
     private const val ALL = "all"
     private const val MAX = 99
 
-    // The Chonkestrel's cloaking, which it gets in the third fight, and
+    // The cloaking, which the player's ship gets in the third fight, and
     // upgrades every other fight to its sixth and last level (see
     // Cloaking.durationFor). It's only shown, never used in the fights.
     private const val CLOAK = "cloaking"
@@ -139,7 +154,7 @@ object Trailer {
     private val LONG = ShipShape.LONG
     private val WIDE = ShipShape.WIDE
 
-    // The Chonkestrel's weapons, as it gets more and bigger ones
+    // The player's weapons, as it gets more and bigger ones
     private val TRIPLES_EVERYWHERE = listOf(
         "LASER_HEAVY_1" to 3, "MISSILES_2_PLAYER" to 3, "BEAM_1" to 3, "BOMB_1" to 3,
         "LASER_BURST_2" to 3, "ION_1" to 3, "MISSILES_1" to 3, "BOMB_ION" to 3,
@@ -336,22 +351,40 @@ object Trailer {
         ),
     )
 
+    /**
+     * The player's ship in each fight, a different big ship each time:
+     * every race's Type A, in the hangar's order, then the Type Bs in the
+     * same order, as far as they go.
+     */
+    private val SHIPS = listOf(
+        "PLAYER_SHIP_CHONKESTREL", "PLAYER_SHIP_XFTL_ENGI", "PLAYER_SHIP_XFTL_ZOLTAN", "PLAYER_SHIP_XFTL_MANTIS",
+        "PLAYER_SHIP_XFTL_SLUG", "PLAYER_SHIP_XFTL_ROCK", "PLAYER_SHIP_XFTL_FED", "PLAYER_SHIP_XFTL_STEALTH",
+        "PLAYER_SHIP_XFTL_LANIUS", "PLAYER_SHIP_XFTL_CRYSTAL",
+        "PLAYER_SHIP_CHONKESTREL_2", "PLAYER_SHIP_XFTL_ENGI_2", "PLAYER_SHIP_XFTL_ZOLTAN_2",
+        "PLAYER_SHIP_XFTL_MANTIS_2", "PLAYER_SHIP_XFTL_SLUG_2", "PLAYER_SHIP_XFTL_ROCK_2",
+    )
+
+    init {
+        check(SHIPS.size == FIGHTS.size) { "${SHIPS.size} ships for ${FIGHTS.size} fights" }
+    }
+
     /** How long the trailer is. */
     val LENGTH: Float = FIGHTS.size * FIGHT_SECONDS
 
     /**
      * The trailer's timeline: each fight set up as the last one ends, then,
      * once everyone's powered their weapons, everyone's weapons charged,
-     * the enemies with teleporters boarding the Chonkestrel, its own boarding
-     * party boarding them, and a screenshot of it all later on (sorted by
-     * time, as the recorder runs them in order).
+     * the enemies with teleporters boarding the player's ship, its own
+     * boarding party boarding them, and a screenshot of it all later on
+     * (sorted by time, as the recorder runs them in order).
      */
     fun timeline(): List<VideoDirector.Step> = FIGHTS.withIndex().flatMap { (index, fight) ->
         val at = index * FIGHT_SECONDS
+        val name = "fight ${index + 1}: ${SHIPS[index]} in ${fight.sector} (${fight.hazards.joinToString(" + ")})"
         listOf(
-            VideoDirector.Step(at, "fight ${index + 1}: ${fight.sector} (${fight.hazards.joinToString(" + ")})") { game, driver ->
+            VideoDirector.Step(at, name) { game, driver ->
                 XftlDebug.showEnemyCrew = true
-                setUp(game, fight)
+                setUp(game, index)
                 driver.nextFight()
                 driver.dronesOn = game.player.droneSystems.isNotEmpty()
                 driver.hackingOn = game.player.hackingSystems.isNotEmpty()
@@ -377,12 +410,21 @@ object Trailer {
         )
     }.sortedBy { it.at }
 
-    private fun setUp(game: InGameState, fight: Fight) {
+    /**
+     * Set up the fight [index]: its ship, new (see [newShip]), with every
+     * fight's [Loadout] so far, in a new sector, against its enemies.
+     */
+    private fun setUp(game: InGameState, index: Int) {
+        val fight = FIGHTS[index]
+        newShip(game, SHIPS[index])
         val player = game.player
-        bringBoardersHome(game)
-        game.debugRemoveEnemy()
-        ScreenshotDirector.patchUp(player)
-        fight.player?.let { grow(game, it) }
+        val loadouts = FIGHTS.take(index + 1).mapNotNull { it.player }
+        for ((i, loadout) in loadouts.withIndex())
+            grow(game, loadout, log = i == loadouts.lastIndex)
+        for (name in loadouts.flatMap { it.systems }.distinct()) {
+            if (player.systems.none { it.blueprint.name == name })
+                println("[video] No room for the $name system")
+        }
 
         // A new sector, at the start
         val map = game.gameMap
@@ -411,7 +453,7 @@ object Trailer {
         for (enemy in game.getOpponentShips(player)) {
             if (fight.enemyWeaponSize > 1)
                 arm(game, enemy, fight.enemyWeaponSize)
-            // Every enemy can board through the Chonkestrel's Zoltan shields
+            // Every enemy can board through the player's Zoltan shields
             if (bypass != null && !enemy.hasAugment(bypass.name))
                 enemy.augments.add(bypass)
             // and their cloaks take a moment to get ready
@@ -420,23 +462,25 @@ object Trailer {
     }
 
     /**
-     * Bring the Chonkestrel's crew home from the last fight's enemy ships,
-     * and stop any teleport that's on its way, as the reconstructive
-     * teleport does when it jumps away: they're all back, healed.
+     * Replace the player's ship with a new one of blueprint [name], as a
+     * new game has it (or the default ship, without that one), taking the
+     * last fight's enemies, and the old ship's crew, boarders, drones and
+     * projectiles, away with the old one (see
+     * [InGameState.debugReplacePlayerShip]). In debug mode (but for the
+     * trailer's plain ship), that's with its debug loadout, as a new debug
+     * game has it. The log lines start with [tag] (the screenshots use it
+     * too).
      */
-    private fun bringBoardersHome(game: InGameState) {
-        val player = game.player
-        val home = player.teleporter?.room ?: player.rooms.first()
-        for (ship in game.getOpponentShips(player) + player) {
-            for (member in ship.crew.filterIsInstance<LivingCrew>().toList()) {
-                if (member.ownerShip == player)
-                    member.teleportInstantlyTo(if (ship == player) member.room else home)
-            }
-        }
+    internal fun newShip(game: InGameState, name: String, tag: String = "video") {
+        val ship = name.takeIf { game.blueprintManager.getOrNull(it) is LazyShipBlueprint }
+            ?: game.blueprintManager.defaultPlayerShip.also { println("[$tag] No ship $name, using $it") }
+        game.debugReplacePlayerShip(ship)
+        println("[$tag] Flying the $ship, its own crew: " + game.player.crew.filterIsInstance<LivingCrew>()
+            .groupingBy { it.info.race.name }.eachCount().entries.joinToString { (race, count) -> "$count $race" })
     }
 
     /**
-     * Put the Chonkestrel's crew at their stations as the fight starts, so
+     * Put the player's crew at their stations as the fight starts, so
      * none of them stand about: one at each system that can be manned (the
      * piloting, engines, shields, weapons, sensors and doors, the engines
      * by the Lanius first), a boarding party in the teleporter, if it has
@@ -499,15 +543,23 @@ object Trailer {
     }
 
     /**
-     * Give the Chonkestrel what it has by the next fight (see [Loadout]).
+     * Give the player's ship a fight's [loadout], on top of what it has: its
+     * own crew, systems, weapons and augments stay, but for those the
+     * loadout's weapons and drones take the slots of. With [log], what
+     * doesn't fit is printed (for the fight's own loadout, as the earlier
+     * ones' weapons have been replaced since).
      */
-    private fun grow(game: InGameState, loadout: Loadout) {
+    private fun grow(game: InGameState, loadout: Loadout, log: Boolean) {
         val player = game.player
         val blueprints = game.blueprintManager
 
+        // (a ship with no oxygen only takes on more Lanius, see LANIUS)
+        val airless = player.systemSlots.none { it.spec.systemName == "oxygen" }
         for (race in loadout.crew) {
             if (player.crew.size >= player.type.maxCrew)
                 break
+            if (airless && race != LANIUS)
+                continue
             val blueprint = blueprints.getOrNull(race) as? CrewBlueprint ?: continue
             player.addCrewMember(LivingCrewInfo.generateRandom(blueprint, game), false)
         }
@@ -520,10 +572,6 @@ object Trailer {
             ) continue
             slot.room.setSystem(slot)
         }
-        for (name in loadout.systems) {
-            if (player.systems.none { it.blueprint.name == name })
-                println("[video] No room for the $name system")
-        }
 
         for (system in player.systems) {
             val level = loadout.levels[system.blueprint.name]
@@ -533,15 +581,22 @@ object Trailer {
         // The reactor powers everything at once
         player.purchasedReactorPower = maxOf(player.purchasedReactorPower, player.mainSystems.sumOf { it.energyLevels })
 
-        loadout.weapons?.let { setWeapons(game, player, it) }
+        loadout.weapons?.let { setWeapons(game, player, it, log) }
 
-        if (loadout.drones.isNotEmpty()) {
-            val slots = player.droneSystems.flatMap { system -> system.drones.indices.map { system to it } }
-            for ((i, name) in loadout.drones.withIndex()) {
-                val (system, slot) = slots.getOrNull(i) ?: break
+        // The drones, three to a drones system, as the Chonkestrel has them:
+        // a system with fewer slots takes the first few of its three, and
+        // the systems past the Chonkestrel's (and the slots "" leaves) keep
+        // the ship's own drones
+        for ((index, system) in player.droneSystems.withIndex()) {
+            for (slot in system.drones.indices.take(DRONE_SLOTS_PER_SYSTEM)) {
+                val name = loadout.drones.getOrNull(index * DRONE_SLOTS_PER_SYSTEM + slot) ?: continue
                 val drone = blueprints.getOrNull(name) as? DroneBlueprint ?: continue
-                if (system.drones[slot]?.type != drone)
-                    system.drones[slot] = Drones.DroneInfo(drone, null)
+                if (system.drones[slot]?.type == drone)
+                    continue
+                // (turned off first, so the old one doesn't fly on)
+                if (system.drones[slot] != null)
+                    system.setDronePower(slot, false)
+                system.drones[slot] = Drones.DroneInfo(drone, null)
             }
         }
 
@@ -571,32 +626,45 @@ object Trailer {
     }
 
     /**
-     * Put [weapons] in the Chonkestrel's slots, each in the biggest size
-     * up to the one asked for that its weapons system has the power for.
+     * Put [weapons] in the [player]'s slots, each in the biggest size up to
+     * the one asked for that its weapons system has the power for. They're
+     * listed four to a weapons system, as the Chonkestrel has them: a system
+     * with fewer slots takes the first few of its four, and a system with
+     * more slots, or past the ones listed for, takes the next ones round,
+     * so every slot's filled. With [log], what doesn't fit is printed.
      */
-    internal fun setWeapons(game: InGameState, player: Ship, weapons: List<Pair<String, Int>?>) {
-        for ((slot, hardpoint) in player.hardpoints.withIndex()) {
-            val weapon = hardpoint.weapon ?: continue
-            if (weapon.isPowered)
-                player.weaponsFor(slot)?.setWeaponPower(weapon, false)
-            hardpoint.weapon = null
-        }
+    internal fun setWeapons(game: InGameState, player: Ship, weapons: List<Pair<String, Int>?>, log: Boolean = true) {
+        // (only the weapons systems' slots: the hardpoints past them are
+        // the artillery's, see Weapons.uiSlots)
         for (system in player.weaponSystems) {
+            for (index in system.uiSlots) {
+                val hardpoint = player.hardpoints.getOrNull(index) ?: break
+                val weapon = hardpoint.weapon ?: continue
+                if (weapon.isPowered)
+                    system.setWeaponPower(weapon, false)
+                hardpoint.weapon = null
+            }
+        }
+        if (weapons.isEmpty())
+            return
+        for ((systemIndex, system) in player.weaponSystems.withIndex()) {
             var power = 0
-            for (index in system.hardpointIndices) {
+            for ((slot, index) in system.uiSlots.withIndex()) {
                 if (index >= player.hardpoints.size)
                     break
-                val (name, size) = weapons.getOrNull(index) ?: continue
+                val (name, size) = weapons[(systemIndex * WEAPON_SLOTS_PER_SYSTEM + slot) % weapons.size] ?: continue
                 val single = game.blueprintManager.getOrNull(name) as? AbstractWeaponBlueprint
                 if (single == null) {
-                    println("[video] No weapon $name")
+                    if (log)
+                        println("[video] No weapon $name")
                     continue
                 }
                 val weapon = (size downTo 1).asSequence()
                     .mapNotNull { if (it == 1) single else WeaponSizes.combined(game.blueprintManager, single, it) }
                     .firstOrNull { power + it.power <= system.energyLevels }
                 if (weapon == null) {
-                    println("[video] No power left for $name in slot ${index + 1}")
+                    if (log)
+                        println("[video] No power left for $name in slot ${index + 1}")
                     continue
                 }
                 power += weapon.power

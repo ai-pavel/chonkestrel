@@ -24,10 +24,13 @@ class ScreenshotDirectorTest {
         // Each one gets its own file, with a name that's safe for a URL
         assertEquals(names.size, names.toSet().size)
         assertTrue(names.toString(), names.all { it.matches(Regex("[a-z0-9-]+")) })
-        // The first is the main menu's new game window, the only one taken
-        // in the main menu
+        // The first is the main menu's new game window; the hangar, the
+        // achievements and the statistics are taken from the main menu too
         assertEquals("new-game", names.first())
-        assertEquals(listOf("new-game"), scenarios.filter { it.menu != null }.map { it.name })
+        assertEquals(
+            listOf("new-game", "hangar-with-the-federations-big-ship", "achievements-of-all-twenty-big-ships", "statistics-of-the-best-games"),
+            scenarios.filter { it.menu != null }.map { it.name }
+        )
     }
 
     @Test

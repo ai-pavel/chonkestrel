@@ -90,6 +90,14 @@ class ShipBlueprint(private val elem: Element, df: Datafile) : Blueprint(elem) {
     val isVariant: Boolean get() = variantOf.isNotEmpty()
 
     /**
+     * For a big player ship, the vanilla player ship it was made from (its
+     * Kestrel, Engi Type B and so on), set with an xftlVanillaShip element
+     * (an XFTL extension). The hangar's Normal and Chonky buttons switch
+     * between the two (see SelectShipState).
+     */
+    val vanillaShip: String? = elem.getChildTextTrim("xftlVanillaShip")?.takeIf { it.isNotEmpty() }
+
+    /**
      * For player ships, how many vanilla-sized hostile ships they fight at
      * once, set with an opponentShips element (an XFTL extension). This is
      * the ship's size by default. See [Opponent.enemyShipCount].
@@ -166,6 +174,18 @@ class ShipBlueprint(private val elem: Element, df: Datafile) : Blueprint(elem) {
     private val loadout: Loadout get() = debugLoadout?.takeIf { XftlDebug.enabled && !XftlDebug.plainPlayerShip } ?: normalLoadout
 
     /**
+     * Whether it has its own debug mode loadout, an xftlDebug element, as
+     * the Chonkestrel has. A player ship without one gets one made up
+     * instead, as full as the Chonkestrel's (see [madeUpDebugLoadout]), so
+     * the hangar shows it too, and a full crew in the game (see
+     * Ship.fillDebugCrew).
+     */
+    val hasOwnDebugLoadout: Boolean
+
+    /** Whether its starting equipment is the made-up debug loadout (see [madeUpDebugLoadout]). */
+    val usesMadeUpDebugLoadout: Boolean get() = !hasOwnDebugLoadout && loadout === debugLoadout
+
+    /**
      * The ship's starting weapons, by slot. Slots can be left empty (null)
      * with the slot attribute on weapon elements, an XFTL extension, which
      * is how a ship can start with a weapon in its second weapons system.
@@ -202,6 +222,13 @@ class ShipBlueprint(private val elem: Element, df: Datafile) : Blueprint(elem) {
     // Layout-related stuff
     val rooms: List<ParsedRoom> = ArrayList()
     val doors: List<ParsedDoor> = ArrayList()
+
+    /**
+     * The layout's wide doors (its XFTL_WIDE_DOOR lines, see
+     * tools/wide_passages.py): its DOORs side by side, on [ParsedWideDoor.size]
+     * cells of a wall, that are one door (see Door.group).
+     */
+    val wideDoors: List<ParsedWideDoor> = ArrayList()
     lateinit var shieldEllipse: Rectangle
         private set
     lateinit var roomOffset: ConstPoint
@@ -283,7 +310,30 @@ class ShipBlueprint(private val elem: Element, df: Datafile) : Blueprint(elem) {
         // loadout (weapons, drones and crew), given in an xftlDebug element.
         // This is an XFTL extension. Anything it doesn't set is loaded as normal.
         normalLoadout = parseLoadout(elem, null)
-        debugLoadout = elem.getChild("xftlDebug")?.let { parseLoadout(elem, it) }
+        val ownDebugLoadout = elem.getChild("xftlDebug")?.let { parseLoadout(elem, it) }
+        hasOwnDebugLoadout = ownDebugLoadout != null
+        debugLoadout = ownDebugLoadout ?: if (isPlayerShip) madeUpDebugLoadout(normalLoadout) else null
+    }
+
+    /**
+     * A debug loadout for a player ship without its own, as full as the
+     * Chonkestrel's: every weapon slot full of triple weapons (Burst Laser
+     * IIs, a Glaive Beam and an Ion Bomb in turn), a Combat Drone I in
+     * every drone slot (which the game swaps for random twin and triple
+     * drones, see Ship.fillDebugDrones), the Weapon Pre-Igniter and Zoltan
+     * shields in every augment slot, and the cargo hold full of the
+     * Chonkestrel's goodies. The crew are as usual, and filled up in the
+     * game.
+     */
+    private fun madeUpDebugLoadout(normal: Loadout): Loadout {
+        // (vanilla's ships without a number of slots have four weapon slots
+        // and three drone slots)
+        val weapons = List(weaponSlots ?: 4) { DEBUG_WEAPONS[it % DEBUG_WEAPONS.size] }
+        val hasDrones = systems.any { it.systemName == "drones" }
+        val drones = if (hasDrones) List(droneSlots ?: 3) { DEBUG_DRONE } else emptyList()
+        val augments = List(maxAugments) { if (it == 0) DEBUG_FIRST_AUGMENT else DEBUG_AUGMENT }
+        val cargo = DEBUG_CARGO.take(maxCargo)
+        return Loadout(weapons, DEBUG_MISSILES, drones, DEBUG_DRONE_PARTS, augments, cargo, normal.crew)
     }
 
     private fun parseLoadout(elem: Element, debugElem: Element?): Loadout {
@@ -335,6 +385,7 @@ class ShipBlueprint(private val elem: Element, df: Datafile) : Blueprint(elem) {
         // Use this trick so we can mutate the arrays here, but nowhere else (without a cast).
         require(rooms is ArrayList)
         require(doors is ArrayList)
+        require(wideDoors is ArrayList)
 
         val l = layout.replace("\r\n", "\n").split('\n')
         var i = 0
@@ -378,6 +429,12 @@ class ShipBlueprint(private val elem: Element, df: Datafile) : Blueprint(elem) {
                     doors += ParsedDoor(ConstPoint(x, y), left, right, vertical)
                 }
 
+                "XFTL_WIDE_DOOR" -> {
+                    val pos = ConstPoint(l[i++].toInt(), l[i++].toInt())
+                    val vertical = l[i++].toInt() == 1
+                    wideDoors += ParsedWideDoor(pos, vertical, l[i++].toInt())
+                }
+
                 "" -> {
                 }
 
@@ -410,6 +467,9 @@ class ShipBlueprint(private val elem: Element, df: Datafile) : Blueprint(elem) {
 
     class ParsedRoom(val id: Int, val pos: IPoint, val size: IPoint)
     class ParsedDoor(val pos: ConstPoint, val left: ParsedRoom?, val right: ParsedRoom?, val isVertical: Boolean)
+
+    /** A wide door: the DOORs on the [size] cells along its wall from [pos]. */
+    class ParsedWideDoor(val pos: ConstPoint, val isVertical: Boolean, val size: Int)
 
     class ParsedHardpoint(
         val position: IPoint,
@@ -465,3 +525,16 @@ class ShipBlueprint(private val elem: Element, df: Datafile) : Blueprint(elem) {
         }
     }
 }
+
+// The made-up debug loadout's equipment (see ShipBlueprint.madeUpDebugLoadout),
+// as the Chonkestrel's own (see its xftlDebug element)
+private val DEBUG_WEAPONS = listOf("XFTL_X3_LASER_BURST_3", "XFTL_X3_LASER_BURST_3", "XFTL_X3_BEAM_3", "XFTL_X3_BOMB_ION")
+private const val DEBUG_DRONE = "COMBAT_1"
+private const val DEBUG_FIRST_AUGMENT = "WEAPON_PREIGNITE"
+private const val DEBUG_AUGMENT = "ENERGY_SHIELD"
+private val DEBUG_CARGO = listOf(
+    "BEAM_3", "XFTL_X2_BEAM_LONG", "MISSILES_3", "LASER_CHAINGUN",
+    "XFTL_X3_LASER_BURST_1", "CRYSTAL_HEAVY_1", "DEFENSE_2", "COMBAT_BEAM_2",
+)
+private const val DEBUG_MISSILES = 8
+private const val DEBUG_DRONE_PARTS = 8

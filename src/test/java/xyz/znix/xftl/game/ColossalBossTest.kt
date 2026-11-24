@@ -180,6 +180,8 @@ class ColossalBossTest {
         kit.state.updateGameState(0.01f)
         val phase = kit.boss
         val sector = kit.state.currentBeacon.sector
+        // (the bays are the second phase)
+        sector.mainframePhase = phase.colossal!!.kind.mainframePhase
         val before = sector.mainframePhase
 
         // CONCORD takes over: it's automated, still fighting, and the phase

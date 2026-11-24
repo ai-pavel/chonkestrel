@@ -37,7 +37,7 @@ class ShipGenerator(val df: Datafile, val bp: BlueprintManager) {
         sys: InGameState, spec: EnemyShipSpec, sector: Int, difficulty: Difficulty, seed: Int? = null,
         shape: ShipShape = ShipShape.NORMAL
     ): Ship {
-        // Shift everything back a sector on easy.
+        // Shift everything back a sector on easy, and on a sector on insane.
         // This is thus -1 for the first sector on easy.
         val effectiveSector = sector + difficulty.sectorOffset
 
@@ -153,15 +153,11 @@ class ShipGenerator(val df: Datafile, val bp: BlueprintManager) {
             SystemCategory.GENERAL -> generalPower -= power
         }
 
-        if (difficulty == Difficulty.HARD)
-            generalPower++
+        // More on hard, and more again on insane
+        generalPower += difficulty.extraGeneralPower
 
         // Place the optional systems
-        val optionalSystemChance = (sector * 10 + when (difficulty) {
-            Difficulty.EASY -> 10
-            Difficulty.NORMAL -> 20
-            Difficulty.HARD -> 30
-        }).coerceAtLeast(10)
+        val optionalSystemChance = (sector * 10 + difficulty.optionalSystemBaseChance).coerceAtLeast(10)
 
         for (system in ship.systemSlots) {
             // Don't install one system by uninstalling another.
@@ -187,7 +183,7 @@ class ShipGenerator(val df: Datafile, val bp: BlueprintManager) {
             val category = getSystemCategory(systemInstance)
             val basePowerUse = when {
                 category == SystemCategory.OFFENSIVE && systemInstance !is Artillery -> 1
-                difficulty == Difficulty.HARD -> 1
+                difficulty.cheapOptionalSystems -> 1
                 else -> 2
             }
             subtractPower(category, basePowerUse)
@@ -643,8 +639,9 @@ class ShipGenerator(val df: Datafile, val bp: BlueprintManager) {
     /**
      * Pick the upper limit for the amount of power given a system can start with.
      *
-     * The [effectiveSector] is the sector number with -1 applied for easy (this
-     * means that on the first sector of easy, the effective sector number is -1).
+     * The [effectiveSector] is the sector number with the difficulty's
+     * [Difficulty.sectorOffset] applied (this means that on the first sector
+     * of easy, the effective sector number is -1).
      */
     private fun pickSystemPowerLimit(
         effectiveSector: Int, difficulty: Difficulty, system: AbstractSystem, rand: Random
@@ -678,6 +675,10 @@ class ShipGenerator(val df: Datafile, val bp: BlueprintManager) {
         }
         if (vanillaMax != null && maxPower >= vanillaMax)
             maxPower = system.blueprint.maxPower
+        // The artillery goes past vanilla's four bars only for the player
+        // (see Artillery.COOLDOWN_FACTORS): the enemies' stay as fast as vanilla's
+        if (system is Artillery)
+            maxPower = maxPower.coerceAtMost(Artillery.VANILLA_MAX_POWER)
 
         // Lerp between the min and max power
         val numSectors = 8
@@ -688,11 +689,8 @@ class ShipGenerator(val df: Datafile, val bp: BlueprintManager) {
         val offsetMax = when {
             // First sector on easy is 0, then 1 for all subsequent sectors
             effectiveSector == -1 -> 0
-            difficulty == Difficulty.EASY -> 1
-
-            // Normal/hard is 1, rising to 2 on sector 3 (id=2 when zero-indexed)
-            effectiveSector < 3 - 1 -> 2
-            else -> 2
+            // and 2 on normal and harder (see Difficulty.systemPowerOffsetMax)
+            else -> difficulty.systemPowerOffsetMax
         }
 
         val offset = (0..offsetMax).random(rand)

@@ -1,5 +1,5 @@
 <!--
-    More crew names, as the Chonkestrel has room for sixteen crew and the
+    More crew names, as the Chonkestrel has room for eighteen crew and the
     game only has 169 English ones. These go in the first English lists of
     male and female names (the localised lists come later in the file, and
     have a language attribute), rather than new lists, since the game picks a

@@ -68,6 +68,17 @@ class SaveProfile private constructor() {
         }
 
     /**
+     * The code of the language the player picked in the options (see
+     * [xyz.znix.xftl.Language]), or null if there's none yet (a new
+     * profile, or an older one), for the computer's language.
+     */
+    var language: String? = null
+        set(value) {
+            field = value
+            dirty = true
+        }
+
+    /**
      * Set to true if this profile needs saving.
      */
     var dirty = false
@@ -83,6 +94,16 @@ class SaveProfile private constructor() {
     /** Add a finished game to [topGames], if it's among the best. */
     fun addGameRecord(record: GameRecord) {
         topGames = GameRecord.topGames(topGames, record)
+        dirty = true
+    }
+
+    /**
+     * Forget every game in [topGames] (and any made-up ones), for the
+     * statistics screen's Reset. The achievements stay.
+     */
+    fun clearGameRecords() {
+        topGames = emptyList()
+        randomTopGames = null
         dirty = true
     }
 
@@ -241,6 +262,12 @@ class SaveProfile private constructor() {
             display.setAttribute("windowHeight", height.toString())
         }
 
+        language?.let { code ->
+            val elem = Element("language")
+            root.addContent(elem)
+            elem.setAttribute("code", code)
+        }
+
         if (topGames.isNotEmpty()) {
             val games = Element("topGames")
             root.addContent(games)
@@ -309,6 +336,8 @@ class SaveProfile private constructor() {
         if (displayWidth != null && displayHeight != null) {
             displayWindowSize = displayWidth to displayHeight
         }
+
+        language = root.getChild("language")?.getAttributeValue("code")
 
         topGames = root.getChild("topGames")?.getChildren("game")?.mapNotNull { GameRecord.loadFromXML(it) }
             ?.sortedByDescending { it.score }?.take(GameRecord.TOP_GAMES) ?: emptyList()

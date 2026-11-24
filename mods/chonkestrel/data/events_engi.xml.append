@@ -10,97 +10,97 @@
 </eventList>
 
 <event name="XFTL_ENGI_NANITE_SWARM">
-	<text>A cloud of loose Engi nanites is drifting at the beacon. They start settling on your hull, and trying to "improve" it.</text>
+	<text id="event_XFTL_ENGI_NANITE_SWARM_text"/>
 	<choice>
-		<text>Let them work.</text>
+		<text id="event_XFTL_ENGI_NANITE_SWARM_c1_choice"/>
 		<event load="XFTL_ENGI_NANITE_OUTCOME"/>
 	</choice>
 	<choice req="engi" hidden="true">
-		<text>(Engi Crew) Have your Engi give the nanites instructions.</text>
+		<text id="event_XFTL_ENGI_NANITE_SWARM_c2_choice"/>
 		<event>
-			<text>Your Engi communes with the swarm, and the nanites seal every crack in your hull before drifting off.</text>
+			<text id="event_XFTL_ENGI_NANITE_SWARM_c2_text"/>
 			<damage amount="-6"/>
 		</event>
 	</choice>
 	<choice>
-		<text>Jump away before they get inside.</text>
+		<text id="event_XFTL_ENGI_NANITE_SWARM_c3_choice"/>
 		<event/>
 	</choice>
 </event>
 <eventList name="XFTL_ENGI_NANITE_OUTCOME">
 	<event>
-		<text>The nanites patch up your hull, then lose interest.</text>
+		<text id="event_XFTL_ENGI_NANITE_OUTCOME_1_text"/>
 		<damage amount="-4"/>
 	</event>
 	<event>
-		<text>The nanites take apart one of your systems to "improve" it, and don't quite manage to put it back together.</text>
+		<text id="event_XFTL_ENGI_NANITE_OUTCOME_2_text"/>
 		<damage amount="1" system="random"/>
 	</event>
 	<event>
-		<text>The nanites reorganise your reactor's wiring. It actually works better.</text>
+		<text id="event_XFTL_ENGI_NANITE_OUTCOME_3_text"/>
 		<upgrade amount="1" system="reactor"/>
 	</event>
 </eventList>
 
 <event name="XFTL_ENGI_LIBRARY">
-	<text>An Engi data library offers to trade knowledge. "Your vessel carries information of high value. Exchange is proposed."</text>
+	<text id="event_XFTL_ENGI_LIBRARY_text"/>
 	<choice>
-		<text>Trade some of your data for their schematics.</text>
+		<text id="event_XFTL_ENGI_LIBRARY_c1_choice"/>
 		<event>
-			<text>The Engi send you a drone schematic in return.</text>
+			<text id="event_XFTL_ENGI_LIBRARY_c1_text"/>
 			<drone name="RANDOM"/>
 		</event>
 	</choice>
 	<choice>
-		<text>Trade for a map of the sector.</text>
+		<text id="event_XFTL_ENGI_LIBRARY_c2_choice"/>
 		<event>
-			<text>The Engi send you a precise map of the sector.</text>
+			<text id="event_XFTL_ENGI_LIBRARY_c2_text"/>
 			<reveal_map/>
 		</event>
 	</choice>
 	<choice>
-		<text>Your data stays private.</text>
+		<text id="event_XFTL_ENGI_LIBRARY_c3_choice"/>
 		<event>
-			<text>"Regrettable." The library closes the channel.</text>
+			<text id="event_XFTL_ENGI_LIBRARY_c3_text"/>
 		</event>
 	</choice>
 </event>
 
 <event name="XFTL_ENGI_DRONE_FACTORY">
-	<text>An automated Engi drone factory is still producing drones, though its owners left long ago. Its defence drones haven't noticed you yet.</text>
+	<text id="event_XFTL_ENGI_DRONE_FACTORY_text"/>
 	<choice>
-		<text>Raid the factory's stores.</text>
+		<text id="event_XFTL_ENGI_DRONE_FACTORY_c1_choice"/>
 		<event load="XFTL_ENGI_DRONE_FACTORY_OUTCOME"/>
 	</choice>
 	<choice req="hacking" hidden="true">
-		<text>(Hacking) Hack the factory, and order it to make parts for you.</text>
+		<text id="event_XFTL_ENGI_DRONE_FACTORY_c2_choice"/>
 		<event>
-			<text>The factory obediently fills your hold with drone parts.</text>
+			<text id="event_XFTL_ENGI_DRONE_FACTORY_c2_text"/>
 			<item_modify>
 				<item type="drones" min="3" max="5"/>
 			</item_modify>
 		</event>
 	</choice>
 	<choice>
-		<text>Leave it alone.</text>
+		<text id="event_XFTL_ENGI_DRONE_FACTORY_c3_choice"/>
 		<event/>
 	</choice>
 </event>
 <eventList name="XFTL_ENGI_DRONE_FACTORY_OUTCOME">
 	<event>
-		<text>You get in and out with a load of drone parts before the defences wake up.</text>
+		<text id="event_XFTL_ENGI_DRONE_FACTORY_OUTCOME_1_text"/>
 		<item_modify>
 			<item type="drones" min="2" max="4"/>
 		</item_modify>
 	</event>
 	<event>
-		<text>The factory's defences wake up, and its automated guard ship moves to attack!</text>
+		<text id="event_XFTL_ENGI_DRONE_FACTORY_OUTCOME_2_text"/>
 		<ship load="XFTL_ENGI_FACTORY_GUARD" hostile="true"/>
 	</event>
 </eventList>
 <ship name="XFTL_ENGI_FACTORY_GUARD" auto_blueprint="SHIPS_AUTO">
 	<destroyed>
-		<text>With the guard ship gone, you strip the factory's stores.</text>
+		<text id="ship_XFTL_ENGI_FACTORY_GUARD_destroyed_text"/>
 		<item_modify>
 			<item type="drones" min="2" max="4"/>
 		</item_modify>
@@ -109,34 +109,34 @@
 </ship>
 
 <event name="XFTL_ENGI_ROGUE_AI">
-	<text>An Engi ship hails you. "Assistance requested. Our ship's computer has become... uncooperative. It is attempting to vent our atmosphere."</text>
+	<text id="event_XFTL_ENGI_ROGUE_AI_text"/>
 	<choice>
-		<text>Disable the ship, so its crew can regain control.</text>
+		<text id="event_XFTL_ENGI_ROGUE_AI_c1_choice"/>
 		<event>
-			<text>You'll have to fight the ship's computer for control.</text>
+			<text id="event_XFTL_ENGI_ROGUE_AI_c1_text"/>
 			<ship load="XFTL_ENGI_ROGUE_SHIP" hostile="true"/>
 		</event>
 	</choice>
 	<choice req="hacking" hidden="true">
-		<text>(Hacking) Hack the rogue computer, and shut it down.</text>
+		<text id="event_XFTL_ENGI_ROGUE_AI_c2_choice"/>
 		<event>
-			<text>Your hacking drone shuts the computer down. The grateful Engi reward you, and one of them joins you.</text>
+			<text id="event_XFTL_ENGI_ROGUE_AI_c2_text"/>
 			<crewMember amount="1" class="engi"/>
 			<autoReward level="LOW">standard</autoReward>
 		</event>
 	</choice>
 	<choice>
-		<text>It's not your problem.</text>
+		<text id="event_XFTL_ENGI_ROGUE_AI_c3_choice"/>
 		<event/>
 	</choice>
 </event>
 <ship name="XFTL_ENGI_ROGUE_SHIP" auto_blueprint="SHIPS_CIRCLE">
 	<destroyed>
-		<text>You destroy the ship. Its crew get to the escape pods in time, and give you what supplies they saved.</text>
+		<text id="ship_XFTL_ENGI_ROGUE_SHIP_destroyed_text"/>
 		<autoReward level="LOW">standard</autoReward>
 	</destroyed>
 	<deadCrew>
-		<text>The ship's computer killed its crew before you could stop it. You salvage what you can.</text>
+		<text id="ship_XFTL_ENGI_ROGUE_SHIP_deadCrew_text"/>
 		<autoReward level="MED">standard</autoReward>
 	</deadCrew>
 </ship>

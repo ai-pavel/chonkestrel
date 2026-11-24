@@ -142,7 +142,7 @@ scaled up). What's new is how a combined drone looks in the interface:
 ## Bulwarks
 
 The enemies' twin and triple anti-personnel drones aren't squads, but one
-big drone that doesn't move: a **bulwark**, standing guard in a big room.
+big, slow drone: a **bulwark**, keeping watch over the big rooms.
 
 - **Size.** It's the anti-personnel drone's image scaled up, two or three
   times as wide and tall (its own sprite sheets, every frame of the
@@ -152,23 +152,72 @@ big drone that doesn't move: a **bulwark**, standing guard in a big room.
   img/people, made by `python3 tools/drone_sizes.py ftl.dat`), and it stands on a square of 2x2 or 3x3 cells,
   so it only goes in a room at least that big (a twin in a 2x2 room or
   bigger, a triple in a 3x3 or bigger), and only one without a system: it
-  never stands in a system's way, or on its console. A ship with no empty
-  room that big doesn't get one (it gets the single drone instead).
+  never stands in a system's way, or on its console. It's one bulwark to
+  a room: it doesn't stand in, or walk into, a room another one's in. A
+  ship with no empty room that big doesn't get one (it gets the single
+  drone instead), and a bulwark with no such room left free is launched
+  as a single drone.
 - **Thick.** As much health as it covers cells (four times the single
   drone's for a twin, nine for a triple), and N times its damage, against
   everyone in its room.
-- **Still.** It's launched in its room, and stays there: it fights whoever
-  comes in, and doesn't go after boarders elsewhere. It holds all the
-  cells it stands on, so no one else, of either side, stands on any of
-  them: boarders teleported into its room take its other cells, or go
-  to the next rooms (`Room.holdCells`), and it's only launched onto a
-  square no one's standing on. Its health bar is over its middle.
+- **Walks the big rooms.** It's launched in the biggest room it fits
+  in, and walks from there, but only where it fits: into rooms it can
+  stand in (big enough, and without a system), and between them only
+  through a passage as wide as itself, as many doors side by side on the
+  wall between them as it's wide (two for a twin, three for a triple).
+  The bigger enemies' big empty rooms have wide doors between them (see
+  [ship-shapes.md](ship-shapes.md)), so it can; through a single door, it
+  can't.
+- **Wide doors.** As the drones and weapons come in sizes, so do those
+  doors: a door 2 or 3 cells long, rather than a row of single ones
+  (`Door.group`: the doors on its cells, which open and close as one, are
+  broken down as one, the first keeping the damage, and are drawn by the
+  first as one door). Its sprite's vanilla's door as long as its cells,
+  each half's ends as vanilla's and its middle repeated, opening as far
+  for its length (`tools/door_sizes.py`, run by `make art`, into the mod's
+  img/effects). A wall longer than 3 is several, of as near the same size
+  as they can be (4 cells are 2 and 2, 5 are 3 and 2), so a triple may go
+  through two of them at once. It walks a cell at a time across a
+  room, and through a passage in one go, the whole square at once, at
+  half a human's speed (as a Rockman), or less on its rounds.
+  - **After boarders.** It fights whoever's in its room. With boarders
+    aboard elsewhere, it goes for the nearest it can get to (the shortest
+    way, through passages it fits through, into a room it can stand in),
+    and fights them there. Boarders in a room it can't get into (a
+    system's, or one behind a single door) it leaves to the crew.
+  - **On its rounds.** With no boarders it can get to, it walks slowly
+    round the edges of the rooms it can get to: to each corner of each
+    room in turn, clockwise, stopping at each for a couple of seconds,
+    and on through a passage into the next room. A ship with one room
+    it fits in, and that just its size, has it standing still.
+    `make bulwarks` shows them at it (see `devutil/BulwarkDemo`): a new
+    game against the Rock-Zoltan Mainframe, two triple and two twin
+    bulwarks, and two of the player's crew
+    teleported aboard every half a minute, for them to go after.
+  - **Doors.** The doors open for it as for the ship's crew (it's theirs:
+    they aren't locked against it); a door that is (hacked, or sealed by
+    a lockdown's crystal) stops it, and it goes another way, or waits.
+  - **Room to stand.** It holds all the cells it stands on, so no one
+    else, of either side, stands on any of them (`Room.holdCells`), and
+    on its way from one square to the next, the cells of both. It only
+    walks over squares no one else is standing on or on their way to,
+    so it never walks over the crew or another bulwark; only the square
+    it ends on, in the boarders' room, may have boarders on it, if
+    there's no free one, and they're moved off its cells, to the room's
+    other cells or the next rooms, as boarders teleported into its room
+    are. It's only launched onto a square no one's standing on.
+  - **Saved** with where it's walking from and to, and which corner of
+    its rounds it's going to next.
+
+  Its health bar is over its middle.
 
 Its one launch takes as many drone parts as it's worth (two or three).
 If there's no free square for it when it's launched (crew standing in
 it, say), it goes as an ordinary single anti-personnel drone.
 
-Estimates, to be playtested: the health and damage.
+Estimates, to be playtested: the health and damage, and how fast it walks
+(half a human's speed after boarders, 0.3 of it on its rounds, two seconds
+at each corner).
 
 **The hybrids' control drones.** The hybrids (see
 [hybrid-ships.md](hybrid-ships.md)) carry a lot of anti-personnel drones,
@@ -178,8 +227,8 @@ anti-personnel drones becomes a twin bulwark; on a wide one, one becomes a
 triple and one a twin; and an Engi hybrid gets one more twin. Each takes
 the place of as many of the single drones as it's worth (a twin two, a
 triple three), so the ship's no stronger, but it's drones of two kinds:
-small ones that hunt the boarders, and big ones holding the empty rooms
-(the biggest first). A bulwark that won't fit goes back to being its
+small ones that hunt the boarders anywhere, and big ones walking the empty
+rooms (the biggest first). A bulwark that won't fit goes back to being its
 single drones.
 
 ## Where they turn up

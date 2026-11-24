@@ -8,6 +8,9 @@
 
     <text name="xftl_edit_ship">EDIT SHIP</text>
     <text name="xftl_clear_edit_ship">DISCARD CHANGES</text>
+    <text name="xftl_hangar_type">TYPE</text>
+    <text name="xftl_hangar_normal">NORMAL</text>
+    <text name="xftl_hangar_chonky">CHONKY</text>
 
     <text name="xftl_select_datafile_title">Find your copy of FTL</text>
     <text name="xftl_select_datafile_desc">
@@ -26,8 +29,15 @@
 
     <text name="xftl_options_display">Configure Display Settings</text>
     <text name="xftl_button_back">BACK</text>
+    <text name="xftl_button_reset">RESET</text>
+    <text name="xftl_stats_reset_confirm">Are you sure?\nThis will erase all\nyour statistics.</text>
     <text name="xftl_display_title">DISPLAY SETTINGS</text>
     <text name="xftl_display_desc">The interface needs at least 1920x1080.</text>
+    <!-- The language options (LanguageWindow), which show each language's name in itself -->
+    <text name="xftl_options_language">Change Language</text>
+    <text name="xftl_language_title">LANGUAGE</text>
+    <text name="xftl_language_desc">The language of the game's text:</text>
+    <text name="xftl_language_later">In a game, the new language is used from the next time you go back to the main menu or start a new game.</text>
 
     <!-- The main menu, which also uses vanilla's mainmenu_* strings -->
     <text name="xftl_mainmenu_statistics">STATISTICS</text>
@@ -44,7 +54,7 @@
     <text name="xftl_stats_sector">Sector</text>
     <text name="xftl_stats_beacons">Beacons explored</text>
     <text name="xftl_stats_ships">Ships defeated</text>
-    <text name="xftl_stats_ships_split">(\1 crew killed)</text>
+    <text name="xftl_stats_crews_killed">Crews killed</text>
     <text name="xftl_stats_scrap">Scrap collected</text>
     <text name="xftl_stats_crew_lost">Crew lost</text>
     <text name="xftl_stats_crew">Crew (hover over them for their skills)</text>
@@ -72,9 +82,12 @@
     <text name="xftl_ach_this_game">This game: \1</text>
     <text name="xftl_ach_best">Best game: \1</text>
     <text name="xftl_ach_locked">Locked</text>
+    <text name="xftl_ach_out_of_reach">Can't be earned in this game any more</text>
+    <text name="xftl_ach_insane">Unlocked on INSANE</text>
     <!-- The main menu's new game window -->
     <text name="xftl_new_game_names">CREW NAMES</text>
-    <text name="xftl_difficulty_fourth">INSANE</text>
+    <!-- The fourth difficulty's name (see Difficulty), as vanilla's easy_button and so on -->
+    <text name="xftl_insane_button">INSANE</text>
     <text name="xftl_names_default">Default</text>
     <text name="xftl_names_random">Random</text>
     <text name="xftl_names_all">ALL</text>
@@ -111,6 +124,8 @@
     <text name="xftl_weapon_short_x2">\1 (x2)</text>
     <text name="xftl_weapon_short_x3">\1 (x3)</text>
     <text name="xftl_level_manned">Manned</text>
+    <text name="xftl_artillery_5">17 Second Cooldown, 2 Ships</text>
+    <text name="xftl_artillery_6">14 Second Cooldown, 3 Ships</text>
     <text name="xftl_crew_killed">CREW KILLED</text>
     <text name="xftl_mind_duration">Lasts \1 seconds</text>
     <text name="xftl_fleet_surrender">Their captain speaks for the whole group: if you accept, the other ships will stand down too.</text>
@@ -165,6 +180,16 @@
     <text name="xftl_hybrid_salvage">The hybrid was two ships welded into one, and its wreckage has more to salvage.</text>
     <text name="xftl_sector_legend_hazard">Hazardous</text>
     <text name="xftl_sector_hazard">Unidentified Hazardous Sector</text>
+    <text name="xftl_artillery_skill">\1% faster artillery charge</text>
+    <text name="xftl_drones_skill">\1% faster drone charge</text>
+    <text name="xftl_drones_skill_infobox">\1 when manning Drones or Hacking.</text>
+    <text name="xftl_drones_skill_tooltip">Drones Skill:\n\1\nDrones shot down come back, and hacking pulses recharge, as much sooner.</text>
+    <text name="xftl_hacking_skill">\1% faster hacking recharge</text>
+    <text name="xftl_life_skill">\1% faster life support</text>
+    <text name="xftl_life_skill_infobox">\1 when manning Mind Control or Oxygen.</text>
+    <text name="xftl_life_skill_tooltip">Life Support Skill:\n\1\nMind control recharges as much sooner, and oxygen refills as much faster.</text>
+    <text name="xftl_mind_skill">\1% faster mind control recharge</text>
+    <text name="xftl_oxygen_skill">\1% faster oxygen refill</text>
     <text name="xftl_sensors_nebula">Blocked by the nebula: your sensors don't work here.</text>
     <text name="xftl_map_extreme_loc">EXTREME HAZARD: two hazards at once.</text>
     <text name="xftl_map_catastrophic_loc">CATASTROPHIC HAZARD: three hazards at once.</text>

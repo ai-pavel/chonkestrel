@@ -5,7 +5,10 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import xyz.znix.xftl.augments.AugmentBlueprint
+import xyz.znix.xftl.crew.Skill
+import xyz.znix.xftl.systems.Drones
 import xyz.znix.xftl.testkit.InGameTest
+import xyz.znix.xftl.testkit.addCrew
 import xyz.znix.xftl.weapons.DroneBlueprint
 
 class ShieldDroneTest {
@@ -163,6 +166,36 @@ class ShieldDroneTest {
         assertTrue(system.setDronePower(0, true))
         repeat(20) { kit.updateSingle(0.1f) }
         assertTrue(system.drones[0]!!.instance?.isPowered == true)
+    }
+
+    @Test
+    fun testAMannedDronesSystemChargesFaster() {
+        // Someone at the drones system's console speeds its drones up by
+        // their Drones skill (see Drones.manningSpeed)
+        val kit = createKit()
+        val player = kit.player
+        player.dronesCount = 5
+        kit.powerUpAll()
+        val system = player.droneSystems.single()
+        system.drones[0] = Drones.DroneInfo(kit.state.blueprintManager["TEST_SHIELD_DRONE"] as DroneBlueprint, null)
+        assertTrue(system.setDronePower(0, true))
+        repeat(5) { kit.updateSingle(0.1f) }
+        assertEquals(1f, system.manningSpeed, 0.001f)
+
+        // (someone at the helm first, or they'd go and fly the ship)
+        kit.addCrew(player, player.piloting!!.room!!)
+        val crew = kit.addCrew(player, system.room!!)
+        var steps = 0
+        while (system.manningCrew == null && steps++ < 200)
+            kit.updateSingle(0.1f)
+        assertEquals(crew, system.manningCrew)
+        assertEquals(1f / (1f - Drones.SKILL_BONUSES[0] / 100f), system.manningSpeed, 0.001f)
+
+        // It's their Drones skill that counts, not their Weapons
+        crew.info.skills[Skill.WEAPONS] = 1f
+        assertEquals(1f / (1f - Drones.SKILL_BONUSES[0] / 100f), system.manningSpeed, 0.001f)
+        crew.info.skills[Skill.DRONES] = 1f
+        assertEquals(1f / (1f - Drones.SKILL_BONUSES.last() / 100f), system.manningSpeed, 0.001f)
     }
 
     companion object {
