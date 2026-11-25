@@ -173,6 +173,13 @@ data class Room(val ship: Ship, val id: Int, val x: Int, val y: Int, val width: 
         heldCells.values.removeAll { it === holder }
     }
 
+    /**
+     * Whether [point] is an obstructed cell (see [obstructions]). It's looked
+     * up as a [ConstPoint], as another kind of point (a [RoomPoint], say)
+     * is never equal to one, so would never be found.
+     */
+    fun isObstructed(point: IPoint): Boolean = ConstPoint(point.x, point.y) in obstructions
+
     /** Whether [point] is held by someone other than [allow] (see [holdCells]). */
     fun isHeld(point: IPoint, allow: AbstractCrew? = null): Boolean =
         heldCells[ConstPoint(point.x, point.y)]?.let { it !== allow } ?: false
@@ -821,7 +828,7 @@ data class Room(val ship: Ship, val id: Int, val x: Int, val y: Int, val width: 
     fun isSlotFree(point: IPoint, type: AbstractCrew.SlotType, allow: AbstractCrew? = null): Boolean {
         // Skip obstructed cells - eg, healer in the medbay - and those a
         // bulwark's standing on
-        if (obstructions.contains(point) || isHeld(point, allow))
+        if (isObstructed(point) || isHeld(point, allow))
             return false
 
         val slots = slotsFor(type)
@@ -865,7 +872,7 @@ data class Room(val ship: Ship, val id: Int, val x: Int, val y: Int, val width: 
         if (crewPos != null && crewPos.room == this) {
             val slot = pointToSlot(crewPos)
 
-            if (isHeld(crewPos, crew)) {
+            if (isHeld(crewPos, crew) || isObstructed(crewPos)) {
                 conflicts.add(crew)
             } else if (slots[slot] == null) {
                 slots[slot] = crew
@@ -883,7 +890,7 @@ data class Room(val ship: Ship, val id: Int, val x: Int, val y: Int, val width: 
         if (target != null && target.room == this) {
             val slot = pointToSlot(target)
 
-            if (isHeld(target, crew)) {
+            if (isHeld(target, crew) || isObstructed(target)) {
                 conflicts.add(crew)
             } else if (slots[slot] == null) {
                 slots[slot] = crew

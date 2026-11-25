@@ -59,9 +59,12 @@ public class SloppyXMLParser {
 
 	private Pattern declPtn = Pattern.compile( "(\\s*)<[?]xml [^?]*[?]>" );
 	private Pattern emptyCommentPtn = Pattern.compile( "(\\s*)<!---->" );
-	private Pattern commentPtn = Pattern.compile( "(?s)(\\s*)<!--((?:.(?!-->))*.)-->" );
+	// (the text up to the first "-->", lazily, rather than a character at a
+	// time with a lookahead: that's a recursion per character in some regex
+	// engines, such as the browser version's, too deep for a long comment)
+	private Pattern commentPtn = Pattern.compile( "(?s)(\\s*)<!--(.+?)-->" );
 	private Pattern emptyCDATAPtn = Pattern.compile( "(\\s*)<!\\[CDATA\\[\\]\\]>" );
-	private Pattern cdataPtn = Pattern.compile( "(?s)(\\s*)<!\\[CDATA\\[((?:.(?!\\]\\]>))*.)\\]\\]>" );
+	private Pattern cdataPtn = Pattern.compile( "(?s)(\\s*)<!\\[CDATA\\[(.+?)\\]\\]>" );
 	private Pattern sTagPtn = Pattern.compile( "(\\s*)<(?:([\\w.-]+):)?([\\w.-]+)((?: [^>]+?)??)\\s*(/?)>" );
 	private Pattern eTagPtn = Pattern.compile( "([^<]*)</\\s*([^>]+)>" );
 	private Pattern endSpacePtn = Pattern.compile( "\\s+$" );

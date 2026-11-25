@@ -92,6 +92,18 @@ fun <E> MutableList<E>.pop(): E {
 
 object Utils {
     /**
+     * Create the directory [path] (and its parents) if it isn't there yet.
+     * Files.createDirectories should do nothing for one that's there, but
+     * the browser version's (TeaVM's) throws FileAlreadyExistsException.
+     */
+    @JvmStatic
+    @Throws(java.io.IOException::class)
+    fun createDirectories(path: java.nio.file.Path) {
+        if (!java.nio.file.Files.isDirectory(path))
+            java.nio.file.Files.createDirectories(path)
+    }
+
+    /**
      * Draw something with stenciling.
      *
      * You draw something in the [stencil] function which is then used to control

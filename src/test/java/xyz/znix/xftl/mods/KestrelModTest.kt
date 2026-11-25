@@ -14,6 +14,8 @@ import xyz.znix.xftl.systems.Artillery
 import xyz.znix.xftl.systems.SystemBlueprint
 import xyz.znix.xftl.Translator
 import xyz.znix.xftl.VanillaDatafile
+import xyz.znix.xftl.hangar.EditableShip
+import xyz.znix.xftl.hangar.StartingCrew
 import xyz.znix.xftl.modding.SlipstreamDirectoryMod
 import xyz.znix.xftl.sector.Event
 import xyz.znix.xftl.sector.EventList
@@ -505,6 +507,26 @@ class KestrelModTest {
         // And none of them were already there
         val english = lists.flatMap { it.second }
         assertEquals(169 + 169, english.toSet().size)
+    }
+
+    @Test
+    fun testTheStartingCrewManTheSystems() {
+        // Every big ship's starting crew start at its consoles, one to each
+        // (as the hangar shows them, see StartingCrew), but for the Mantis
+        // A and C's boarders, more than they have consoles for, who wait on
+        // a teleporter pad
+        val modded = Datafile(df, listOf(SlipstreamDirectoryMod(MOD_DIR.toPath())))
+        val blueprints = BlueprintManager(modded, true)
+        val waiting = mapOf("PLAYER_SHIP_XFTL_MANTIS" to 2, "PLAYER_SHIP_XFTL_MANTIS_3" to 1)
+        for (name in listOf(CHONKESTREL) + RACE_SHIPS.keys) {
+            val blueprint = blueprints.getShip(name)
+            val ship = EditableShip.fromBlueprint(blueprint)
+            val spots = StartingCrew.spots(blueprint, ship)
+            assertEquals(name, blueprint.initialCrew.sumOf { it.amount }, spots.size)
+            val idle = spots.filter { it.facing == null }
+            assertEquals("$name: ${idle.map { "${it.race} in room ${it.room}" }}", waiting[name] ?: 0, idle.size)
+            assertTrue(name, idle.all { ship.rooms[it.room].system?.type == "teleporter" })
+        }
     }
 
     @Test

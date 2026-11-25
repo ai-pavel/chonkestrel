@@ -96,7 +96,11 @@ As the Chonkestrel:
   starts with at once.
 - A crew of its own race, about twice the vanilla ship's, each at a station
   (fewer on the Chonkvortex, whose drones do the work, and a mixed one on
-  the Chonk-Tail, as on the Red-Tail).
+  the Chonk-Tail, as on the Red-Tail): every one of them starts at the
+  console of a system the ship starts with, one to each, but for the
+  Chonkila Monster's and the Chonkeseus' boarders that there are no more
+  consoles for, who wait on a teleporter pad. `tools/race_ships.py` checks
+  it, and the hangar shows them there (see `StartingCrew`).
 
 ## The ships
 
@@ -169,7 +173,8 @@ through become 2x4. The Gila Monster's teleporter is moved into two new
 2x2 teleporters, each sending four crew at once, and there's a second
 medbay (3x2) to patch them up, as well as the first, now 2x4. Its second
 weapons system has a twin Basic Laser and a Small Bomb. Seven Mantis (two
-on each teleporter) and two Engi, at the piloting and the engines, and
+at the doors and the oxygen, and two more, with no consoles left for them,
+on a teleporter) and two Engi, at the piloting and the engines, and
 Mantis Pheromones.
 
 ### The Man of Chonk (Slug)
@@ -191,8 +196,9 @@ and it has Rock Plating and a second shields system. Seven Rocks.
 ### The Chonkruos (Lanius)
 
 For a crew that doesn't breathe: it has no oxygen system at all, not even
-to buy, so its air runs out, which doesn't matter to its seven Lanius (the
-teleporter takes two, to drain the air from enemy ships). It has two backup
+to buy, so its air runs out, which doesn't matter to its seven Lanius (at
+the doors and a hacking system too, ready to board and drain the air from
+enemy ships). It has two backup
 batteries (one in the Kruos's empty room by the teleporter), two hacking
 systems and its teleporter, all installed. The engines and piloting rooms
 the new rows go through are 2x6 and 1x6. Its second weapons system has a
@@ -277,8 +283,8 @@ teleporter and a new one, with a new medbay between them and its own medbay
 above, two drones systems (a Boarding Drone and a Defense Drone in the
 first, a twin Boarding Drone in the second, and 30 drone parts), and a
 Basic Laser in each weapons system. The piloting room the new rows go
-through is 1x6. Eight Mantis, two on each teleporter, and Mantis
-Pheromones.
+through is 1x6. Eight Mantis (at the doors, the sensors, the oxygen and a
+drones system too, ready to board), and Mantis Pheromones.
 
 ### The Chonkwalker (Slug B)
 
@@ -305,7 +311,7 @@ weapons system), two backup batteries (one in the empty room by the
 shields), two hacking systems, its mind control and its teleporter, all
 installed. The engines and piloting rooms the new rows go through are 2x6
 and 1x6, and, as the Chonkruos, its fins are a little shorter, to fit the
-screen. Seven Lanius, two on the teleporter.
+screen. Seven Lanius (at the doors and a hacking system too).
 
 ### The Chonkelian (Crystal B)
 
@@ -313,7 +319,8 @@ Carnelian's Crystal boarders, who seal the rooms they land in, sent over
 while it's cloaked: it has its own cloaking system and a new one (see the
 Chonkravais), its 2x2 teleporter, and a Heavy Crystal and a twin Heavy
 Crystal. Its new rows go across its lower half, where the hull carries on
-cleanly. Six Crystals, two on the teleporter, and Crystal Vengeance.
+cleanly. Six Crystals (at the doors and the sensors too), and Crystal
+Vengeance.
 
 ### The Chonknisos (Federation B)
 
@@ -383,7 +390,8 @@ middle, so its own teleporter, which they go through, becomes a 2x4 pad
 for eight, and there's a new 2x2 one for four, and a second medbay (as
 well as its clonebay). A Crystal Lockdown Bomb and a Stun Bomb in each
 weapons system.
-Seven Mantis (two on each teleporter), an Engi and a Lanius. The row of
+Seven Mantis (at the doors, the sensors and the oxygen too, and one, with
+no console left, on a teleporter), an Engi and a Lanius. The row of
 pixels repeated is eight above each cut, as the rows just above have a
 pale highlight that would make pale blocks.
 

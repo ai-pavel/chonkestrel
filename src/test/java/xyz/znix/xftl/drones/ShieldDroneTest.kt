@@ -182,8 +182,9 @@ class ShieldDroneTest {
         repeat(5) { kit.updateSingle(0.1f) }
         assertEquals(1f, system.manningSpeed, 0.001f)
 
-        // (someone at the helm first, or they'd go and fly the ship)
-        kit.addCrew(player, player.piloting!!.room!!)
+        // (someone at the other consoles first, or they'd go and man those)
+        for (other in listOf(player.piloting!!, player.engines!!, player.oxygen!!))
+            kit.addCrew(player, other.room!!)
         val crew = kit.addCrew(player, system.room!!)
         var steps = 0
         while (system.manningCrew == null && steps++ < 200)

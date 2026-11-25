@@ -746,6 +746,12 @@ public class PNGDecoder {
     private void readChunkUnzip(Inflater inflater, byte[] buffer, int offset, int length) throws IOException {
         try {
             do {
+                // Give it its input first, rather than asking it to inflate
+                // nothing: the JDK's returns 0 then, but some (the browser
+                // version's, jzlib's) take it as an error
+                if (inflater.needsInput() && !inflater.finished()) {
+                    refillInflater(inflater);
+                }
                 int read = inflater.inflate(buffer, offset, length);
                 if (read <= 0) {
                     if (inflater.finished()) {

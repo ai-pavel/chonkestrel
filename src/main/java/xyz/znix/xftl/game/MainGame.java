@@ -103,7 +103,7 @@ public class MainGame implements Game {
 
         // Make sure the saves directory exists, as a fresh install has none
         try {
-            Files.createDirectories(PlatformSpecific.INSTANCE.getSaveGamePath());
+            Utils.createDirectories(PlatformSpecific.INSTANCE.getSaveGamePath());
         } catch (IOException e) {
             System.err.println("Failed to create the saves directory: " + e);
         }
@@ -649,7 +649,7 @@ public class MainGame implements Game {
     public static void saveFtlDatPath(@NotNull Path ftlDat) {
         Path ftlPathFile = PlatformSpecific.INSTANCE.getFtlDatPathFile();
         try {
-            Files.createDirectories(ftlPathFile.getParent());
+            Utils.createDirectories(ftlPathFile.getParent());
             Files.writeString(ftlPathFile, ftlDat.toAbsolutePath().toString(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             System.err.println("Failed to save the ftl.dat path to: " + ftlPathFile);
@@ -701,17 +701,23 @@ public class MainGame implements Game {
         SaveProfile profile = SaveProfile.load(profilePath);
 
         if (profile == null) {
-            // TODO some better behaviour for if/when users encounter this
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Failed to load profile at: " + profilePath,
-                    "Failed to load profile",
-                    JOptionPane.ERROR_MESSAGE
-            );
+            showProfileError(profilePath);
             System.exit(0);
         }
 
         return profile;
+    }
+
+    // TODO some better behaviour for if/when users encounter this
+    // (a method of its own, as the browser version has no dialogs to show,
+    // see web/)
+    private static void showProfileError(Path profilePath) {
+        JOptionPane.showMessageDialog(
+                null,
+                "Failed to load profile at: " + profilePath,
+                "Failed to load profile",
+                JOptionPane.ERROR_MESSAGE
+        );
     }
 
     private void saveProfile() {

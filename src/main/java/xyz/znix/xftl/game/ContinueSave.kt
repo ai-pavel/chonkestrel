@@ -1,6 +1,7 @@
 package xyz.znix.xftl.game
 
 import org.jdom2.Document
+import xyz.znix.xftl.Utils
 import org.jdom2.input.SAXBuilder
 import org.jdom2.output.Format
 import org.jdom2.output.XMLOutputter
@@ -53,7 +54,7 @@ object ContinueSave {
             // Write it to another file first, so a crash part way through
             // doesn't leave half a save
             val temp = file.resolveSibling("continue.xml.tmp")
-            Files.createDirectories(temp.parent)
+            Utils.createDirectories(temp.parent)
             Files.newBufferedWriter(temp, Charsets.UTF_8).use { writer ->
                 XMLOutputter(Format.getCompactFormat()).output(doc, writer)
             }

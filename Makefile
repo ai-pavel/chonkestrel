@@ -1,4 +1,4 @@
-.PHONY: art run test debug rich randomize window icon release bulwarks
+.PHONY: art run test debug rich randomize window icon release bulwarks web
 
 # `ftl.dat`'s location: XFTL_DATAFILE if it's set, or else a copy (or a
 # link) in this directory, which git ignores
@@ -112,3 +112,9 @@ $(ICONS):
 release: $(ART) $(ICONS)
 	./gradlew fatJar -PxftlVersion=$(VERSION)
 	python3 tools/release/package.py $(VERSION)
+
+# The browser version (a prototype, see web/): compile it with TeaVM, and
+# serve it on http://localhost:8000, where it asks for your ftl.dat
+web:
+	./gradlew :web:site
+	python3 -m http.server --directory web/build/site 8000

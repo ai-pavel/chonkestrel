@@ -55,6 +55,8 @@ with the mod in it, if there isn't one yet.
 - [doc/tools/modding.md](doc/tools/modding.md): XFTL's XML extensions for ships,
   sectors and events.
 - [doc/tools/tests.md](doc/tools/tests.md): what the automated tests cover.
+- [doc/tools/web.md](doc/tools/web.md): the browser version, compiled with
+  TeaVM.
 - [doc/tools/translations.md](doc/tools/translations.md): where the game's
   text is, and how to translate and check it.
 - [doc/tools/art.md](doc/tools/art.md): where the new art is, and the scripts

@@ -3393,6 +3393,19 @@ public class InGameState extends MainGame.GameState {
      * where the mods and Advanced Edition mode are the same) is fast.
      */
     public static class GameContent {
+        /**
+         * The game's sounds, or silence if there's no sound device to play
+         * them on (OpenAL couldn't open one, as in the browser version).
+         */
+        private static SoundManager createSounds(Datafile datafile, ResourceContext resourceContext) {
+            try {
+                return new RealSoundManager(datafile, resourceContext);
+            } catch (IllegalArgumentException e) {
+                System.out.println("No sound: " + e.getMessage());
+                return new SilentSoundManager();
+            }
+        }
+
         public final Datafile datafile;
         public final boolean enableAdvancedEdition;
 
@@ -3430,7 +3443,7 @@ public class InGameState extends MainGame.GameState {
 
             blueprintManager = new BlueprintManager(datafile, enableAdvancedEdition);
             animations = new Animations(datafile);
-            sounds = new RealSoundManager(datafile, resourceContext);
+            sounds = createSounds(datafile, resourceContext);
             generator = new ShipGenerator(datafile, blueprintManager);
             translator = new Translator(datafile, language);
             eventManager = new EventManager(datafile, translator, blueprintManager);

@@ -6,12 +6,12 @@ import xyz.znix.xftl.f
 import xyz.znix.xftl.math.ConstPoint
 import xyz.znix.xftl.math.IPoint
 import xyz.znix.xftl.math.Point
+import xyz.znix.xftl.math.Rectangle
 import xyz.znix.xftl.rendering.Colour
 import xyz.znix.xftl.rendering.Graphics
 import xyz.znix.xftl.rendering.StandardTooltip
 import xyz.znix.xftl.sector.GameMap
 import xyz.znix.xftl.sector.SectorType
-import java.awt.Rectangle
 
 class SectorMapWindow(private val game: InGameState, private val selectedCallback: (GameMap.SectorInfo?) -> Unit) :
     Window() {
@@ -332,7 +332,7 @@ class SectorMapWindow(private val game: InGameState, private val selectedCallbac
 
         // If needed, register the bounds of this name box so it can be hovered
         if (updateBoxes) {
-            val rect = Rectangle(pos.x, pos.y, width, height)
+            val rect = Rectangle(ConstPoint(pos.x, pos.y), ConstPoint(width, height))
             nextSectorNameBoxes.add(rect)
         }
     }

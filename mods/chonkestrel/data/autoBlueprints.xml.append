@@ -19605,8 +19605,9 @@
     <crewCount amount="1" class="mantis" room="16" />
     <crewCount amount="1" class="mantis" room="13" />
     <crewCount amount="1" class="mantis" room="20" />
+    <crewCount amount="1" class="mantis" room="14" />
+    <crewCount amount="1" class="mantis" room="4" />
     <crewCount amount="2" class="mantis" room="18" />
-    <crewCount amount="2" class="mantis" room="21" />
     <aug name="CREW_STIMS" />
     <maxCargo>8</maxCargo>
     <maxAugments>6</maxAugments>
@@ -19931,7 +19932,8 @@
     <crewCount amount="1" class="anaerobic" room="9" />
     <crewCount amount="1" class="anaerobic" room="17" />
     <crewCount amount="1" class="anaerobic" room="7" />
-    <crewCount amount="2" class="anaerobic" room="1" />
+    <crewCount amount="1" class="anaerobic" room="15" />
+    <crewCount amount="1" class="anaerobic" room="3" />
     <maxCargo>8</maxCargo>
     <maxAugments>6</maxAugments>
     <shipSize>2</shipSize>
@@ -20465,8 +20467,10 @@
     <crewCount amount="1" class="mantis" room="7" />
     <crewCount amount="1" class="mantis" room="6" />
     <crewCount amount="1" class="mantis" room="10" />
-    <crewCount amount="2" class="mantis" room="9" />
-    <crewCount amount="2" class="mantis" room="17" />
+    <crewCount amount="1" class="mantis" room="15" />
+    <crewCount amount="1" class="mantis" room="1" />
+    <crewCount amount="1" class="mantis" room="16" />
+    <crewCount amount="1" class="mantis" room="11" />
     <aug name="CREW_STIMS" />
     <maxCargo>8</maxCargo>
     <maxAugments>6</maxAugments>
@@ -20789,7 +20793,8 @@
     <crewCount amount="1" class="anaerobic" room="13" />
     <crewCount amount="1" class="anaerobic" room="19" />
     <crewCount amount="1" class="anaerobic" room="8" />
-    <crewCount amount="2" class="anaerobic" room="12" />
+    <crewCount amount="1" class="anaerobic" room="16" />
+    <crewCount amount="1" class="anaerobic" room="3" />
     <maxCargo>8</maxCargo>
     <maxAugments>6</maxAugments>
     <shipSize>2</shipSize>
@@ -20883,7 +20888,8 @@
     <crewCount amount="1" class="crystal" room="1" />
     <crewCount amount="1" class="crystal" room="4" />
     <crewCount amount="1" class="crystal" room="2" />
-    <crewCount amount="2" class="crystal" room="3" />
+    <crewCount amount="1" class="crystal" room="14" />
+    <crewCount amount="1" class="crystal" room="10" />
     <aug name="CRYSTAL_SHARDS" />
     <maxCargo>8</maxCargo>
     <maxAugments>6</maxAugments>
@@ -21304,7 +21310,7 @@
     <crewCount amount="1" class="human" room="18" />
     <crewCount amount="1" class="human" room="6" />
     <crewCount amount="1" class="energy" room="5" />
-    <crewCount amount="1" class="energy" room="16" />
+    <crewCount amount="1" class="energy" room="13" />
     <aug name="ADV_SCANNERS" />
     <maxCargo>8</maxCargo>
     <maxAugments>6</maxAugments>
@@ -21956,8 +21962,10 @@
     <crewCount amount="1" class="mantis" room="6" />
     <crewCount amount="1" class="mantis" room="12" />
     <crewCount amount="1" class="mantis" room="21" />
-    <crewCount amount="2" class="mantis" room="15" />
-    <crewCount amount="2" class="mantis" room="18" />
+    <crewCount amount="1" class="mantis" room="9" />
+    <crewCount amount="1" class="mantis" room="10" />
+    <crewCount amount="1" class="mantis" room="5" />
+    <crewCount amount="1" class="mantis" room="15" />
     <aug name="CREW_STIMS" />
     <maxCargo>8</maxCargo>
     <maxAugments>6</maxAugments>
@@ -22169,7 +22177,7 @@
     <crewCount amount="1" class="human" room="17" />
     <crewCount amount="1" class="human" room="5" />
     <crewCount amount="1" class="rock" room="9" />
-    <crewCount amount="1" class="slug" room="4" />
+    <crewCount amount="1" class="slug" room="1" />
     <aug name="ADV_SCANNERS" />
     <maxCargo>8</maxCargo>
     <maxAugments>6</maxAugments>

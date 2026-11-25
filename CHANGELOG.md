@@ -1,5 +1,46 @@
 # Changelog
 
+## 2026-11-25: version 0.9-alpha
+
+### Features
+
+- **The game in a browser:** https://chonkestrel.gitlab.io/play/ plays it
+  in the browser, with the Chonkestrel mod, sound and saves, from your own
+  `ftl.dat` (read in the browser, never uploaded). It's compiled from the
+  same code by TeaVM, with WebGL 2 and WebAudio in place of the desktop's
+  OpenGL and OpenAL, and needs about 0.4 GB of memory. `make web` builds
+  and serves it locally. See doc/tools/web.md.
+- **The hangar shows the starting crew:** each ship's crew stand where
+  they'll be when the game starts, typing away at their consoles (each a
+  little out of step with the others), as they look in a fight, worked out as the game places them (see
+  `hangar/StartingCrew.kt`).
+
+### Changes
+
+- **The hangar shows only the systems a ship starts with,** as vanilla's
+  does: the ones it has rooms for, to buy later, are hidden (their room
+  images and outlined icons), but in debug mode (`XFTL_DEBUG`, not its
+  screenshots) and while a ship's being edited.
+- **Every big ship's crew start at a console:** the boarders who stood on
+  the teleporter pads (on the Mantis, Lanius and Crystal ships) now start
+  at the doors, sensors, oxygen, drones or hacking, and DA-CHONK 24's and
+  Simo-CHONK's at the doors and oxygen, rather than at a cloak, or a
+  sensors system that isn't installed. Only the Chonkila Monster (two) and
+  the Chonkeseus (one) have more Mantis than consoles, who wait on a
+  teleporter. `tools/race_ships.py` checks it, as does a test.
+
+### Fixes
+
+- **No sound device, no crash:** a computer without one (or that OpenAL
+  can't open) plays the game in silence, rather than crashing as it
+  starts.
+- **Boarders don't land on a medbay's or clonebay's blocked cell:** a
+  boarder teleports to the cell they stood on at home if it's free, and
+  the check for the room's blocked cell (where the medbay's machine is)
+  never matched that kind of point, so they could land on it. It's
+  checked properly now (`Room.isObstructed`), and anyone found on a
+  blocked cell (from an older save, say) moves off it.
+
 ## 2026-11-24: version 0.8.1-alpha
 
 ### Features

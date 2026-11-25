@@ -76,9 +76,9 @@ class ShaderProgramme(vertPath: String, fragPath: String) : AutoCloseable {
     }
 
     private fun createShader(path: String, type: Int): Int {
-        val url = javaClass.classLoader.getResource(path)
-        requireNotNull(url) { "Could not find shader file '$path'" }
-        val bytes = url.openStream().use { it.readAllBytes() }
+        val stream = javaClass.classLoader.getResourceAsStream(path)
+        requireNotNull(stream) { "Could not find shader file '$path'" }
+        val bytes = stream.use { it.readAllBytes() }
         val content = bytes.toString(Charsets.UTF_8)
 
         val shader = glCreateShader(type)

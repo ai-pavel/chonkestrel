@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chonkestrel - Web Prototype</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛸</text></svg>">
+  <style>
+    /* As the desktop version's ftl.dat screen (see LauncherStyle and
+       DatafileSelectState), a little bigger */
+    @font-face { font-family: Roboto; src: url(roboto.ttf); }
+    :root {
+      --background: rgb(12, 16, 26); --panel: rgb(24, 30, 44); --panel-border: rgb(58, 70, 92);
+      --accent: rgb(120, 220, 140); --text: rgb(235, 240, 248); --muted: rgb(160, 172, 192);
+      --faint: rgb(105, 116, 138); --error: rgb(255, 120, 110);
+      --drop: rgb(20, 26, 38); --drop-hover: rgb(28, 42, 46); --drop-border: rgb(90, 104, 130);
+    }
+    html, body { margin: 0; height: 100%; background: var(--background); color: var(--text);
+                 font: 20px/1.45 Roboto, system-ui, sans-serif; overflow: hidden; }
+    #game { position: absolute; inset: 0; width: 100vw; height: 100vh; object-fit: contain;
+            image-rendering: pixelated; background: #000; }
+    #pick { position: absolute; inset: 0; z-index: 1; background: var(--background);
+            display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .panel { box-sizing: border-box; width: min(760px, 100%); background: var(--panel);
+             border: 1px solid var(--panel-border); border-top: 4px solid var(--accent);
+             padding: 44px; text-align: center; }
+    h1 { margin: 0 0 18px; font-weight: 400; font-size: 42px; line-height: 1.2; }
+    .desc { margin: 0 0 30px; color: var(--muted); }
+    #drop { position: relative; height: 210px; background: var(--drop); cursor: pointer;
+            border: 2px dashed var(--drop-border); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 6px; }
+    #drop:hover, #drop.over { background: var(--drop-hover); border-color: var(--accent); }
+    #drop:hover .browse, #drop.over .browse { color: var(--accent); }
+    #drop svg { color: var(--text); margin-bottom: 10px; }
+    #drop.busy { cursor: default; border-color: var(--accent); }
+    .browse { color: var(--muted); }
+    #file { display: none; }
+    #bar { width: 80%; height: 8px; background: var(--panel-border); overflow: hidden; display: none; }
+    #fill { height: 100%; width: 0; background: var(--accent); transition: width 0.1s; }
+    #status { min-height: 1.45em; }
+    #status.error { color: var(--error); }
+    .note { margin: 24px 0 0; color: var(--faint); font-size: 17px; }
+  </style>
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <div id="pick">
+    <div class="panel">
+      <h1>Find your copy of FTL</h1>
+      <p class="desc">This game runs on the assets of FTL: Faster Than Light, so it needs your copy of the
+        game's <code>ftl.dat</code>, from its install folder.</p>
+      <div id="drop" tabindex="0">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3">
+          <path d="M24 34V6M14 16l10-10 10 10M6 32v10h36V32"/>
+        </svg>
+        <div id="status">Drop ftl.dat here</div>
+        <div class="browse" id="browse">or click to choose it</div>
+        <div id="bar"><div id="fill"></div></div>
+      </div>
+      <input type="file" id="file">
+      <p class="note">It's read here, in your browser, and isn't uploaded anywhere. Your saves are kept in this
+        browser. The game goes full screen: hold Esc to leave it.</p>
+    </div>
+  </div>
+  <script>Error.stackTraceLimit = 60;</script>
+  <script src="js/web.js"></script>
+  <script>
+    // The game's saves, kept in IndexedDB (see WebSaves): read before the
+    // game starts, and written as it changes them
+    const SAVES_DB = 'xftl-saves', SAVES_STORE = 'files';
+    function openSaves() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(SAVES_DB, 1);
+        request.onupgradeneeded = () => request.result.createObjectStore(SAVES_STORE);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+    function readSaves(db) {
+      return new Promise((resolve, reject) => {
+        const files = [];
+        const cursor = db.transaction(SAVES_STORE).objectStore(SAVES_STORE).openCursor();
+        cursor.onsuccess = () => {
+          const at = cursor.result;
+          if (!at) { resolve(files); return; }
+          files.push({ path: at.key, data: at.value.buffer });
+          at.continue();
+        };
+        cursor.onerror = () => reject(cursor.error);
+      });
+    }
+    window.xftlSaves = {
+      db: null,
+      pending: new Set(),
+      write(change) {
+        if (!this.db) return;
+        const tx = this.db.transaction(SAVES_STORE, 'readwrite');
+        change(tx.objectStore(SAVES_STORE));
+        const done = new Promise(resolve => { tx.oncomplete = tx.onerror = tx.onabort = resolve; });
+        this.pending.add(done);
+        done.then(() => this.pending.delete(done));
+      },
+      put(path, bytes) { this.write(store => store.put(bytes, path)); },
+      remove(path) { this.write(store => store.delete(path)); },
+      whenSaved() { return Promise.all([...this.pending]); },
+    };
+
+    const status = document.getElementById('status');
+    const bar = document.getElementById('bar');
+    const fill = document.getElementById('fill');
+
+    const drop = document.getElementById('drop');
+    const browse = document.getElementById('browse');
+    const input = document.getElementById('file');
+    let started = false;
+
+    function progress(text, done, total) {
+      status.textContent = text + (total ? ' ' + Math.floor(100 * done / total) + '%' : '');
+      bar.style.display = total ? 'block' : 'none';
+      fill.style.width = total ? (100 * done / total) + '%' : '0';
+    }
+
+    // Read a stream into one buffer, [total] bytes long if that's known,
+    // showing how far it's got
+    async function readAll(stream, total, text) {
+      const reader = stream.getReader();
+      const chunks = [];
+      let done = 0;
+      for (;;) {
+        const { value, done: finished } = await reader.read();
+        if (finished) break;
+        chunks.push(value);
+        done += value.length;
+        progress(text, done, total);
+      }
+      const all = new Uint8Array(done);
+      let at = 0;
+      for (const chunk of chunks) { all.set(chunk, at); at += chunk.length; }
+      return all.buffer;
+    }
+
+    // Full screen, with Escape kept for the game (where the browser allows
+    // it, as Chrome does: holding Esc still leaves full screen)
+    let fullScreenWanted = true;
+    async function goFullScreen() {
+      if (document.fullscreenElement) return true;
+      try {
+        await document.documentElement.requestFullscreen();
+        if (navigator.keyboard && navigator.keyboard.lock)
+          navigator.keyboard.lock(['Escape']).catch(() => {});
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+    // (if the browser wouldn't go full screen straight away, the first
+    // click in the game does)
+    document.getElementById('game').addEventListener('mousedown', () => {
+      if (fullScreenWanted && !document.fullscreenElement) goFullScreen();
+    });
+    // (and if the browser started the sound paused, the first click or key
+    // in the game starts it)
+    function resumeAudio() {
+      if (window.xftlAudio && window.xftlAudio.state === 'suspended') window.xftlAudio.resume();
+    }
+    document.getElementById('game').addEventListener('mousedown', resumeAudio);
+    window.addEventListener('keydown', resumeAudio);
+
+    // Click the drop area to choose the file, or drop it there
+    drop.addEventListener('click', () => { if (!started) input.click(); });
+    drop.addEventListener('keydown', (e) => { if (!started && (e.key === 'Enter' || e.key === ' ')) input.click(); });
+    drop.addEventListener('dragover', (e) => { e.preventDefault(); if (!started) drop.classList.add('over'); });
+    drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+    drop.addEventListener('drop', (e) => {
+      e.preventDefault();
+      drop.classList.remove('over');
+      if (e.dataTransfer.files.length) start(e.dataTransfer.files[0]);
+    });
+    input.addEventListener('change', () => { if (input.files.length) start(input.files[0]); });
+
+    async function start(file) {
+      if (started) return;
+      started = true;
+      drop.classList.add('busy');
+      browse.textContent = '';
+      // Straight away, while picking the file still counts as the player
+      // asking for something: full screen, and the sound (see WebAudio)
+      goFullScreen();
+      try {
+        window.xftlAudio = new AudioContext();
+      } catch (err) {
+        console.log('No sound: ' + err);
+      }
+
+      window.ftlDat = await readAll(file.stream(), file.size, 'Reading ' + file.name + '...');
+
+      // The Chonkestrel mod, zipped by the build (without it, it's vanilla FTL)
+      try {
+        const mod = await fetch('chonkestrel.zip');
+        if (mod.ok) {
+          const total = Number(mod.headers.get('Content-Length')) || 0;
+          window.modZip = await readAll(mod.body, total, 'Loading the Chonkestrel mod...');
+        }
+      } catch (err) {
+        console.log('No Chonkestrel mod: ' + err);
+      }
+
+      // The saves from last time
+      try {
+        window.xftlSaves.db = await openSaves();
+        window.savedFiles = await readSaves(window.xftlSaves.db);
+      } catch (err) {
+        console.log('No saves (IndexedDB): ' + err);
+      }
+
+      // The game starts all at once, without the page being drawn again
+      // until it's done, so say so first
+      progress('Starting the game...');
+      await new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 0)));
+      main([]);
+      document.getElementById('pick').style.display = 'none';
+    }
+  </script>
+</body>
+</html>

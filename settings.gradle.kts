@@ -10,3 +10,6 @@
 rootProject.name = "wormhole"
 
 include("slipstream")
+
+// The browser version (a prototype), compiled to JavaScript by TeaVM
+include("web")

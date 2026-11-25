@@ -36,6 +36,9 @@ class SelectShipState @JvmOverloads constructor(
     val mousePos = Point(0, 0)
     val shipOffset = Point(0, 0)
 
+    // How long the hangar's been open, for the starting crew's typing (see StartingCrew)
+    private var crewTime = 0f
+
     private val shipSelectorPos = ConstPoint(20, 50)
 
     // This is the size of the game window, not the full screen - but 'window'
@@ -64,6 +67,15 @@ class SelectShipState @JvmOverloads constructor(
 
     var isShipEdited = false
         private set
+
+    /**
+     * Whether the hangar shows the systems a ship doesn't start with, but
+     * has rooms for (to buy later): only in debug mode (but not in its
+     * screenshots), or while it's being edited. Otherwise only the systems
+     * it starts with are shown, as in vanilla.
+     */
+    val showsBuyableSystems: Boolean
+        get() = isShipEdited || XftlDebug.enabled && !XftlDebug.recording
 
     /**
      * Whether the ship's shown with its rooms hidden, just its hull (the
@@ -238,6 +250,10 @@ class SelectShipState @JvmOverloads constructor(
         editor.editorHeight = container.height - shipOffset.y
         if (!hideRooms)
             editor.draw(g)
+        // The crew it starts with, where they'll be when the game starts
+        // (not while it's being edited, when they'd be in the way)
+        if (!hideRooms && !isShipEdited)
+            StartingCrew.draw(this, current, StartingCrew.spots(currentBlueprint, current), crewTime)
         g.popTransform()
 
         if (shipListVisible) {
@@ -246,6 +262,7 @@ class SelectShipState @JvmOverloads constructor(
     }
 
     override fun update(container: GameContainer, delta: Float) {
+        crewTime += delta
         val input = container.input
         mousePos.x = input.mouseX
         mousePos.y = input.mouseY

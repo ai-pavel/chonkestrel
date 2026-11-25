@@ -144,7 +144,9 @@ SHIPS = [
         "drones": [], "drone_parts": 4, "drone_slots": 2,
         "augments": ["CREW_STIMS"],
         "crew": [("engi", "pilot", 0), ("engi", "engines", 0), ("mantis", "shields", 0), ("mantis", "weapons", 0),
-                 ("mantis", "weapons", 1), ("mantis", "teleporter", 0), ("mantis", "teleporter", 1)],
+                 ("mantis", "weapons", 1), ("mantis", "doors", 0), ("mantis", "oxygen", 0),
+                 # (more than it has consoles for: two wait on a teleporter pad)
+                 ("mantis", "teleporter", 0, 2)],
     },
     {
         "vanilla": "PLAYER_SHIP_JELLY", "name": "PLAYER_SHIP_XFTL_SLUG", "img": "man_of_chonk",
@@ -196,7 +198,8 @@ SHIPS = [
         "drones": [], "drone_parts": 18, "drone_slots": 2,
         "augments": [],
         "crew": [("anaerobic", "pilot", 0), ("anaerobic", "shields", 0), ("anaerobic", "weapons", 0),
-                 ("anaerobic", "weapons", 1), ("anaerobic", "engines", 0), ("anaerobic", "teleporter", 0)],
+                 ("anaerobic", "weapons", 1), ("anaerobic", "engines", 0), ("anaerobic", "doors", 0),
+                 ("anaerobic", "hacking", 0)],
     },
     {
         "vanilla": "PLAYER_SHIP_CRYSTAL", "name": "PLAYER_SHIP_XFTL_CRYSTAL", "img": "chonkravais",
@@ -284,7 +287,7 @@ SHIPS += [
         "drones": ["BOARDER", "DEFENSE_1", "XFTL_X2_BOARDER"], "drone_parts": 30, "drone_slots": 2,
         "augments": ["CREW_STIMS"],
         "crew": [("mantis", "pilot", 0), ("mantis", "shields", 0), ("mantis", "weapons", 0), ("mantis", "engines", 0),
-                 ("mantis", "teleporter", 0), ("mantis", "teleporter", 1)],
+                 ("mantis", "doors", 0), ("mantis", "sensors", 0), ("mantis", "oxygen", 0), ("mantis", "drones", 0)],
     },
     {
         "vanilla": "PLAYER_SHIP_JELLY_2", "name": "PLAYER_SHIP_XFTL_SLUG_2", "img": "chonkwalker",
@@ -336,7 +339,8 @@ SHIPS += [
         "drones": [], "drone_parts": 0, "drone_slots": 2,
         "augments": [],
         "crew": [("anaerobic", "pilot", 0), ("anaerobic", "shields", 0), ("anaerobic", "weapons", 0),
-                 ("anaerobic", "weapons", 1), ("anaerobic", "engines", 0), ("anaerobic", "teleporter", 0)],
+                 ("anaerobic", "weapons", 1), ("anaerobic", "engines", 0), ("anaerobic", "doors", 0),
+                 ("anaerobic", "hacking", 0)],
     },
     {
         "vanilla": "PLAYER_SHIP_CRYSTAL_2", "name": "PLAYER_SHIP_XFTL_CRYSTAL_2", "img": "chonkelian",
@@ -353,7 +357,7 @@ SHIPS += [
         "drones": [], "drone_parts": 0, "drone_slots": 2,
         "augments": ["CRYSTAL_SHARDS"],
         "crew": [("crystal", "pilot", 0), ("crystal", "shields", 0), ("crystal", "weapons", 0),
-                 ("crystal", "engines", 0), ("crystal", "teleporter", 0)],
+                 ("crystal", "engines", 0), ("crystal", "doors", 0), ("crystal", "sensors", 0)],
     },
 ]
 
@@ -451,7 +455,7 @@ SHIPS += [
         "drones": [], "drone_parts": 0, "drone_slots": 2,
         "augments": ["ADV_SCANNERS"],
         "crew": [("human", "pilot", 0), ("human", "weapons", 0), ("human", "weapons", 1), ("human", "sensors", 0),
-                 ("energy", "engines", 0), ("energy", "cloaking", 1)],
+                 ("energy", "engines", 0), ("energy", "doors", 0)],
     },
 ]
 
@@ -566,8 +570,10 @@ SHIPS += [
         "drones": [], "drone_parts": 0, "drone_slots": 2,
         "augments": ["CREW_STIMS"],
         "crew": [("engi", "pilot", 0), ("anaerobic", "engines", 0), ("mantis", "shields", 0),
-                 ("mantis", "weapons", 0), ("mantis", "weapons", 1), ("mantis", "teleporter", 0),
-                 ("mantis", "teleporter", 1)],
+                 ("mantis", "weapons", 0), ("mantis", "weapons", 1), ("mantis", "doors", 0),
+                 ("mantis", "sensors", 0), ("mantis", "oxygen", 0),
+                 # (more than it has consoles for: one waits on a teleporter pad)
+                 ("mantis", "teleporter", 0, 1)],
     },
     {
         "vanilla": "PLAYER_SHIP_ROCK_3", "name": "PLAYER_SHIP_XFTL_ROCK_3", "img": "chonktite",
@@ -601,7 +607,7 @@ SHIPS += [
         "drones": ["DRONE_SHIELD_PLAYER", "ANTI_DRONE", "DRONE_SHIELD_PLAYER"], "drone_parts": 30, "drone_slots": 3,
         "augments": ["ADV_SCANNERS"],
         "crew": [("human", "pilot", 0), ("human", "weapons", 0), ("human", "weapons", 1), ("human", "engines", 0),
-                 ("rock", "doors", 0), ("slug", "sensors", 0)],
+                 ("rock", "doors", 0), ("slug", "oxygen", 0)],
     },
 ]
 
@@ -1161,6 +1167,17 @@ def make_ship(dat, blueprints, cat, ship):
     return made
 
 
+# The systems the crew can man, at their consoles
+MANNED_SYSTEMS = {"pilot", "engines", "shields", "weapons", "sensors", "doors", "drones", "hacking", "mind",
+                  "oxygen", "artillery"}
+
+
+def crew_entries(ship):
+    """Each of its crew lists (race, system, which of those systems, how many): one at a console, or (with a
+    fourth element) as many as that waiting on a teleporter pad, when it has more crew than consoles."""
+    return [entry if len(entry) == 4 else entry + (1,) for entry in ship["crew"]]
+
+
 def system_rooms(made, name):
     return [int(e.get("room")) for e in made.systems if e.tag == name]
 
@@ -1211,10 +1228,8 @@ def blueprint_xml(made):
     power = sum(int(e.get("power")) for e in main if e.get("start") != "false" and e.tag != "clonebay")
     ET.SubElement(bp, "maxPower", {"amount": str(power)})
 
-    for race, system, which in ship["crew"]:
+    for race, system, which, amount in crew_entries(ship):
         rooms = system_rooms(made, system)
-        assert which < len(rooms), "%s: no %s system number %d for its crew" % (ship["img"], system, which + 1)
-        amount = 2 if system == "teleporter" else 1
         ET.SubElement(bp, "crewCount", {"amount": str(amount), "class": race, "room": str(rooms[which])})
     for aug in ship["augments"]:
         ET.SubElement(bp, "aug", {"name": aug})
@@ -1234,6 +1249,21 @@ def check(made):
     layout = made.layout
     pilot = system_rooms(made, "pilot")[0]
     check_layout(name, layout, pilot)
+    # Its crew start at the consoles of the systems it starts with, one to each (but any it has no consoles
+    # for, on a teleporter pad), so none stand about doing nothing
+    taken = set()
+    for race, system, which, amount in crew_entries(made.ship):
+        elems = [e for e in made.systems if e.tag == system]
+        assert which < len(elems), "%s: no %s system number %d for its crew" % (name, system, which + 1)
+        elem = elems[which]
+        assert elem.get("start") != "false", "%s: its %s's console is for a system it doesn't start with" % (
+            name, system)
+        if system == "teleporter":
+            continue
+        assert system in MANNED_SYSTEMS and amount == 1, "%s: %s %s crew at its %s, which has no console" % (
+            name, amount, race, system)
+        assert elem.get("room") not in taken, "%s: two crew at the console in room %s" % (name, elem.get("room"))
+        taken.add(elem.get("room"))
     for elem in made.systems:
         assert int(elem.get("room")) in layout.rooms, "%s: no room %s for its %s" % (name, elem.get("room"), elem.tag)
         room = layout.rooms[int(elem.get("room"))]

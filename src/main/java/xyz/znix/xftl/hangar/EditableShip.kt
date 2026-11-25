@@ -102,8 +102,9 @@ class EditableShip(
 
         EditableRoom.drawFloor(g, x, y, room.w, room.h)
 
-        // Draw the room image
-        val system = room.system
+        // Draw the room image (not of a system it doesn't start with, unless
+        // those are shown, see SelectShipState.showsBuyableSystems)
+        val system = room.system?.takeIf { it.startingPower > 0 || state.showsBuyableSystems }
         if (system != null) {
             val img = system.interiorImage?.let { state.getImg(it) }
             img?.draw(x, y)

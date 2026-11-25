@@ -14,16 +14,11 @@ import java.io.InputStream
 
 object TextureLoader {
     init {
-        // Make sure we're using our modified copy of PNGDecoder.
-        // This is a bit of an ugly place to put it, but it'll do.
-        // Use reflection here, since Julk said this was causing issues
-        // with Gradle compiling against Slick's class (though it should
-        // always be correct at runtime).
-        try {
-            PNGDecoder::class.java.getField("FTL_MARKER")
-        } catch (e: NoSuchFieldException) {
-            throw RuntimeException("Couldn't verify modified PNG loader is in use", e)
-        }
+        // Make sure we're using our modified copy of PNGDecoder: Slick's
+        // own hasn't got this field, so this fails to load if it's used
+        // instead (as SoundManager does for OggInputStream). It's not
+        // looked up by reflection, which the browser version hasn't got.
+        PNGDecoder.FTL_MARKER = 2
     }
 
     fun loadTexture(context: ResourceContext, imageData: ImageData): Texture {

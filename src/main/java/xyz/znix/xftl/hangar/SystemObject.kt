@@ -33,6 +33,11 @@ class SystemObject(
             dragY = centreY
         }
 
+        // A system the ship doesn't start with is hidden, outside debug
+        // mode and the editor (see SelectShipState.showsBuyableSystems)
+        if (room != null && system.startingPower == 0 && !editor.state.showsBuyableSystems)
+            return
+
         val iconColour = when {
             editor.isSelected(this) -> Constants.SYSTEM_IONISED
             editor.isHovered(this) -> Constants.SYSTEM_DAMAGED
