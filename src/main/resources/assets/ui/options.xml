@@ -23,6 +23,14 @@
             <widget type="button" pTop="80" pLeft="15" id="language">
                 <widget type="label" text="xftl_options_language"/>
             </widget>
+
+            <!-- Persistent options for the jump map -->
+            <widget type="button" pTop="120" pLeft="15" pRight="15" id="mapAllConnections">
+                <widget type="label" text="noloc:" id="mapAllConnectionsLabel"/>
+            </widget>
+            <widget type="button" pTop="160" pLeft="15" pRight="15" id="mapFleetForecast">
+                <widget type="label" text="noloc:" id="mapFleetForecastLabel"/>
+            </widget>
         </widget>
 
         <widget type="window" w="400" h="150" pLeft="0" pTop="300" pBottom="0">

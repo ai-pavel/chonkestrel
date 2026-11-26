@@ -17,8 +17,10 @@ import xyz.znix.xftl.sector.Mirage
 import xyz.znix.xftl.sector.Sector
 import xyz.znix.xftl.sys.Input
 import kotlin.math.atan2
+import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.roundToInt
+import kotlin.math.sign
 import kotlin.math.sin
 
 // Note that the actual window appears at 340, if we want to be resizable we'll have to fix
@@ -73,6 +75,9 @@ class JumpWindow(
     private val mapBase = Point(0, 0)
 
     private val sector = game.currentBeacon.sector
+
+    // The player's map options (see OptionsWindow)
+    private val profile: SaveProfile get() = game.mainGame.profile
 
     private val flashTimerBase = System.nanoTime()
 
@@ -202,6 +207,14 @@ class JumpWindow(
 
         // The nebulas' clouds, behind the beacons and the lines between them
         drawNebulaClouds()
+
+        // Draw every connection once, below the highlighted connections.
+        if (profile.mapShowAllConnections) {
+            val indices = sector.beacons.withIndex().associate { (i, beacon) -> beacon to i }
+            for ((i, beacon) in sector.beacons.withIndex()) {
+                drawBeaconLinesTo(g, beacon, ALL_CONNECTIONS_COLOUR) { indices.getValue(it) > i }
+            }
+        }
 
         // Draw the connections to the adjacent beacons.
         drawBeaconLinesTo(g, game.currentBeacon, Constants.BEACON_LINE_PLAYER) { true }
@@ -407,6 +420,8 @@ class JumpWindow(
         // (there's none where a boss hunts the player instead, see HunterBoss)
         if (!sector.isLastStand && sector.hasFleet) {
             drawDangerZone(g)
+            if (profile.mapShowFleetForecast)
+                drawFleetForecast(g)
         }
         for (label in pendingLabels)
             label()
@@ -473,6 +488,50 @@ class JumpWindow(
                 fleetControlTile.draw(fleetControlX, tileY)
                 tileY += tileHeight
             }
+        }
+    }
+
+    /**
+     * Draw where the fleet's front will be after each jump after the next,
+     * assuming future jumps aren't from nebula beacons.
+     */
+    private fun drawFleetForecast(g: Graphics) {
+        val shipSize = game.player.type.shipSize
+        val every = game.difficulty.fleetExtraStepEvery
+        var modifier = sector.fleetAdvanceModifier
+        var fleetJumps = sector.fleetJumps
+        val centre = Point(sector.dangerZoneCentre)
+        val radius = Sector.DANGER_ZONE_RADIUS.f
+
+        g.colour = FLEET_FORECAST_COLOUR
+        for (jump in 1..FLEET_FORECAST_MAX_JUMPS) {
+            val advance = if (jump == 1) {
+                nextFleetAdvance()
+            } else {
+                val step = sector.getFleetAdvance(false, shipSize, modifier)
+                if (every > 0 && (fleetJumps + 1) % every == 0) step * 2 else step
+            }
+            centre.x += advance
+            fleetJumps++
+            modifier -= modifier.sign
+
+            if (jump > 1) {
+                val cx = mapBase.x + centre.x.f
+                val cy = mapBase.y + centre.y.f
+                var lastX = cx
+                var lastY = cy - radius
+                for (i in 1..FLEET_FORECAST_SEGMENTS) {
+                    val angle = PIf * i / FLEET_FORECAST_SEGMENTS
+                    val x = cx + radius * sin(angle)
+                    val y = cy - radius * cos(angle)
+                    g.drawLine(lastX, lastY, x, y)
+                    lastX = x
+                    lastY = y
+                }
+            }
+
+            if (sector.beacons.all { it.pos.distToSq(centre) < Sector.DANGER_ZONE_RADIUS_SQUARED })
+                break
         }
     }
 
@@ -1030,6 +1089,12 @@ class JumpWindow(
 
         // The colour of the hazard icon for an extreme hazard (two at once)
         private val EXTREME_HAZARD_COLOUR = Colour(255, 70, 70)
+
+        // Optional jump map overlays
+        private val ALL_CONNECTIONS_COLOUR = Colour(255, 255, 255, 70)
+        private val FLEET_FORECAST_COLOUR = Colour(246, 128, 125, 90)
+        private const val FLEET_FORECAST_MAX_JUMPS = 60
+        private const val FLEET_FORECAST_SEGMENTS = 96
 
         // And for a catastrophic hazard (three at once)
         private val CATASTROPHIC_HAZARD_COLOUR = Colour(200, 90, 255)

@@ -685,7 +685,8 @@ public class InGameState extends MainGame.GameState {
                     rightClicked = true;
                 }
 
-                shipUI.mouseClick(i, in.getMouseX(), in.getMouseY(), playerShipOffset);
+                boolean shiftPressed = in.isKeyDown(Input.KEY_LSHIFT) || in.isKeyDown(Input.KEY_RSHIFT);
+                shipUI.mouseClick(i, in.getMouseX(), in.getMouseY(), playerShipOffset, shiftPressed);
             } else if (prev && !now) {
                 shipUI.mouseUp(i, in.getMouseX(), in.getMouseY(), playerShipOffset);
             }

@@ -112,6 +112,7 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
     private val selectedCrew: MutableList<AbstractCrew> = ArrayList()
     private val hoveredCrew: MutableList<AbstractCrew> = ArrayList()
     private var skillsHoveredCrew: AbstractCrew? = null
+    private var crewSelectionAdditive = false
 
     private val buttons = ArrayList<Button>()
 
@@ -324,7 +325,10 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
         buttons += settings
     }
 
-    fun mouseClick(button: Int, x: Int, y: Int, playerShipPosition: IPoint) {
+    fun mouseClick(button: Int, x: Int, y: Int, playerShipPosition: IPoint) =
+        mouseClick(button, x, y, playerShipPosition, shiftPressed = false)
+
+    fun mouseClick(button: Int, x: Int, y: Int, playerShipPosition: IPoint, shiftPressed: Boolean) {
         pauseWindow?.let { win ->
             win.mouseClick(button, x, y)
             return
@@ -381,6 +385,7 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
         if (button == Input.MOUSE_LEFT_BUTTON) {
             pressedDoor = ship.doors.firstOrNull { it.isUnderMouse(x - playerShipPosition.x, y - playerShipPosition.y) }
             crewSelectionRectangle = Pair(ConstPoint(x, y), Point(x, y))
+            crewSelectionAdditive = shiftPressed
             if (pressedDoor != null)
                 return
         }
@@ -443,8 +448,15 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
 
             updateHoveredCrew(x, y, playerShipPosition)
 
-            selectedCrew.clear()
-            selectedCrew.addAll(hoveredCrew)
+            val crewListClick = if (isCrewSelectionPoint) crewListCrewAt(x, y) else null
+            if (crewSelectionAdditive && crewListClick != null && selectedCrew.removeAll { it == crewListClick }) {
+                crewSelectionRectangle = null
+                return@let
+            }
+
+            if (!crewSelectionAdditive)
+                selectedCrew.clear()
+            selectedCrew.addAll(hoveredCrew.filterNot { it in selectedCrew })
 
             crewSelectionRectangle = null
         }
@@ -587,19 +599,21 @@ class PlayerShipUI(val ship: Ship, private val game: InGameState) {
 
     fun isCrewHovered(crew: AbstractCrew, mouseX: Int, mouseY: Int, crewPos: IPoint): Boolean {
         // Check if the crewmember's box is being hovered
-        val index = game.playerCrew.indexOf(crew)
-        if (index != -1) {
-            val boxY = crewBaseY + index * crewBoxSpacing
-            if (mouseX in crewX..crewX + CREW_BOX_WIDTH && mouseY in boxY..boxY + CREW_BOX_HEIGHT) {
-                skillsHoveredCrew = crew
-                return true
-            }
+        if (crewListCrewAt(mouseX, mouseY) == crew) {
+            skillsHoveredCrew = crew
+            return true
         }
 
         // Check if the physical crewmember is being hovered
         return mouseX in crewPos.x..crewPos.x + crew.icon.width &&
                 mouseY in crewPos.y..crewPos.y + crew.icon.height
     }
+
+    private fun crewListCrewAt(mouseX: Int, mouseY: Int): AbstractCrew? =
+        game.playerCrew.withIndex().firstOrNull { (index, _) ->
+            val boxY = crewBaseY + index * crewBoxSpacing
+            mouseX in crewX..crewX + CREW_BOX_WIDTH && mouseY in boxY..boxY + CREW_BOX_HEIGHT
+        }?.value
 
     // Called by SlickGame, used for controlling boarders.
     fun enemyRoomRightClicked(room: Room, enemyShip: Ship) {
