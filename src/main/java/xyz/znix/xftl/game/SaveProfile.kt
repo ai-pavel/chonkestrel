@@ -68,6 +68,26 @@ class SaveProfile private constructor() {
         }
 
     /**
+     * Whether the jump map shows every connection between the sector's
+     * beacons, not just those from the player's beacon and the hovered one.
+     */
+    var mapShowAllConnections: Boolean = false
+        set(value) {
+            field = value
+            dirty = true
+        }
+
+    /**
+     * Whether the jump map previews where the Rebel fleet's front will be
+     * after each of the next jumps.
+     */
+    var mapShowFleetForecast: Boolean = false
+        set(value) {
+            field = value
+            dirty = true
+        }
+
+    /**
      * The code of the language the player picked in the options (see
      * [xyz.znix.xftl.Language]), or null if there's none yet (a new
      * profile, or an older one), for the computer's language.
@@ -262,6 +282,11 @@ class SaveProfile private constructor() {
             display.setAttribute("windowHeight", height.toString())
         }
 
+        val map = Element("map")
+        root.addContent(map)
+        map.setAttribute("showAllConnections", mapShowAllConnections.toString())
+        map.setAttribute("showFleetForecast", mapShowFleetForecast.toString())
+
         language?.let { code ->
             val elem = Element("language")
             root.addContent(elem)
@@ -336,6 +361,11 @@ class SaveProfile private constructor() {
         if (displayWidth != null && displayHeight != null) {
             displayWindowSize = displayWidth to displayHeight
         }
+
+        // (an older profile has none)
+        val map = root.getChild("map")
+        mapShowAllConnections = map?.getAttributeValue("showAllConnections")?.toBoolean() ?: false
+        mapShowFleetForecast = map?.getAttributeValue("showFleetForecast")?.toBoolean() ?: false
 
         language = root.getChild("language")?.getAttributeValue("code")
 

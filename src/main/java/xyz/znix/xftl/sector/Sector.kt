@@ -412,9 +412,16 @@ class Sector {
     }
 
     // How far the rebel fleet advances in one step, from [beacon]
-    private fun getFleetStepFor(beacon: Beacon, playerShipSize: Int): Int {
+    private fun getFleetStepFor(beacon: Beacon, playerShipSize: Int): Int =
+        getFleetAdvance(beacon.isNebula, playerShipSize, fleetAdvanceModifier)
+
+    /**
+     * How far the fleet advances from a nebula beacon or not, with the
+     * given pursuit modifier (used to preview future jumps on the map).
+     */
+    fun getFleetAdvance(fromNebula: Boolean, playerShipSize: Int, modifier: Int): Int {
         val base = baseFleetAdvance(
-            beacon.isNebula,
+            fromNebula,
             info.sectorClass == GameMap.SectorClass.NEBULA,
             playerShipSize
         )
@@ -422,8 +429,8 @@ class Sector {
         // (faster in a boss's sector, see SectorType.fleetSpeed)
         val advance = (base * type.fleetSpeed).toInt()
         return when {
-            fleetAdvanceModifier < 0 -> 0
-            fleetAdvanceModifier > 0 -> advance * 2
+            modifier < 0 -> 0
+            modifier > 0 -> advance * 2
             else -> advance
         }
     }

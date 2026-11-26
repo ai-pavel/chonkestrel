@@ -5,9 +5,12 @@ import xyz.znix.xftl.Ship
 import xyz.znix.xftl.SystemInfo
 import xyz.znix.xftl.Translator
 import xyz.znix.xftl.augments.AugmentBlueprint
+import xyz.znix.xftl.crew.AbstractCrew
+import xyz.znix.xftl.crew.DroneBayRepair
 import xyz.znix.xftl.crew.Skill
 import xyz.znix.xftl.drones.AbstractDrone
 import xyz.znix.xftl.drones.AbstractExternalDrone
+import xyz.znix.xftl.drones.AbstractIndoorsDrone
 import xyz.znix.xftl.drones.BoardingDrone
 import xyz.znix.xftl.rendering.Graphics
 import xyz.znix.xftl.savegame.ObjectRefs
@@ -112,6 +115,8 @@ class Drones(blueprint: SystemBlueprint) : MainSystem(blueprint) {
             }
         }
 
+        repairDockedDrones(dt)
+
         // If a drone has turned itself on or off, find out why and fix it.
         if (powerSelected != powerManager.currentPower) {
             powerStateChanged()
@@ -120,6 +125,24 @@ class Drones(blueprint: SystemBlueprint) : MainSystem(blueprint) {
         if (playDroneLaunchSound) {
             droneLaunchSound.play()
             playDroneLaunchSound = false
+        }
+    }
+
+    /**
+     * As in vanilla, this ship's own crew drones (repair and anti-personnel
+     * drones) slowly mend while they're in the drones room, as long as the
+     * system has any power, whether or not they're the ones using it.
+     */
+    private fun repairDockedDrones(dt: Float) {
+        if (powerSelected == 0 || isHackActive)
+            return
+        val repair = DroneBayRepair(-DRONE_REPAIR_PER_SEC * dt)
+        for (crew in room?.crew ?: return) {
+            if (crew !is AbstractIndoorsDrone.Pawn || crew.drone.ownerShip != ship)
+                continue
+            if (crew.currentAction == AbstractCrew.Action.DYING || crew.health >= crew.maxHealth)
+                continue
+            crew.dealDamage(repair)
         }
     }
 
@@ -362,6 +385,9 @@ class Drones(blueprint: SystemBlueprint) : MainSystem(blueprint) {
 
     companion object {
         val INFO: SystemInfo = DronesInfo
+
+        /** How fast crew drones are mended in the drones room. */
+        const val DRONE_REPAIR_PER_SEC: Float = 6.4f
 
         // For each level of the Drones skill (see SkillLevel and
         // manningSpeed): as the weapons' (Weapons.SKILL_BONUSES)

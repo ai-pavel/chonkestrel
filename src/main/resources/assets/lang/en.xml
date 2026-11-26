@@ -39,6 +39,12 @@
     <text name="xftl_language_desc">The language of the game's text:</text>
     <text name="xftl_language_later">In a game, the new language is used from the next time you go back to the main menu or start a new game.</text>
 
+    <!-- The options window's jump map toggles; \1 is on or off -->
+    <text name="xftl_options_map_all_connections">Map - show all beacon connections: \1</text>
+    <text name="xftl_options_map_fleet_forecast">Map - show the fleet's next positions: \1</text>
+    <text name="xftl_options_on">ON</text>
+    <text name="xftl_options_off">OFF</text>
+
     <!-- The main menu, which also uses vanilla's mainmenu_* strings -->
     <text name="xftl_mainmenu_statistics">STATISTICS</text>
     <text name="xftl_escape_statistics">STATISTICS</text>

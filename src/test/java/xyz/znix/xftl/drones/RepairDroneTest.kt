@@ -1,8 +1,11 @@
 package xyz.znix.xftl.drones
 
 import org.intellij.lang.annotations.Language
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import xyz.znix.xftl.crew.AbstractCrew
+import xyz.znix.xftl.systems.Drones
 import xyz.znix.xftl.testkit.InGameTest
 import xyz.znix.xftl.weapons.DroneBlueprint
 
@@ -48,6 +51,57 @@ class RepairDroneTest {
 
         kit.run(60f)
         assertTrue(room.breaches.all { it == null })
+    }
+
+    private fun launchFromSlot(): Pair<InGameTest, RepairDrone> {
+        val kit = InGameTest(extraBlueprints = listOf(BLUEPRINT_XML), extraAnimations = listOf(ANIMATIONS_XML),
+            playerShip = "TEST_SHIP_REPAIR_DRONE")
+        val drones = kit.player.droneSystems.single()
+        drones.drones[0] = Drones.DroneInfo(kit.state.blueprintManager["TEST_REPAIR_DRONE"] as DroneBlueprint)
+        kit.player.dronesCount = 1
+        assertTrue(drones.setDronePower(0, true))
+        return kit to drones.drones[0]!!.instance as RepairDrone
+    }
+
+    private class Hurt(amount: Float) : xyz.znix.xftl.crew.AbstractCrewDamage(amount)
+
+    @Test
+    fun testMendsInDronesRoom() {
+        val (kit, drone) = launchFromSlot()
+        val pawn = drone.pawn!!
+        assertTrue(pawn.room.system is Drones)
+        pawn.dealDamage(Hurt(10f))
+        val hurt = pawn.health
+
+        kit.run(1f)
+        assertTrue("Health ${pawn.health} vs $hurt", pawn.health > hurt)
+        kit.run(10f)
+        assertEquals(pawn.maxHealth, pawn.health, 0f)
+    }
+
+    @Test
+    fun testMendsWhileOffIfTheSystemIsPowered() {
+        val (kit, drone) = launchFromSlot()
+        val pawn = drone.pawn!!
+        drone.isPowered = false
+        pawn.dealDamage(Hurt(10f))
+        val hurt = pawn.health
+        kit.run(1f)
+        assertTrue(pawn.health > hurt)
+        assertTrue(pawn.currentAction != AbstractCrew.Action.DYING)
+    }
+
+    @Test
+    fun testNoMendingWithoutPower() {
+        val (kit, drone) = launchFromSlot()
+        val pawn = drone.pawn!!
+        val drones = kit.player.droneSystems.single()
+        drones.setDronePower(0, false)
+        while (drones.powerSelected > 0) drones.decreasePower()
+        pawn.dealDamage(Hurt(10f))
+        val hurt = pawn.health
+        kit.run(1f)
+        assertEquals(hurt, pawn.health, 0f)
     }
 
     companion object {

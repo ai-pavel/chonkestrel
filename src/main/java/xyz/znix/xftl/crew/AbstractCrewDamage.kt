@@ -23,6 +23,12 @@ abstract class AbstractCrewDamage(var amount: Float) {
 class MedbayHealing(amount: Float) : AbstractCrewDamage(amount)
 
 /**
+ * 'damage' caused by the drones system mending its crew drones while
+ * they're in its room, always negative.
+ */
+class DroneBayRepair(amount: Float) : AbstractCrewDamage(amount)
+
+/**
  * 'damage' caused by a clonebay, always negative. Caused by the
  * heal-on-jump mechanic.
  */

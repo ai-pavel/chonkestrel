@@ -79,6 +79,17 @@ class GameRecordTest {
     }
 
     @Test
+    fun mapOptionsAreSavedInTheProfile() {
+        val profile = SaveProfile.createBlank()
+        profile.mapShowAllConnections = true
+        profile.mapShowFleetForecast = true
+
+        val loaded = SaveProfile.fromDocument(profile.save())
+        assertTrue(loaded.mapShowAllConnections)
+        assertTrue(loaded.mapShowFleetForecast)
+    }
+
+    @Test
     fun theStatsAreSavedWithTheGame() {
         val kit = InGameTest()
         val stats = kit.state.stats
